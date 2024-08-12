@@ -1,0 +1,28 @@
+package com.project.backend.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name="review_style")
+public class ReviewStyle {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rstyle_id")
+    private Long rstyleId;
+
+    private String color;
+
+    private String image;
+
+        
+        
+}

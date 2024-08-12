@@ -1,0 +1,47 @@
+package com.project.backend.model;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name="cart_product")
+public class CartProduct extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cart_product_id;
+
+    private String name;
+
+    private String image;
+
+    private String size;
+
+    private String quantity;
+
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ProductColorAttribute.class)
+    @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)
+    private ProductColorAttribute color;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
+    private int price;   
+
+    private int cart_total;
+
+    private int total_after_discount;
+
+    
+}
