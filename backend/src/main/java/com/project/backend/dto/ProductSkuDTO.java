@@ -1,12 +1,13 @@
 package com.project.backend.dto;
 
 import java.util.List;
+import java.util.Set;
 
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import com.project.backend.dto.SizeAttributeDTO;
+import com.project.backend.dto.ColorAttributeDTO;
 
 @Data
 @NoArgsConstructor
@@ -24,5 +25,8 @@ public class ProductSkuDTO {
     private int discount = 0;
 
     private int sold = 0;
+
+    private Set<SizeAttributeDTO> sizes;
+    private ColorAttributeDTO color;
 
 }

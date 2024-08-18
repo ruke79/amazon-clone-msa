@@ -14,8 +14,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.backend.dto.CategoryDTO;
+import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.ProductDTO;
 import com.project.backend.dto.ProductSkuDTO;
+import com.project.backend.dto.SizeAttributeDTO;
 import com.project.backend.dto.SubCategoryDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.Product;
@@ -75,13 +77,27 @@ public class ProductService {
                 for (String image : sku.getImages()) {
                     base64Image.add(image);
                 }
+
+                
+
+                Set<SizeAttributeDTO> sizes = sku.getSizes().stream().map(item-> {
+                    SizeAttributeDTO size = new SizeAttributeDTO(item.getSizeId(),
+                    item.getSize(), item.getQuantity(), item.getPrice());
+                    return size;                    
+                }).collect(Collectors.toSet());  
+                
+                ColorAttributeDTO color = new ColorAttributeDTO(sku.getColor().getColorId(), 
+                sku.getColor().getColor(), sku.getColor().getColorImage());
+                
                 
                 ProductSkuDTO dto = new ProductSkuDTO(
                     sku.getSkuproductId(),
                     sku.getSku(),
                     base64Image,
                     sku.getDiscount(),
-                    sku.getSold()
+                    sku.getSold(),
+                    sizes,
+                    color
                 );
 
                 return dto;                
@@ -104,7 +120,7 @@ public class ProductService {
             product.getRefund_policy(),
             product.getRating(),
             product.getNum_reviews(),
-            product.getShipping()                
+            product.getShipping()                   
         );
     }
 
