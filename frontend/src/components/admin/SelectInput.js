@@ -25,9 +25,9 @@ const SelectInput = ({
                 <MenuItem key={""} value={""}>
                     no selected
                 </MenuItem>
-                {data.map((option) => (
+                {data?.map((option) => (
                     <MenuItem key={option._id} value={option._id || option.name}>
-                        {option.name}
+                        {option.name } 
                     </MenuItem>
                 ))}
             </TextField>

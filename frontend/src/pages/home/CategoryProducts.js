@@ -12,3 +12,5 @@ const CategoriesProduct = ({ products}) => {
 };
 
 export default CategoriesProduct;
+
+

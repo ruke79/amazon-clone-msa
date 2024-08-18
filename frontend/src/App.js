@@ -1,32 +1,60 @@
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import RootPage  from "./pages/Root";
-import HomePage from './pages/home/Home';
+import RootPage from "./pages/Root";
+import HomePage, {loader as productsLoader } from './pages/home/Home';
 import RegisterPage from './pages/user/RegisterPage';
 import SignInPage from './pages/user/SignInPage';
-import SideBar from './components/Sidebar';
+import DashboardLayout from './components/admin/DashboardLayout';
+import { ContextProvider } from "./store/AuthContext";
+import { persistor, store } from "./redux/store";
+import Categories from './pages/admin/Category';
+import SubCategories from './pages/admin/SubCategory';
+import AdminProduct from './pages/admin/Product';
+
+
 
 const router = createBrowserRouter([
   {
-  
-    path: '/',
-    element:<RootPage />,
-    children : [    
-      { index: true, element: <HomePage /> },
-      { path : '/signin', element:<SignInPage/>},
-      { path : '/register', element:<RegisterPage/>},
 
-      
+    path: '/',
+    element: <RootPage />,
+    children: [
+      { index: true, 
+        element: <HomePage />,
+        loader: productsLoader,
+      },
+      { path: '/signin', element: <SignInPage /> },
+      { path: '/register', element: <RegisterPage /> },
+
+
     ]
   },
-  { path : '/admin' ,
-    element : <SideBar/>     
+  {
+    path: '/admin',
+    element: <DashboardLayout />,
+    children: [
+      { path: 'category', element: <Categories /> },
+      { path: 'subcategory', element: <SubCategories /> },
+      { path: 'product', element: <AdminProduct /> }
+    ]
   }
 
 ]);
 
 
 function App() {
-  return <RouterProvider router={router} />;  
+  return (
+    <>
+    <ContextProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>          
+            <RouterProvider router={router} />          
+        </PersistGate>
+      </Provider>
+      </ContextProvider>
+    </>
+  );
 }
 
 export default App;

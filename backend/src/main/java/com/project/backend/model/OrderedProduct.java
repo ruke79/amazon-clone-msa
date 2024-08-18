@@ -2,6 +2,7 @@ package com.project.backend.model;
 
 import javax.swing.text.AttributeSet.ColorAttribute;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,8 +21,7 @@ import lombok.Data;
 @Table(name="ordered_product")
 public class OrderedProduct extends BaseEntity {
         
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id @Tsid        
         @Column(name = "order_product_id")
         private Long  orderProductId; 
 

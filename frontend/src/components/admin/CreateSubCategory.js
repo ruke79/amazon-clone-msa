@@ -3,10 +3,10 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import InputAdmin from "./AdminInput";
 import api from "../../util/api";
-import SelectInput from ".SelectInput";
+import SelectInput from "./SelectInput";
+import slugify from "slugify";
 
-
-const CreateSubCategory = ({ setSubCategories, categories }) => {
+const CreateSubCategory = (categories) => {
     const [name, setName] = useState();
     const [parent, setParent] = useState();
     const validate = Yup.object({
@@ -22,13 +22,16 @@ const CreateSubCategory = ({ setSubCategories, categories }) => {
     });
 
     const submitHandler = async () => {
+        console.log(name);
         try {
-            const { data } = await api.post("/api/admin/subcategory", {
+            const slug = slugify(name);            
+            const { data } = await api.post("/admin/subcategory", {
                 name,
                 parent,
+                slug
             });
 
-            setSubCategories(data.subCategory);
+            //setSubCategories(data.subCategory);
             setName("");
             setParent("");
         } catch (error) {

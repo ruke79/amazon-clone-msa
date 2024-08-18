@@ -1,5 +1,8 @@
 package com.project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,10 +21,10 @@ import lombok.Data;
 @Table(name="review")
 public class Review extends BaseEntity{
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
-    private Integer reviewId;
+    private Long reviewId;
 
     private int rating = 0;
 
@@ -35,6 +38,7 @@ public class Review extends BaseEntity{
     @JoinColumn(name="rstyle_id", referencedColumnName = "rstyle_id", nullable = false)
     private ReviewStyle style;
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
     private Product product;

@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,8 +15,8 @@ import lombok.Data;
 public class ReviewStyle {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rstyle_id")
     private Long rstyleId;
 

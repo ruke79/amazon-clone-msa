@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,10 +15,9 @@ import lombok.Data;
 public class Address extends BaseEntity {
     
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @Id @Tsid    
     //@GenericGenerator(name = "native",strategy = "native")
-    private int addressId;
+    private Long addressId;
 
     @NotBlank(message="주소는 공백이 없어야 합니다.")
     @Size(min=5, message="주소1은 적어도 5자 이상이어야 합니다.")

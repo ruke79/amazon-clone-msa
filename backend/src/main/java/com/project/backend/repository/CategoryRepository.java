@@ -1,12 +1,22 @@
 package com.project.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.model.Note;
 import com.project.backend.model.ProductCategory;
+import com.project.backend.model.SubCategory;
+
+
+import java.util.List;
+
 
 @Repository
-public interface CategoryRepository extends JpaRepository<ProductCategory, String> {
+public interface CategoryRepository extends JpaRepository<ProductCategory, Long> {
 
+    public ProductCategory findByCategoryName(String categoryName);
+
+    @Query(value ="SELECT s FROM ProductCategory c INNER JOIN SubCategory s on c.categoryId = s.category.categoryId WHERE c.categoryName = :categoryName")    
+    public List<SubCategory> findSubCategoriesByCategoryName(@Param("categoryName") String categoryName);
 }

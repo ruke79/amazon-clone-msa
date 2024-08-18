@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,8 +17,8 @@ import lombok.Data;
 @Table(name="product_size")
 public class ProductSizeAttribute {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "size_id")
     private Long sizeId;
 
@@ -29,5 +30,5 @@ public class ProductSizeAttribute {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="skuproduct_id", referencedColumnName = "skuproduct_id", nullable=true)
-    private ProductSku sku_project;
+    private ProductSku sku_product;
 }

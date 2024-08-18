@@ -1,7 +1,11 @@
 package com.project.backend.model;
 
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,18 +14,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 @Table(name="product")
 public class Product extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid    
     @Column(name = "product_id")
     private Long productId;
 
@@ -33,23 +42,28 @@ public class Product extends BaseEntity {
 
     private String slug;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ProductCategory.class)
-    @JoinColumn(name="category_name", referencedColumnName = "category_name", nullable = false)
-    private ProductCategory category;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=SubCategory.class)
-    @JoinColumn(name="subcategory_name", referencedColumnName = "subcategory_name", nullable = false)
-    private SubCategory sub_category;
+    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="category_id", referencedColumnName = "category_id", nullable=false)
+    private ProductCategory category;    
 
-    private String details;
+    @OneToMany(fetch = FetchType.LAZY,
+    cascade = CascadeType.PERSIST,targetEntity = SubCategory.class)
+    @JoinColumn(name ="product_fk" , referencedColumnName = "product_id")
+    private List<SubCategory> subCategories;
+
+    @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
+            targetEntity = ProductDetails.class)
+    private Set<ProductDetails> details;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = Review.class)
     private Set<Review> reviews;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = ProductQA.class)
-    private Set<ProductQA> qas;
+    targetEntity = ProductQA.class)
+    private Set<ProductQA> questions;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSku.class)

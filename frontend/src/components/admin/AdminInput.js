@@ -5,7 +5,7 @@ const AdminInput = ({ type, placeholder, label, ...props }) => {
     return (
         <div className="mt-4">
             <label className={`flex ${meta.touched && meta.error ? "error-input-admin" : ""}`}>
-                <span className="w-[130px] px-4 py-2 bg-blue-500 rounded-l text-white">
+                <span className="w-[135px] px-4 py-2 bg-blue-500 rounded-l text-white">
                     {label}
                 </span>
                 <input  

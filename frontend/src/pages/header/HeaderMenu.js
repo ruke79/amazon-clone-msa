@@ -25,7 +25,7 @@ const HeaderMenu = ({ handleOpenMenu }) => {
                 </ul>
             </div>
             <div className="hidden md:inline text-sm">
-                <a href="">Shop deals in Electronics</a>
+                <a href="/">Shop deals in Electronics</a>
             </div>
         </div>
 

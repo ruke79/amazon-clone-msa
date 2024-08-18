@@ -1,9 +1,18 @@
+import { useState, useEffect } from 'react';
+import { useLoaderData, json } from 'react-router-dom';
 import CarouselContainer from "./CarouselContainer";
 import CategoriesProduct from "./CategoryProducts";
+import api from '../../util/api';
 
-const HomePage = ({ products }) => {
+const HomePage = () => {
+    //const [products, setProducts] = useState([]);
 
+    const data = useLoaderData();
+    const temp = JSON.parse(JSON.stringify(data));    
+    const products = temp.data;
 
+  
+    
     return (
         <main className="max-w-screen-2xl mx-auto bg-gray-100">
         <CarouselContainer />
@@ -19,3 +28,21 @@ const HomePage = ({ products }) => {
 }
 
 export default HomePage;
+
+
+export async function loader() {
+
+    const response  = await api.get("/admin/product/products");
+    if(!response) {
+  
+        throw json(
+            { message: 'Could not fetch events.' },
+            {
+              status: 500,
+            }
+          );
+    }    
+      
+    return response;
+  }
+  

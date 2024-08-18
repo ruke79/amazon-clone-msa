@@ -77,6 +77,7 @@ import {
       {
         icon: <HomeIcon />,
         text: 'Home',
+        link: '/admin',
         active: true,
       },
       {
@@ -84,14 +85,23 @@ import {
         subMenu: [
           {
             icon: <UserIcon />,
-            text: 'Profile',
+            text: 'Category',
+            link: '/admin/category'
           },
+          // {
+          //   icon: <CogIcon />,
+          //   text: 'SubCategory',
+          //   link: '/admin/subcategory'
+          // },
+
           {
             icon: <CogIcon />,
-            text: 'Settings',
+            text: 'Product',
+            link: '/admin/product'
           },
+          
         ],
-        text: 'Profile',
+        text: 'Product Management',
       },
       {
         icon: <CogIcon />,

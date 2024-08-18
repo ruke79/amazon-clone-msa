@@ -1,6 +1,7 @@
 
 package com.project.backend.model;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,11 +23,11 @@ import lombok.Data;
 public class ShippingAddress extends BaseEntity {
 
     
-     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+     @Id @Tsid
+    //@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     //@GenericGenerator(name = "native",strategy = "native")
     @Column(name = "shipping_address_id")
-    private int shippingAddressId;
+    private Long shippingAddressId;
 
     @NotBlank(message="주소는 공백이 없어야 합니다.")
     @Size(min=5, message="주소1은 적어도 5자 이상이어야 합니다.")

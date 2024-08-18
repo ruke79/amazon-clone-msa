@@ -2,6 +2,7 @@ package com.project.backend.model;
 
 import java.util.Set;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,8 +20,8 @@ import lombok.Data;
 @Table(name="cart")
 public class Cart extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cart_id;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY,

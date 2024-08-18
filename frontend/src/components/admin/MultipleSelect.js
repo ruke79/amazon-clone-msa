@@ -1,3 +1,13 @@
+import { ErrorMessage, useField } from "formik";
+import * as React from "react";
+import { Theme, useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
 
 
 const ITEM_HEIGHT = 48;
@@ -20,7 +30,7 @@ function getStyles(name, value, theme) {
     };
 }
 
-const MultipleSelect = ({ data, label, handleChange, ...rest }) => {
+const MultipleSelect = ({ data, label, fn, handleChange, ...rest }) => {
     const [field, meta] = useField(rest);
 
     const theme = useTheme();
@@ -34,8 +44,9 @@ const MultipleSelect = ({ data, label, handleChange, ...rest }) => {
     //         typeof value === "string" ? value.split(",") : value
     //     );
     // };
-    
-    const result = data.length ? data.reduce((obj , cur) => ({ ...obj, [cur._id]: cur.name}), {}) : {};
+        
+    //const result = data.length ? data.reduce((obj , cur) => ({ ...obj, [cur._id]: cur.name}), {}) : {};
+      
     
     return (
         <div className="mt-2">
@@ -57,8 +68,9 @@ const MultipleSelect = ({ data, label, handleChange, ...rest }) => {
                         <Box
                             sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
                         >
+                            
                             {selected.map((value) => (
-                                <Chip key={value} label={result[value]} />
+                                <Chip key={value} label={value} />
                             ))}
                         </Box>
                     )}

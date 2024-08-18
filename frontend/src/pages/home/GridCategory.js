@@ -1,26 +1,36 @@
+import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
 const GridCategory = ({ category, products, gridCols}) => {
     const length = gridCols * gridCols;
-    //const selectedProducts = products.filter( (product) => ( category === product.category.slug)).slice(0, length);
+     //let [imgSrc,setImgSrc] = useState('');
+     //let base64_to_imgsrc = Buffer.from(products, "base64").toString()
+    // //add the string to the state
+    // setImgSrc(base64_to_imgsrc)
+    // <img src={"data:image/jpeg;base64," + imgSrc} />        
+    
+    
+    const selectedProducts = products.filter( (product) => ( category === product.category.slug)).slice(0, length);
+    
     return ( 
-        <div className="flex flex-col bg-white border rounded p-2">
+        <div className="flex flex-col bg-white border rounded p-2 justify-center items-center">
                 <h3 className="font-bold my-2 uppercase">{category.replace("-"," ")}</h3>
-                <div className={`h-full grid grid-cols-${gridCols} gap-4 m-1  items-center`}>
+                <div className={`h-full grid grid-cols-1 gap-4 m-1 `}>
                 
-                {/* {selectedProducts.map((product) => (
-                        <Link to={`/product/${product.name}`} key={product._id}>
-                            <div className={`relative  ${length > 1 ? 'h-[200px]' : 'h-[420px]'}`}>
+                {products.map((product) => (
+                        <Link to={`/product/${product.name}`} key={product.product_id}>
+                            <div className={`relative`}>
+                            
                                 <img
-                                    src={product.subProducts[0].images[0].url}
-                                    alt={product.name}
-                                    fill
-                                    className="object-cover rounded"
+                                    src={"data:image/jpeg;base64,"+product.sku_products[0].images[0]}
+                                    alt={product.name}                                    
+                                    className="h-[420px]  object-cover rounded  "
                                 />  
                             </div>
-                            {length > 1 && (<h4 className="text-xs mt-1">{product.name}</h4>)}
+                            {/* {length > 1 && (<h4 className="text-xs mt-1">{product.name}</h4>)} */}
+                            
                         </Link>
-                    ))} */}
+                    ))}
      
 
                 </div>

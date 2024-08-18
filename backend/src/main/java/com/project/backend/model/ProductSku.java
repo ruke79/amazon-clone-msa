@@ -3,6 +3,9 @@ package com.project.backend.model;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,24 +29,26 @@ import lombok.Setter;
 @Table(name="product_sku")
 public class ProductSku extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skuproduct_id")
     private Long skuproductId;
 
     private String sku;
 
-    @Lob
-    private List<byte[]> images;
-
-    @Lob
-    private List<byte[]> descriptionImages;
+    
+    @Column(length = 100000)
+    private List<String> images;
+    
+    //@Column(length = 20000)
+    //private List<String> descriptionImages;
 
     private int discount = 0;
 
     private int sold = 0;
 
-    @OneToMany(mappedBy="sku_project", fetch = FetchType.LAZY,
+    @JsonIgnore
+    @OneToMany(mappedBy="sku_product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSizeAttribute.class)
     private Set<ProductSizeAttribute> sizes;
 
@@ -52,6 +57,7 @@ public class ProductSku extends BaseEntity {
     private ProductColorAttribute color;
 
 
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
     private Product product;

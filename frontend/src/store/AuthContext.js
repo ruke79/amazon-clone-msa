@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from "react";
 import { useEffect } from "react";
 import api from "../util/api";
@@ -56,7 +57,7 @@ export const ContextProvider = ({ children }) => {
   }, [token]);
 
   //through context provider you are sending all the datas so that we access at anywhere in your application
-  return (
+  return (    
     <AuthContext.Provider
       value={{
         token,
@@ -71,6 +72,7 @@ export const ContextProvider = ({ children }) => {
     >
       {children}
     </AuthContext.Provider>
+    
   );
 };
 

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.project.backend.constants.OrderStatusEnum;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,8 +27,8 @@ import lombok.Data;
 public class Order extends BaseEntity {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long orderId;
 
@@ -41,7 +42,7 @@ public class Order extends BaseEntity {
 
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ShippingAddress.class)
-    @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_addressId", nullable = false)
+    @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id", nullable = false)
     private ShippingAddress shipping_address;
 
     private String payment_method;

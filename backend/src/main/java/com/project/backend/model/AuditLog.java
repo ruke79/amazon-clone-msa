@@ -8,11 +8,13 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
+
 @Entity
 @Data
 public class AuditLog {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String action;
     private String username;

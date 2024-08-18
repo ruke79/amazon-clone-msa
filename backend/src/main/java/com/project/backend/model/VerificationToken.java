@@ -3,6 +3,7 @@ package com.project.backend.model;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +11,8 @@ public class VerificationToken {
 
     private static final int EXPIRATION = 60 * 24;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String token;

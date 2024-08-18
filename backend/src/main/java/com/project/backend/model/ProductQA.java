@@ -1,5 +1,8 @@
 package com.project.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,8 +20,8 @@ import lombok.Data;
 @Table(name="product_qa")
 public class ProductQA extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qa_id")
     private Long  qaId;
     
@@ -26,6 +29,8 @@ public class ProductQA extends BaseEntity {
 
     private String answer;
 
+
+    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
     private Product product;

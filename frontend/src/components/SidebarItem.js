@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
-
+import { Link } from 'react-router-dom';
 
 // This component is used to render the sub-menu items when hovered
 function HoveredSubMenuItem({ icon, text, active }) {
@@ -12,7 +12,7 @@ function HoveredSubMenuItem({ icon, text, active }) {
     >
       <div className="flex items-center justify-center ">
         <span className="text-primary-500 h-6 w-6 ">{icon}</span>
-        <span className="text-primary-500 ml-3 w-28 text-start">{text}</span>
+        <span className="text-primary-500 ml-3 w-28 text-start">{text}</span>        
         <div className="bg-primary-200 h-1" />
       </div>
     </div>
@@ -23,6 +23,7 @@ export default function SidebarItem({
   icon,
   active = false,
   text,
+  link,  
   expanded = false,
   subMenu = null,
 }) {
@@ -63,7 +64,7 @@ export default function SidebarItem({
               expanded ? 'ml-3 w-44' : 'w-0'
             }`}
           >
-            {text}
+           <Link to={!link? "":link}>{text}</Link>
           </span>
           {subMenu && (
             <div

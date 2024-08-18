@@ -6,12 +6,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
+
 @Entity
 @Data
 @NoArgsConstructor
 public class PasswordResetToken {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)

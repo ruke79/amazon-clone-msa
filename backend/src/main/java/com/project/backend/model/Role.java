@@ -1,6 +1,8 @@
 package com.project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,10 +19,10 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
-    private Integer roleId;
+    private Long roleId;
 
     @ToString.Exclude
     @Enumerated(EnumType.STRING)

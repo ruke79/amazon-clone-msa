@@ -2,6 +2,7 @@ package com.project.backend.model;
 
 import java.util.Set;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +19,12 @@ import lombok.Data;
 @Table(name="category")
 public class ProductCategory extends BaseEntity {
 
-    @Id    
+    @Id @Tsid
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
+    private Long categoryId;
+
+    
     @Column(name = "category_name")
     private String categoryName;
 
@@ -27,6 +33,12 @@ public class ProductCategory extends BaseEntity {
      
     @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = SubCategory.class)
-    private Set<SubCategory> sub_categorys;
+    private Set<SubCategory> subCategories;
+
+
+    
+    @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,targetEntity = Product.class)
+    private Set<Product> products;
 
 }
