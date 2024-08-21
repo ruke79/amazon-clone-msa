@@ -28,6 +28,7 @@ import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.CategoryRequest;
+import com.project.backend.security.request.ImageRequest;
 import com.project.backend.security.request.ProductRequest;
 import com.project.backend.security.request.SubCategoryRequest;
 import com.project.backend.security.response.SubCategoryResponse;
@@ -190,7 +191,7 @@ public class AdminController {
 
         List<ProductDTO> response = new ArrayList<ProductDTO>();
         for (Product product : products) {
-              ProductDTO dto = productService.getProduct(product.getName());
+              ProductDTO dto = productService.getProductByName(product.getName());
               response.add(dto);
         }
         
@@ -201,27 +202,51 @@ public class AdminController {
     @GetMapping("/product/{productName}")
     public ResponseEntity<ProductDTO> getParentProduct(@PathVariable String productName) {
 
-            ProductDTO dto = productService.getProduct(productName);
+            ProductDTO dto = productService.getProductByName(productName);
 
             return new ResponseEntity<>(dto, HttpStatus.OK);                           
     }
     
     
-    @PostMapping("/product")
+    // DB에 이미지 저장할 때
+    // @PostMapping("/product")
+    // public ResponseEntity<ProductSku> addProduct(
+    // @RequestPart("product") ProductRequest request, 
+    //     @RequestPart("images") MultipartFile[] images,         
+    //     @RequestPart("colorImage") MultipartFile colorImage) throws IOException {
+
+    //     Product product = productRepository.findByName(request.getName());
+
+    //     if (product != null)
+    //         return null;
+
+       
+    //     ProductSku skuProject = productService.addProduct(request, images, colorImage);
+
+    //     return new ResponseEntity<>(skuProject,  HttpStatus.OK);       
+       
+    // } 
+
+     @PostMapping("/product")
     public ResponseEntity<ProductSku> addProduct(
-    @RequestPart("product") ProductRequest request, @RequestPart("image") MultipartFile[] images, 
-        @RequestPart("colorImage") MultipartFile colorImage) throws IOException {
+    @RequestPart("product") ProductRequest request, 
+        @RequestParam(value = "images", required = false) List<String> images,         
+        @RequestParam(value="colorImage", required = false) String colorImage) throws IOException {
 
         Product product = productRepository.findByName(request.getName());
 
         if (product != null)
             return null;
 
-       
+               
         ProductSku skuProject = productService.addProduct(request, images, colorImage);
 
         return new ResponseEntity<>(skuProject,  HttpStatus.OK);       
        
     } 
+
+    // required =false 가 없으면 or method parameter type [  ] is not present] Error 
+       
+
 }
 

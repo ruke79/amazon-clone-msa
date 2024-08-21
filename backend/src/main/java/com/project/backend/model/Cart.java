@@ -26,11 +26,11 @@ public class Cart extends BaseEntity {
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = CartProduct.class)
-    private Set<CartProduct> cart_products;
+    private Set<CartProduct> cartProducts;
 
 
-    private int cart_total;
-    private int total_after_discount;
+    private int cartTotal;
+    private int totalAfterDiscount;
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=User.class)
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)

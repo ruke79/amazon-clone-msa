@@ -11,6 +11,7 @@ import { persistor, store } from "./redux/store";
 import Categories from './pages/admin/Category';
 import SubCategories from './pages/admin/SubCategory';
 import AdminProduct from './pages/admin/Product';
+import SingleProduct, {loader as productLoader } from "./pages/Product";
 
 
 
@@ -25,11 +26,16 @@ const router = createBrowserRouter([
         loader: productsLoader,
       },
       { path: '/signin', element: <SignInPage /> },
-      { path: '/register', element: <RegisterPage /> },
-
-
+      { path: '/register', element: <RegisterPage /> },      
     ]
   },
+  { path: '/product/:slug',
+    //id: 'slug',
+    element: <SingleProduct/>,
+    loader: productLoader,
+    
+  },  
+
   {
     path: '/admin',
     element: <DashboardLayout />,

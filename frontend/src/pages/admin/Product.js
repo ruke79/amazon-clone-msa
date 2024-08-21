@@ -21,7 +21,7 @@ const initialState = {
     sizes: [
         {
             size: "",
-            qty: "",
+            quantity: "",
             price: "",
         },
     ],
@@ -67,8 +67,7 @@ const AdminProduct = () => {
         async function getParentData() {            
             const { data } = await api.get(`/admin/product/${product.parent || ""}`);
             if(data) {  
-                
-                console.log(JSON.stringify(data));
+                        
                 
                 setProduct({
                     ...product,

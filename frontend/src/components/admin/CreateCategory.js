@@ -18,8 +18,7 @@ export const loadCategories = async(setCategories) => {
       
       
       for(const [i, value] of response.data.entries()) 
-        categoryNames.push({"id" : value.categoryId, "name" : value.categoryName});
-      console.log(categoryNames);
+        categoryNames.push({"id" : value.categoryId, "name" : value.categoryName});      
       setCategories(categoryNames);     
 
        return response.data;

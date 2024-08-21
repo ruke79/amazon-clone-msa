@@ -7,9 +7,11 @@ import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../store/AuthContext";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Account = () => {
     const navigate = useNavigate();
+    const cart = useSelector((state) => state.cart.cartItems);
 
     const { token, setToken, currentUser, setCurrentUser, isAdmin, setIsAdmin } =
     useAuthContext();
@@ -128,11 +130,11 @@ const Account = () => {
         </div>
 
         <div
-            // onClick={() => router.push("/cart")}
+             onClick={() => navigate("/cart")}
             className="relative link flex items-center"
         >
             <span className="flex items-center justify-center absolute top-0 right-[0.44rem] md:right-8 bg-amazon-orange text-amazon-blue_dark font-semibold h-5 w-5 rounded-full">
-                {/* {cart.length} */}
+                { cart.length }
             </span>
             <ShoppingCartIcon className="h-10" />
             <p className="hidden md:inline font-bold mt-2 text-sm">Cart</p>

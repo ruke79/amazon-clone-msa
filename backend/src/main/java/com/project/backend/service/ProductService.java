@@ -1,8 +1,10 @@
 package com.project.backend.service;
 
 import java.io.IOException;
+import java.lang.classfile.ClassFile.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -51,7 +53,7 @@ public class ProductService {
     @Autowired
     ProductSkuRepository productskuRepository;
 
-    public ProductDTO getProduct(String productName ) {
+    public ProductDTO getProductByName(String productName ) {
 
           Product product = productRepository.findByName(productName);
 
@@ -64,18 +66,53 @@ public class ProductService {
         return null;
     }
 
+    public ProductDTO getProductById(Long productId ) {
+
+        Optional<Product> product = productRepository.findById(productId);
+        
+      if (product.isPresent()) {
+
+        log.info("GetProductById");
+
+          ProductDTO dto = convertToDto(product.get());
+
+          return dto;
+      }
+      return null;
+  }
+
+    public ProductDTO getProductBySlug(String slug ) {
+
+        Product product = productRepository.findBySlug(slug);
+
+        log.info(Long.toString(product.getProductId()));
+
+      if (product != null) {
+
+          ProductDTO dto = convertToDto(product);
+
+          return dto;
+      }
+      return null;
+  }
+
     private ProductDTO convertToDto(Product product) {
          
         List<String> dtos = product.getSubCategories().stream().map(subcategory -> subcategory.getSubcategoryName()).
         // new SubCategoryDTO(subcategory.getSubcategoryId(), subcategory.getSubcategoryName())).
         collect(Collectors.toList());
 
+        
+        
+
         Set<ProductSkuDTO> skus = product.getSku_products().stream().map(sku -> 
             {   
 
-                List<String> base64Image = new ArrayList<String>();
+                
+                List<String> base64Image = new ArrayList<String>();                
                 for (String image : sku.getImages()) {
-                    base64Image.add(image);
+                    log.info("image: " + image);
+                    base64Image.add(image);                    
                 }
 
                 
@@ -90,57 +127,63 @@ public class ProductService {
                 sku.getColor().getColor(), sku.getColor().getColorImage());
                 
                 
-                ProductSkuDTO dto = new ProductSkuDTO(
-                    sku.getSkuproductId(),
-                    sku.getSku(),
-                    base64Image,
-                    sku.getDiscount(),
-                    sku.getSold(),
-                    sizes,
-                    color
-                );
+                ProductSkuDTO dto = ProductSkuDTO.builder()
+                    .skuproductId(sku.getSkuproductId())
+                    .sku(sku.getSku())
+                    .images(base64Image)
+                    .discount(sku.getDiscount())
+                    .sold(sku.getSold())
+                    .sizes(sizes)
+                    .color(color)
+                    .build();
+                
 
                 return dto;                
             }
         ).collect(Collectors.toSet());
 
         
-        return  new ProductDTO(
-            product.getProductId(),
-            product.getName(),
-            product.getDescription(),
-            product.getBrand(),
-            product.getSlug(),
-            new CategoryDTO(product.getCategory().getCategoryName(), product.getCategory().getSlug()),
-            dtos,
-            product.getDetails(),
-            product.getReviews(),
-            product.getQuestions(),
-            skus,
-            product.getRefund_policy(),
-            product.getRating(),
-            product.getNum_reviews(),
-            product.getShipping()                   
-        );
+        return  ProductDTO.builder()
+            .productId(product.getProductId())
+            .name(product.getName())
+            .description(product.getDescription())
+            .brand(product.getBrand())
+            .slug(product.getSlug())
+            .category(new CategoryDTO(product.getCategory().getCategoryName(), product.getCategory().getSlug()))                        
+            .subCategories(dtos)
+            .details(product.getDetails())
+            .reviews(product.getReviews())
+            .questions(product.getQuestions())
+            .sku_products(skus)
+            .refund_policy(product.getRefund_policy())
+            .rating(product.getRating())
+            .num_reviews(product.getNum_reviews())
+            .shipping(product.getShipping())                   
+            .build();        
     }
 
-    public ProductSku addProduct(ProductRequest request, MultipartFile[] images, MultipartFile colorImage ) throws IOException {
+    public ProductSku addProduct(ProductRequest request, List<String> images, String colorImage ) throws IOException {
 
         Product product = new Product();
 
         product.setBrand(request.getBrand());
         product.setName(request.getName());
         product.setDescription(request.getDescription());
+        product.setSlug(request.getSlug());
 
-        request.getDetails().forEach(detail -> detail.setProduct(product));
-        product.setDetails(request.getDetails());
+        if (request.getDetails() != null) {
+            request.getDetails().forEach(detail -> detail.setProduct(product));
+            product.setDetails(request.getDetails());
+        }
 
+        if (request.getQuestions() != null ) {
+            request.getQuestions().forEach(q -> q.setProduct(product));
+            product.setQuestions(request.getQuestions());  
+        }
         
-        request.getQuestions().forEach(q -> q.setProduct(product));
         
-        product.setQuestions(request.getQuestions());  
               
-        if(request.getShippingFee().length() > 0)
+        if(request.getShippingFee() != null)
             product.setShipping(Integer.parseInt(request.getShippingFee()));
 
                         
@@ -163,6 +206,7 @@ public class ProductService {
                 
                 product.setSubCategories(subCategories);
 
+                
                 ProductSku skuProject = new ProductSku();
 
                 skuProject.setSku(request.getSku());
@@ -172,17 +216,23 @@ public class ProductService {
                 
                 skuProject.setColor(request.getColor());
 
-                ArrayList<String> bytes = new ArrayList<String>();
-                for(MultipartFile image : images) {
-                    //String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-                    bytes.add(encodeFileToBase64((image)));
-                    //bytes.add(encodeFileToBase64(image).getBytes());
-                }
-                if (bytes.size() > 0)
-                    skuProject.setImages(bytes);
+                // ArrayList<String> bytes = new ArrayList<String>();
+                // for(MultipartFile image : images) {                    
+                //     bytes.add(encodeFileToBase64((image)));
+                    
+                // }
+                // if (bytes.size() > 0)
+                //     skuProject.setImages(bytes);                
+                // skuProject.getColor().setColorImage(encodeFileToBase64(colorImage));                  
 
-                skuProject.getColor().setColorImage(encodeFileToBase64(colorImage));                  
-                    //StringUtils.cleanPath(colorImage.getOriginalFilename()).getBytes());
+                for(String image : images) {
+                    log.info("Image: " + image);
+                }
+
+                skuProject.setImages(images);
+                // cloudinary에 저장된 이미지 URL
+                skuProject.getColor().setColorImage(colorImage);
+                    
 
 
                 request.getSizes().forEach(size->size.setSku_product(skuProject));

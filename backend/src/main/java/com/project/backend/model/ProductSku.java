@@ -37,7 +37,7 @@ public class ProductSku extends BaseEntity {
     private String sku;
 
     
-    @Column(length = 100000)
+    @Column(length = 1000)
     private List<String> images;
     
     //@Column(length = 20000)

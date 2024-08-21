@@ -73,7 +73,7 @@ const Sizes = ({ sizes, product, setProduct }) => {
                     if (!noSize) {
                         let data = sizes.map((size, i) => {
                             return {
-                                qty: size.qty,
+                                quantity: size.quantity,
                                 price: size.price,
                             };
                         });
@@ -84,7 +84,7 @@ const Sizes = ({ sizes, product, setProduct }) => {
                         let data = sizes.map((size) => {
                             return {
                                 sizes: size.size || "",
-                                qty: size.qty,
+                                quantity: size.quantity,
                                 price: size.price,
                             };
                         });
@@ -118,12 +118,12 @@ const Sizes = ({ sizes, product, setProduct }) => {
                           </select>
                           <input
                               type="number"
-                              name="qty"
+                              name="quantity"
                               placeholder={
                                   noSize ? "Product Quantity" : "size Quantity"
                               }
                               min={1}
-                              value={size.qty}
+                              value={size.quantity}
                               onChange={(e) => handleSize(i, e)}
                               className="ml-4 mr-2 border  rounded p-2 w-44  focus:bg-slate-200"
                           />
@@ -155,7 +155,7 @@ const Sizes = ({ sizes, product, setProduct }) => {
                                                   ...sizes,
                                                   {
                                                       size: "",
-                                                      qty: "",
+                                                      quantity: "",
                                                       price: "",
                                                   },
                                               ],

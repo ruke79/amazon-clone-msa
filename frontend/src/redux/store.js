@@ -1,7 +1,7 @@
 import { configureStore,combineReducers, getDefaultMiddleware } from "@reduxjs/toolkit";
 import menuReducer from "./MenuSlice";
 import dialogReducer from "./DialogSlice";
-//import cartReducer from "./CartSlice";
+import cartReducer from "./CartSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
@@ -10,7 +10,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 const rootReducer = combineReducers({
     menu: menuReducer,
     dialog: dialogReducer,
-    //cart: cartRedu\package\redux-thunkcer,
+    cart: cartReducer,
 });
 
 const persistConfig = {
@@ -36,3 +36,4 @@ export const store = configureStore({
 
 
 export const persistor = persistStore(store)
+

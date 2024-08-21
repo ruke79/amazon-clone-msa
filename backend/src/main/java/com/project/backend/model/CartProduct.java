@@ -30,6 +30,10 @@ public class CartProduct extends BaseEntity {
 
     private String quantity;
 
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=Product.class)
+    @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable = true)
+    private Product product;
+
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ProductColorAttribute.class)
     @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)
     private ProductColorAttribute color;
@@ -40,9 +44,9 @@ public class CartProduct extends BaseEntity {
 
     private int price;   
 
-    private int cart_total;
+    private int cartTotal;
 
-    private int total_after_discount;
+    private int totalAfterDiscount;
 
     
 }

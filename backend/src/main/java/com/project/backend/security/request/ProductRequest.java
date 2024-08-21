@@ -27,6 +27,8 @@ public class ProductRequest {
 
     private String discount;
 
+    private String slug;
+
     private String parent;
 
     private String category;
@@ -41,11 +43,6 @@ public class ProductRequest {
 
     private Set<ProductQA> questions;
 
-    private String shippingFee;
-
-    // private List<byte[]> images;
-
-    // private byte[] colorImage;
-
+    private String shippingFee;  
 
 }

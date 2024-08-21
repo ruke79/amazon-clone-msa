@@ -1,5 +1,6 @@
 package com.project.backend.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -30,7 +33,7 @@ import lombok.Setter;
 @Table(name="product")
 public class Product extends BaseEntity {
 
-    @Id @Tsid    
+    @Id @Tsid          
     @Column(name = "product_id")
     private Long productId;
 
@@ -48,10 +51,13 @@ public class Product extends BaseEntity {
     @JoinColumn(name="category_id", referencedColumnName = "category_id", nullable=false)
     private ProductCategory category;    
 
-    @OneToMany(fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = SubCategory.class)
-    @JoinColumn(name ="product_fk" , referencedColumnName = "product_id")
-    private List<SubCategory> subCategories;
+    
+    @ManyToMany(fetch = FetchType.LAZY, 
+    cascade = CascadeType.PERSIST)    
+    @JoinTable(name="product_subcatgeory",
+    joinColumns =  { @JoinColumn(name="product_id", referencedColumnName = "product_id") },
+    inverseJoinColumns = { @JoinColumn(name="subcategory_id", referencedColumnName = "subcategory_id")})
+    private List<SubCategory> subCategories = new ArrayList<>();
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             targetEntity = ProductDetails.class)

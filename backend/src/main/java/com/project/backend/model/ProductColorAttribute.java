@@ -24,8 +24,8 @@ public class ProductColorAttribute {
     private Long colorId;
     private String color;
        
-    @Lob
-    @Column(length = 1048576)
+    //@Lob
+    //@Column(length = 1048576)
     private String colorImage;
 
 

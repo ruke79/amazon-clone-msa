@@ -9,9 +9,16 @@ const GridCategory = ({ category, products, gridCols}) => {
     // setImgSrc(base64_to_imgsrc)
     // <img src={"data:image/jpeg;base64," + imgSrc} />        
     
+    products.map(product => 
+    product.sku_products[0].images.map(image => image = JSON.stringify(image))
+    );    
+
+    
     
     const selectedProducts = products.filter( (product) => ( category === product.category.slug)).slice(0, length);
     
+    
+
     return ( 
         <div className="flex flex-col bg-white border rounded p-2 justify-center items-center">
                 <h3 className="font-bold my-2 uppercase">{category.replace("-"," ")}</h3>
@@ -20,9 +27,10 @@ const GridCategory = ({ category, products, gridCols}) => {
                 {selectedProducts.map((product) => (
                         <Link to={`/product/${product.name}`} key={product.product_id}>
                             <div className={`relative`}>
-                            
+                                                            
                                 <img
-                                    src={"data:image/jpeg;base64,"+product.sku_products[0].images[0]}
+                                    //  src={"data:image/jpeg;base64,"+product.sku_products[0].images[0]}                                    
+                                    src={product.sku_products[1].images[0]}
                                     alt={product.name}                                    
                                     className="h-[420px]  object-cover rounded  "
                                 />  

@@ -48,7 +48,7 @@ const validateCreateProduct = (product, images) => {
         })
     }
     for (let i = 0; i < sizes.length; i++ ) {
-        if(sizes[i].qty === "" || sizes[i].price === "" || sizes[i].size === "" ) {
+        if(sizes[i].quantity === "" || sizes[i].price === "" || sizes[i].size === "" ) {
             checks.push({
                 msg: `Please fill all information on sizes.`,
                 type: "error"
