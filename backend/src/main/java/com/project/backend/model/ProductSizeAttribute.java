@@ -26,7 +26,7 @@ public class ProductSizeAttribute {
 
     private int quantity;
 
-    private int price;
+    private Integer price;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="skuproduct_id", referencedColumnName = "skuproduct_id", nullable=true)

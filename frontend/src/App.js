@@ -12,6 +12,7 @@ import Categories from './pages/admin/Category';
 import SubCategories from './pages/admin/SubCategory';
 import AdminProduct from './pages/admin/Product';
 import SingleProduct, {loader as productLoader } from "./pages/Product";
+import Browse, { loader as browseLoader } from "pages/browse";
 
 
 
@@ -35,6 +36,11 @@ const router = createBrowserRouter([
     loader: productLoader,
     
   },  
+  {
+    path: '/browse', 
+    element: <Browse/>,
+    loader : browseLoader, 
+  },
 
   {
     path: '/admin',

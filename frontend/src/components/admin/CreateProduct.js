@@ -78,14 +78,17 @@ const CreateProduct = ({
             let files = images.map((img) => {
                 return dataURItoBlob(img);
             });
-                       
+                
+            const path = "product images";
             
             imageUploader = files.map(async( file ) => {
                 let formData = new FormData();    
+                formData.append("path", path);
                 formData.append("file", file);                                          
                 formData.append("upload_preset", "nd7idl8b");
                 formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
                 formData.append("timestamp", (Date.now() / 1000) | 0);
+                
                 
                 const image = await uploadImages(formData);                
                 uploaded_images.push(image.url);            
@@ -95,8 +98,9 @@ const CreateProduct = ({
         if (product.color.image) {
             let temp = dataURItoBlob(product.color.image);        
             //formData.append("colorImage", temp);               
-            
+            let path = "product style images";
             let formData = new FormData();            
+            formData.append("path", path);
             formData.append("file", temp);
             formData.append("upload_preset", "nd7idl8b");
             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
@@ -114,7 +118,7 @@ const CreateProduct = ({
 
                                
                 product.slug = slugify(product.name);
-                console.log(product.sizes);
+                console.log(product);
                 
                 formData.append("product", new Blob([JSON.stringify(product)], { 
                     type: 'application/json'
@@ -143,6 +147,7 @@ const CreateProduct = ({
                         ],
                     }                              
                 );
+                console.log(data);
                                     
                 // if (data.status === 200) {
                 //     setProduct(initialProduct);

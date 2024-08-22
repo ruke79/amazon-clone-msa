@@ -44,7 +44,7 @@ public class ProductDTO  {
 
     private List<String> subCategories;
 
-    private Set<ProductDetails> details;
+    private Set<ProductDetailDTO> details;
     
     private Set<Review> reviews;
     

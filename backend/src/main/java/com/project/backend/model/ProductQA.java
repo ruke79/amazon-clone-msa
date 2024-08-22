@@ -14,8 +14,11 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="product_qa")
 public class ProductQA extends BaseEntity {
@@ -29,8 +32,7 @@ public class ProductQA extends BaseEntity {
 
     private String answer;
 
-
-    @JsonIgnore
+    
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
     private Product product;

@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,21 +21,26 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.backend.dto.CategoryDTO;
 import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.ProductDTO;
+import com.project.backend.dto.ProductDetailDTO;
 import com.project.backend.dto.ProductSkuDTO;
+import com.project.backend.dto.SearchResultDTO;
 import com.project.backend.dto.SizeAttributeDTO;
 import com.project.backend.dto.SubCategoryDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.Product;
 import com.project.backend.model.ProductCategory;
+import com.project.backend.model.ProductDetails;
 import com.project.backend.model.ProductQA;
 import com.project.backend.model.ProductSku;
 import com.project.backend.model.SubCategory;
 import com.project.backend.model.User;
 import com.project.backend.repository.CategoryRepository;
+import com.project.backend.repository.ProductDetailsRepository;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.ProductRequest;
+import com.project.backend.security.request.SearchParamsRequest;
 
 import jakarta.mail.Multipart;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +60,11 @@ public class ProductService {
 
     @Autowired
     ProductSkuRepository productskuRepository;
+
+    @Autowired
+    ProductDetailsRepository productDetailsRepository;
+    
+
 
     public ProductDTO getProductByName(String productName ) {
 
@@ -102,7 +115,12 @@ public class ProductService {
         // new SubCategoryDTO(subcategory.getSubcategoryId(), subcategory.getSubcategoryName())).
         collect(Collectors.toList());
 
-        
+        Set<ProductDetailDTO> details = product.getDetails().stream().map(detail->
+        {
+              return ProductDetailDTO.builder()
+              .name(detail.getName())
+              .value(detail.getValue()).build();          
+        }).collect(Collectors.toSet());
         
 
         Set<ProductSkuDTO> skus = product.getSku_products().stream().map(sku -> 
@@ -151,7 +169,7 @@ public class ProductService {
             .slug(product.getSlug())
             .category(new CategoryDTO(product.getCategory().getCategoryName(), product.getCategory().getSlug()))                        
             .subCategories(dtos)
-            .details(product.getDetails())
+            .details(details)
             .reviews(product.getReviews())
             .questions(product.getQuestions())
             .sku_products(skus)
@@ -171,16 +189,9 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setSlug(request.getSlug());
 
-        if (request.getDetails() != null) {
-            request.getDetails().forEach(detail -> detail.setProduct(product));
-            product.setDetails(request.getDetails());
-        }
-
-        if (request.getQuestions() != null ) {
-            request.getQuestions().forEach(q -> q.setProduct(product));
-            product.setQuestions(request.getQuestions());  
-        }
+                
         
+       
         
               
         if(request.getShippingFee() != null)
@@ -241,6 +252,22 @@ public class ProductService {
 
                 skuProject.setProduct(product);
 
+                if (request.getDetails() != null) {                  
+                           
+                    product.setDetails(request.getDetails());            
+
+                    product.getDetails().forEach(detail -> {
+                        detail.setProduct(product); 
+                        log.info(detail.getValue());                
+                    } );          
+                }
+                
+                if (request.getQuestions() != null ) {
+                    request.getQuestions().forEach(q -> q.setProduct(product));
+                    product.setQuestions(request.getQuestions());  
+                }
+                
+
                 productRepository.save(product);
 
                 return productskuRepository.save(skuProject);
@@ -249,6 +276,9 @@ public class ProductService {
 
         return null;
     }
+
+
+
 
     private String encodeFileToBase64(MultipartFile file) {
         try {
@@ -263,6 +293,112 @@ public class ProductService {
 
     private byte[] decodeBase64ToFile(String encodedString) {
         return  Base64.decodeBase64(encodedString);
+    }
+
+    private Pageable createPageRequestUsing(int page, int size) {
+        return PageRequest.of(page, size);
+    }
+
+
+    public SearchResultDTO searchProducts(SearchParamsRequest params) {
+
+         Long categoryId = categoryRepository.findIdByCategoryName(params.getCategory());
+
+         
+
+        List<Long> productIds = null;
+        List<Product> products = null;
+        if(params.getSort() == "popular") {
+            
+            productIds = productskuRepository.findProductIDBySizeAndPriceAndColorOrderBySoldDesc
+            (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
+
+            products = productRepository.findProductBySearchParamsOrderByRatingDesc(params.getSearch(), categoryId, 
+        params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
+        params.getRating(), productIds);
+            
+        }
+        else {
+             productIds = productskuRepository.findProductIDBySizeAndPriceAndColor
+             (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
+
+            products = productRepository.findProductBySearchParams(params.getSearch(), categoryId, 
+        params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
+        params.getRating(), productIds);
+        }   
+        
+        int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), categoryId, 
+        params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
+        params.getRating(), productIds);
+
+        
+        List<ProductDTO> pDtos = products.stream().map(product -> {
+
+            ProductDTO dto = convertToDto(product);     
+            return dto;
+        }).collect(Collectors.toList());
+
+        
+        
+        Pageable pageRequest = createPageRequestUsing(params.getPage(), params.getPageSize());
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), pDtos.size());
+
+        log.info(Integer.toString(start));
+        log.info(Integer.toString(end));
+
+        List<ProductDTO> pageContent = pDtos.subList(start, end);
+
+        List<String> subs = null;        
+        List<SubCategory> subcategories  = categoryRepository.findSubCategoriesByCategoryName(params.getCategory());
+        subs =  subcategories.stream().map(sub-> {return sub.getSubcategoryName();}).collect(Collectors.toList());
+        
+        
+
+        List<String> brandDB = productRepository.findBrandsByCategoryName(params.getCategory());
+        
+        
+
+        SearchResultDTO result = SearchResultDTO.
+            builder().product(new PageImpl<>(pageContent, pageRequest, pDtos.size()))
+            .categories(categoryRepository.findAllCategoryNames())
+            .subCategories(subs)
+            .colors(getColors(params.getCategory()))
+            .sizes(getSizes(params.getCategory()))
+            .details(getDetails(params.getCategory()))
+            .brandsDB(brandDB)
+            .totalProducts(totalProducts)
+            .build();
+
+
+        return result;
+    }
+
+    public List<String> getColors(String categoryName) {
+
+        List<Long> ids = productRepository.findProductIDsByCategoryName(categoryName);
+
+        return productskuRepository.findColorsByProductId(ids);
+    }
+    
+
+    public List<String> getSizes(String categoryName) {
+
+        List<Long> ids = productRepository.findProductIDsByCategoryName(categoryName);
+
+        return productskuRepository.findSizesByProductId(ids);
+    }
+
+    public List<ProductDetailDTO> getDetails(String categoryName) {
+
+        List<Long> ids = productRepository.findProductIDsByCategoryName(categoryName);
+
+        List<ProductDetails> details = productDetailsRepository.findDistinctAll();//findDistinctAllByProductProductIdIn(ids);
+        
+        return details.stream().map(detail -> {
+            return ProductDetailDTO.builder().name(detail.getName()).value(detail.getValue()).build();            
+        }).collect(Collectors.toList());
+
     }
 
 }

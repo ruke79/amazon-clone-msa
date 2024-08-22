@@ -17,7 +17,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="product_details")
 public class ProductDetails extends BaseEntity {
 
@@ -30,7 +31,7 @@ public class ProductDetails extends BaseEntity {
 
     private String value;
 
-    @JsonIgnore
+    
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
     private Product product;

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import ProductSwiper from "./ProductSwiper";
 
 const ProductCard = ({ product }) => {
+
+    
     const [active, setActive] = useState(0);
     const [images, setImages] = useState(product.sku_products[active]?.images);
     const [prices, setPrices] = useState(

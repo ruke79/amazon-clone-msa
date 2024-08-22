@@ -52,6 +52,7 @@ public class Product extends BaseEntity {
     private ProductCategory category;    
 
     
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, 
     cascade = CascadeType.PERSIST)    
     @JoinTable(name="product_subcatgeory",
@@ -60,15 +61,16 @@ public class Product extends BaseEntity {
     private List<SubCategory> subCategories = new ArrayList<>();
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-            targetEntity = ProductDetails.class)
+    cascade = CascadeType.PERSIST,targetEntity = ProductDetails.class)
     private Set<ProductDetails> details;
 
+    // cascade = CascadeType.PERSIST 빠지면 저장 안됨..
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = Review.class)
     private Set<Review> reviews;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-    targetEntity = ProductQA.class)
+    cascade = CascadeType.PERSIST,targetEntity = ProductQA.class)
     private Set<ProductQA> questions;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,

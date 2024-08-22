@@ -17,6 +17,12 @@ public interface CategoryRepository extends JpaRepository<ProductCategory, Long>
 
     public ProductCategory findByCategoryName(String categoryName);
 
-    @Query(value ="SELECT s FROM ProductCategory c INNER JOIN SubCategory s on c.categoryId = s.category.categoryId WHERE c.categoryName = :categoryName")    
+    @Query("select categoryName from ProductCategory")
+    public List<String> findAllCategoryNames();
+
+    @Query("select categoryId from ProductCategory where categoryName = :name")
+    public Long findIdByCategoryName(@Param("name") String categoryName);
+
+    @Query(value ="SELECT s FROM ProductCategory c INNER JOIN SubCategory s on c.categoryId = s.category.categoryId WHERE (:categoryName is null or c.categoryName = :categoryName)")    
     public List<SubCategory> findSubCategoriesByCategoryName(@Param("categoryName") String categoryName);
 }

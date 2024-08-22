@@ -135,33 +135,39 @@ public class AdminController {
 
             log.info(categoryRequest.getName() +' ' + categoryRequest.getSlug());
 
-            ProductCategory category = new ProductCategory();
-            category.setCategoryName(categoryRequest.getName());
-            category.setSlug(categoryRequest.getSlug());
+            if ( null == categoryRepository.findByCategoryName(categoryRequest.getName())) {
 
-            categoryRepository.save(category);
-            
-            return new ResponseEntity<>(category,  HttpStatus.OK);
+                ProductCategory category = new ProductCategory();
+                category.setCategoryName(categoryRequest.getName());
+                category.setSlug(categoryRequest.getSlug());
+
+                categoryRepository.save(category);
+                
+                return new ResponseEntity<>(category,  HttpStatus.OK);
+            }
+            return null;
 
     }
 
     @PostMapping("/subcategory")
     public ResponseEntity<SubCategory> addSubCategory(@RequestBody SubCategoryRequest subcategoryRequest) {
 
-            log.info(subcategoryRequest.getSubcategoryName() + ' ' + subcategoryRequest.getParent() + ' ' + subcategoryRequest.getSlug());
+            // List<String> existed = new ArrayList<String>();
+            // existed.add(subcategoryRequest.getSubcategoryName());
+            // if (null == subCategoryRepository.findBySubcategoryNameIn(existed)) {
 
-            SubCategory subcategory = new SubCategory();
-            subcategory.setSubcategoryName(subcategoryRequest.getSubcategoryName());
+                SubCategory subcategory = new SubCategory();
+                subcategory.setSubcategoryName(subcategoryRequest.getSubcategoryName());
 
-            ProductCategory category = categoryRepository.findByCategoryName(subcategoryRequest.getParent());
-            subcategory.setCategory(category);
-            subcategory.setSlug(subcategoryRequest.getSlug());
-                      
+                ProductCategory category = categoryRepository.findByCategoryName(subcategoryRequest.getParent());
+                subcategory.setCategory(category);
+                subcategory.setSlug(subcategoryRequest.getSlug());
+                        
 
-            subCategoryRepository.save(subcategory);
+                subCategoryRepository.save(subcategory);
+                
+                return new ResponseEntity<>(subcategory,  HttpStatus.OK);
             
-            return new ResponseEntity<>(subcategory,  HttpStatus.OK);
-
     }
 
     @GetMapping("/categories")
