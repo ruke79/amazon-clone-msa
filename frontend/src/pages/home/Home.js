@@ -9,8 +9,8 @@ const HomePage = () => {
     //const [products, setProducts] = useState([]);
 
     const data = useLoaderData();
-    const temp = JSON.parse(JSON.stringify(data));    
-    const products = temp.data;
+    //const temp = JSON.parse(JSON.stringify(data));    
+    const products = data.data;
 
     console.log(products);
     

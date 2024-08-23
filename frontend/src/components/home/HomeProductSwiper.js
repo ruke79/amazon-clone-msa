@@ -10,14 +10,12 @@ import { Navigation } from "swiper/modules";
 
 const HomeProductSwiper = ({ products, category }) => {
     
-    console.log(products);
-    console.log(category);
-    
+        
     let selectedProducts = products.filter(
         (p) => p.category.name === category
     );
 
-    console.log(selectedProducts);
+    
     
 
     return (

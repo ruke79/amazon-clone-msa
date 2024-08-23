@@ -8,10 +8,13 @@ import org.springframework.data.domain.Page;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchResultDTO {
@@ -19,9 +22,9 @@ public class SearchResultDTO {
     //private Set<ProductDTO> products;
     private Page<ProductDTO> product;
 
-    private List<String> categories;
+    private List<CategoryDTO> categories;
 
-    private List<String> subCategories;
+    private List<SubCategoryDTO> subCategories;
 
     private List<String> colors;
 

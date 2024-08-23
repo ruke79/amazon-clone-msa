@@ -41,19 +41,19 @@ const Browse = ({
     
     
     let details = productsDB.details;
-    let brandsDb = productsDB.brand;
+    let brandsDb = productsDB.brandsDB;
     let paginationCount =  Math.ceil(productsDB.totalProducts / 10);
     let sizes = productsDB.sizes;
     let colors = productsDB.colors;
 
-    console.log(categories);
-
+    
      let stylesDb = filterArray(details, "Style");
      let materialsDb = filterArray(details, "Material");
      let styles = removeDublicates(stylesDb);
      let materials = removeDublicates(materialsDb);
      let brands = removeDublicates(brandsDb);
     
+     console.log(productsDB);
     
     
     const [searchParams, setSearchParams] = useSearchParams();
@@ -76,23 +76,41 @@ const Browse = ({
         page,
     }) => {
         //const path = router.pathname;
+        function isEmptyObject(arg) {
+            return typeof arg === 'object' && Object.keys(arg).length === 0;
+          }
         
+         function toggleParam(name, param) {
+            if (param && !isEmptyObject(param)) {
+                searchParams.set(name, param);
+                setSearchParams(searchParams);
+            }
+            else if(isEmptyObject(param)) {
+                searchParams.delete(name);
+                setSearchParams(searchParams);            
+            }
+         }
 
-        if (search) searchParams.set('search', search);
-        if (category) searchParams.set('category', category);
-        if (brand) searchParams.set('brand', brand);
-        if (style) searchParams.set('style', style);
-        if (size) searchParams.set('size', size);
-        if (color) searchParams.set('color', color);
-        if (material) searchParams.set('material',  material);
-        if (gender) searchParams.set('gender', gender);
-        if (price) searchParams.set('price', price);
-        if (shipping) searchParams.set('shipping', shipping);
-        if (rating) searchParams.set('rating', rating);
-        if (sort) searchParams.set('sort', sort);
-        if (page) searchParams.set('page', page);
-        console.log("price > ", price);
-        setSearchParams(searchParams);
+        
+         toggleParam('search', search);
+        
+        toggleParam('category', category);
+
+        toggleParam('brand', brand);
+
+        toggleParam('style', style);
+
+        toggleParam('size', size);        
+        
+        toggleParam('color', color);        
+        toggleParam('material', material);               
+        toggleParam('gender', gender);               
+        toggleParam('price', price);               
+        toggleParam('shipping', shipping);                     
+        toggleParam('rating', rating);               
+        toggleParam('sort', sort);                      
+        toggleParam('page', page);                           
+        
     };
 
     const searchHandler = (search) => {
@@ -108,7 +126,7 @@ const Browse = ({
     const brandHandler = (brand) => {
         filter({ brand });
     };
-    const styleHandler = (style) => {
+    const styleHandler = (style) => {            
         filter({ style });
     };
     const sizeHandler = (size) => {
@@ -121,11 +139,12 @@ const Browse = ({
         filter({ material });
     };
     const genderHandler = (gender) => {
-        if (gender === "Unisex") {
-            filter({ gender: {} });
-        } else {
-            filter({ gender });
-        }
+        // if (gender === "Unisex") {
+        //     filter({ gender: {} });
+        // } else {
+        //     filter({ gender });
+        // }
+        filter({ gender });
     };
 
     // function throttle(fn, delay) {
@@ -194,7 +213,13 @@ const Browse = ({
         const existedQeury = searchParams.get(queryName);
         const valueCheck = existedQeury?.search(value);
         const _check = existedQeury?.search(`_${value}`);
+
+        // console.log("queryName : " + queryName);
+        // console.log("value : " + value);
+        // console.log("existedQuery : " + existedQeury);
+        // console.log("valueCheck" + valueCheck);
         
+                
         let result = null;
         if (existedQeury) {
             if (existedQeury === value) {
@@ -221,8 +246,7 @@ const Browse = ({
             }
         } else {
             result = value;
-        }
-        console.log("result : " + JSON.stringify(result) );
+        }        
         return {
             result,
             active: existedQeury && valueCheck !== -1 ? true : false,
@@ -267,7 +291,7 @@ const Browse = ({
                                     {
                                         categories.find(
                                             (x) =>
-                                                x._id === searchParams.get('category')
+                                                x.id === searchParams.get('category')
                                         )?.name
                                     }
                                 </span>
@@ -281,9 +305,9 @@ const Browse = ({
                     >
                         {categories.map((c) => (
                             <span
-                                onClick={() => categoryHandler(c._id)}
+                                onClick={() => categoryHandler(c.id)}
                                 className={`cursor-pointer flex items-center justify-center w-40 md:w-56 h-10 border bg-white rounded  transition-all duration-300 hover:bg-amazon-blue_light hover:text-white hover:scale-95 hover:border-amazon-blue_dark`}
-                                key={c._id}
+                                key={c.id}
                             >
                                 {c.name}
                             </span>
@@ -303,7 +327,7 @@ const Browse = ({
                             onClick={() => navigate("/browse")}
                             className={`flex items-center justify-center w-56 md:w-full py-2 rounded transition-all duration-300 bg-amazon-blue_light text-white hover:scale-95 border-amazon-blue_dark`}
                         >
-                            Clear All ({Object.keys(searchParams).length})
+                            Clear All ({Array.from(searchParams).length})
                         </button>
                         <CategoriesFilter
                             categories={categories}
@@ -440,12 +464,12 @@ export async function loader({request, params}) {
             ? searchQuery : {};
     const category =
         categoryQuery && categoryQuery !== ""
-            ? { category: categoryQuery }
+            ? categoryQuery
             : {};
     // const brand = brandQuery && brandQuery !== "" ? { brand: brandQuery } : {};
     const style =
         styleQuery && styleQuery !== ""
-            ? styleSearchRegex : {};
+            ? styleSearchRegex : null;
     const size =
         sizeQuery && sizeQuery !== ""
             ? sizeSearchRegex  : {};
@@ -465,7 +489,7 @@ export async function loader({request, params}) {
         priceQuery && priceQuery !== ""
             ? {                
                 lowPrice : Number(priceQuery[0]) || 0,
-                highPrice : Number(priceQuery[1]) || Infinity,                
+                highPrice : Number(priceQuery[1]) || 0,                
               }
             : {};
     const shipping =
@@ -507,23 +531,21 @@ export async function loader({request, params}) {
         return styleRegex;
     }
 
-    console.log({category});
-    console.log({brand});
-    console.log({style});
-    console.log({size});
-    console.log({color});
-    console.log({material});
-    console.log({gender});
-    console.log({price});
-    console.log({shipping});
-    console.log({rating});
+    // console.log({category});
+    // console.log({brand});
+    // console.log({style});
+    // console.log({size});
+    // console.log({color});
+    // console.log({material});
+    // console.log({gender});
+    // console.log({price});
+    // console.log({shipping});
+    // console.log({rating});
 
-    const highPrice = null;
-    const lowPrice = null;
 
     let productsDb = await api.get("/search", 
         {params: { search, category, brand, style, 
-            size, color, material, gender, highPrice, lowPrice, shipping, rating, 
+            size, color, material, gender, lowPrice : price.lowPrice, highPrice : price.highPrice, shipping, rating, 
             page, pageSize, sort
         }}
     )

@@ -1,7 +1,6 @@
 package com.project.backend.service;
 
 import java.io.IOException;
-import java.lang.classfile.ClassFile.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -167,7 +166,7 @@ public class ProductService {
             .description(product.getDescription())
             .brand(product.getBrand())
             .slug(product.getSlug())
-            .category(new CategoryDTO(product.getCategory().getCategoryName(), product.getCategory().getSlug()))                        
+            .category(new CategoryDTO(product.getCategory().getCategoryId(), product.getCategory().getCategoryName(), product.getCategory().getSlug()))                        
             .subCategories(dtos)
             .details(details)
             .reviews(product.getReviews())
@@ -302,32 +301,33 @@ public class ProductService {
 
     public SearchResultDTO searchProducts(SearchParamsRequest params) {
 
-         Long categoryId = categoryRepository.findIdByCategoryName(params.getCategory());
-
-         
-
+                
         List<Long> productIds = null;
         List<Product> products = null;
-        if(params.getSort() == "popular") {
+        // if(params.getSort().equals("popular")) {
             
-            productIds = productskuRepository.findProductIDBySizeAndPriceAndColorOrderBySoldDesc
-            (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
+        //     productIds = productskuRepository.findProductIDBySizeAndPriceAndColorOrderBySoldDesc
+        //     (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
 
-            products = productRepository.findProductBySearchParamsOrderByRatingDesc(params.getSearch(), categoryId, 
-        params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
-        params.getRating(), productIds);
-            
-        }
-        else {
+        //     products = productRepository.findProductBySearchParamsOrderByRatingDesc(params.getSearch(), categoryId, 
+        // params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
+        // params.getRating(), productIds);
+
+        // products.forEach(product-> log.info(product.getName()));
+
+                    
+        // }
+        // else 
+        {
              productIds = productskuRepository.findProductIDBySizeAndPriceAndColor
              (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
 
-            products = productRepository.findProductBySearchParams(params.getSearch(), categoryId, 
+            products = productRepository.findProductBySearchParams(params.getSearch(), params.getCategory(), 
         params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
         params.getRating(), productIds);
         }   
         
-        int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), categoryId, 
+        int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), params.getCategory(), 
         params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
         params.getRating(), productIds);
 
@@ -349,20 +349,29 @@ public class ProductService {
 
         List<ProductDTO> pageContent = pDtos.subList(start, end);
 
-        List<String> subs = null;        
-        List<SubCategory> subcategories  = categoryRepository.findSubCategoriesByCategoryName(params.getCategory());
-        subs =  subcategories.stream().map(sub-> {return sub.getSubcategoryName();}).collect(Collectors.toList());
+        // List<String> subs = null;        
+        // List<SubCategory> subcategories  = categoryRepository.findSubCategoriesByCategoryName(params.getCategory());
+        // subs =  subcategories.stream().map(sub-> {return sub.getSubcategoryName();}).collect(Collectors.toList());
         
         
 
-        List<String> brandDB = productRepository.findBrandsByCategoryName(params.getCategory());
+        List<String> brandDB = productRepository.findBrandsByCategoryId(params.getCategory());
         
-        
+        List<CategoryDTO> categoryDTOs = categoryRepository.findAll().stream().map(category ->
+         { return new CategoryDTO(category.getCategoryId(), category.getCategoryName(), category.getSlug()); }
+        ).collect(Collectors.toList());
+
+        List<SubCategoryDTO> subCategoryDTOs = subCategoryRepository.findAll().stream().map(
+            subcategory->{ return new SubCategoryDTO(subcategory.getSubcategoryId(), 
+                new CategoryDTO(subcategory.getCategory().getCategoryId(), subcategory.getCategory().getCategoryName(), 
+                subcategory.getCategory().getSlug()),
+                subcategory.getSubcategoryName());}        
+        ).collect(Collectors.toList());
 
         SearchResultDTO result = SearchResultDTO.
             builder().product(new PageImpl<>(pageContent, pageRequest, pDtos.size()))
-            .categories(categoryRepository.findAllCategoryNames())
-            .subCategories(subs)
+            .categories(categoryDTOs)
+            .subCategories(subCategoryDTOs)
             .colors(getColors(params.getCategory()))
             .sizes(getSizes(params.getCategory()))
             .details(getDetails(params.getCategory()))
@@ -380,6 +389,13 @@ public class ProductService {
 
         return productskuRepository.findColorsByProductId(ids);
     }
+
+    public List<String> getColors(Long categoryId) {
+
+        List<Long> ids = productRepository.findProductIDsByCategoryId(categoryId);
+
+        return productskuRepository.findColorsByProductId(ids);
+    }
     
 
     public List<String> getSizes(String categoryName) {
@@ -392,6 +408,25 @@ public class ProductService {
     public List<ProductDetailDTO> getDetails(String categoryName) {
 
         List<Long> ids = productRepository.findProductIDsByCategoryName(categoryName);
+
+        List<ProductDetails> details = productDetailsRepository.findDistinctAll();//findDistinctAllByProductProductIdIn(ids);
+        
+        return details.stream().map(detail -> {
+            return ProductDetailDTO.builder().name(detail.getName()).value(detail.getValue()).build();            
+        }).collect(Collectors.toList());
+
+    }
+
+    public List<String> getSizes(Long categoryId) {
+
+        List<Long> ids = productRepository.findProductIDsByCategoryId(categoryId);
+
+        return productskuRepository.findSizesByProductId(ids);
+    }
+
+    public List<ProductDetailDTO> getDetails(Long categoryId) {
+
+        List<Long> ids = productRepository.findProductIDsByCategoryId(categoryId);
 
         List<ProductDetails> details = productDetailsRepository.findDistinctAll();//findDistinctAllByProductProductIdIn(ids);
         

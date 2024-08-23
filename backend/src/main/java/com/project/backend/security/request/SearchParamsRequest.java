@@ -9,7 +9,7 @@ public class SearchParamsRequest {
 
     private String search;
 
-    private String category;
+    private Long category;
 
     private String style;
 

@@ -32,7 +32,7 @@ const CategoriesFilter = ({
             {show &&
                 categories.map((c) => (
                     <ParentCategory
-                        key={c._id}
+                        key={c.id}
                         category={c}
                         subCategories={subCategories}
                         categoryHandler={categoryHandler}

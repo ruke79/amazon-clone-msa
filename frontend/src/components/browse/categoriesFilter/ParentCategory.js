@@ -9,10 +9,10 @@ import { useState } from "react";
 const ParentCategory = ({ category, subCategories, categoryHandler, replaceQuery }) => {
     const [show, setShow] = useState(false);
     // const [activeCat, setActiveCat] = useState(false);
-    const check = replaceQuery("category",category._id);
+    const check = replaceQuery("category",category.id);
 
     const selectSubCategory = subCategories.filter(
-        (c) => c.parent?._id === category._id
+        (c) => c.parent?.id === category.id
     );
 
     const showSub = (e) => {
@@ -24,7 +24,7 @@ const ParentCategory = ({ category, subCategories, categoryHandler, replaceQuery
         <div>
             <h4
                 onClick={() => {
-                    categoryHandler(category._id);
+                    categoryHandler(category.id);
                     setShow((prev) => !prev)
                 }}
                 className={`${

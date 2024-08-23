@@ -18,19 +18,19 @@ public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
     @Query(value = "select product_id from product_sku a " +
     "left join product_size b on a.skuproduct_id = b.skuproduct_id " +
     "left join product_color c on a.color_id = c.color_id " +
-    "where ((:low_price is null or :high_price is null ) or b.price between :low_price and :high_price) or (:size is null or b.size REGEXP :size)" +
-    "or (:color is null or c.color REGEXP :color)", nativeQuery = true)
+    "where ((:low_price is null or :high_price is null ) or b.price between :low_price and :high_price) and (:size is null or b.size REGEXP :size)" +
+    "and (:color is null or c.color REGEXP :color)", nativeQuery = true)
     List<Long> findProductIDBySizeAndPriceAndColor(@Param("low_price") Integer lowPrice, @Param("high_price") Integer highPrice,
     @Param("size") String size, @Param("color") String color);
 
-    List<ProductSku> findBySizesPriceBetweenAndSizesSizeAndColorColor(@Param("low_price") Integer lowPrice, @Param("high_price") int highPrice,
+    List<ProductSku> findBySizesPriceBetweenAndSizesSizeAndColorColor(@Param("low_price") Integer lowPrice, @Param("high_price") Integer highPrice,
     @Param("size") String size, @Param("color") String color);
 
-    @Query(value = "select productId from product_sku a " +
+    @Query(value = "select product_id from product_sku a " +
     "left join product_size b on a.skuproduct_id = b.skuproduct_id " +
     "left join product_color c on a.color_id = c.color_id " +
-    "where ((:low_price is null or :high_price is null ) or b.price between :low_price and :high_price) or (:size is null or b.size REGEXP :size)" +
-    "or (:color is null or c.color REGEXP :color) " +
+    "where ((:low_price is null or :high_price is null ) or b.price between :low_price and :high_price) and (:size is null or b.size REGEXP :size)" +
+    "and (:color is null or c.color REGEXP :color) " +
     "order by a.sold desc", nativeQuery = true)
     List<Long> findProductIDBySizeAndPriceAndColorOrderBySoldDesc(@Param("low_price") Integer lowPrice, @Param("high_price") Integer highPrice,
     @Param("size") String size, @Param("color") String color);
