@@ -34,7 +34,7 @@ const MaterialsFilter = ({ materials, materialHandler, replaceQuery }) => {
                                     type="checkbox"
                                     name="material"
                                     id={material}
-                                    checked={check.ctive}
+                                    checked={check.active}
                                 />
                                 {material.length > 8
                                     ? `${material.substring(0, 8)}...`

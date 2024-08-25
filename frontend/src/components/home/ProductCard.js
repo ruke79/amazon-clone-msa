@@ -25,9 +25,7 @@ const ProductCard = ({ product }) => {
         );
         
     }, [active]);
-
-    console.log(product);
-
+    
     return (
         <div className="flex flex-col relative w-[215px] rounded p-1">
             <Link to={`/product/${product.slug}?style=${active}${`${product.sku_products[active].sizes.length > 1 ? '&size='+ active : ''}`}`}>

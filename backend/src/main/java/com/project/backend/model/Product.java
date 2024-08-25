@@ -1,6 +1,7 @@
 package com.project.backend.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,20 +63,21 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = ProductDetails.class)
-    private Set<ProductDetails> details;
+    private List<ProductDetails> details;
 
     // cascade = CascadeType.PERSIST 빠지면 저장 안됨..
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = Review.class)
-    private Set<Review> reviews;
+    private List<Review> reviews;
 
+    
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = ProductQA.class)
-    private Set<ProductQA> questions;
+    cascade = CascadeType.MERGE, targetEntity = ProductQA.class)    
+    private List<ProductQA> questions;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSku.class)
-    private Set<ProductSku> sku_products;
+    private List<ProductSku> sku_products;
 
     private String refund_policy = "30 days";
 

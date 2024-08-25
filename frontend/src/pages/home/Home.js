@@ -12,8 +12,7 @@ const HomePage = () => {
     //const temp = JSON.parse(JSON.stringify(data));    
     const products = data.data;
 
-    console.log(products);
-    
+        
     return (
         <main className="max-w-screen-2xl mx-auto bg-gray-100">
         <CarouselContainer />

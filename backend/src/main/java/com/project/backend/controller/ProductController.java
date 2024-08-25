@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.dto.ProductDTO;
+import com.project.backend.dto.ProductInfoDTO;
 import com.project.backend.model.Product;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.service.ProductService;
@@ -38,16 +40,15 @@ public class ProductController {
     }
 
     @GetMapping("/cart/{product_id}")
-    public ResponseEntity<ProductDTO> getProductInfoWithParams(@PathVariable(required = true) String product_id, 
-                    int style, int size )     
+    public ResponseEntity<ProductInfoDTO> getProductInfoWithParams(@PathVariable(required = true) String product_id, 
+                    @RequestParam("style") int style, @RequestParam("size") int size )     
 
      {
         
-        ProductDTO dto = productService.getProductByName(product_id);
-
-        
+        ProductInfoDTO dto = productService.getCartProductInfo(product_id, style, size);        
 
         return new ResponseEntity<>(dto, HttpStatus.OK);        
 
     }
+    
 }

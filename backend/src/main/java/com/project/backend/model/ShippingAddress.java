@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -25,9 +26,14 @@ public class ShippingAddress extends BaseEntity {
     
      @Id @Tsid
     //@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
-    //@GenericGenerator(name = "native",strategy = "native")
+    //@GenericGenerator(name = "native",strategy = "native")    
     @Column(name = "shipping_address_id")
     private Long shippingAddressId;
+
+
+    private String firstname;
+
+    private String lastname;
 
     @NotBlank(message="주소는 공백이 없어야 합니다.")
     @Size(min=5, message="주소1은 적어도 5자 이상이어야 합니다.")
@@ -47,10 +53,12 @@ public class ShippingAddress extends BaseEntity {
     @Pattern(regexp = "(^$|[0-9]{5})", message="우편번호는 5자리 숫자이어야 합니다.")
     private String zipCode;
     
-
     private String country;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=Order.class)
-    @JoinColumn(name="order_id", referencedColumnName = "order_id", nullable = false)
-    private Order order;
+    private String phoneNumber;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable=true)
+    private User user;    
+        
 }

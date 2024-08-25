@@ -14,18 +14,20 @@ const HeadingFilter = ({
     replaceQuery,
     ratingHandler,
     sortHandler,
+    searchParams
 }) => {
     
     const [show, setShow] = useState(false);
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
 
-    const [searchParams, setSearchParams] = useSearchParams();
+
 
     const shippingParam = searchParams.get('shipping');
-    const ratingParam = searchParams.get('rateing');
+    let ratingParam = searchParams.get('rating');
     const priceParam  = searchParams.get('price');
     const sortParam  = searchParams.get('sort');
+    
 
     const check = replaceQuery(
         "shipping",
@@ -33,6 +35,10 @@ const HeadingFilter = ({
     );
     const checkRating = replaceQuery("rating", "4");
     const sortQuery = sortParam || "Recomended";
+
+    console.log("checkRating : " + checkRating);
+    console.log("ratingParam : " + ratingParam);
+    console.log("priceParam : " + priceParam);
     return (
         <div className="w-full flex flex-col md:flex-row md:items-end gap-x-6">
             <div>

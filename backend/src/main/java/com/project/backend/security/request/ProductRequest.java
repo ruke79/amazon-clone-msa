@@ -37,11 +37,11 @@ public class ProductRequest {
 
     private ProductColorAttribute color;
 
-    private Set<ProductSizeAttribute> sizes;
+    private List<ProductSizeAttribute> sizes;
 
-    private Set<ProductDetails> details;
+    private List<ProductDetails> details;
 
-    private Set<ProductQA> questions;
+    private List<ProductQA> questions;
 
     private String shippingFee;  
 

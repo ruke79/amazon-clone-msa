@@ -31,16 +31,19 @@ import com.project.backend.security.request.CategoryRequest;
 import com.project.backend.security.request.ImageRequest;
 import com.project.backend.security.request.ProductRequest;
 import com.project.backend.security.request.SubCategoryRequest;
+import com.project.backend.security.response.CategoryResponse;
 import com.project.backend.security.response.SubCategoryResponse;
 import com.project.backend.service.ProductService;
 import com.project.backend.service.UserService;
 
 import jakarta.mail.Multipart;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 
@@ -131,7 +134,7 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    public ResponseEntity<ProductCategory> addCategory(@RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> addCategory(@RequestBody CategoryRequest categoryRequest) {
 
             log.info(categoryRequest.getName() +' ' + categoryRequest.getSlug());
 
@@ -142,50 +145,76 @@ public class AdminController {
                 category.setSlug(categoryRequest.getSlug());
 
                 categoryRepository.save(category);
+
+                CategoryResponse response = new CategoryResponse(
+                    Long.toString(category.getCategoryId()), 
+                    category.getCategoryName()
+                    //category.getSlug()
+                );
                 
-                return new ResponseEntity<>(category,  HttpStatus.OK);
+                return new ResponseEntity<>(response,  HttpStatus.OK);
             }
             return null;
 
     }
 
     @PostMapping("/subcategory")
-    public ResponseEntity<SubCategory> addSubCategory(@RequestBody SubCategoryRequest subcategoryRequest) {
+    public ResponseEntity<SubCategoryResponse> addSubCategory(@RequestBody SubCategoryRequest subcategoryRequest) {
 
-            // List<String> existed = new ArrayList<String>();
-            // existed.add(subcategoryRequest.getSubcategoryName());
-            // if (null == subCategoryRepository.findBySubcategoryNameIn(existed)) {
+             List<String> existed = new ArrayList<String>();
+             existed.add(subcategoryRequest.getSubcategoryName());
+
+             List<SubCategory> data = subCategoryRepository.findBySubcategoryNameIn(existed);
+
+             for (SubCategory s: data)
+                log.info(s.getSubcategoryName());
+
+            if ( 0 == subCategoryRepository.findBySubcategoryNameIn(existed).size()) {
 
                 SubCategory subcategory = new SubCategory();
                 subcategory.setSubcategoryName(subcategoryRequest.getSubcategoryName());
 
-                ProductCategory category = categoryRepository.findByCategoryName(subcategoryRequest.getParent());
-                subcategory.setCategory(category);
-                subcategory.setSlug(subcategoryRequest.getSlug());
-                        
+                Optional<ProductCategory> category = categoryRepository.findById(Long.parseLong(subcategoryRequest.getParent()));
+                
+                subcategory.setCategory(category.get());
+
+                subcategory.setSlug(subcategoryRequest.getSlug());                        
 
                 subCategoryRepository.save(subcategory);
+
+                SubCategoryResponse response = new SubCategoryResponse(
+                    Long.toString(subcategory.getSubcategoryId()),
+                    subcategory.getSubcategoryName()
+                );
                 
-                return new ResponseEntity<>(subcategory,  HttpStatus.OK);
+                return new ResponseEntity<>(response,  HttpStatus.OK);
+            }
+            return null;
             
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<List<ProductCategory>> getCategories() {
+    public ResponseEntity<List<CategoryResponse>> getCategories() {
 
         List<ProductCategory> category = categoryRepository.findAll();  
+
+        List<CategoryResponse> responses = new ArrayList<>();
+        category.forEach(item -> {
+            responses.add(new CategoryResponse(Long.toString(item.getCategoryId()), item.getCategoryName()));
+        });
         
-        return new ResponseEntity<>(category,  HttpStatus.OK);
+        return new ResponseEntity<>(responses,  HttpStatus.OK);
     }
 
     @GetMapping("/product/subcategories")
     public ResponseEntity<ArrayList<SubCategoryResponse>> getSubcategories(@RequestParam String category) {
 
-        List<SubCategory> subcategories = categoryRepository.findSubCategoriesByCategoryName(category);
+        log.info(category);
+        List<SubCategory> subcategories = categoryRepository.findSubCategoriesByCategoryId(Long.parseLong(category));
 
         ArrayList<SubCategoryResponse> subCategoryList = new ArrayList<>();
 
-        subcategories.forEach(item -> subCategoryList.add(new SubCategoryResponse(item.getSubcategoryId(), item.getSubcategoryName())) );
+        subcategories.forEach(item -> subCategoryList.add(new SubCategoryResponse(Long.toString(item.getSubcategoryId()), item.getSubcategoryName())) );
         
         return new ResponseEntity<>(subCategoryList,  HttpStatus.OK);
     }
@@ -205,10 +234,10 @@ public class AdminController {
         return new ResponseEntity<>(response,  HttpStatus.OK);
     }
     
-    @GetMapping("/product/{productName}")
-    public ResponseEntity<ProductDTO> getParentProduct(@PathVariable String productName) {
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<ProductDTO> getParentProduct(@PathVariable String productId) {
 
-            ProductDTO dto = productService.getProductByName(productName);
+            ProductDTO dto = productService.getProductById(Long.parseLong(productId));
 
             return new ResponseEntity<>(dto, HttpStatus.OK);                           
     }

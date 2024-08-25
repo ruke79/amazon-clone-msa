@@ -173,6 +173,7 @@ const CreateProduct = ({
         });
     }    
     const handleChange = (e) => {
+       
         
         const { value, name } = e.target;        
         if (name === "subCategories") {            
@@ -192,6 +193,8 @@ const CreateProduct = ({
             });
         }
     };
+
+    
 
     return (
         <div className="my-4">
@@ -333,6 +336,14 @@ const CreateProduct = ({
                                 name="discount"
                                 label="Discount"
                                 placeholder="Product Discount"
+                                icon="category"
+                                onChange={handleChange}
+                            />
+                            <AdminInput
+                                type="text"
+                                name="sold"
+                                label="Sold"
+                                placeholder="Product Sold"
                                 icon="category"
                                 onChange={handleChange}
                             />

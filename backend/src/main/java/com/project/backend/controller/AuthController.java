@@ -120,7 +120,7 @@ public class AuthController {
                 .collect(Collectors.toList());
 
         // Prepare the response body, now including the JWT token directly in the body
-        LoginResponse response = new LoginResponse(userDetails.getUsername(),
+        LoginResponse response = new LoginResponse(userDetails.getEmail(),
                 roles, jwtToken);
 
         // Return the response entity with the JWT token included in the response body

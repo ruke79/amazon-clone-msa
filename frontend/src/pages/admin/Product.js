@@ -68,7 +68,7 @@ const AdminProduct = () => {
             const { data } = await api.get(`/admin/product/${product.parent || ""}`);
             if(data) {  
                         
-                
+                                
                 setProduct({
                     ...product,
                     name: data.name,
@@ -81,7 +81,7 @@ const AdminProduct = () => {
                     discount: data.discount
                 })
             }
-            // console.log('id product: ', data)
+             console.log('id product: ', data);
         };
         if (product.parent ) {
             getParentData();
@@ -92,18 +92,23 @@ const AdminProduct = () => {
 
         loadCategories(setCategories);
 
+        console.log(categories);
 
         async function getSubs() {
+
+            
             const { data } = await api.get("/admin/product/subcategories", {
                 params: {
-                    category: product.category,
+                    category : product.category,
                 },
-            });
-            console.log(JSON.stringify(data));
+            });            
             setSubs(data);
         }
-        getSubs();
+        if (product.category)
+            getSubs();
     }, [product.category, product.name]);
+
+    console.log(categories);
 
     return (
         <>

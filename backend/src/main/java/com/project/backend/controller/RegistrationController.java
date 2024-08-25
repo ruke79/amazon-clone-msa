@@ -68,7 +68,7 @@ public class RegistrationController {
             // model.addAttribute("qr", userService.generateQRUrl(user));
             // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
             // }
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUserName());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails,

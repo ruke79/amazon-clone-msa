@@ -47,7 +47,68 @@ api.interceptors.request.use(
 );
 
 
+export const saveCart = async (cart, user_id) => {
+  try {
+      console.log(cart);
+      const { data } = await api.post("/user/cart/savecart", {
+          products : cart,
+          userId : user_id,
+      });
+      return data;
+  } catch (error) {
+      console.log("erorr >>>", error.response.data.message);
+  }
+};
 
+export const saveShippingAddress = async(address, user_id) => {
 
+  try {
+
+    console.log(address);
+    console.log(user_id);
+    
+    const { data } = await api.post("/user/cart/save_shipping_address", {
+            address : address,
+            userId : user_id
+        });
+        return data;
+    } catch (error) {
+        console.log("erorr >>>", error.response.data.message);
+    }
+}
+
+export const selectShippingAddress = async(user, id) => {
+
+  try {
+
+    
+    const params = new URLSearchParams();
+    params.append('userId', user.userId);
+    params.append('addressId', id);
+                
+    const { data } = await api.post("/user/cart/select_shipping_address", null,
+          {            
+             params: { userId : user.userId, addressId : id }                        
+           }
+        );
+        return data;
+    } catch (error) {
+        console.log("erorr >>>", error.response.data.message);
+    }
+}
+
+export const applyCoupon = async(coupon, user_id) => {
+
+  try {
+
+        const { data } = await api.post("/user/cart/coupon", {
+                        coupon : coupon, userId : user_id
+                      });
+                      return data;
+    } catch (error) {
+        console.log("erorr >>>", error.response.data.message);
+    }
+}
 
 export default api;
+

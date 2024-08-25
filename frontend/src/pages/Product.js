@@ -117,8 +117,8 @@ async function loaderProduct(slug, style, size) {
                 product.reviews.length > 0 ? (product.reviews.reduce((total, review) => {
                     return (
                         total +
-                        (review.rating == Number(num) ||
-                            review.rating == Number(num) + 0.5)
+                        (review.rating === Number(num) ||
+                            review.rating === Number(num) + 0.5)
                     );
                 }, 0) *
                     100) /

@@ -62,6 +62,8 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf ->
                 csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                .ignoringRequestMatchers("/api/user/**")
                         .ignoringRequestMatchers("/api/auth/public/**").ignoringRequestMatchers("/api/admin/**")
         );
         //http.csrf(AbstractHttpConfigurer::disable);
@@ -70,6 +72,7 @@ public class SecurityConfig {
                 //.requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/admin/**").permitAll()
                 .requestMatchers("/api/product/**").permitAll()
+                .requestMatchers("/api/user/**").permitAll()
                 .requestMatchers("/api/search/**").permitAll()
                 .requestMatchers("/api/csrf-token").permitAll()
                 .requestMatchers("/api/auth/public/**").permitAll()

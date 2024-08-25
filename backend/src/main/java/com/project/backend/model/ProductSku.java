@@ -50,7 +50,7 @@ public class ProductSku extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy="sku_product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSizeAttribute.class)
-    private Set<ProductSizeAttribute> sizes;
+    private List<ProductSizeAttribute> sizes;
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ProductColorAttribute.class)
     @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)

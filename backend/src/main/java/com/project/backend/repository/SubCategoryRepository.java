@@ -12,5 +12,7 @@ import com.project.backend.model.SubCategory;
 public interface  SubCategoryRepository extends JpaRepository<SubCategory, Long>  {
     List<SubCategory> findBySubcategoryNameIn(List<String> subcategoryName);    
 
+    List<SubCategory> findBySubcategoryIdIn(List<Long> subcategoryName);    
+
     List<SubCategory> findAll();
 }

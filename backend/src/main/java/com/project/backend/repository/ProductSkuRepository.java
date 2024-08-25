@@ -2,6 +2,7 @@ package com.project.backend.repository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,7 @@ import com.project.backend.model.ProductSku;
 @Repository
 public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
 
-
+    
     @Query(value = "select product_id from product_sku a " +
     "left join product_size b on a.skuproduct_id = b.skuproduct_id " +
     "left join product_color c on a.color_id = c.color_id " +

@@ -21,6 +21,7 @@ import com.project.backend.dto.CategoryDTO;
 import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.ProductDTO;
 import com.project.backend.dto.ProductDetailDTO;
+import com.project.backend.dto.ProductInfoDTO;
 import com.project.backend.dto.ProductSkuDTO;
 import com.project.backend.dto.SearchResultDTO;
 import com.project.backend.dto.SizeAttributeDTO;
@@ -35,6 +36,7 @@ import com.project.backend.model.SubCategory;
 import com.project.backend.model.User;
 import com.project.backend.repository.CategoryRepository;
 import com.project.backend.repository.ProductDetailsRepository;
+import com.project.backend.repository.ProductQARepository;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.repository.SubCategoryRepository;
@@ -62,6 +64,9 @@ public class ProductService {
 
     @Autowired
     ProductDetailsRepository productDetailsRepository;
+
+    @Autowired
+    ProductQARepository productQARepository;
     
 
 
@@ -84,8 +89,6 @@ public class ProductService {
         
       if (product.isPresent()) {
 
-        log.info("GetProductById");
-
           ProductDTO dto = convertToDto(product.get());
 
           return dto;
@@ -97,8 +100,7 @@ public class ProductService {
 
         Product product = productRepository.findBySlug(slug);
 
-        log.info(Long.toString(product.getProductId()));
-
+        
       if (product != null) {
 
           ProductDTO dto = convertToDto(product);
@@ -109,20 +111,31 @@ public class ProductService {
   }
 
     private ProductDTO convertToDto(Product product) {
-         
-        List<String> dtos = product.getSubCategories().stream().map(subcategory -> subcategory.getSubcategoryName()).
-        // new SubCategoryDTO(subcategory.getSubcategoryId(), subcategory.getSubcategoryName())).
-        collect(Collectors.toList());
 
-        Set<ProductDetailDTO> details = product.getDetails().stream().map(detail->
+        // CategoryDTO parent = CategoryDTO.builder()
+        // .id(Long.toString(product.getCategory().getCategoryId())) 
+        // .name(product.getCategory().getCategoryName())
+        // .slug(product.getCategory().getSlug()).build();
+         
+        // List<SubCategoryDTO> dtos = product.getSubCategories().stream().map(subcategory -> 
+        //  new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()), parent, subcategory.getSubcategoryName())).
+        // collect(Collectors.toList());
+
+                  
+         
+        List<String> subcategoryIds = product.getSubCategories().stream().map(subcategory -> {
+         return Long.toString(subcategory.getSubcategoryId()); })
+        .collect(Collectors.toList());
+
+        List<ProductDetailDTO> details = product.getDetails().stream().map(detail->
         {
               return ProductDetailDTO.builder()
               .name(detail.getName())
               .value(detail.getValue()).build();          
-        }).collect(Collectors.toSet());
+        }).collect(Collectors.toList());
         
 
-        Set<ProductSkuDTO> skus = product.getSku_products().stream().map(sku -> 
+        List<ProductSkuDTO> skus = product.getSku_products().stream().map(sku -> 
             {   
 
                 
@@ -135,17 +148,17 @@ public class ProductService {
                 
 
                 Set<SizeAttributeDTO> sizes = sku.getSizes().stream().map(item-> {
-                    SizeAttributeDTO size = new SizeAttributeDTO(item.getSizeId(),
+                    SizeAttributeDTO size = new SizeAttributeDTO(Long.toString(item.getSizeId()),
                     item.getSize(), item.getQuantity(), item.getPrice());
                     return size;                    
                 }).collect(Collectors.toSet());  
                 
-                ColorAttributeDTO color = new ColorAttributeDTO(sku.getColor().getColorId(), 
+                ColorAttributeDTO color = new ColorAttributeDTO(Long.toString(sku.getColor().getColorId()), 
                 sku.getColor().getColor(), sku.getColor().getColorImage());
                 
                 
                 ProductSkuDTO dto = ProductSkuDTO.builder()
-                    .skuproductId(sku.getSkuproductId())
+                    .id(Long.toString(sku.getSkuproductId()))
                     .sku(sku.getSku())
                     .images(base64Image)
                     .discount(sku.getDiscount())
@@ -157,17 +170,19 @@ public class ProductService {
 
                 return dto;                
             }
-        ).collect(Collectors.toSet());
+        ).collect(Collectors.toList());
 
         
         return  ProductDTO.builder()
-            .productId(product.getProductId())
+            .id(Long.toString(product.getProductId()))
             .name(product.getName())
             .description(product.getDescription())
             .brand(product.getBrand())
             .slug(product.getSlug())
-            .category(new CategoryDTO(product.getCategory().getCategoryId(), product.getCategory().getCategoryName(), product.getCategory().getSlug()))                        
-            .subCategories(dtos)
+            //.category(new CategoryDTO(Long.toString(product.getCategory().getCategoryId()), product.getCategory().getCategoryName(), product.getCategory().getSlug()))                        
+            //.subCategories(dtos)
+            .category(Long.toString(product.getCategory().getCategoryId()))
+            .subCategories(subcategoryIds)
             .details(details)
             .reviews(product.getReviews())
             .questions(product.getQuestions())
@@ -181,95 +196,60 @@ public class ProductService {
 
     public ProductSku addProduct(ProductRequest request, List<String> images, String colorImage ) throws IOException {
 
-        Product product = new Product();
-
-        product.setBrand(request.getBrand());
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setSlug(request.getSlug());
-
-                
-        
-       
-        
-              
-        if(request.getShippingFee() != null)
-            product.setShipping(Integer.parseInt(request.getShippingFee()));
-
-                        
-        ProductCategory category = categoryRepository.findByCategoryName(request.getCategory());
-
-        log.info(category.getCategoryName());
-        
-
-        if ( category != null)
-        {        
-            
-            product.setCategory(category);
-
-            List<SubCategory> subCategories = subCategoryRepository.findBySubcategoryNameIn(request.getSubCategories());
-
+        if (request.getParent() != null && request.getParent().length() > 0) {
             
 
-            if (subCategories != null) {                
-                                
+            Optional<Product> existed = productRepository.findById(Long.parseLong(request.getParent()));
+
+            if (existed.isPresent()) {
+
+                ProductSku newSku = createSku(request, existed.get(), images, colorImage);
+                existed.get().getSku_products().add(newSku);
+
+                productRepository.save(existed.get());
+
+                return newSku;
+            }
+        }
+        else {     
+        
+            Product product = new Product();
+
+            product.setBrand(request.getBrand());
+            product.setName(request.getName());
+            product.setDescription(request.getDescription());
+            product.setSlug(request.getSlug());
                 
-                product.setSubCategories(subCategories);
+            if(request.getShippingFee() != null)
+                product.setShipping(Integer.parseInt(request.getShippingFee()));
+                            
+            Optional<ProductCategory> category = categoryRepository.findById(Long.parseLong(request.getCategory()));
 
+                       
+
+            if ( category != null)
+            {        
                 
-                ProductSku skuProject = new ProductSku();
+                product.setCategory(category.get());
 
-                skuProject.setSku(request.getSku());
-
-                if (request.getDiscount() != null)
-                    skuProject.setDiscount(Integer.parseInt(request.getDiscount()));
-                
-                skuProject.setColor(request.getColor());
-
-                // ArrayList<String> bytes = new ArrayList<String>();
-                // for(MultipartFile image : images) {                    
-                //     bytes.add(encodeFileToBase64((image)));
-                    
-                // }
-                // if (bytes.size() > 0)
-                //     skuProject.setImages(bytes);                
-                // skuProject.getColor().setColorImage(encodeFileToBase64(colorImage));                  
-
-                for(String image : images) {
-                    log.info("Image: " + image);
+                List<Long> subcategoryIds = new ArrayList<>();
+                for (String subcategory : request.getSubCategories()) {
+                    log.info(subcategory);
+                    subcategoryIds.add(Long.parseLong(subcategory));
                 }
 
-                skuProject.setImages(images);
-                // cloudinary에 저장된 이미지 URL
-                skuProject.getColor().setColorImage(colorImage);
-                    
+                List<SubCategory> subCategories = subCategoryRepository.findBySubcategoryIdIn(subcategoryIds);
 
-
-                request.getSizes().forEach(size->size.setSku_product(skuProject));
-
-                skuProject.setSizes(request.getSizes());       
-
-                skuProject.setProduct(product);
-
-                if (request.getDetails() != null) {                  
-                           
-                    product.setDetails(request.getDetails());            
-
-                    product.getDetails().forEach(detail -> {
-                        detail.setProduct(product); 
-                        log.info(detail.getValue());                
-                    } );          
-                }
-                
-                if (request.getQuestions() != null ) {
-                    request.getQuestions().forEach(q -> q.setProduct(product));
-                    product.setQuestions(request.getQuestions());  
-                }
                 
 
-                productRepository.save(product);
+                if (subCategories != null) {                
+                                    
+                    product.setSubCategories(subCategories);
+                  
+                    productRepository.save(product);
 
-                return productskuRepository.save(skuProject);
+                    return createSku(request, product, images, colorImage);
+                }
             }
         }
 
@@ -277,6 +257,68 @@ public class ProductService {
     }
 
 
+    private ProductSku createSku(ProductRequest request, Product product, List<String> images, String colorImage) {
+
+        ProductSku skuProject = new ProductSku();
+
+        skuProject.setSku(request.getSku());
+
+        if (request.getDiscount() != null)
+            skuProject.setDiscount(Integer.parseInt(request.getDiscount()));
+        
+        skuProject.setColor(request.getColor());
+
+        // ArrayList<String> bytes = new ArrayList<String>();
+        // for(MultipartFile image : images) {                    
+        //     bytes.add(encodeFileToBase64((image)));
+            
+        // }
+        // if (bytes.size() > 0)
+        //     skuProject.setImages(bytes);                
+        // skuProject.getColor().setColorImage(encodeFileToBase64(colorImage));                  
+
+
+        skuProject.setImages(images);
+        // cloudinary에 저장된 이미지 URL
+        skuProject.getColor().setColorImage(colorImage);
+            
+
+
+        request.getSizes().forEach(size->size.setSku_product(skuProject));
+
+        skuProject.setSizes(request.getSizes());       
+
+        skuProject.setProduct(product);
+
+        if (request.getDetails() != null) {                  
+
+                                    
+            product.setDetails(request.getDetails());            
+
+
+
+            
+            product.getDetails().forEach(detail -> {
+                detail.setProduct(product); 
+            } );          
+        }
+        
+        if (request.getQuestions() != null ) {
+
+            
+            //request.getQuestions().forEach(q -> q.setProduct(product));  -                   
+            
+            
+            // for(ProductQA i : product.getQuestions())
+            // log.info(i.getQuestion());
+        }
+
+        product.setQuestions(request.getQuestions());  
+        product.getQuestions().forEach(question->{question.setProduct(product);});
+        
+        return productskuRepository.save(skuProject);
+
+    }
 
 
     private String encodeFileToBase64(MultipartFile file) {
@@ -304,30 +346,21 @@ public class ProductService {
                 
         List<Long> productIds = null;
         List<Product> products = null;
-        // if(params.getSort().equals("popular")) {
-            
-        //     productIds = productskuRepository.findProductIDBySizeAndPriceAndColorOrderBySoldDesc
-        //     (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
+        Long categoryId = null;
 
-        //     products = productRepository.findProductBySearchParamsOrderByRatingDesc(params.getSearch(), categoryId, 
-        // params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
-        // params.getRating(), productIds);
+        if (params.getCategory() != null)
+         categoryId = Long.parseLong(params.getCategory());
+       
+       
+        productIds = productskuRepository.findProductIDBySizeAndPriceAndColor
+       (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
 
-        // products.forEach(product-> log.info(product.getName()));
-
-                    
-        // }
-        // else 
-        {
-             productIds = productskuRepository.findProductIDBySizeAndPriceAndColor
-             (params.getLowPrice(), params.getHighPrice(), params.getSize(), params.getColor());
-
-            products = productRepository.findProductBySearchParams(params.getSearch(), params.getCategory(), 
+            products = productRepository.findProductBySearchParams(params.getSearch(), categoryId, 
         params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
         params.getRating(), productIds);
-        }   
+          
         
-        int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), params.getCategory(), 
+        int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), categoryId, 
         params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
         params.getRating(), productIds);
 
@@ -340,9 +373,9 @@ public class ProductService {
 
         
         
-        Pageable pageRequest = createPageRequestUsing(params.getPage(), params.getPageSize());
+        Pageable pageRequest = createPageRequestUsing(params.getPage() - 1, params.getPageSize());
         int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), pDtos.size());
+        int end = Math.min((start + pageRequest.getPageSize()), totalProducts);
 
         log.info(Integer.toString(start));
         log.info(Integer.toString(end));
@@ -355,15 +388,15 @@ public class ProductService {
         
         
 
-        List<String> brandDB = productRepository.findBrandsByCategoryId(params.getCategory());
+        List<String> brandDB = productRepository.findBrandsByCategoryId(categoryId);
         
         List<CategoryDTO> categoryDTOs = categoryRepository.findAll().stream().map(category ->
-         { return new CategoryDTO(category.getCategoryId(), category.getCategoryName(), category.getSlug()); }
+         { return new CategoryDTO(Long.toString(category.getCategoryId()), category.getCategoryName(), category.getSlug()); }
         ).collect(Collectors.toList());
 
         List<SubCategoryDTO> subCategoryDTOs = subCategoryRepository.findAll().stream().map(
-            subcategory->{ return new SubCategoryDTO(subcategory.getSubcategoryId(), 
-                new CategoryDTO(subcategory.getCategory().getCategoryId(), subcategory.getCategory().getCategoryName(), 
+            subcategory->{ return new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()), 
+                new CategoryDTO(Long.toString(subcategory.getCategory().getCategoryId()), subcategory.getCategory().getCategoryName(), 
                 subcategory.getCategory().getSlug()),
                 subcategory.getSubcategoryName());}        
         ).collect(Collectors.toList());
@@ -372,9 +405,9 @@ public class ProductService {
             builder().product(new PageImpl<>(pageContent, pageRequest, pDtos.size()))
             .categories(categoryDTOs)
             .subCategories(subCategoryDTOs)
-            .colors(getColors(params.getCategory()))
-            .sizes(getSizes(params.getCategory()))
-            .details(getDetails(params.getCategory()))
+            .colors(getColors(categoryId))
+            .sizes(getSizes(categoryId))
+            .details(getDetails(categoryId))
             .brandsDB(brandDB)
             .totalProducts(totalProducts)
             .build();
@@ -435,5 +468,66 @@ public class ProductService {
         }).collect(Collectors.toList());
 
     }
+
+    public ProductInfoDTO getCartProductInfo(String productId, int style, int size) {
+
+        Optional<Product> data = productRepository.findById(Long.parseLong(productId));
+
+        if (data.isPresent()) {
+
+            Product product = data.get();
+                
+            int discount = product.getSku_products().get(style).getDiscount();
+            int priceBefore = product.getSku_products().get(style).getSizes().get(size).getPrice();
+            int price = discount > 0  ? priceBefore - priceBefore / discount : priceBefore;
+
+            ColorAttributeDTO color = ColorAttributeDTO.builder()
+            .id(Long.toString(product.getSku_products().get(style).getColor().getColorId()))
+            .color(product.getSku_products().get(style).getColor().getColor())
+            .colorImage(product.getSku_products().get(style).getColor().getColorImage())
+            .build();
+
+            List<String> subcategoryIds = product.getSubCategories().stream().map(subcategory -> {
+                return Long.toString(subcategory.getSubcategoryId()); })
+               .collect(Collectors.toList());
+            
+               List<ProductDetailDTO> details = product.getDetails().stream().map(detail->
+               {
+                     return ProductDetailDTO.builder()
+                     .name(detail.getName())
+                     .value(detail.getValue()).build();          
+               }).collect(Collectors.toList());
+
+
+            ProductInfoDTO dto = ProductInfoDTO.builder()
+            .id(Long.toString(product.getProductId()))
+            .style(style)
+            .name(product.getName())
+            .description(product.getDescription())
+            .slug(product.getSlug())
+            .sku(product.getSku_products().get(style).getSku())
+            .brand(product.getBrand())
+            .shipping(product.getShipping())
+            .images(product.getSku_products().get(style).getImages())
+            .color(color)
+            .size(product.getSku_products().get(style).getSizes().get(size).getSize())           
+            .price(price)
+            .priceBefore(priceBefore)
+            .qty(0)
+            .quantity(product.getSku_products().get(style).getSizes().get(size).getQuantity())
+            .category(Long.toString(product.getCategory().getCategoryId()))
+            .subCategories(subcategoryIds)
+            .questions(product.getQuestions())
+            .details(details)
+            .discount(discount)
+            .build();
+
+            return dto;
+        }
+
+        return null;
+
+    }
+
 
 }

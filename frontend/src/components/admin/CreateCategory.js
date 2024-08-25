@@ -14,12 +14,12 @@ export const loadCategories = async(setCategories) => {
        // subCategories(response.categories);
       //console.log(JSON.stringify(response.data));
 
-      let categoryNames = [] ;
       
       
-      for(const [i, value] of response.data.entries()) 
-        categoryNames.push({"id" : value.categoryId, "name" : value.categoryName});      
-      setCategories(categoryNames);     
+      //let categoryNames = [] ;
+      //for(const [i, value] of response.data.entries()) 
+        //  categoryNames.push({"id" : value.id, "name" : value.name});      
+      setCategories(JSON.parse(JSON.stringify(response.data)));     
 
        return response.data;
 
@@ -83,7 +83,7 @@ const CreateCategory = () => {
 
             console.log(JSON.stringify(response.data));
             
-            categoryNames.push({"id" : response.data.categoryId, "name" : response.data.categoryName});
+            categoryNames.push({"id" : response.data.id, "name" : response.data.name});
               console.log(categoryNames);
               setCategories(categories ||categoryNames);     
             
@@ -110,7 +110,7 @@ const CreateCategory = () => {
                 parent,
                 slug
             });
-
+            console.log(data);
             //setSubCategories(data.subCategory);
             setSubcategoryName("");
             setParent("");

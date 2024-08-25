@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
     private UserDTO convertToDto(User user) {
         return new UserDTO(
-                user.getUserId(),
+                Long.toString(user.getUserId()),
                 user.getUserName(),
                 user.getEmail(),
                 user.isAccountNonLocked(),

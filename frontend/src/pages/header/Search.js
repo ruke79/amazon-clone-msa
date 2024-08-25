@@ -1,11 +1,28 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-//import { useState } from "react";
+import { useState } from "react";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 
 const Search = ({searchHandler}) => {
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    const {pathname} = useLocation();
+    const navigate = useNavigate();
+    const [query, setQuery] = useState(searchParams.get('search') ||"");
+
     const handleSearch = (e) => {
         e.preventDefault();
-
+        console.log("query : " + query);
+        console.log("pathname : " + pathname);
+        if (query.length > 1) {
+            if (pathname !== "/browse") {                
+                navigate(`/browse?search=${query}`);
+                
+            } else {
+                searchHandler(query);
+            }   
+        } else if(query.length == 0 && pathname == "/browse") {
+            searchHandler(query);
+        }
     };
 
     return (
@@ -27,12 +44,12 @@ const Search = ({searchHandler}) => {
                 <option value="Book">Book</option>
             </select>
             <input
-                // onClick={() => setShowSearch((prev) => !prev)}
+                 //onClick={() => setShowSearch((prev) => !prev)}
                 type="text"
                 className="outline-none w-full h-11 text-black pl-3 max-md:rounded-l"
                 placeholder="Search Amazon"
-                // onChange={(ey) => setQuery(e.target.value)}
-                // defaultValue={query}
+                 onChange={(e) => setQuery(e.target.value)}
+                 defaultValue={query}
             />
             <button type="submit">
                 <MagnifyingGlassIcon className="text-amazon-blue_dark h-8 w-8 my-1 mx-2 cursor-pointer" />

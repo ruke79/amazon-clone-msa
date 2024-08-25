@@ -9,7 +9,7 @@ public class SearchParamsRequest {
 
     private String search;
 
-    private Long category;
+    private String category;
 
     private String style;
 
@@ -30,8 +30,6 @@ public class SearchParamsRequest {
     private Integer shipping = 0;
 
     private Integer rating;
-
-    private String sort;
 
     private int page;
 

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SizeAttributeDTO {
 
-    private Long sizeId;
+    private String id;
 
     private String size;
 

@@ -16,7 +16,7 @@ import com.project.backend.dto.ColorAttributeDTO;
 @AllArgsConstructor
 public class ProductSkuDTO {
 
-    private Long skuproductId;
+    private String id;
 
     private String sku;
 

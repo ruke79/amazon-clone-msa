@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 public class ProductDTO  {
     
         
-    private Long productId;
+    private String id;
 
     private String name;
 
@@ -40,17 +40,17 @@ public class ProductDTO  {
 
     private String slug;
 
-    private CategoryDTO category;
+    private String category;
 
     private List<String> subCategories;
 
-    private Set<ProductDetailDTO> details;
+    private List<ProductDetailDTO> details;
     
-    private Set<Review> reviews;
+    private List<Review> reviews;
     
-    private Set<ProductQA> questions;
+    private List<ProductQA> questions;
     
-    private Set<ProductSkuDTO> sku_products;
+    private List<ProductSkuDTO> sku_products;
 
     private String refund_policy;
 

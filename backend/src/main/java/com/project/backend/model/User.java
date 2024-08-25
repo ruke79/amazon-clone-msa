@@ -16,6 +16,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -47,6 +48,9 @@ public class User extends BaseEntity{
     @JsonIgnore
     private String password;
 
+    
+    private String image;
+
     private boolean emailVerified = false;
 
     private boolean accountNonLocked = true;
@@ -66,6 +70,16 @@ public class User extends BaseEntity{
     @JsonBackReference
     @ToString.Exclude
     private Role role;
+
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, targetEntity = Address.class)
+    @JoinColumn(name="address_id", referencedColumnName = "addressId", nullable=true)
+    private Address address;
+
+    // @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, targetEntity = ShippingAddress.class)
+    // @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id", nullable=true)
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,targetEntity = ShippingAddress.class)
+    private List<ShippingAddress> shippingAddresses;
 
 
     private String defaultPaymentMethod;

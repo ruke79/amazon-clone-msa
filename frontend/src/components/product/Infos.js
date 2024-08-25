@@ -11,7 +11,7 @@ import {
 import AccoridanProduct from "./AccordianProduct";
 import api from "util/api";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, updateCart } from "../../redux/CartSlice";
+import { addToCart, emptyCart, updateCart } from "../../redux/CartSlice";
 import { showDialog } from "../../redux/DialogSlice";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useAuthContext } from "../../store/AuthContext";
@@ -53,13 +53,15 @@ const Infos = ({ product, setActiveImg }) => {
             setLoading(false);
             return;
         }
-
         
-        const data  = await api.get(
-            `/product/cart/${product.name}?style=${product.style}&size=${sizeParam}`
+        
+        const { data }  = await api.get(
+            `/product/cart/${product.id}?style=${product.style}&size=${sizeParam}`
         );
 
-        console.log(data);
+        
+        
+                
 
         if (qty > data.quantity) {
             setError(
@@ -92,6 +94,8 @@ const Infos = ({ product, setActiveImg }) => {
                 setError("");
                 setLoading(false);
             }
+
+            //dispatch(emptyCart());
         }
     };
 
@@ -101,7 +105,7 @@ const Infos = ({ product, setActiveImg }) => {
                 return navigate('/signin');
             }
             const { data } = await api.put("/user/wishlist", {
-                productId: product.productId,
+                id: product.id,
                 style: product.style,
             });
             dispatch(

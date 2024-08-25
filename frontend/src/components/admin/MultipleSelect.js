@@ -24,7 +24,7 @@ const MenuProps = {
 function getStyles(name, value, theme) {
     return {
         fontWeight:
-            value.indexOf(name) === -1
+        value.indexOf(name) === -1
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium,
     };
@@ -44,9 +44,12 @@ const MultipleSelect = ({ data, label, fn, handleChange, ...rest }) => {
     //         typeof value === "string" ? value.split(",") : value
     //     );
     // };
+
+    
         
-    //const result = data.length ? data.reduce((obj , cur) => ({ ...obj, [cur._id]: cur.name}), {}) : {};
-      
+    const result = data.length ? data.reduce((obj , cur) => ({ ...obj, [cur.id]: cur.name}), {}) : {};
+
+          
     
     return (
         <div className="mt-2">
@@ -70,7 +73,7 @@ const MultipleSelect = ({ data, label, fn, handleChange, ...rest }) => {
                         >
                             
                             {selected.map((value) => (
-                                <Chip key={value} label={value} />
+                                <Chip key={value} label={result[value]} />
                             ))}
                         </Box>
                     )}
@@ -78,8 +81,8 @@ const MultipleSelect = ({ data, label, fn, handleChange, ...rest }) => {
                 >
                     {data.map((sub) => (
                         <MenuItem
-                            key={sub._id}
-                            value={sub._id || sub.name}
+                            key={sub.id}
+                            value={sub.id}
                             style={getStyles(sub.name, field.value, theme)}
                             
                         >

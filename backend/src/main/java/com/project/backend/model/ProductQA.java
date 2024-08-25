@@ -3,6 +3,7 @@ package com.project.backend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,8 +24,7 @@ import lombok.Setter;
 @Table(name="product_qa")
 public class ProductQA extends BaseEntity {
 
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid    
     @Column(name = "qa_id")
     private Long  qaId;
     

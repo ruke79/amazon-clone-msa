@@ -14,6 +14,7 @@ import HeadingFilter from "components/browse/headingFilter/HeadingFilter";
 import { Pagination } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import api from "util/api";
+import keySort  from "util/sort_utils";
 // import DotLoaderSpinner from "@/components/loaders/dotLoader/DotLoaderSpinner";
 
 const Browse = ({
@@ -28,16 +29,16 @@ const Browse = ({
     // paginationCount,
 }) => {
 
-    const loaderData = useLoaderData();
+    const productsDB = useLoaderData();
 
-    let productsDB = JSON.parse(JSON.stringify(loaderData)).data;
-
-   
+       
 
     let categories = productsDB.categories;
     let subCategories = productsDB.subCategories;
     
     let products = productsDB.product.content;
+
+    console.log(productsDB);
     
     
     let details = productsDB.details;
@@ -52,13 +53,48 @@ const Browse = ({
      let styles = removeDublicates(stylesDb);
      let materials = removeDublicates(materialsDb);
      let brands = removeDublicates(brandsDb);
-    
-     console.log(productsDB);
-    
+             
     
     const [searchParams, setSearchParams] = useSearchParams();
     // const [loading, setloading] = useState(false);
     const navigate = useNavigate();
+    const sortParam = searchParams.get('sort');
+    
+    useEffect(() => {
+
+        const sortQuery = sortParam ||"";
+
+        if (sortQuery === "popular") {
+
+
+        }
+
+
+
+    }, [sortParam]);
+    
+    // if (sortQuery === "popular") {
+    //     let sortOps = { rating : "DESC"}
+
+    //     // console.log(products);
+    //      products = products.keySort(sortOps);
+
+    //      sortOps = { sold : "DESC"}
+    //      products.map(product =>{product.sku_products.keySort(sortOps)});    
+    // }
+   //     ? { rating: -1, "sku_products.sold": -1 }
+   //     : sortQuery == "newest"
+   //     ? { createdAt: -1 }
+   //     : sortQuery == "topSelling"
+   //     ? { "sku_products.sold": -1 }
+   //     : sortQuery == "topReviewed"
+   //     ? { rating: -1 }
+   //     : sortQuery == "priceHighToLow"
+   //     ? { "sku_products.sizes.price": -1 }
+   //     : sortQuery == "priceLowToHight"
+   //     ? { "sku_products.sizes.price": 1 }
+   //     : {};    
+
 
     const filter = ({
         search,
@@ -81,16 +117,20 @@ const Browse = ({
           }
         
          function toggleParam(name, param) {
-            if (param && !isEmptyObject(param)) {
+            if (param && !searchParams.get(param) && !isEmptyObject(param)) {
                 searchParams.set(name, param);
-                setSearchParams(searchParams);
+                                
+                //setSearchParams(searchParams);    
+                if(param !== 'page' && searchParams.get('page'))
+                    searchParams.delete('page');    
+
             }
-            else if(isEmptyObject(param)) {
+            else if(param) {
                 searchParams.delete(name);
-                setSearchParams(searchParams);            
+                //setSearchParams(searchParams);            
             }
          }
-
+                  
         
          toggleParam('search', search);
         
@@ -106,11 +146,35 @@ const Browse = ({
         toggleParam('material', material);               
         toggleParam('gender', gender);               
         toggleParam('price', price);               
-        toggleParam('shipping', shipping);                     
-        toggleParam('rating', rating);               
+
+        console.log("rating : " + rating);
+        //toggleParam('rating', rating);               
+
+                
+        if( shipping && !searchParams.get('shipping') ) {                                    
+            searchParams.set('shipping', shipping);
+            //setSearchParams(searchParams);                        
+        }
+        else if (shipping) {
+            searchParams.delete('shipping');
+            //setSearchParams(searchParams);                 
+        }
+        
+        if (rating && !searchParams.get('rating') ) {
+            console.log('searchParams.set(rating rating)');
+            searchParams.set('rating', rating);
+            //setSearchParams(searchParams);
+        }
+        else if(rating) {
+            searchParams.delete('rating');
+            //setSearchParams(searchParams);            
+        }
+                   
         toggleParam('sort', sort);                      
         toggleParam('page', page);                           
-        
+
+       
+        setSearchParams(searchParams);        
     };
 
     const searchHandler = (search) => {
@@ -189,7 +253,7 @@ const Browse = ({
         filter({ price: `${min}_${max}` });
     };
 
-    const shippingHandler = (shipping) => {
+    const shippingHandler = (shipping) => {        
         filter({ shipping });
     };
     const ratingHandler = (rating) => {
@@ -208,17 +272,11 @@ const Browse = ({
 
     const replaceQuery = (queryName, value) => {
 
-        const queryString = searchParams.toString();
-
+        
         const existedQeury = searchParams.get(queryName);
         const valueCheck = existedQeury?.search(value);
         const _check = existedQeury?.search(`_${value}`);
-
-        // console.log("queryName : " + queryName);
-        // console.log("value : " + value);
-        // console.log("existedQuery : " + existedQeury);
-        // console.log("valueCheck" + valueCheck);
-        
+                
                 
         let result = null;
         if (existedQeury) {
@@ -379,13 +437,14 @@ const Browse = ({
                             shippingHandler={shippingHandler}
                             ratingHandler={ratingHandler}
                             sortHandler={sortHandler}
-                            replaceQuery={replaceQuery}
+                            replaceQuery={replaceQuery}   
+                            searchParams={searchParams}                    
                         />
                         <div className="mt-6 flex flex-wrap items-start gap-4">
                             {products.map((product) => (
                                 <ProductCard
                                     product={product}
-                                    key={product.productId}
+                                    key={product.id}
                                 />
                             ))}
                         </div>
@@ -432,7 +491,7 @@ export async function loader({request, params}) {
     const ratingQuery = rateParam || "";
     const sortQuery = sortParam || "";
     const pageSize = 10;
-    const page = pageParam || 0;
+    const page = pageParam || 1;
     // --------------------------------------------------
     const brandQuery = brandParam?.split("_") || "";
     const brandRegex = `^${brandQuery[0]}`;
@@ -466,6 +525,7 @@ export async function loader({request, params}) {
         categoryQuery && categoryQuery !== ""
             ? categoryQuery
             : {};
+    console.log("categoryQuery: " + categoryQuery);
     // const brand = brandQuery && brandQuery !== "" ? { brand: brandQuery } : {};
     const style =
         styleQuery && styleQuery !== ""
@@ -505,22 +565,7 @@ export async function loader({request, params}) {
               }
             : {};
 
-    const sort = "popular";
-        // sortQuery == ""
-        //     ? {}
-        //     : sortQuery == "popular"
-        //     ? { rating: -1, "sku_products.sold": -1 }
-        //     : sortQuery == "newest"
-        //     ? { createdAt: -1 }
-        //     : sortQuery == "topSelling"
-        //     ? { "sku_products.sold": -1 }
-        //     : sortQuery == "topReviewed"
-        //     ? { rating: -1 }
-        //     : sortQuery == "priceHighToLow"
-        //     ? { "sku_products.sizes.price": -1 }
-        //     : sortQuery == "priceLowToHight"
-        //     ? { "sku_products.sizes.price": 1 }
-        //     : {};
+   
     // --------------------------------------------------
     function createRegex(data, styleRegex) {
         if (data.length > 1) {
@@ -543,62 +588,20 @@ export async function loader({request, params}) {
     // console.log({rating});
 
 
-    let productsDb = await api.get("/search", 
+    let response = await api.get("/search", 
         {params: { search, category, brand, style, 
-            size, color, material, gender, lowPrice : price.lowPrice, highPrice : price.highPrice, shipping, rating, 
-            page, pageSize, sort
+            size, color, material, gender, lowPrice : price.lowPrice, highPrice : price.highPrice, shipping:shipping.shipping, rating, 
+            page, pageSize
         }}
     )
-
-    console.log(productsDb);
-
-    return productsDb;    
     
-    // let products =
-    //     sortQuery && sortQuery !== "" ? productsDb : randomize(productsDb);
+    let productsDB = JSON.parse(JSON.stringify(response)).data;
     
-    // let categories = await Category.find().lean();
-    // let subCategories = await SubCategory.find()
-    //     .populate({ path: "parent", model: Category })
-    //     .lean();
-    // let colors = await Product.find({ ...category }).distinct(
-    //     "sku_products.color.color"
-    // );
-    // let brandsDb = await Product.find({ ...category }).distinct("brand");
-    // let sizes = await Product.find({ ...category }).distinct(
-    //     "sku_products.sizes.size"
-    // );
-    // let details = await Product.find({ ...category }).distinct("details");
-    // let stylesDb = filterArray(details, "Style");
-    // let materialsDb = filterArray(details, "Material");
-    // let styles = removeDublicates(stylesDb);
-    // let materials = removeDublicates(materialsDb);
-    // let brands = removeDublicates(brandsDb);
-    // let totalProducts = await Product.countDocuments({
-    //     ...search,
-    //     ...category,
-    //     ...brand,
-    //     ...style,
-    //     ...size,
-    //     ...color,
-    //     ...material,
-    //     ...gender,
-    //     ...price,
-    //     ...shipping,
-    //     ...rating,
-    // });
+    
+   
+    
 
-    // return {
-    //     props: {
-    //         categories: JSON.parse(JSON.stringify(categories)),
-    //         products: JSON.parse(JSON.stringify(products)),
-    //         subCategories: JSON.parse(JSON.stringify(subCategories)),
-    //         sizes,
-    //         colors,
-    //         brands,
-    //         styles,
-    //         materials,
-    //         paginationCount: Math.ceil(totalProducts / pageSize),
-    //     },
-    // };
+    return productsDB;    
+    
+    
 }

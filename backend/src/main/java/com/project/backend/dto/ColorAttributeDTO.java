@@ -4,17 +4,19 @@ package com.project.backend.dto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 public class ColorAttributeDTO {
 
-    private Long colorId;
+    private String id;
     private String color;     
     
     private String colorImage;
