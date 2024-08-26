@@ -29,6 +29,7 @@ public class UserDTO {
     private String signUpMethod;
     private Role role;
     private String image;
+    private AddressDTO address;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;    
 }

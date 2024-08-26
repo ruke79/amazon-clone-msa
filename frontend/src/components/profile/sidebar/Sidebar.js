@@ -19,7 +19,7 @@ const Sidebar = ({ data }) => {
             </div>
             <ul className="mt-4">
                 {profile.map((item, i) => (
-                    <img
+                    <Item
                         key={i}
                         item={item}
                         visible={data.tab == i.toString()}

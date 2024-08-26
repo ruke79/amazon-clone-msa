@@ -1,18 +1,28 @@
 import ShippingPage from "components/checkout/ShippingPage";
 import Layout from "components/profile/Layout";
 import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import api from "util/api";
 
-const Address = ({ user, tab, addressData }) => {
-    const [addresses, setAddresses] = useState(user?.address.address)
+const Address = () => {
+    
+    const { user, tab } = useLoaderData();
+    
+    //console.log(user);
+    
+    const [addresses, setAddresses] = useState([user?.address])
+    
+    console.log(addresses);
+    
+
     return (
         <>
-            <Layout user={user.user} tab={tab} title={`${user.user.name}'s Address`}>
+            <Layout user={user} tab={tab} title={`${user.userName}'s Address`}>
             <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Addresses</h2>
             </div>
-                <ShippingPage user={user} addresses={addresses} setAddresses={setAddresses} profile={true}/>
-            </Layout>
+                { <ShippingPage user={user} addresses={addresses} setAddresses={setAddresses} profile={true}/> }                
+            </Layout>            
         </>
     );
 };
@@ -26,16 +36,23 @@ export const loader = (authContext) => {
     
         const { currentUser } = authContext;
         const searchParams = new URL(request.url).searchParams;
+        const tab = Number(searchParams.get('tab')) || 0;
+        console.log(currentUser);
 
         try {
 
-            const { data } = await api.get("/profile/address", null,
+            const { data } = await api.get("/user/profile/address", 
                             { params : { userId : currentUser.username,             
                                         }
                             } 
             );                                   
+
+            console.log(data);
         
-            return data;    
+            return {
+                  user : data,
+                  tab : tab 
+            }
         
         } catch (error) {
             console.log("erorr >>>", error.response.data.message);

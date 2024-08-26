@@ -1,5 +1,6 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.AppRole;
 import com.project.backend.model.PasswordResetToken;
@@ -11,6 +12,7 @@ import com.project.backend.repository.RoleRepository;
 import com.project.backend.repository.UserRepository;
 import com.project.backend.repository.VerificationTokenRepository;
 import com.project.backend.security.request.SignupRequest;
+import com.project.backend.service.AddressService;
 import com.project.backend.service.EmailService;
 import com.project.backend.service.TotpService;
 import com.project.backend.service.UserService;
@@ -100,6 +102,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDTO convertToDto(User user) {
+
+        
         return new UserDTO(
                 Long.toString(user.getUserId()),
                 user.getUserName(),
@@ -115,6 +119,7 @@ public class UserServiceImpl implements UserService {
                 user.getSignUpMethod(),
                 user.getRole(),
                 user.getImage(),
+                null,
                 user.getCreatedAt(),
                 user.getUpdatedAt()
                 
@@ -390,6 +395,33 @@ public class UserServiceImpl implements UserService {
             ;
                 }
             }).collect(Collectors.toList());
+    }
+
+
+    public UserDTO findUser(String userId) {
+
+        Optional<User> existed = userRepository.findByEmail(userId);
+
+        if ( existed.isPresent()) {
+
+            User user = existed.get();
+
+            AddressDTO address = new AddressDTO();
+            if (null != user.getAddress() ) {
+                AddressService.deepCopyUserAddressDTO(address, user.getAddress());
+            }
+
+            UserDTO result = UserDTO.builder()
+            .userName(user.getUserName())
+            .email(user.getEmail())
+            .image(user.getImage())
+            .address(address)
+            .build();
+
+            return result;
+        }
+        return null;
+
     }
 
 }

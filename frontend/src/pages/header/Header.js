@@ -19,6 +19,7 @@ const Header = ({title, searchHandler}) => {
         
                     
         <header>
+        <script src="http://localhost:8097"></script>
         <title>{title}</title>
             <meta name="description" content="full amazon clone React" />
             <meta

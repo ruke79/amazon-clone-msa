@@ -14,6 +14,7 @@ import { useAuthContext } from "store/AuthContext";
 const AddShipping = ({
     shipping,
     setShipping,
+    addresses,
     setAddresses,
     initialValue,
     setSelectedAddress,
@@ -80,8 +81,8 @@ const AddShipping = ({
         
         const res = await saveShippingAddress(shipping, currentUser.username);        
 
-        
-        setAddresses(shipping);
+        // ListShipping에서 배열로 참조
+        setAddresses([...addresses, shipping]); 
         setSelectedAddress(initialValue);
         setShipping(initialValue);
     };

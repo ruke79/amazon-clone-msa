@@ -63,5 +63,7 @@ public interface UserService {
     void disable2FA(Long userId);
 
     List<String> getUsersFromSessionRegistry();
+
+    UserDTO findUser(String userId);
     
 }

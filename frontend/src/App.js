@@ -17,11 +17,12 @@ import Browse, { loader as browseLoader } from "pages/browse";
 import Cart from "pages/cart";
 import Checkout, { loader as loaderCart } from "pages/checkout";
 import OrderPage,{ loader as loaderOrder } from "pages/order";
-import Address from "pages/profile/address";
+import Address, {loader as loaderAddress} from "pages/profile/address";
 import Orders from "pages/profile/orders";
 import Security from "pages/profile/security";
-import Profile from "pages/profile";
+import Profile, { loader as loaderProfile }  from "pages/profile/profile";
 import Payment from "components/order/Payment";
+import ProtectedRoute from "components/ProtectedRoute";
 
 
 const AppRouter = () => {
@@ -40,35 +41,49 @@ const router = useMemo( () => createBrowserRouter([
       },
       { path: '/signin', element: <SignInPage /> },
       { path: '/register', element: <RegisterPage /> },      
-    ]
+    ]    
   },
   { path: '/profile',
-    element : <Profile/>,
-    children: [
-      {
-        path : 'address',
-        element : <Address/>,
-      },
-      {
-        path : 'orders',
-        element : <Orders/>,
-      },
-      {
-        path : 'payment', 
-        element : <Payment/>,
-      },
-      {
-        path : 'security',
-        element : <Security/>,
-      },
+    element :  <Profile/>,
+    loader : loaderProfile(authContext),
+    // 원인 파악..
+     children: [      
+            
+      // {
+      //   path : 'orders',
+      //   element : <Orders/>,
+      // },
+    //   {
+    //     path : 'payment', 
+    //     element : <Payment/>,
+    //   },
+    //   {
+    //     path : 'security',
+    //     element : <Security/>,
+    //   },
       // {
       //   path : 'wishlist',
       //   element : 
       // }
     ]
-
   },
-
+  {        
+    path : 'profile/address',
+    element : <Address/>,
+    loader : loaderAddress(authContext),
+  },
+  {
+      path : 'profile/orders',
+        element : <Orders/>,
+   },
+   {
+        path : 'profile/payment', 
+        element : <Payment/>,
+     },
+      {
+        path : 'profile/security',
+        element : <Security/>,
+      },
   { path: '/product/:slug',
     //id: 'slug',
     element: <SingleProduct/>,
@@ -82,7 +97,7 @@ const router = useMemo( () => createBrowserRouter([
   },
   {
     path: '/cart',
-    element: <Cart />,
+    element: <ProtectedRoute><Cart /></ProtectedRoute>,
   },
   {
     path: '/checkout',
@@ -103,7 +118,8 @@ const router = useMemo( () => createBrowserRouter([
         { path: 'product', element: <AdminProduct /> }
       ]
     }
-  ]), [authContext]);
+  ]),   
+  [authContext]);
 
   return <RouterProvider router={router} />          
 };
@@ -115,8 +131,8 @@ function App() {
     <>
     <ContextProvider>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>          
-            <AppRouter />
+        <PersistGate loading={null} persistor={persistor}>                      
+              <AppRouter />            
         </PersistGate>
       </Provider>
       </ContextProvider>

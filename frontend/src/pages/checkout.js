@@ -28,7 +28,7 @@ const Checkout = () => {
     
     useEffect(() => {
                      
-        let check = addresses.find((address) => address.active == true);
+        let check = addresses?.find((address) => address.active == true);
         if (check) {
             setSelectedAddress(check);
             //console.log(selectedAddress);

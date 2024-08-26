@@ -40,7 +40,7 @@ const ShippingPage = ({
                 user={user}
                 profile={false}
             />
-            {visible && (
+            {(
                 <AddShipping
                     shipping={shipping}
                     setShipping={setShipping}

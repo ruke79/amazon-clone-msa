@@ -1,10 +1,14 @@
 import Layout from "components/profile/Layout";
+import { redirect, useLoaderData } from "react-router-dom";
 import api from "util/api";
 
-const Profile = ({ user, tab, orders }) => {
+const Profile = () => {
+    const { user, tab } = useLoaderData();
+
+    
     return (
         <>
-            <Layout user={user} tab={tab} title={`${user.name}'s Profile`}>
+            <Layout user={user} tab={tab} title={`${user.username}'s Profile`}>
             <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Profile</h2>
             </div>
@@ -21,26 +25,25 @@ export const loader = (authContext) => {
     
         const { currentUser } = authContext;
 
-        if (!currentUser)
-            return 
+        console.log(currentUser);
+
+        // if (!currentUser) {
+        //     return redirect('/')
+        // }
 
         const searchParams = new URL(request.url).searchParams;
+        const tab = Number(searchParams.get('tab')) || 0;
 
-        try {
-
-            const { data } = await api.get("/profile/address", null,
-            { params : { userId : currentUser.username,             
-                        }
-            } 
-);                                   
-        
-            return data;    
-        
-        } catch (error) {
-            console.log("erorr >>>", error.response.data.message);
+        return {
+               user : currentUser,
+               tab : tab,                          
         }
+
     };
 }
+
+
+
 
 // export async function getServerSideProps(context) {
 //     db.connectDb();

@@ -25,7 +25,7 @@ const HeadingFilter = ({
 
     const shippingParam = Number(searchParams.get('shipping'));
     let ratingParam = Number(searchParams.get('rating'));
-    const priceParam  = Number(searchParams.get('price'));
+    const priceParam  = searchParams.get('price');
     const sortParam  = searchParams.get('sort');
     
 

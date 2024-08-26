@@ -88,6 +88,15 @@ public class AddressService {
         address.setZipCode(src.getZipCode());
     }
 
+    static public void deepCopyUserAddressDTO(AddressDTO address, Address src) {
+        
+        address.setAddress1(src.getAddress1());
+        address.setAddress2(src.getAddress2());
+        address.setCity(src.getCity());
+        address.setState(src.getState());
+        address.setZipCode(src.getZipCode());
+    }
+
     public Address updateUserAddress(AddressRequest request) {
 
         Optional<User> user = userRepository.findByEmail(request.getUserId());
