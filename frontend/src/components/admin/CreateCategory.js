@@ -11,20 +11,13 @@ export const loadCategories = async(setCategories) => {
     try {
         const response = await api.get("/admin/categories");
 
-       // subCategories(response.categories);
-      //console.log(JSON.stringify(response.data));
-
       
-      
-      //let categoryNames = [] ;
-      //for(const [i, value] of response.data.entries()) 
-        //  categoryNames.push({"id" : value.id, "name" : value.name});      
       setCategories(JSON.parse(JSON.stringify(response.data)));     
 
        return response.data;
 
        } catch(error) {
-           //console.log(error.response.data.message);
+           console.log(error.response.data.message);
        }  
 }
 
@@ -44,8 +37,7 @@ const CreateCategory = () => {
         //if (isLoaded) {
         loadCategories(setCategories);        
         //}
-        console.log("UseEffect");
-        
+                
         //setIsLoaded(true);        
         
       }, [isLoaded]);
@@ -81,15 +73,14 @@ const CreateCategory = () => {
 
             let categoryNames = [] ;     
 
-            console.log(JSON.stringify(response.data));
-            
+                        
             categoryNames.push({"id" : response.data.id, "name" : response.data.name});
-              console.log(categoryNames);
+              
               setCategories(categories ||categoryNames);     
             
             //setName("")
         } catch (error ) {
-            //console.log(error.response.data.message)
+            console.log(error.response.data.message)
         }
     };
     const handleCategoryChange = (e) => {
@@ -103,14 +94,14 @@ const CreateCategory = () => {
     
     const submitSubCategoryHandler = async () => {
         try {
-            console.log(subcategoryName);
+            
             const slug = slugify(subcategoryName);
             const { data } = await api.post("/admin/subcategory", {
                 subcategoryName,
                 parent,
                 slug
             });
-            console.log(data);
+            
             //setSubCategories(data.subCategory);
             setSubcategoryName("");
             setParent("");

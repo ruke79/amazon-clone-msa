@@ -6,10 +6,10 @@ import { useLoaderData, defer } from "react-router-dom";
 import api from "util/api";
 
 const SingleProduct = () => {
-    // console.log(product);
+    
     const product = useLoaderData();
     
-    console.log(product);
+    
 
     return (
         <>
@@ -49,8 +49,7 @@ async function loaderProduct(slug, style, size) {
         
         const product = response.data;
 
-        console.log(product);
-
+        
         let subProduct = product.sku_products[style];
     
         let prices = subProduct.sizes        

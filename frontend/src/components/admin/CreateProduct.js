@@ -118,7 +118,7 @@ const CreateProduct = ({
 
                                
                 product.slug = slugify(product.name);
-                console.log(product);
+                
                 
                 formData.append("product", new Blob([JSON.stringify(product)], { 
                     type: 'application/json'
@@ -147,7 +147,7 @@ const CreateProduct = ({
                         ],
                     }                              
                 );
-                console.log(data);
+                
                                     
                 // if (data.status === 200) {
                 //     setProduct(initialProduct);

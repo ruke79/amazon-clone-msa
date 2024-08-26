@@ -25,16 +25,16 @@ const Infos = ({ product, setActiveImg }) => {
     const dispatch = useDispatch();
     const { cartItems: cart } = useSelector((state) => state.cart);
 
-    
+        
     const sizeParam = searchParams.get('size');
-    const styleParam = searchParams.get('style');
+    const styleParam = searchParams.get('style');    
 
     const [loading, setLoading] = useState(false);
     const [size, setSize] = useState(sizeParam);
     const [qty, setQty] = useState(1);
     const [error, setError] = useState("");
     
-    // console.log("cart: ", cart);
+    
     useEffect(() => {
         setSize("");
         setQty(1);
@@ -84,12 +84,12 @@ const Infos = ({ product, setActiveImg }) => {
                     }
                     return p;
                 });
-                console.log(newCart);
+                
                 dispatch(updateCart(newCart));
                 setError("");
                 setLoading(false);
             } else {       
-                console.log("addToCart");         
+                
                 dispatch(addToCart({ ...data, qty, size: data.size, _uid }));
                 setError("");
                 setLoading(false);
@@ -194,12 +194,12 @@ const Infos = ({ product, setActiveImg }) => {
                     {product.sizes.map((size, i) => (
                         <Link
                             key={i}
-                            to={`/product/${product.slug}?style=${styleParam}&size=${i}`}
+                            to={`/product/${product.slug}?style=${Number(styleParam)}&size=${i}`}
                         >
                             <div
-                                onClick={() => setSize(size.size)}
+                                onClick={() => {setSize(size.size);} }
                                 className={`flex items-center justify-center w-11 h-11 rounded-full bg-slate-200 text-slate-700 hover:outline hover:outline-1 hover:outline-slate-400 hover:outline-offset-[3px] transition-all transition  ${
-                                    i === sizeParam &&
+                                    i === Number(sizeParam) &&
                                     "font-semibold outline outline-1 outline-slate-400 outline-offset-[3px] bg-gradient-to-r from-amazon-orange to-slate-100"
                                 }`}
                             >
@@ -220,7 +220,7 @@ const Infos = ({ product, setActiveImg }) => {
                             <span
                                 key={i}
                                 className={`rounded-full w-11 h-11 hover:outline outline-1 hover:outline-offset-[3px] hover:outline-slate-400  transition-all transition ${
-                                    i === styleParam
+                                    i === Number(styleParam)
                                         ? "outline outline-1 outline-offset-[3px] outline-slate-400"
                                         : ""
                                 }`}

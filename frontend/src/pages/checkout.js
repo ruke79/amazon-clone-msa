@@ -16,7 +16,7 @@ const Checkout = () => {
         
     const cart = useLoaderData();
     const user = { userId : cart.userId, address : cart.address};
-    console.log(user);
+    
         
     const [addresses, setAddresses] = useState(user?.address || []);
     const [paymentMethod, setPaymentMethod] = useState("paypal");
@@ -31,7 +31,7 @@ const Checkout = () => {
         let check = addresses.find((address) => address.active == true);
         if (check) {
             setSelectedAddress(check);
-            console.log(selectedAddress);
+            //console.log(selectedAddress);
         } else {
             setSelectedAddress("");
         }
@@ -88,8 +88,7 @@ export const loader = (authContext) => {
         const { data } = await api.get("/user/cart/checkout", 
         { params : { userId : currentUser.username } } 
         );       
-
-                
+        
         
         return data;    
     };

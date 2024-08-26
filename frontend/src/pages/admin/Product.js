@@ -81,7 +81,7 @@ const AdminProduct = () => {
                     discount: data.discount
                 })
             }
-             console.log('id product: ', data);
+             
         };
         if (product.parent ) {
             getParentData();
@@ -92,7 +92,7 @@ const AdminProduct = () => {
 
         loadCategories(setCategories);
 
-        console.log(categories);
+        
 
         async function getSubs() {
 
@@ -108,7 +108,7 @@ const AdminProduct = () => {
             getSubs();
     }, [product.category, product.name]);
 
-    console.log(categories);
+    
 
     return (
         <>

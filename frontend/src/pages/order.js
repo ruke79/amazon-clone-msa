@@ -7,10 +7,17 @@ import UserInfo from "components/order/UserInfo";
 import { useEffect, useState } from "react";
 import DotLoaderSpinner from "components/loader/Loading"
 import api from "util/api";
+import { useLoaderData } from "react-router-dom";
 
-const OrderPage = ({ order: orderData }) => {
+const OrderPage = () => {
+    const orderData = useLoaderData();
+    
+    
     const [order ,setOrder] = useState(orderData);
     const [loading, setLoading] = useState(false);
+
+    
+
     
     return (
         <>
@@ -53,16 +60,18 @@ export default OrderPage;
 //     };
 // }
 
+
 export const loader = (authContext) => {
 
     return async ({params, request}) => {
     
-        const { currentUser } = authContext;
+        //const { currentUser } = authContext;
+        const orderId = params.id;
 
-        const { data } = await api.get("/user/order", 
-        { params : { userId : currentUser.username } } 
-        );                       
-        
+
+        const { data } = await api.get(`/user/order/${orderId}`);                       
+
+                
         return data;    
     };
 }

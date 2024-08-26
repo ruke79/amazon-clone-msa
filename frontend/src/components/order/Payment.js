@@ -14,8 +14,9 @@ const Payment = ({ order, setLoading, setOrder }) => {
                 const { data } = await api.put("/order/payment", {
                     id: order.id,
                 });
-                setOrder(data);
-                dispatch(emptyCart(data));
+                let paidOrder = {...order, isPaid : data }
+                setOrder(paidOrder);
+                dispatch(emptyCart(paidOrder));
                 setLoading(false);
             }, 500);
 

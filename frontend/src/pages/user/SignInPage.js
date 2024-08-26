@@ -67,7 +67,7 @@ const SignInPage = () => {
         }
         try {
         setLoading(true);
-        console.log(data);
+        
         const response = await api.post("/auth/public/signin", data);
 
         if (response.status === 200 && response.data.jwtToken) {

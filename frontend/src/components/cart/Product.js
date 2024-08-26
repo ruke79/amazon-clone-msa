@@ -14,7 +14,6 @@ const Product = ({ product, selected, setSelected, cart }) => {
     const {cartItems} = cart;
     const [active, setActive] = useState(); 
 
-    console.log(product);
 
     useEffect(() => {
         const check = selected.find((p) => p._uid === product._uid);

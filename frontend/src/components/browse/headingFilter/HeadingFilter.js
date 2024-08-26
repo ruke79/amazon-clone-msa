@@ -23,9 +23,9 @@ const HeadingFilter = ({
 
 
 
-    const shippingParam = searchParams.get('shipping');
-    let ratingParam = searchParams.get('rating');
-    const priceParam  = searchParams.get('price');
+    const shippingParam = Number(searchParams.get('shipping'));
+    let ratingParam = Number(searchParams.get('rating'));
+    const priceParam  = Number(searchParams.get('price'));
     const sortParam  = searchParams.get('sort');
     
 
@@ -36,9 +36,7 @@ const HeadingFilter = ({
     const checkRating = replaceQuery("rating", "4");
     const sortQuery = sortParam || "Recomended";
 
-    console.log("checkRating : " + checkRating);
-    console.log("ratingParam : " + ratingParam);
-    console.log("priceParam : " + priceParam);
+    
     return (
         <div className="w-full flex flex-col md:flex-row md:items-end gap-x-6">
             <div>

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.CartDTO;
 import com.project.backend.dto.CartProductDTO;
-import com.project.backend.dto.CartProductInfoDTO;
 import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.ProductInfoDTO;
 import com.project.backend.model.Cart;
@@ -151,8 +150,10 @@ public class CartService {
         
         for (CartProduct item : cart.get().getCartProducts()) {
 
-            CartProductDTO dto = new CartProductDTO();
+            CartProductDTO dto = new CartProductDTO();            
+            dto.setId(Long.toString(item.getCartproductId()));            
             dto.setColor(ColorAttributeDTO.builder()
+                            .id(Long.toString(item.getColor().getColorId()))
                             .color(item.getColor().getColor())
                             .colorImage(item.getColor().getColorImage()).build());
             dto.setImage(item.getImage());
@@ -239,7 +240,7 @@ public class CartService {
                     if (sku.getDiscount() > 0)
                         price = (price - price / sku.getDiscount());
                     
-                    CartProduct cartProduct = CartProduct.builder()
+                    CartProduct cartProduct = CartProduct.builder()                    
                     .name(product.get().getName())
                     .color(ProductColorAttribute.builder()
                             .colorId(Long.parseLong(cartItem.getColor().getId()))

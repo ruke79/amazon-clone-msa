@@ -21,11 +21,9 @@ const ListShipping = ({
 
     
     const changeActiveHandler = async (user, id) => {
-        console.log(user);
-        console.log(id);
         
-        const res = await selectShippingAddress(user, id);
-        console.log(res);
+        
+        const res = await selectShippingAddress(user, id);        
         setAddresses(res);
     };
     const deleteHandler = async (id, e) => {

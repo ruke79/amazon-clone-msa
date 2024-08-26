@@ -77,7 +77,7 @@ const AddReview = ({ product, setReviews }) => {
                 formData.append("file", img);
             });
             uploaded_images = await uploadImages(formData);
-            console.log(uploaded_images);
+            //console.log(uploaded_images);
         } else {
             const { data } = await api.put(
                 `/product/${product.product_id}/review`,

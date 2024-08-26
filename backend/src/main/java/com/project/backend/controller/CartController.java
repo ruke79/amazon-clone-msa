@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.CartDTO;
-import com.project.backend.dto.CartProductInfoDTO;
 import com.project.backend.dto.ProductInfoDTO;
 import com.project.backend.model.Cart;
 import com.project.backend.security.request.AddressRequest;

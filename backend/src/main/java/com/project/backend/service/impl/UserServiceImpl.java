@@ -114,8 +114,10 @@ public class UserServiceImpl implements UserService {
                 user.isTwoFactorEnabled(),
                 user.getSignUpMethod(),
                 user.getRole(),
+                user.getImage(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
+                
         );
     }
 

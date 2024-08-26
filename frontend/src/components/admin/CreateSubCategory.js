@@ -22,7 +22,7 @@ const CreateSubCategory = (categories) => {
     });
 
     const submitHandler = async () => {
-        console.log(name);
+        
         try {
             const slug = slugify(name);            
             const { data } = await api.post("/admin/subcategory", {

@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 
 const Checkout = ({ subtotal, shippingFee, total, selected, saveCartToDbHandler }) => {
 
-    console.log(shippingFee, total, subtotal);
+    
     return (
         <div className="flex flex-col h-fit bg-white rounded py-2 px-4 border">
 

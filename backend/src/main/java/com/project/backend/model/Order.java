@@ -1,7 +1,7 @@
 package com.project.backend.model;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import com.project.backend.constants.OrderStatusEnum;
 
@@ -37,38 +37,38 @@ public class Order extends BaseEntity {
     private User user;    
             
     @OneToMany(mappedBy="order", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class)
-    private Set<OrderedProduct> ordered_products;
+    cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class, orphanRemoval = true)
+    private List<OrderedProduct> orderedProducts;
 
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ShippingAddress.class)
     @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id", nullable = false)
-    private ShippingAddress shipping_address;
+    private ShippingAddress shippingAddress;
 
-    private String payment_method;
+    private String paymentMethod;
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class)
     @JoinColumn(name="payment_id", referencedColumnName = "payment_id", nullable = false)
-    private PaymentResult payment_result;
+    private PaymentResult paymentResult;
     
     private int total;
 
-    private int shipping_price;
+    private int shippingPrice;
 
-    private int total_before_discount;
+    private int totalBeforeDiscount;
 
-    private String coupon_applied;
+    private String couponApplied;
 
-    private int tax_price = 0;
+    private int taxPrice = 0;
 
-    private boolean is_paid = false;
+    private boolean isPaid = false;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatusEnum order_status;    
+    private OrderStatusEnum orderStatus = OrderStatusEnum.NOT_PROCESSED ;    
 
     
-    private LocalDateTime paid_at;
+    private LocalDateTime paidAt;
 
-    private LocalDateTime delivered_at;
+    private LocalDateTime deliveredAt;
 
 }

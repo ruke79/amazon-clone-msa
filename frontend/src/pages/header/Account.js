@@ -17,7 +17,7 @@ const Account = () => {
     useAuthContext();
 
     useEffect(() => {
-        console.log(currentUser);
+        
       }, [token]);
 
     const handleLogout = () => {

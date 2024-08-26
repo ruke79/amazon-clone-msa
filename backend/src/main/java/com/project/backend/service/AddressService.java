@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.project.backend.model.Address;
 import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
+import com.project.backend.dto.AddressDTO;
 import com.project.backend.repository.AddressRepository;
 import com.project.backend.repository.ShippingAddressRepository;
 import com.project.backend.repository.UserRepository;
@@ -34,16 +35,7 @@ public class AddressService {
         ShippingAddress address = new ShippingAddress();
 
         
-
-        address.setAddress1(request.getAddress().getAddress1());
-        address.setAddress2(request.getAddress().getAddress2());
-        address.setCity(request.getAddress().getCity());
-        address.setState(request.getAddress().getState());
-        address.setCountry(request.getAddress().getCountry());
-        address.setFirstname(request.getAddress().getFirstname());
-        address.setLastname(request.getAddress().getLastname());
-        address.setPhoneNumber(request.getAddress().getPhoneNumber());
-        address.setZipCode(request.getAddress().getZipCode());
+        deepCopyShippingAddress(address, request.getAddress());        
 
         Optional<User> user = userRepository.findByEmail(request.getUserId());
         
@@ -56,18 +48,44 @@ public class AddressService {
 
         Address address = new Address();
 
-        deepCopyUserAddress(address, request);
+        deepCopyUserAddress(address, request.getAddress());
 
         return addressRepository.save(address);              
     }
 
-    private void deepCopyUserAddress(Address address, AddressRequest request) {
+    static public void deepCopyShippingAddress(ShippingAddress address, AddressDTO src) {
+
+        address.setAddress1(src.getAddress1());
+        address.setAddress2(src.getAddress2());
+        address.setCity(src.getCity());
+        address.setState(src.getState());
+        address.setCountry(src.getCountry());
+        address.setFirstname(src.getFirstname());
+        address.setLastname(src.getLastname());
+        address.setPhoneNumber(src.getPhoneNumber());
+        address.setZipCode(src.getZipCode());
+    }
+
+    static public void deepCopyShippingAddressDTO(AddressDTO address, ShippingAddress src ) {
+
+        address.setAddress1(src.getAddress1());
+        address.setAddress2(src.getAddress2());
+        address.setCity(src.getCity());
+        address.setState(src.getState());
+        address.setCountry(src.getCountry());
+        address.setFirstname(src.getFirstname());
+        address.setLastname(src.getLastname());
+        address.setPhoneNumber(src.getPhoneNumber());
+        address.setZipCode(src.getZipCode());
+    }
+
+    private void deepCopyUserAddress(Address address, AddressDTO src) {
         
-        address.setAddress1(request.getAddress().getAddress1());
-        address.setAddress2(request.getAddress().getAddress2());
-        address.setCity(request.getAddress().getCity());
-        address.setState(request.getAddress().getState());
-        address.setZipCode(request.getAddress().getZipCode());
+        address.setAddress1(src.getAddress1());
+        address.setAddress2(src.getAddress2());
+        address.setCity(src.getCity());
+        address.setState(src.getState());
+        address.setZipCode(src.getZipCode());
     }
 
     public Address updateUserAddress(AddressRequest request) {
@@ -78,7 +96,7 @@ public class AddressService {
 
             Address address = userRepository.findAddressByEmail(request.getUserId());
 
-            deepCopyUserAddress(address, request);
+            deepCopyUserAddress(address, request.getAddress());
 
             return addressRepository.save(address);
         }

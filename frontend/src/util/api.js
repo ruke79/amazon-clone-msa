@@ -49,7 +49,7 @@ api.interceptors.request.use(
 
 export const saveCart = async (cart, user_id) => {
   try {
-      console.log(cart);
+      
       const { data } = await api.post("/user/cart/savecart", {
           products : cart,
           userId : user_id,
@@ -64,8 +64,7 @@ export const saveShippingAddress = async(address, user_id) => {
 
   try {
 
-    console.log(address);
-    console.log(user_id);
+    
     
     const { data } = await api.post("/user/cart/save_shipping_address", {
             address : address,

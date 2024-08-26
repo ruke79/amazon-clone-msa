@@ -59,7 +59,10 @@ const Summary = ({
                 setLoading(false);
                 return;
             }
-            const { data } = await api.post("/order/create", {
+
+                        
+            const {data}  = await api.post("/user/order/create", {
+                userId : user.userId,
                 products: cart.products,
                 shippingAddress: selectedAddress,
                 paymentMethod,
@@ -70,8 +73,9 @@ const Summary = ({
                 totalBeforeDiscount: cart.cartTotal,
                 couponApplied: coupon,
             });
-            navigate(`/order/${data.order_id}`);
-            // setLoading(false);
+            
+            navigate(`/order/${data.orderId}`);
+            setLoading(false);
         } catch (error) {
             setLoading(false);
             setOrder_Error(error.response.data.message);

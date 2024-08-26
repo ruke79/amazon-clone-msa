@@ -33,7 +33,7 @@ const CartPage = ({ cart }) => {
                 }                
             );
                 dispatch(updateCart(data));
-                 console.log("update cart > ", data);
+                 //console.log("update cart > ", data);
             };
 
             if (cart.cartItems.length > 0) {
@@ -84,7 +84,7 @@ const CartPage = ({ cart }) => {
     const saveCartToDbHandler = async () => {
         if (token) {
             setLoading(true);
-            console.log(currentUser);
+            
             const res = await saveCart(selected, currentUser.username);
             navigate("/checkout");
         } else {

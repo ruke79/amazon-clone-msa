@@ -32,7 +32,7 @@ const RegisterPage = () => {
             ...user,
             [name]: value,
         });
-        // console.log(user);
+        
     };
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const RegisterPage = () => {
           };    
         try{
             setLoading(true);
-            console.log(sendData);
+            
             const response = await api.post("/auth/public/register", sendData);
 
             setUser({

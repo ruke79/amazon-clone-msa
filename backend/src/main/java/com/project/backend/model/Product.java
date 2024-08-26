@@ -62,21 +62,21 @@ public class Product extends BaseEntity {
     private List<SubCategory> subCategories = new ArrayList<>();
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = ProductDetails.class)
+    cascade = CascadeType.PERSIST,targetEntity = ProductDetails.class, orphanRemoval = true)
     private List<ProductDetails> details;
 
     // cascade = CascadeType.PERSIST 빠지면 저장 안됨..
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,targetEntity = Review.class)
+            cascade = CascadeType.PERSIST,targetEntity = Review.class,orphanRemoval = true)
     private List<Review> reviews;
 
     
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-    cascade = CascadeType.MERGE, targetEntity = ProductQA.class)    
+    cascade = CascadeType.MERGE, targetEntity = ProductQA.class, orphanRemoval = true)    
     private List<ProductQA> questions;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,targetEntity = ProductSku.class)
+            cascade = CascadeType.PERSIST,targetEntity = ProductSku.class, orphanRemoval = true)
     private List<ProductSku> sku_products;
 
     private String refund_policy = "30 days";

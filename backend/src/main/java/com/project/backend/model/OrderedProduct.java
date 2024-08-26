@@ -31,9 +31,9 @@ public class OrderedProduct extends BaseEntity {
 
         private String size;
 
-        private int quantity;
+        private int qty;
 
-        @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ProductColorAttribute.class)
+        @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.MERGE, targetEntity=ProductColorAttribute.class)
         @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)
         private ProductColorAttribute color;
 

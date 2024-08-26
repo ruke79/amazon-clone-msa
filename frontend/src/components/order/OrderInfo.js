@@ -32,7 +32,7 @@ const OrderInfo = ({ order }) => {
                             : "text-red-600"
                     }`}
                 >
-                    {order.status}
+                    {order.orderStatus}
                 </span>
             </div>
         </div>

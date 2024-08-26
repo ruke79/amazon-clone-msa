@@ -14,7 +14,7 @@ const Total = ({ order }) => {
                         </em>
                     </span>
                     <span>
-                        - {order.totalBeforeDiscount - order.tatol}$
+                        - {order.totalBeforeDiscount - order.total}$
                     </span>
                 </div>
             )}

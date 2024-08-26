@@ -77,7 +77,7 @@ const AddShipping = ({
     const { currentUser } = useAuthContext();
 
     const submitHandler = async () => {
-        console.log("shipping : ", shipping);
+        
         const res = await saveShippingAddress(shipping, currentUser.username);        
 
         
