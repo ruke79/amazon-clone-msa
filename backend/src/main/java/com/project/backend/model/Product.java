@@ -81,7 +81,7 @@ public class Product extends BaseEntity {
 
     private String refund_policy = "30 days";
 
-    private int rating = 0;
+    private float rating = 0F;
 
     private int num_reviews = 0;
 

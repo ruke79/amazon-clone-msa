@@ -88,7 +88,7 @@ const router = useMemo( () => createBrowserRouter([
       },
   { path: '/product/:slug',
     //id: 'slug',
-    element: <SingleProduct/>,
+    element: <ProtectedRoute><SingleProduct/></ProtectedRoute>,
     loader: productLoader,
     
   },  

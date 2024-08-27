@@ -16,8 +16,10 @@ public class ReviewDTO {
     private String size;
     private ReviewStyleDTO style;
     private String fit;
-    private int rating;
+    private float rating;
     private String review;
     List<String> images;
+
+    private ReviewerDTO reviewedBy;
 
 }

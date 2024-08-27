@@ -8,6 +8,7 @@ import api from 'util/api';
 import { useState } from "react";
 import ImagesReview from "./Images";
 import Select from "./Select";
+import axios from "axios";
 
 let fits = ["Small", "True to size", "Large"];
 
@@ -85,38 +86,71 @@ const AddReview = ({ product, setReviews }) => {
                 uploaded_images.push(image.url);
             });
 
+            axios.all(imageUploader).then(async() => {
+
+                const { data } = await api.put(
+                    `/product/${product.id}/review`,
+                    {
+                        size,
+                        style,
+                        fit,
+                        rating,
+                        review,
+                        images: uploaded_images,
+                    }
+                );
+                setReviews(data.reviews);
+                dispatch(
+                    showDialog({
+                        header: "Adding review Successfully!",
+                        msgs: [{
+                            msg: "Adding review Successfully.",
+                            type: "success",
+                        }],
+                    })
+                );
+                setSize("");
+                setStyle("");
+                setFit("");
+                setRating(0);
+                setImages([]);
+                setReview("");
+                setLoading(false);
+    
+            });
+        } else {
+            const { data } = await api.put(
+                `/product/${product.id}/review`,
+                {
+                    size,
+                    style,
+                    fit,
+                    rating,
+                    review,
+                    images: uploaded_images,
+                }
+            );
+            console.log(data);
+            setReviews(data.reviews);
+            dispatch(
+                showDialog({
+                    header: "Adding review Successfully!",
+                    msgs: [{
+                        msg: "Adding review Successfully.",
+                        type: "success",
+                    }],
+                })
+            );
+            setSize("");
+            setStyle("");
+            setFit("");
+            setRating(0);
+            setImages([]);
+            setReview("");
+            setLoading(false);
         }
-
-        const { data } = await api.put(
-            `/product/${product.id}/review`,
-            {
-                size,
-                style,
-                fit,
-                rating,
-                review,
-                images: uploaded_images,
-            }
-        );
-        setReviews(data.reviews);
-        dispatch(
-            showDialog({
-                header: "Adding review Successfully!",
-                msgs: [{
-                    msg: "Adding review Successfully.",
-                    type: "success",
-                }],
-            })
-        );
-        setSize("");
-        setStyle("");
-        setFit("");
-        setRating(0);
-        setImages([]);
-        setReview("");
-        setLoading(false);
-
-    };
+        
+    }
 
     return (
         <div className="flex flex-col">

@@ -24,7 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Transactional
     @Modifying
     @Query("Update Product p Set p.rating = :rating WHERE p.productId = :productId")
-    int updateRating(@Param("productId") Long id, @Param("rating") int rating);
+    int updateRating(@Param("productId") Long id, @Param("rating") float rating);
 
     @Query(value ="select a.product_id from product a inner join category b  where (:categoryRegexp is null or b.category_name REGEXP :categoryRegexp)", nativeQuery = true)
     public List<Long> findProductIDsByCategoryName(@Param("categoryRegexp") String categoryRegexp);

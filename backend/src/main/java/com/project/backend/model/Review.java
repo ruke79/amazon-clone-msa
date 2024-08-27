@@ -28,7 +28,7 @@ public class Review extends BaseEntity{
     @Column(name = "review_id")
     private Long reviewId;
 
-    private int rating = 0;
+    private float rating = 0F;
 
     private String review;
 
@@ -37,11 +37,13 @@ public class Review extends BaseEntity{
     private String fit;
 
     private List<String> images;
+    private List<Boolean> likes;
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ReviewStyle.class)
     @JoinColumn(name="rstyle_id", referencedColumnName = "rstyle_id", nullable = false)
     private ReviewStyle style;
 
+    @JsonIgnore
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=User.class)
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     private User reviewedBy;    

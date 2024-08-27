@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.dto.ReviewDTO;
 import com.project.backend.security.request.ReviewRequest;
-import com.project.backend.service.impl.ReviewService;
+import com.project.backend.service.ReviewService;
 
 @RestController
 @RequestMapping("api/product/")

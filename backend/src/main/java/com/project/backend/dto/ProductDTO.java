@@ -46,15 +46,15 @@ public class ProductDTO  {
 
     private List<ProductDetailDTO> details;
     
-    private List<Review> reviews;
+    private List<ReviewDTO> reviews;
     
-    private List<ProductQA> questions;
+    private List<ProductQADTO> questions;
     
     private List<ProductSkuDTO> sku_products;
 
     private String refund_policy;
 
-    private int rating;
+    private float rating;
 
     private int num_reviews;
 

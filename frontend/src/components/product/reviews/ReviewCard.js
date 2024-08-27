@@ -2,7 +2,12 @@ import { HandThumbUpIcon } from "@heroicons/react/24/outline";
 import { Rating } from "@mui/material";
 
 const ReviewCard = ({ review }) => {
-    const { name, image } = review.reviewBy;
+    console.log(review);
+    
+    const { name, image } = review.reviewedBy;
+
+    
+
     return (
         <div className="grid md:grid-cols-10 mb-4">
             <div className="md:col-span-1 flex flex-col items-center mt-1">
