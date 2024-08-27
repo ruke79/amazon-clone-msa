@@ -23,8 +23,8 @@ const UserInfo = ({ order }) => {
                     Shipping Address
                 </h4>
                 <span>
-                    {order.shippingAddress.firstName}
-                    {order.shippingAddress.lastName}
+                    {order.shippingAddress.firstname}
+                    {order.shippingAddress.lastname}
                 </span>
                 <span>
                     {order.shippingAddress.city}/{order.shippingAddress.state}/
@@ -40,8 +40,8 @@ const UserInfo = ({ order }) => {
                     Billing Address
                 </h4>
                 <span>
-                    {order.shippingAddress.firstName}{" "}
-                    {order.shippingAddress.lastName}
+                    {order.shippingAddress.firstname}{" "}
+                    {order.shippingAddress.lastname}
                 </span>
                 <span>
                     {order.shippingAddress.city}/{order.shippingAddress.state}/

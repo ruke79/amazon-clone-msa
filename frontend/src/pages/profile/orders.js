@@ -89,9 +89,7 @@ export const loader = (authContext) => {
         try {
 
          const { data } = await api.get("/profile/orders", null,
-                      { params : { userId : currentUser.username, 
-                                    filter : filter 
-                                  }
+                      { params : { filter : filter }                                  
                        } 
             );                                   
         

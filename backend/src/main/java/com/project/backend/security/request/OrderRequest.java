@@ -13,8 +13,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class OrderRequest {
-
-    private String userId;
+    
     private List<CartProductDTO> products;
     private AddressDTO shippingAddress;    
     private String paymentMethod;

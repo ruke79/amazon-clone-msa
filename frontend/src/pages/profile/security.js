@@ -6,6 +6,7 @@ import { useState } from "react";
 import * as Yup from "yup";
 import DotLoaderSpinner from "components/loader/Loading"
 import api from "util/api";
+import { useLoaderData } from "react-router-dom";
 
 const initialPassword = {
     current_password: "",
@@ -15,7 +16,10 @@ const initialPassword = {
     error: "",
 };
 
-const Security = ({ user, tab, orders }) => {
+const Security = () => {
+
+    const { user, tab } = useLoaderData();
+
     const [loading, setLoading] = useState(false);
     const [newPassword, setNewPassword] = useState(initialPassword);
     const { current_password, new_password, conf_password , success, error} = newPassword;
@@ -138,6 +142,24 @@ const Security = ({ user, tab, orders }) => {
         </>
     );
 };
+
+export const loader = (authContext) => {
+
+    return async ({params, request}) => {
+    
+        const { currentUser } = authContext;
+        const searchParams = new URL(request.url).searchParams;
+        const tab = Number(searchParams.get('tab')) || 0;
+        
+      
+            return {
+                  user : currentUser,
+                  tab : tab 
+            }
+        
+    };
+}
+
 
 export default Security;
 

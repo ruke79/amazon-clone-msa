@@ -1,5 +1,7 @@
 package com.project.backend.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
@@ -34,9 +36,16 @@ public class Review extends BaseEntity{
 
     private String fit;
 
+    private List<String> images;
+
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ReviewStyle.class)
     @JoinColumn(name="rstyle_id", referencedColumnName = "rstyle_id", nullable = false)
     private ReviewStyle style;
+
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=User.class)
+    @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
+    private User reviewedBy;    
+    
 
     @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)

@@ -42,13 +42,13 @@ public class OrderService {
     @Autowired
     ProductRepository productRepository;
 
-    public Order createOrder(OrderRequest request) {
+    public Order createOrder(OrderRequest request, String username) {
 
-        Optional<User> user = userRepository.findByEmail(request.getUserId());
+        Optional<User> user = userRepository.findByUserName(username);
 
         if (user.isPresent()) {
 
-            Order existed = orderRepository.findByUser_Email(request.getUserId());
+            Order existed = orderRepository.findByUser_UserName(username);
             if(existed != null)
             {
                 orderRepository.delete(existed);

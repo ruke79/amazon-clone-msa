@@ -21,7 +21,8 @@ import Address, {loader as loaderAddress} from "pages/profile/address";
 import Orders from "pages/profile/orders";
 import Security from "pages/profile/security";
 import Profile, { loader as loaderProfile }  from "pages/profile/profile";
-import Payment from "components/order/Payment";
+import Payment,{ loader as loaderPayment } from "pages/profile/payment"
+
 import ProtectedRoute from "components/ProtectedRoute";
 
 
@@ -79,6 +80,7 @@ const router = useMemo( () => createBrowserRouter([
    {
         path : 'profile/payment', 
         element : <Payment/>,
+        loader : loaderPayment(authContext),
      },
       {
         path : 'profile/security',

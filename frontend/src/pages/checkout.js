@@ -31,7 +31,7 @@ const Checkout = () => {
         let check = addresses?.find((address) => address.active == true);
         if (check) {
             setSelectedAddress(check);
-            //console.log(selectedAddress);
+            console.log(selectedAddress);
         } else {
             setSelectedAddress("");
         }
@@ -85,9 +85,7 @@ export const loader = (authContext) => {
     
         const { currentUser } = authContext;
 
-        const { data } = await api.get("/user/cart/checkout", 
-        { params : { userId : currentUser.username } } 
-        );       
+        const { data } = await api.get("/user/cart/checkout");       
         
         
         return data;    

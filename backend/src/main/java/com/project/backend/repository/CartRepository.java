@@ -12,6 +12,6 @@ import com.project.backend.model.Cart;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
     
-    Optional<Cart> findByUserEmail(String email);
+    Optional<Cart> findByUser_UserName(String userName);
     
 }

@@ -66,48 +66,56 @@ const AddReview = ({ product, setReviews }) => {
             return;
         }
         if (images.length > 0) {
-            let temp = [];
-            if (images.length > 0) {
-                temp = images.map((img) => dataURItoBlob(img));
-            }
-            const path = "review images";
-            let formData = new FormData();
-            formData.append("path", path);
-            temp.forEach((img) => {
-                formData.append("file", img);
+
+            let files = images.map((img) => {
+                return dataURItoBlob(img);
             });
-            uploaded_images = await uploadImages(formData);
-            //console.log(uploaded_images);
-        } else {
-            const { data } = await api.put(
-                `/product/${product.product_id}/review`,
-                {
-                    size,
-                    style,
-                    fit,
-                    rating,
-                    review,
-                    images: uploaded_images,
-                }
-            );
-            setReviews(data.reviews);
-            dispatch(
-                showDialog({
-                    header: "Adding review Successfully!",
-                    msgs: [{
-                        msg: "Adding review Successfully.",
-                        type: "success",
-                    }],
-                })
-            );
-            setSize("");
-            setStyle("");
-            setFit("");
-            setRating(0);
-            setImages([]);
-            setReview("");
-            setLoading(false);
+
+            const path = "review images";
+            let imageUploader = files.map(async (file) => {
+                let formData = new FormData();
+                formData.append("path", path);
+                formData.append("file", file);
+                formData.append("upload_preset", "nd7idl8b");
+                formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
+                formData.append("timestamp", (Date.now() / 1000) | 0);
+
+
+                const image = await uploadImages(formData);
+                uploaded_images.push(image.url);
+            });
+
         }
+
+        const { data } = await api.put(
+            `/product/${product.id}/review`,
+            {
+                size,
+                style,
+                fit,
+                rating,
+                review,
+                images: uploaded_images,
+            }
+        );
+        setReviews(data.reviews);
+        dispatch(
+            showDialog({
+                header: "Adding review Successfully!",
+                msgs: [{
+                    msg: "Adding review Successfully.",
+                    type: "success",
+                }],
+            })
+        );
+        setSize("");
+        setStyle("");
+        setFit("");
+        setRating(0);
+        setImages([]);
+        setReview("");
+        setLoading(false);
+
     };
 
     return (
@@ -158,7 +166,7 @@ const AddReview = ({ product, setReviews }) => {
                     onClick={() => handleSubmit()}
                     className={`w-full mt-4  p-3  font-semibold rounded-md transition-all ${loading ? 'bg-gradient-to-r from-amazon-blue_light to-slate-400 text-white cursor-not-allowed' : 'bg-gradient-to-r from-amazon-orange to-yellow-300 text-amazon-blue_dark hover:scale-95'}`}
                 >
-                     {loading ? 'loading ...' : 'Submit Review'}
+                    {loading ? 'loading ...' : 'Submit Review'}
                 </button>
             </div>
         </div>

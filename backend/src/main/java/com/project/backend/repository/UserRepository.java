@@ -1,9 +1,11 @@
 package com.project.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.backend.model.Address;
 import com.project.backend.model.ShippingAddress;
@@ -23,10 +25,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     void delete(User user);
 
-    @Query(value = "SELECT a FROM User u LEFT JOIN Address a on u.address.addressId = a.addressId WHERE u.email = :userEmail")
-    Address findAddressByEmail(@Param("userEmail") String userEmail);
+    @Query(value = "SELECT a FROM User u LEFT JOIN ShippingAddress a  WHERE u.userId = :userId")
+    List<ShippingAddress> findAddressesByUserUserId(@Param("userId") Long userId);
 
-    
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE User u SET u.defaultPaymentMethod = :paymentMethod WHERE u.userId = :userId")
+    int updateDefaultPaymentMethod(@Param("userId") Long userId, @Param("paymentMethod") String paymentMethod  );
     //@Query(value = "SELECT distinct a FROM User u LEFT JOIN ShippingAddress a on a.shippingAddressId =   WHERE u.email = :userEmail")
     
 

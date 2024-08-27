@@ -1,24 +1,26 @@
-import PaymentCheckout from "@/components/checkoutPage/payment/Payment";
-import Layout from "@/components/profile/layout/Layout";
-import User from "@/models/User";
-import db from "@/utils/db";
-import axios from "axios";
-import { getSession } from "next-auth/react";
-import { useState } from "react";
+import PaymentCheckout from "components/checkout/Payment";
+import Layout from "components/profile/Layout";
 
-const Payment = ({ user, tab, defaultPaymentMethod }) => {
-    const [dbPM, setDbPM] = useState(defaultPaymentMethod);
-    const [paymentMethod, setPaymentMethod] = useState(defaultPaymentMethod);
+import api from "util/api";
+import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
+
+const Payment = () => {
+
+    const { user, tab } = useLoaderData();
+
+    const [dbPM, setDbPM] = useState(user.defaultPaymentMethod);
+    const [paymentMethod, setPaymentMethod] = useState(user.defaultPaymentMethod);
     const [error, setErorr] = useState("");
 
     const handlePM = async () => {
         try {
-            const { data } = await axios.put("/api/user/changepm", {
-                paymentMethod: paymentMethod,
+            const { data } = await api.put("/user/cart/changepm", null, {
+                params : { paymentMethod: paymentMethod }
             });
             setErorr("");
-            setDbPM(data.paymentMethod);
-            window.location.reload();
+            setDbPM(data);
+            //window.location.reload();
         } catch (error) {
             setErorr(error.response.data.message);
         }
@@ -29,7 +31,7 @@ const Payment = ({ user, tab, defaultPaymentMethod }) => {
             <Layout
                 user={user.user}
                 tab={tab}
-                title={`${user.user.name}'s Address`}
+                title={`${user.username}'s Address`}
             >
                 <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">
@@ -60,27 +62,55 @@ const Payment = ({ user, tab, defaultPaymentMethod }) => {
 
 export default Payment;
 
-export async function getServerSideProps(context) {
-    db.connectDb();
-    const { query } = context;
-    const session = await getSession(context);
-    const tab = query.tab || 0;
 
-    if (!session) {
-        return {
-            redirect: {
-                destination: "/",
-            },
-        };
-    }
-    const user = await User.findById(session.user?.id).select(
-        "defaultPaymentMethod"
-    );
-    return {
-        props: {
-            user: session,
-            tab,
-            defaultPaymentMethod: user.defaultPaymentMethod,
-        },
+export const loader = (authContext) => {
+
+    return async ({params, request}) => {
+    
+        //const { currentUser } = authContext;
+        const searchParams = new URL(request.url).searchParams;
+        const tab = Number(searchParams.get('tab')) || 0;
+        
+        try {
+
+            const { data } = await api.get("/user/profile/payment"); 
+                                                 
+
+            console.log(data);
+        
+            return {
+                  user : data,
+                  tab : tab 
+            }
+        
+        } catch (error) {
+            console.log("erorr >>>", error.response.data.message);
+        }
     };
 }
+
+
+// export async function getServerSideProps(context) {
+//     db.connectDb();
+//     const { query } = context;
+//     const session = await getSession(context);
+//     const tab = query.tab || 0;
+
+//     if (!session) {
+//         return {
+//             redirect: {
+//                 destination: "/",
+//             },
+//         };
+//     }
+//     const user = await User.findById(session.user?.id).select(
+//         "defaultPaymentMethod"
+//     );
+//     return {
+//         props: {
+//             user: session,
+//             tab,
+//             defaultPaymentMethod: user.defaultPaymentMethod,
+//         },
+//     };
+// }

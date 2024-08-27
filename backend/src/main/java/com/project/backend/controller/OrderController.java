@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +36,12 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/order/create")
-    ResponseEntity<Map<String, String>> createOrder(@RequestBody OrderRequest request) {
+    ResponseEntity<Map<String, String>> createOrder(@RequestBody OrderRequest request,
+    @AuthenticationPrincipal UserDetails userDetails) {
 
-        Order newOrder = orderService.createOrder(request);
+        String username = userDetails.getUsername();
+
+        Order newOrder = orderService.createOrder(request, username);
 
         String orderID = Long.toString(newOrder.getOrderId());
 
@@ -54,8 +59,8 @@ public class OrderController {
         return null;
     }
 
-    @PostMapping("/order/payment")
-    ResponseEntity<Boolean> processPayment(@RequestParam("orderId") String orderId) {
+    @PostMapping("/order/{orderId}/payment")
+    ResponseEntity<Boolean> processPayment(@PathVariable("orderId") String orderId) {
 
         Boolean result = Boolean.valueOf(orderService.processPayment(orderId));
 

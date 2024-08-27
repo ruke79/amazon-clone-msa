@@ -47,12 +47,11 @@ api.interceptors.request.use(
 );
 
 
-export const saveCart = async (cart, user_id) => {
+export const saveCart = async (cart) => {
   try {
       
       const { data } = await api.post("/user/cart/savecart", {
-          products : cart,
-          userId : user_id,
+          products : cart          
       });
       return data;
   } catch (error) {
@@ -60,15 +59,14 @@ export const saveCart = async (cart, user_id) => {
   }
 };
 
-export const saveShippingAddress = async(address, user_id) => {
+export const saveShippingAddress = async(address) => {
 
   try {
 
     
     
     const { data } = await api.post("/user/cart/save_shipping_address", {
-            address : address,
-            userId : user_id
+            address : address            
         });
         return data;
     } catch (error) {
@@ -76,19 +74,17 @@ export const saveShippingAddress = async(address, user_id) => {
     }
 }
 
-export const selectShippingAddress = async(user, id) => {
+export const selectShippingAddress = async(addressId) => {
 
   try {
 
     
-    const params = new URLSearchParams();
-    params.append('userId', user.userId);
-    params.append('addressId', id);
-                
-    const { data } = await api.post("/user/cart/select_shipping_address", null,
-          {            
-             params: { userId : user.userId, addressId : id }                        
-           }
+    
+    // const params = new URLSearchParams();    
+    // params.append('addressId', id);
+                   
+    const { data } = await api.get(`/user/cart/selectaddress/${addressId}`
+          
         );
         return data;
     } catch (error) {
@@ -96,12 +92,29 @@ export const selectShippingAddress = async(user, id) => {
     }
 }
 
-export const applyCoupon = async(coupon, user_id) => {
+export const deleteAddress = async(addressId) => {
+
+  try {
+     // const params = new URLSearchParams();    
+    // params.append('addressId', id);
+                   
+    const { data } = await api.get(`/user/cart/deleteaddress/${addressId}`
+          
+        );
+        return data;
+    } catch (error) {
+        console.log("erorr >>>", error.response.data.message);
+    }
+}
+
+
+
+export const applyCoupon = async(coupon) => {
 
   try {
 
         const { data } = await api.post("/user/cart/coupon", {
-                        coupon : coupon, userId : user_id
+                        coupon : coupon
                       });
                       return data;
     } catch (error) {

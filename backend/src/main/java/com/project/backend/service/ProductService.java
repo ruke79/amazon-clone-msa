@@ -39,8 +39,10 @@ import com.project.backend.repository.ProductDetailsRepository;
 import com.project.backend.repository.ProductQARepository;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
+import com.project.backend.repository.ReviewRepository;
 import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.ProductRequest;
+import com.project.backend.security.request.ReviewRequest;
 import com.project.backend.security.request.SearchParamsRequest;
 
 import jakarta.mail.Multipart;
@@ -67,6 +69,9 @@ public class ProductService {
 
     @Autowired
     ProductQARepository productQARepository;
+
+    @Autowired 
+    ReviewRepository reviewRepository;
     
 
 
@@ -529,5 +534,11 @@ public class ProductService {
 
     }
 
+    
+        
+
+
+
+ 
 
 }

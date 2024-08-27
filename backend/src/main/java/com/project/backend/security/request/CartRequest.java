@@ -14,5 +14,4 @@ import lombok.Setter;
 public class CartRequest {
 
     List<ProductInfoDTO> products;
-    String userId;
-}
+ }

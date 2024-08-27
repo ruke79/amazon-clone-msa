@@ -8,11 +8,10 @@ const Address = () => {
     
     const { user, tab } = useLoaderData();
     
-    //console.log(user);
+        
+    const [addresses, setAddresses] = useState(user?.addresses)
     
-    const [addresses, setAddresses] = useState([user?.address])
     
-    console.log(addresses);
     
 
     return (
@@ -34,18 +33,14 @@ export const loader = (authContext) => {
 
     return async ({params, request}) => {
     
-        const { currentUser } = authContext;
+        //const { currentUser } = authContext;
         const searchParams = new URL(request.url).searchParams;
         const tab = Number(searchParams.get('tab')) || 0;
-        console.log(currentUser);
-
+        
         try {
 
-            const { data } = await api.get("/user/profile/address", 
-                            { params : { userId : currentUser.username,             
-                                        }
-                            } 
-            );                                   
+            const { data } = await api.get("/user/profile/address"); 
+                                                 
 
             console.log(data);
         
@@ -61,30 +56,3 @@ export const loader = (authContext) => {
 }
 
 
-
-// export async function getServerSideProps(context) {
-//     db.connectDb();
-//     const { query } = context;
-//     const session = await getSession(context);
-//     const user = session?.user;
-//     const tab = query.tab || 0;
-
-//     if (!session) {
-//         return {
-//             redirect: {
-//                 destination: "/",
-//             },
-//         };
-//     }
-//     const addressData = await User.findById(user?.id).select("address").lean();
-//     // console.log('add > ', addressData)
-//     return {
-//         props: {
-//             user:{
-//                 user: user,
-//                 address: JSON.parse(JSON.stringify(addressData)),
-//             },
-//             tab,
-//         },
-//     };
-// }

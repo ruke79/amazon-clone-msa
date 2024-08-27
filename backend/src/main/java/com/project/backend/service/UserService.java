@@ -64,6 +64,8 @@ public interface UserService {
 
     List<String> getUsersFromSessionRegistry();
 
-    UserDTO findUser(String userId);
+    UserDTO findUserWithAddresses(User user);
+
+    UserDTO findUserWithdefaultPaymentMethod(User user);
     
 }

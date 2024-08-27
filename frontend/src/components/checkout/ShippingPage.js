@@ -3,8 +3,8 @@ import AddShipping from "./AddShipping";
 import ListShipping from "./ListShipping";
 
 const initialValue = {
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     phoneNumber: "",
     state: "",
     city: "",
@@ -21,8 +21,10 @@ const ShippingPage = ({
     setSelectedAddress,
     profile,
 }) => {
+
+
     const [shipping, setShipping] = useState(initialValue);
-    const [visible, setVisible] = useState(user?.address?.length ? false : true);
+    const [visible, setVisible] = useState(user?.addresses?.length ? false : true);
 
         
     return (

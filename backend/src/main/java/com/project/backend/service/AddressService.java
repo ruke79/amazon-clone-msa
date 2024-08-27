@@ -1,5 +1,7 @@
 package com.project.backend.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import com.project.backend.model.Address;
 import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
 import com.project.backend.dto.AddressDTO;
-import com.project.backend.repository.AddressRepository;
 import com.project.backend.repository.ShippingAddressRepository;
 import com.project.backend.repository.UserRepository;
 import com.project.backend.security.request.AddressRequest;
@@ -23,36 +24,36 @@ public class AddressService {
     @Autowired 
     ShippingAddressRepository shippingAddressRepository;
 
-    @Autowired
-    AddressRepository addressRepository;
 
     @Autowired
     UserRepository userRepository;
     
     
-    public ShippingAddress saveShippingAddress(AddressRequest request) {
-
+    public List<AddressDTO> saveShippingAddress(AddressRequest request, String username) {
+        
         ShippingAddress address = new ShippingAddress();
 
-        
         deepCopyShippingAddress(address, request.getAddress());        
 
-        Optional<User> user = userRepository.findByEmail(request.getUserId());
+        Optional<User> user = userRepository.findByUserName(username);
         
         address.setUser(user.get());
 
-        return shippingAddressRepository.save(address);              
+        user.get().getShippingAddresses().add(address);
+
+        shippingAddressRepository.save(address);              
+
+        List<AddressDTO> result = new ArrayList<>();
+        for ( ShippingAddress src : user.get().getShippingAddresses()) {
+            AddressDTO dto = new AddressDTO();
+            deepCopyShippingAddressDTO(dto, src);
+            result.add(dto);
+        }
+
+        return result;
     }
 
-    public Address saveUserAddress(AddressRequest request) {
-
-        Address address = new Address();
-
-        deepCopyUserAddress(address, request.getAddress());
-
-        return addressRepository.save(address);              
-    }
-
+    
     static public void deepCopyShippingAddress(ShippingAddress address, AddressDTO src) {
 
         address.setAddress1(src.getAddress1());
@@ -79,40 +80,7 @@ public class AddressService {
         address.setZipCode(src.getZipCode());
     }
 
-    private void deepCopyUserAddress(Address address, AddressDTO src) {
-        
-        address.setAddress1(src.getAddress1());
-        address.setAddress2(src.getAddress2());
-        address.setCity(src.getCity());
-        address.setState(src.getState());
-        address.setZipCode(src.getZipCode());
-    }
+    
 
-    static public void deepCopyUserAddressDTO(AddressDTO address, Address src) {
-        
-        address.setAddress1(src.getAddress1());
-        address.setAddress2(src.getAddress2());
-        address.setCity(src.getCity());
-        address.setState(src.getState());
-        address.setZipCode(src.getZipCode());
-    }
-
-    public Address updateUserAddress(AddressRequest request) {
-
-        Optional<User> user = userRepository.findByEmail(request.getUserId());
-
-        if (user.isPresent()) {
-
-            Address address = userRepository.findAddressByEmail(request.getUserId());
-
-            deepCopyUserAddress(address, request.getAddress());
-
-            return addressRepository.save(address);
-        }
-        
-        return null;
-    }
-
-    //public ShippingAddress updateShippingAddress(AddressRequest request) {}
 
 }

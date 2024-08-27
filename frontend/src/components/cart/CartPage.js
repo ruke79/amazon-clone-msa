@@ -3,7 +3,6 @@ import CartHeader from "./CartHeader";
 import Checkout from "./Checkout";
 import PaymentMethods from "./PaymentMethods";
 import Product from "./Product";
-//import { saveCart } from "../../request/users";
 import api, {saveCart} from "util/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -85,7 +84,7 @@ const CartPage = ({ cart }) => {
         if (token) {
             setLoading(true);
             
-            const res = await saveCart(selected, currentUser.username);
+            const res = await saveCart(selected);
             navigate("/checkout");
         } else {
             navigate("/signin");

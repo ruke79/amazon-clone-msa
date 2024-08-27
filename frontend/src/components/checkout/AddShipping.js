@@ -13,15 +13,14 @@ import { useAuthContext } from "store/AuthContext";
 
 const AddShipping = ({
     shipping,
-    setShipping,
-    addresses,
+    setShipping,    
     setAddresses,
     initialValue,
     setSelectedAddress,
 }) => {
     const {
-        firstName,
-        lastName,
+        firstname,
+        lastname,
         phoneNumber,
         state,
         city,
@@ -32,12 +31,12 @@ const AddShipping = ({
     } = shipping;
 
     const validate = Yup.object({
-        firstName: Yup.string()
+        firstname: Yup.string()
             .required("First Name is required.")
             .min(3, "First Name must be atleast 3 charactes")
             .max(20, "First Name must be less than 20 charactes"),
-        lastName: Yup.string()
-            .required("Phone Number is required")
+        lastname: Yup.string()
+            .required("Last Number is required")
             .min(3, "Last Name must be atleast 3 charactes")
             .max(20, "Last Name must be less than 20 charactes"),
         phoneNumber: Yup.string()
@@ -75,14 +74,15 @@ const AddShipping = ({
         setShipping({ ...shipping, [name]: value });
     };
 
-    const { currentUser } = useAuthContext();
+    //const { currentUser } = useAuthContext();
 
     const submitHandler = async () => {
         
-        const res = await saveShippingAddress(shipping, currentUser.username);        
+        const res = await saveShippingAddress(shipping);        
 
-        // ListShipping에서 배열로 참조
-        setAddresses([...addresses, shipping]); 
+        // ListShipping에서 배열로 참조        
+        setAddresses(res);         
+
         setSelectedAddress(initialValue);
         setShipping(initialValue);
     };
@@ -91,8 +91,8 @@ const AddShipping = ({
         <Formik
             enableReinitialize
             initialValues={{
-                firstName,
-                lastName,
+                firstname,
+                lastname,
                 phoneNumber,
                 state,
                 city,
@@ -118,13 +118,13 @@ const AddShipping = ({
                     <div className="grid md:grid-cols-2 gap-6">
                         <ShippingInput
                             type="text"
-                            name="firstName"
+                            name="firstname"
                             placeholder="*First Name"
                             onChange={handleChange}
                         />
                         <ShippingInput
                             type="text"
-                            name="lastName"
+                            name="lastname"
                             placeholder="*Last Name"
                             onChange={handleChange}
                         />

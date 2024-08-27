@@ -5,6 +5,7 @@ import com.project.backend.dto.UserDTO;
 import com.project.backend.model.AppRole;
 import com.project.backend.model.PasswordResetToken;
 import com.project.backend.model.Role;
+import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
 import com.project.backend.model.VerificationToken;
 import com.project.backend.repository.PasswordResetTokenRepository;
@@ -18,7 +19,6 @@ import com.project.backend.service.TotpService;
 import com.project.backend.service.UserService;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +40,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    
-  @Value("${frontend.url}")
+
+    @Value("${frontend.url}")
     String frontendUrl;
 
     @Autowired
@@ -79,8 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserRole(Long userId, String roleName) {
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         AppRole appRole = AppRole.valueOf(roleName);
         Role role = roleRepository.findByRoleName(appRole)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -93,17 +93,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-
     @Override
     public UserDTO getUserById(Long id) {
-//        return userRepository.findById(id).orElseThrow();
+        // return userRepository.findById(id).orElseThrow();
         User user = userRepository.findById(id).orElseThrow();
         return convertToDto(user);
     }
 
     private UserDTO convertToDto(User user) {
 
-        
         return new UserDTO(
                 Long.toString(user.getUserId()),
                 user.getUserName(),
@@ -120,9 +118,10 @@ public class UserServiceImpl implements UserService {
                 user.getRole(),
                 user.getImage(),
                 null,
+                null,
                 user.getCreatedAt(),
                 user.getUpdatedAt()
-                
+
         );
     }
 
@@ -132,15 +131,12 @@ public class UserServiceImpl implements UserService {
         return user.orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 
-
     @Override
     public void updateAccountLockStatus(Long userId, boolean lock) {
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setAccountNonLocked(!lock);
         userRepository.save(user);
     }
-
 
     @Override
     public List<Role> getAllRoles() {
@@ -149,28 +145,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateAccountExpiryStatus(Long userId, boolean expire) {
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setAccountNonExpired(!expire);
         userRepository.save(user);
     }
 
     @Override
     public void updateAccountEnabledStatus(Long userId, boolean enabled) {
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setEnabled(enabled);
         userRepository.save(user);
     }
 
     @Override
     public void updateCredentialsExpiryStatus(Long userId, boolean expire) {
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         user.setCredentialsNonExpired(!expire);
         userRepository.save(user);
     }
-
 
     @Override
     public void updatePassword(Long userId, String password) {
@@ -185,7 +177,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void generatePasswordResetToken(String email){
+    public void generatePasswordResetToken(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -198,7 +190,6 @@ public class UserServiceImpl implements UserService {
         // Send email to user
         emailService.sendPasswordResetEmail(user.getEmail(), resetUrl);
     }
-
 
     @Override
     public void resetPassword(String token, String newPassword) {
@@ -223,11 +214,9 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-   
-
 
     @Override
-    public User registerUser(User user){
+    public User registerUser(User user) {
         if (user.getPassword() != null)
             user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -247,7 +236,7 @@ public class UserServiceImpl implements UserService {
 
         // Create new user's account
         User user = new User(request.getUsername(),
-        request.getEmail(),
+                request.getEmail(),
                 encoder.encode(request.getPassword()));
 
         Set<String> strRoles = request.getRole();
@@ -275,13 +264,13 @@ public class UserServiceImpl implements UserService {
             user.setTwoFactorEnabled(false);
             user.setSignUpMethod("email");
         }
-        user.setRole(role);                  
-                
+        user.setRole(role);
+
         return userRepository.save(user);
     }
 
     @Override
-    public GoogleAuthenticatorKey generate2FASecret(Long userId){
+    public GoogleAuthenticatorKey generate2FASecret(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         GoogleAuthenticatorKey key = totpService.generateSecret();
@@ -291,14 +280,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean validate2FACode(Long userId, int code){
+    public boolean validate2FACode(Long userId, int code) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return totpService.verifyCode(user.getTwoFactorSecret(), code);
     }
 
     @Override
-    public void enable2FA(Long userId){
+    public void enable2FA(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setTwoFactorEnabled(true);
@@ -306,7 +295,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void disable2FA(Long userId){
+    public void disable2FA(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.setTwoFactorEnabled(false);
@@ -323,7 +312,7 @@ public class UserServiceImpl implements UserService {
         }
 
         PasswordResetToken passwordToken = passwordResetTokenRepository.findByUser(user)
-        .orElseThrow(() -> new RuntimeException("Invalid password reset token"));
+                .orElseThrow(() -> new RuntimeException("Invalid password reset token"));
 
         if (passwordToken != null) {
             passwordResetTokenRepository.delete(passwordToken);
@@ -331,11 +320,10 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
 
-
     }
 
     @Override
-    public void createVerificationTokenForUser(User user, String token) {    
+    public void createVerificationTokenForUser(User user, String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
     }
@@ -344,7 +332,7 @@ public class UserServiceImpl implements UserService {
     public VerificationToken getVerificationToken(final String existingVerificationToken) {
         VerificationToken vToken = tokenRepository.findByToken(existingVerificationToken);
         vToken.updateToken(UUID.randomUUID()
-            .toString());
+                .toString());
         vToken = tokenRepository.save(vToken);
         return vToken;
 
@@ -354,7 +342,7 @@ public class UserServiceImpl implements UserService {
     public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
         VerificationToken vToken = tokenRepository.findByToken(existingVerificationToken);
         vToken.updateToken(UUID.randomUUID()
-            .toString());
+                .toString());
         vToken = tokenRepository.save(vToken);
         return vToken;
     }
@@ -369,8 +357,9 @@ public class UserServiceImpl implements UserService {
         final User user = verificationToken.getUser();
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate()
-            .getTime() - cal.getTime()
-            .getTime()) <= 0) {
+                .getTime()
+                - cal.getTime()
+                        .getTime()) <= 0) {
             tokenRepository.delete(verificationToken);
             return TOKEN_EXPIRED;
         }
@@ -384,44 +373,51 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<String> getUsersFromSessionRegistry() {
         return sessionRegistry.getAllPrincipals()
-            .stream()
-            .filter((u) -> !sessionRegistry.getAllSessions(u, false)
-                .isEmpty())
-            .map(o -> {
-                if (o instanceof User) {
-                    return ((User) o).getEmail();
-                } else {
-                    return o.toString()
-            ;
-                }
-            }).collect(Collectors.toList());
+                .stream()
+                .filter((u) -> !sessionRegistry.getAllSessions(u, false)
+                        .isEmpty())
+                .map(o -> {
+                    if (o instanceof User) {
+                        return ((User) o).getEmail();
+                    } else {
+                        return o.toString();
+                    }
+                }).collect(Collectors.toList());
     }
 
+    public UserDTO findUserWithAddresses(User user) {
 
-    public UserDTO findUser(String userId) {
-
-        Optional<User> existed = userRepository.findByEmail(userId);
-
-        if ( existed.isPresent()) {
-
-            User user = existed.get();
-
+        List<AddressDTO> dtos = new ArrayList<>();
+        for (ShippingAddress src : user.getShippingAddresses()) {
             AddressDTO address = new AddressDTO();
-            if (null != user.getAddress() ) {
-                AddressService.deepCopyUserAddressDTO(address, user.getAddress());
-            }
-
-            UserDTO result = UserDTO.builder()
-            .userName(user.getUserName())
-            .email(user.getEmail())
-            .image(user.getImage())
-            .address(address)
-            .build();
-
-            return result;
+            AddressService.deepCopyShippingAddressDTO(address, src);
+            address.setId(Long.toString(src.getShippingAddressId()));
+            dtos.add(address);
         }
-        return null;
+
+        UserDTO result = UserDTO.builder()
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .image(user.getImage())
+                .addresses(dtos)
+                .build();
+
+        return result;
 
     }
+
+    public UserDTO findUserWithdefaultPaymentMethod(User user) {
+
+        UserDTO result = UserDTO.builder()
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .image(user.getImage())
+                .defaultPaymentMethod(user.getDefaultPaymentMethod())
+                .build();
+
+        return result;
+
+    }
+
 
 }

@@ -11,5 +11,4 @@ import lombok.Setter;
 public class CouponRequest {
 
     private CouponDTO coupon;
-    private String userId;
 }

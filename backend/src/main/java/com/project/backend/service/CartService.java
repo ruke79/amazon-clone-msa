@@ -61,16 +61,32 @@ public class CartService {
     ShippingAddressRepository shippingAddressRepository;
 
     @Autowired
-    CouponRepository    couponRepository;
+    CouponRepository couponRepository;
 
-    public List<AddressDTO> getShipAddresses(String userId, String addressId) {
+    public String updatePaymentMethod(String username, String paymentMethod) {
 
-        Optional<User> user = userRepository.findByEmail(userId);
+        Optional<User> user = userRepository.findByUserName(username);
 
         if (!user.isPresent())
             return null;
 
-        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_Email(userId);
+        user.get().setDefaultPaymentMethod(paymentMethod);
+
+        if (userRepository.updateDefaultPaymentMethod(user.get().getUserId(),paymentMethod) > 0) {
+            return paymentMethod;
+        }
+        return null;
+
+    }
+
+    public List<AddressDTO> getShipAddresses(String username, String addressId) {
+
+        Optional<User> user = userRepository.findByUserName(username);
+
+        if (!user.isPresent())
+            return null;
+
+        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
 
         List<AddressDTO> addressDTOs = new ArrayList<>();
         for (ShippingAddress address : addresses) {
@@ -86,12 +102,11 @@ public class CartService {
             dto.setLastname(address.getLastname());
             dto.setPhoneNumber(address.getPhoneNumber());
             dto.setZipCode(address.getZipCode());
-            
+
             if (address.getShippingAddressId() == Long.parseLong(addressId)) {
                 dto.setActive(true);
-            }                
-            else 
-                dto.setActive(false);               
+            } else
+                dto.setActive(false);
 
             addressDTOs.add(dto);
         }
@@ -99,28 +114,61 @@ public class CartService {
         return addressDTOs;
     }
 
-    public CartDTO getCart(String userId) {
+    public List<AddressDTO> deleteShippingAddress(String username, String addressId) {
 
-        Optional<User> user = userRepository.findByEmail(userId);
+        Optional<User> user = userRepository.findByUserName(username);
 
         if (!user.isPresent())
             return null;
-        
-        Optional<Cart> cart = cartRepository.findByUserEmail(userId);
 
-        if (!cart.isPresent()) 
+        shippingAddressRepository.deleteById(Long.parseLong(addressId));
+
+        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
+
+        List<AddressDTO> addressDTOs = new ArrayList<>();
+        for (ShippingAddress address : addresses) {
+            AddressDTO dto = new AddressDTO();
+            dto.setId(Long.toString(address.getShippingAddressId()));
+
+            dto.setAddress1(address.getAddress1());
+            dto.setAddress2(address.getAddress2());
+            dto.setCity(address.getCity());
+            dto.setState(address.getState());
+            dto.setCountry(address.getCountry());
+            dto.setFirstname(address.getFirstname());
+            dto.setLastname(address.getLastname());
+            dto.setPhoneNumber(address.getPhoneNumber());
+            dto.setZipCode(address.getZipCode());
+
+            if (address.getShippingAddressId() == Long.parseLong(addressId)) {
+                dto.setActive(true);
+            } else
+                dto.setActive(false);
+
+            addressDTOs.add(dto);
+        }
+
+        return addressDTOs;
+    }
+
+    public CartDTO getCart(String username) {
+
+        Optional<User> user = userRepository.findByUserName(username);
+
+        if (!user.isPresent())
             return null;
-      
+
+        Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+
+        if (!cart.isPresent())
+            return null;
 
         CartDTO result = new CartDTO();
-        result.setUserId(userId);
         result.setUserImage(user.get().getImage());
 
-        
+        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
 
-        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_Email(userId);
 
-                
         {
             List<AddressDTO> addressDTOs = new ArrayList<>();
             for (ShippingAddress address : addresses) {
@@ -144,24 +192,24 @@ public class CartService {
             }
             result.setAddress(addressDTOs);
         }
-        //}
-        
+        // }
+
         List<CartProductDTO> products = new ArrayList<>();
-        
+
         for (CartProduct item : cart.get().getCartProducts()) {
 
-            CartProductDTO dto = new CartProductDTO();            
-            dto.setId(Long.toString(item.getCartproductId()));            
+            CartProductDTO dto = new CartProductDTO();
+            dto.setId(Long.toString(item.getCartproductId()));
             dto.setColor(ColorAttributeDTO.builder()
-                            .id(Long.toString(item.getColor().getColorId()))
-                            .color(item.getColor().getColor())
-                            .colorImage(item.getColor().getColorImage()).build());
+                    .id(Long.toString(item.getColor().getColorId()))
+                    .color(item.getColor().getColor())
+                    .colorImage(item.getColor().getColorImage()).build());
             dto.setImage(item.getImage());
             dto.setName(item.getName());
             dto.setPrice(item.getPrice());
             dto.setQty(item.getQty());
             dto.setSize(item.getSize());
-            
+
             products.add(dto);
         }
         result.setProducts(products);
@@ -179,46 +227,41 @@ public class CartService {
 
             Product product = productRepository.findById(Long.parseLong(cartItem.getId())).get();
 
-            
-            
-            int originalPrice = product.getSku_products().get(cartItem.getStyle()).
-            getSizes().stream().filter(i ->  i.getSize().equals(cartItem.getSize())).findFirst().get().getPrice();
-            int quantity = product.getSku_products().get(cartItem.getStyle()).
-            getSizes().stream().filter(i ->  i.getSize().equals(i.getSize())).findFirst().get().getQuantity();
+            int originalPrice = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
+                    .filter(i -> i.getSize().equals(cartItem.getSize())).findFirst().get().getPrice();
+            int quantity = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
+                    .filter(i -> i.getSize().equals(i.getSize())).findFirst().get().getQuantity();
             int discount = product.getSku_products().get(cartItem.getStyle()).getDiscount();
 
             ProductInfoDTO dto = new ProductInfoDTO();
             dto = cartItem;
             dto.setPriceBefore(originalPrice);
             dto.setQty(cartItem.getQty());
-            
+
             if (discount > 0) {
-                int price  = originalPrice - (originalPrice / discount);
+                int price = originalPrice - (originalPrice / discount);
                 dto.setPrice(originalPrice);
             } else {
                 dto.setPrice(originalPrice);
             }
             dto.setShipping(product.getShipping());
 
-            result.add(dto);       
+            result.add(dto);
         }
 
         return result;
     }
 
-    public Cart saveCart(CartRequest request) {
+    public Cart saveCart(CartRequest request, String username) {
 
         if (request.getProducts().size() > 0) {
 
-            log.info(request.getUserId());
-
-            Optional<User> user = userRepository.findByEmail(request.getUserId());
+            Optional<User> user = userRepository.findByUserName(username);
 
             if (user.isPresent()) {
-                Optional<Cart> existed = cartRepository.findByUserEmail(request.getUserId());
-                if (existed.isPresent())
-                {
-                                        
+                Optional<Cart> existed = cartRepository.findByUser_UserName(username);
+                if (existed.isPresent()) {
+
                     cartRepository.delete(existed.get());
                 }
             }
@@ -229,32 +272,32 @@ public class CartService {
             List<CartProduct> products = new ArrayList<CartProduct>();
 
             for (ProductInfoDTO cartItem : request.getProducts()) {
-                
+
                 Optional<Product> product = productRepository.findById(Long.parseLong(cartItem.getId()));
 
-                if(product.isPresent()) {
+                if (product.isPresent()) {
                     ProductSku sku = product.get().getSku_products().get(cartItem.getStyle());
 
                     int price = sku.getSizes().stream().filter(p -> p.getSize().equals(cartItem.getSize()))
-                    .findFirst().get().getPrice();
+                            .findFirst().get().getPrice();
                     if (sku.getDiscount() > 0)
                         price = (price - price / sku.getDiscount());
-                    
-                    CartProduct cartProduct = CartProduct.builder()                    
-                    .name(product.get().getName())
-                    .color(ProductColorAttribute.builder()
-                            .colorId(Long.parseLong(cartItem.getColor().getId()))
-                            .color(cartItem.getColor().getColor())
-                            .colorImage(cartItem.getColor().getColorImage()).build())
-                    .product(product.get())
-                    .image(sku.getImages().get(0))
-                    .qty(cartItem.getQty())
-                    .price(price)
-                    .size(cartItem.getSize())
-                    .build();
 
-                    products.add(cartProduct);     
-                    cartProduct.setCart(cart);               
+                    CartProduct cartProduct = CartProduct.builder()
+                            .name(product.get().getName())
+                            .color(ProductColorAttribute.builder()
+                                    .colorId(Long.parseLong(cartItem.getColor().getId()))
+                                    .color(cartItem.getColor().getColor())
+                                    .colorImage(cartItem.getColor().getColorImage()).build())
+                            .product(product.get())
+                            .image(sku.getImages().get(0))
+                            .qty(cartItem.getQty())
+                            .price(price)
+                            .size(cartItem.getSize())
+                            .build();
+
+                    products.add(cartProduct);
+                    cartProduct.setCart(cart);
                 }
 
             }
@@ -262,44 +305,42 @@ public class CartService {
             for (CartProduct p : products) {
                 cartTotal = cartTotal + p.getPrice() * p.getQty();
             }
-                      
+
             cart.setCartProducts(products);
             cart.setCartTotal(cartTotal);
-            
 
-            return cartRepository.save(cart);     
+            return cartRepository.save(cart);
 
-        }                     
+        }
 
-        return null;     
+        return null;
     }
 
-    public CouponResponse applyCoupon(CouponRequest request) {
+    public CouponResponse applyCoupon(CouponRequest request, String username) {
 
-        Optional<User> user = userRepository.findByEmail(request.getUserId());
+        Optional<User> user = userRepository.findByUserName(username);
 
-        
         if (user.isPresent()) {
-                        
+
             Optional<Coupon> coupon = couponRepository.findById(Long.parseLong(request.getCoupon().getId()));
 
-            if(!coupon.isPresent()) {
+            if (!coupon.isPresent()) {
                 return null;
             }
 
-            Optional<Cart> cart = cartRepository.findByUserEmail(request.getUserId());
-            
+            Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+
             int totalAfterDiscount = (cart.get().getCartTotal() * coupon.get().getDiscount()) / 100;
 
             cart.get().setTotalAfterDiscount(totalAfterDiscount);
 
             cartRepository.save(cart.get());
-            
+
             CouponResponse result = new CouponResponse(totalAfterDiscount, coupon.get().getDiscount());
 
             return result;
         }
-        return null;  
+        return null;
 
     }
 

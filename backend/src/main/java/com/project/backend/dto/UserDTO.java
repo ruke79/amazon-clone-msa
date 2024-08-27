@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.project.backend.model.Role;
 
@@ -29,7 +30,8 @@ public class UserDTO {
     private String signUpMethod;
     private Role role;
     private String image;
-    private AddressDTO address;
+    private String defaultPaymentMethod;
+    private List<AddressDTO> addresses;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;    
 }

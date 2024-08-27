@@ -32,7 +32,7 @@ const Summary = ({
 
     const applyCouponHandler = async () => {
         setLoading(true);
-        //  const result = await applyCoupon(coupon, user?.userId);
+        //  const result = await applyCoupon(coupon);
 
         // if (result.message) {
         //     setError(result.message);

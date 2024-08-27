@@ -7,7 +7,7 @@ import {
     PlusSmallIcon,
     UserIcon,
 } from "@heroicons/react/24/outline";
-import { selectShippingAddress } from "util/api";
+import { selectShippingAddress, deleteAddress } from "util/api";
 //import { changeActiveAddress, deleteAddress } from "../../request/users";
 
 const ListShipping = ({
@@ -19,17 +19,23 @@ const ListShipping = ({
     profile
 }) => {
 
+
+
+      
     
-    const changeActiveHandler = async (user, id) => {
+    const changeActiveHandler = async (id) => {
+                
+        const res = await selectShippingAddress(id);        
+
+        console.log(res);
         
-        
-        const res = await selectShippingAddress(user, id);        
+
         setAddresses(res);
     };
     const deleteHandler = async (id, e) => {
         e.stopPropagation();
-        //const res = await deleteAddress(id);
-        //setAddresses(res.addresses);
+        const res = await deleteAddress(id);
+        setAddresses(res);
     };
 
     return (
@@ -41,7 +47,7 @@ const ListShipping = ({
                         "border-l-4 border-l-amazon-blue_light hover:border-l-amazon-blue_light"
                     } `}
                     key={address.id}
-                    onClick={() => changeActiveHandler(user, address.id)}
+                    onClick={() => changeActiveHandler(address.id)}
                 >
                     {addresses.length > 1 ? (
                         <div
@@ -66,8 +72,8 @@ const ListShipping = ({
                         <div className="flex flex-col md:justify-center">
                             {/* <span className="flex items-center">
                                 <UserIcon className="w-4 h-4 mr-1" />
-                                {address.firstName.toUpperCase()}{" "}
-                                {address.lastName.toUpperCase()}
+                                {address.firstname.toUpperCase()}{" "}
+                                {address.lastname.toUpperCase()}
                             </span>
                             <span className="flex items-center">
                                 <PhoneIcon className="w-4 h-4 mr-1" />

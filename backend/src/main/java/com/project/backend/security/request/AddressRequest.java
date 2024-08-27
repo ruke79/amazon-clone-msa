@@ -11,6 +11,5 @@ import lombok.Setter;
 public class AddressRequest {
 
     private AddressDTO address;
-    private String userId;
-    
+        
 }

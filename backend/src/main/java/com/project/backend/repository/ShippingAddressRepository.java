@@ -15,6 +15,6 @@ import com.project.backend.model.ShippingAddress;
 public interface ShippingAddressRepository extends JpaRepository<ShippingAddress, Long> {
 
 
-    List<ShippingAddress> findByUser_Email(String userEmail);
+    List<ShippingAddress> findByUser_UserId(Long userId);
 
 }
