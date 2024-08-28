@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class WishListRequest {
 
-    private String style;
-    private String productId;
+    private String id;
+    private String style;    
 
 }

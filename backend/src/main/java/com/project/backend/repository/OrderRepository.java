@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying
     @Transactional    
     @Query("Update Order o SET o.isPaid = :payStatus WHERE o.orderId = :id")
-    int updateIsPaidById(@Param("id") Long id, @Param("payStatus") boolean payStatus);
+    int updateIsPaidById(@Param("id") Long id, @Param("payStatus") Boolean payStatus);
 
     Order findByUser_UserName(String email);
 }

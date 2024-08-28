@@ -11,7 +11,11 @@ const Reviews = ({ product }) => {
     const { token } = useAuthContext();
 
     const [reviews, setReviews] = useState(product.reviews)
+    const [isAdded, setIsAdded] = useState(false);
      console.log('product review: ',reviews);
+
+    
+
     return (
         <div className="mt-4 bg-slate-100 mx-auto w-full md:w-4/5 p-4 border rounded-md">
             <h3 className="mb-2 font-bold text-2xl">

@@ -139,7 +139,7 @@ public class OrderService {
             .deliveredAt(data.getDeliveredAt())
             .orderStatus(data.getOrderStatus().name())
             .paymentMethod(data.getPaymentMethod())
-            .paymentResult(data.getPaymentResult().getStatus())
+            .paymentResult(data.getPaymentResult().getPayStatus().getValue())
             .products(dtos)
             .shippingAddress(address)
             .user(UserDTO.builder()
@@ -152,23 +152,14 @@ public class OrderService {
             .build();
 
 
-
-            log.info("Order returned");
+            
             return result;
         }
 
         return null;
     }
 
-    public boolean processPayment(String orderId) {
-
-        int updatedRowcount = orderRepository.updateIsPaidById(Long.parseLong(orderId), true);
-
-        if (updatedRowcount > 0) {
-            return true;
-        }
-        return false;
-    }
+    
 
 
 }

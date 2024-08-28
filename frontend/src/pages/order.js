@@ -16,7 +16,7 @@ const OrderPage = () => {
     const [order ,setOrder] = useState(orderData);
     const [loading, setLoading] = useState(false);
 
-    
+    console.log(order);
 
     
     return (
@@ -39,7 +39,7 @@ const OrderPage = () => {
                 </section>
                 <section className="md:col-span-1 h-fit bg-white p-2 md:p-5 rounded-xl border">
                     <UserInfo order={orderData} />
-                    {order.isPaid == false && (<Payment order={order} setOrder={setOrder} setLoading={setLoading} profile={false} />)}
+                    {order.paid === false && (<Payment order={order} setOrder={setOrder} setLoading={setLoading} profile={false} />)}
                 </section>
             </main>
         </>

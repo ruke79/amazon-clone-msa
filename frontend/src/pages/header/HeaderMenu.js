@@ -17,11 +17,11 @@ const HeaderMenu = ({ handleOpenMenu }) => {
             </div>
             <div className="flex flex-grow max-md:overflow-x-scroll scrollbar-hide text-sm whitespace-nowrap ">
                 <ul className="flex space-x-4">
-                    <li className=""><Link href="">Deals</Link></li>
-                    <li className=""><Link href="">Customer Service</Link></li>
-                    <li className=""><Link href="">Registery</Link></li>
-                    <li className=""><Link href="">Gift Cards</Link></li>
-                    <li className=""><Link href="">Electoronics</Link></li>
+                    <li className=""><Link to="">Deals</Link></li>
+                    <li className=""><Link to="">Customer Service</Link></li>
+                    <li className=""><Link to="">Registery</Link></li>
+                    <li className=""><Link to="">Gift Cards</Link></li>
+                    <li className=""><Link to="">Electoronics</Link></li>
                 </ul>
             </div>
             <div className="hidden md:inline text-sm">

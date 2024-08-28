@@ -104,6 +104,7 @@ const Infos = ({ product, setActiveImg }) => {
             if (!token) {
                 return navigate('/signin');
             }
+            console.log(product);
             const { data } = await api.put("/user/wishlist", {
                 id: product.id,
                 style: product.style,
