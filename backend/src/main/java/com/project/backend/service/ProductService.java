@@ -39,6 +39,7 @@ import com.project.backend.model.ProductSku;
 import com.project.backend.model.Review;
 import com.project.backend.model.SubCategory;
 import com.project.backend.model.User;
+import com.project.backend.model.WishList;
 import com.project.backend.repository.CategoryRepository;
 import com.project.backend.repository.ProductDetailsRepository;
 import com.project.backend.repository.ProductQARepository;
@@ -49,6 +50,7 @@ import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.ProductRequest;
 import com.project.backend.security.request.ReviewRequest;
 import com.project.backend.security.request.SearchParamsRequest;
+import com.project.backend.security.request.WishListRequest;
 
 import jakarta.mail.Multipart;
 import lombok.extern.slf4j.Slf4j;
@@ -562,7 +564,8 @@ public class ProductService {
         }
 
         return null;
-
     }
+
+  
 
 }

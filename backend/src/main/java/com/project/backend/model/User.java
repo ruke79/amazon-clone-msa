@@ -76,6 +76,10 @@ public class User extends BaseEntity{
             cascade = CascadeType.PERSIST,targetEntity = ShippingAddress.class)
     private List<ShippingAddress> shippingAddresses;
 
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,targetEntity = WishList.class)
+    private List<WishList> wishLists;
+
 
     private String defaultPaymentMethod;
 

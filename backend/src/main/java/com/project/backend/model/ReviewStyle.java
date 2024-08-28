@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="review_style")
+@Table(name = "review_style")
 public class ReviewStyle {
 
-
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Tsid
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rstyle_id")
     private Long rstyleId;
 
@@ -30,6 +30,4 @@ public class ReviewStyle {
 
     private String image;
 
-        
-        
 }

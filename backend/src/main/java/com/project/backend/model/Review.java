@@ -43,7 +43,7 @@ public class Review extends BaseEntity{
     @JoinColumn(name="rstyle_id", referencedColumnName = "rstyle_id", nullable = false)
     private ReviewStyle style;
 
-    @JsonIgnore
+    //@JsonIgnore
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=User.class)
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     private User reviewedBy;    

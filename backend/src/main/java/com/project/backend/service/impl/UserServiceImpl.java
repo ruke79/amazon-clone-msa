@@ -165,10 +165,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updatePassword(Long userId, String currPassword, String password) {
+        try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (passwordEncoder.matches(currPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(password));
+                userRepository.save(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update password");
+        }
+    }
+
+    @Override
     public void updatePassword(Long userId, String password) {
         try {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
+
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
         } catch (Exception e) {
@@ -418,6 +434,5 @@ public class UserServiceImpl implements UserService {
         return result;
 
     }
-
 
 }

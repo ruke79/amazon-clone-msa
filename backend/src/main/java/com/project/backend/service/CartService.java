@@ -23,6 +23,7 @@ import com.project.backend.model.ProductSizeAttribute;
 import com.project.backend.model.ProductSku;
 import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
+import com.project.backend.model.WishList;
 import com.project.backend.repository.CartProductRepository;
 import com.project.backend.repository.CartRepository;
 import com.project.backend.repository.CouponRepository;
@@ -30,9 +31,11 @@ import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.repository.ShippingAddressRepository;
 import com.project.backend.repository.UserRepository;
+import com.project.backend.repository.WishiListRepository;
 import com.project.backend.security.request.CartRequest;
 import com.project.backend.security.request.CouponRequest;
 import com.project.backend.security.request.ProductInfoRequest;
+import com.project.backend.security.request.WishListRequest;
 import com.project.backend.security.response.CartResponse;
 import com.project.backend.security.response.CouponResponse;
 
@@ -61,6 +64,9 @@ public class CartService {
     ShippingAddressRepository shippingAddressRepository;
 
     @Autowired
+    WishiListRepository wishiListRepository;
+
+    @Autowired
     CouponRepository couponRepository;
 
     public String updatePaymentMethod(String username, String paymentMethod) {
@@ -72,7 +78,7 @@ public class CartService {
 
         user.get().setDefaultPaymentMethod(paymentMethod);
 
-        if (userRepository.updateDefaultPaymentMethod(user.get().getUserId(),paymentMethod) > 0) {
+        if (userRepository.updateDefaultPaymentMethod(user.get().getUserId(), paymentMethod) > 0) {
             return paymentMethod;
         }
         return null;
@@ -167,7 +173,6 @@ public class CartService {
         result.setUserImage(user.get().getImage());
 
         List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
-
 
         {
             List<AddressDTO> addressDTOs = new ArrayList<>();
@@ -314,6 +319,44 @@ public class CartService {
         }
 
         return null;
+    }
+
+    public Boolean addWishList(String username, WishListRequest request) {
+
+        Long id = Long.parseLong(request.getProductId());
+
+        Optional<User> user = userRepository.findByUserName(username);
+
+        if (user.isPresent()) {
+
+            Optional<Product> product = productRepository.findById(id);
+
+            if (product.isPresent()) {
+
+                WishList existed = user.get().getWishLists().stream()
+                        .filter(x -> x.getProduct().getProductId() == id && x.getStyle() == request.getStyle())
+                        .findFirst().get();
+
+                if (null != existed) {
+
+                    return false;
+
+                } else {
+
+                    WishList wish = new WishList();
+                    wish.setStyle(request.getStyle());
+                    wish.setProduct(product.get());
+                    wish.setUser(user.get());
+
+                    wishiListRepository.save(wish);
+
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
     }
 
     public CouponResponse applyCoupon(CouponRequest request, String username) {

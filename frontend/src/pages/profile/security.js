@@ -47,13 +47,13 @@ const Security = () => {
     };
 
     const changePasswordHandler = async () => {
-        try {
+        try {            
             setLoading(true);
-            const { data } = await api.put("/user/changepassword", {
+
+            const { data } = await api.put("/user/profile/update-password", {
                 current_password,
                 new_password,
-            });
-            
+            });            
 
             setNewPassword({
                 new_password: "",

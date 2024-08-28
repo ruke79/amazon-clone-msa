@@ -6,6 +6,7 @@ import DeliveryTo from "./DeliveryTo";
 import Search from "./Search";
 import Account from './Account'
 import HeaderMenu from "./HeaderMenu";
+import ProtectedRoute from "components/ProtectedRoute";
 
 
 const Header = ({title, searchHandler}) => {

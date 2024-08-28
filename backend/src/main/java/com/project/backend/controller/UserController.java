@@ -46,5 +46,16 @@ public class UserController {
 
     }
 
+    @PutMapping("/update-password")
+    public ResponseEntity<String> updatePassword(@RequestParam Long userId,
+            @RequestParam String currPassword,
+            @RequestParam String password) {
+        try {
+            userService.updatePassword(userId, currPassword, password);
+            return ResponseEntity.ok("Password updated");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
     
 }

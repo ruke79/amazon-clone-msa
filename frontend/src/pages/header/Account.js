@@ -4,7 +4,7 @@ import {
     UserIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, redirect } from "react-router-dom";
 import { useAuthContext } from "../../store/AuthContext";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -17,6 +17,8 @@ const Account = () => {
     useAuthContext();
 
     useEffect(() => {
+
+        
         
       }, [token]);
 
@@ -54,12 +56,12 @@ const Account = () => {
             {/* popOver Account */}
             <div className="z-20 show-account-popup absolute w-96 -right-14 h-auto bg-white rounded-sm border shadow-md mt-1">
                 <div className="absolute h-3 w-3 bg-white rotate-45 -mt-1 right-[3.85rem] "></div>
-                {token ? (
+                {currentUser ? (
                     <div className="flex items-center justify-between p-3 border-b pb-2">
                         <p className="text-xl text-amazon-blue_light">
                             Hi,{" "}
                             <Link to="/profile">
-                                <b>{currentUser?.username}</b>
+                                <b>{ currentUser?.username }</b>
                             </Link>
                         </p>
                         <div className="flex space-x-2">
