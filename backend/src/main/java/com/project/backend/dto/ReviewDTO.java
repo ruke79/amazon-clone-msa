@@ -2,6 +2,7 @@ package com.project.backend.dto;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,10 @@ public class ReviewDTO {
     private String fit;
     private float rating;
     private String review;
+
+    
     List<String> images;
+    List<String> likes;
 
     private ReviewerDTO reviewedBy;
 

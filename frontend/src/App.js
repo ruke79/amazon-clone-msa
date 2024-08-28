@@ -108,7 +108,7 @@ const router = useMemo( () => createBrowserRouter([
   },
   {
     path: '/order/:id',
-    element: <OrderPage/>,
+    element: <ProtectedRoute><OrderPage/></ProtectedRoute>,
     loader : loaderOrder(authContext),
   },
   {

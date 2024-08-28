@@ -77,7 +77,7 @@ const SignInPage = () => {
             if (decodedToken.is2faEnabled) {
               setStep(2); // Move to 2FA verification step
             } else {
-              //handleSuccessfulLogin(response.data.jwtToken, decodedToken);
+              //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
               handleSuccessfulLogin(response.data, decodedToken);
             }
           } else {
@@ -94,8 +94,9 @@ const SignInPage = () => {
         }
       };
 
-      useEffect(() => {
-        if (token) navigate("/");
+      useEffect(() => {   
+
+        //if (token) navigate("/");
       }, [navigate, token]);
 
     return (

@@ -37,7 +37,7 @@ public class Review extends BaseEntity{
     private String fit;
 
     private List<String> images;
-    private List<Boolean> likes;
+    private List<String> likes;
 
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ReviewStyle.class)
     @JoinColumn(name="rstyle_id", referencedColumnName = "rstyle_id", nullable = false)

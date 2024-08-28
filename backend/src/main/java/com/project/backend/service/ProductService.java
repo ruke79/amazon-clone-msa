@@ -154,6 +154,7 @@ public class ProductService {
          .name(review.getReviewedBy().getUserName())
          .image(review.getReviewedBy().getImage())
          .build())
+         .likes(review.getLikes())
          .size(review.getSize())
          .style(ReviewStyleDTO.builder()
          .color(review.getStyle().getColor())

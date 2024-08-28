@@ -19,6 +19,9 @@ import com.project.backend.repository.ReviewRepository;
 import com.project.backend.repository.UserRepository;
 import com.project.backend.security.request.ReviewRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ReviewService {
 
@@ -39,6 +42,7 @@ public class ReviewService {
             return null;
         }
 
+
         Long id = Long.parseLong(productId);
 
         Optional<Product> existed = productRepository.findById(id);
@@ -54,6 +58,10 @@ public class ReviewService {
 
                 if (null != review) {
 
+                    for(String s : request.getImages())
+                        log.info(s);
+                    
+
                     review.setReview(request.getReview());
                     review.setFit(request.getFit());
                     review.setSize(request.getSize());
@@ -64,6 +72,7 @@ public class ReviewService {
                                     .color(request.getStyle().getColor())
                                     .image(request.getStyle().getImage()).build());
                     review.setProduct(p);
+                    review.setReviewedBy(user.get());
 
                     reviewRepository.save(review);
 
@@ -85,6 +94,10 @@ public class ReviewService {
                                 .color(r.getStyle().getColor())
                                 .image(r.getStyle().getImage()).build());
                         dto.setSize(r.getSize());
+                        dto.setReviewedBy(ReviewerDTO.builder()
+                        .name(username)
+                        .image(user.get().getImage())
+                        .build());
 
                         result.add(dto);
                     }
@@ -93,6 +106,7 @@ public class ReviewService {
                 }
             } else {
 
+                
                 Review r = new Review();
                 r.setFit(request.getFit());
                 r.setImages(request.getImages());

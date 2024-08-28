@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,13 +60,7 @@ public class OrderController {
         return null;
     }
 
-    @PostMapping("/order/{orderId}/payment")
-    ResponseEntity<Boolean> processPayment(@PathVariable("orderId") String orderId) {
-
-        Boolean result = Boolean.valueOf(orderService.processPayment(orderId));
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    
 
     @GetMapping("/order/{orderId}")
     ResponseEntity<OrderDTO> getOrder(@PathVariable("orderId") String orderId) {

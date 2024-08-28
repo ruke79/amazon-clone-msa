@@ -42,7 +42,7 @@ public class CartController {
     @Autowired
     AddressService addressService;
 
-    @PostMapping("/savecart")
+    @PutMapping("/savecart")
     ResponseEntity<CartResponse> saveCart(@RequestBody CartRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -54,7 +54,7 @@ public class CartController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/updatecart")
+    @PutMapping("/updatecart")
     ResponseEntity<List<ProductInfoDTO>> updateCart(@RequestBody ProductInfoRequest products,
             @AuthenticationPrincipal UserDetails userDetails) {
 

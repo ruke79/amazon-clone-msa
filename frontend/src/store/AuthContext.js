@@ -41,6 +41,7 @@ export const ContextProvider = ({ children }) => {
           localStorage.removeItem("IS_ADMIN");
           setIsAdmin(false);
         }
+        
         setCurrentUser(data);
       } catch (error) {
         console.error("Error fetching current user", error);

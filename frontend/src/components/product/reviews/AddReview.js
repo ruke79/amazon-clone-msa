@@ -88,6 +88,7 @@ const AddReview = ({ product, setReviews }) => {
 
             axios.all(imageUploader).then(async() => {
 
+
                 const { data } = await api.put(
                     `/product/${product.id}/review`,
                     {
@@ -99,7 +100,9 @@ const AddReview = ({ product, setReviews }) => {
                         images: uploaded_images,
                     }
                 );
-                setReviews(data.reviews);
+                
+
+                setReviews(data);
                 dispatch(
                     showDialog({
                         header: "Adding review Successfully!",
@@ -131,7 +134,7 @@ const AddReview = ({ product, setReviews }) => {
                 }
             );
             console.log(data);
-            setReviews(data.reviews);
+            setReviews(data);
             dispatch(
                 showDialog({
                     header: "Adding review Successfully!",

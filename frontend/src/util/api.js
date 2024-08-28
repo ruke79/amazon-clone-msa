@@ -50,7 +50,7 @@ api.interceptors.request.use(
 export const saveCart = async (cart) => {
   try {
       
-      const { data } = await api.post("/user/cart/savecart", {
+      const { data } = await api.put("/user/cart/savecart", {
           products : cart          
       });
       return data;

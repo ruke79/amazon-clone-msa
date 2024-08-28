@@ -25,9 +25,9 @@ const CartPage = ({ cart }) => {
     
 
     useEffect(() => {
-        if (token) {
+        if (currentUser) {
             const update = async () => {
-                const { data } = await api.post(`/user/cart/updatecart`, {
+                const { data } = await api.put(`/user/cart/updatecart`, {
                     products: cart.cartItems,                     
                 }                
             );
@@ -81,7 +81,7 @@ const CartPage = ({ cart }) => {
     }, [selected]);
 
     const saveCartToDbHandler = async () => {
-        if (token) {
+        if (currentUser) {
             setLoading(true);
             
             const res = await saveCart(selected);

@@ -65,6 +65,8 @@ public class SecurityConfig {
                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 .ignoringRequestMatchers("/api/user/**")
                         .ignoringRequestMatchers("/api/auth/public/**").ignoringRequestMatchers("/api/admin/**")
+                        .ignoringRequestMatchers("/api/order/**")
+                        .ignoringRequestMatchers("/api/product/**")
         );
         //http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((requests)

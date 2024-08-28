@@ -323,7 +323,7 @@ public class CartService {
 
     public Boolean addWishList(String username, WishListRequest request) {
 
-        Long id = Long.parseLong(request.getProductId());
+        Long id = Long.parseLong(request.getId());
 
         Optional<User> user = userRepository.findByUserName(username);
 
@@ -333,11 +333,11 @@ public class CartService {
 
             if (product.isPresent()) {
 
-                WishList existed = user.get().getWishLists().stream()
+                Optional<WishList> existed = user.get().getWishLists().stream()
                         .filter(x -> x.getProduct().getProductId() == id && x.getStyle() == request.getStyle())
-                        .findFirst().get();
+                        .findFirst();
 
-                if (null != existed) {
+                if (existed.isPresent()) {
 
                     return false;
 

@@ -42,7 +42,7 @@ const ReviewCard = ({ review }) => {
                         />
                         <div className="flex items-center ">
                             <HandThumbUpIcon className="h-6 w-6 mr-1 cursor-pointer" />
-                            <span>{review.likes.likes}6 likes</span>
+                            <span>{review.likes?.length}6 likes</span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@ const ReviewCard = ({ review }) => {
                         <span className="ml-4">Fit: {review.fit}</span>
                         <div className="flex items-center ml-auto ">
                             <HandThumbUpIcon className="h-6 2-6 mr-1 cursor-pointer" />
-                            <span>{review.likes.likes} 6 likes</span>
+                            <span>{review.likes?.length} 6 likes</span>
                         </div>
                     </div>
                     <div className="flex flex-col md:flex-row">
@@ -70,10 +70,10 @@ const ReviewCard = ({ review }) => {
                                 review.images.map((img, i) => (
                                     <img
                                         key={i}
-                                        src={img.url}
+                                        src={img}
                                         width={50}
                                         height={50}
-                                        alt={img.url}
+                                        alt={img}
                                         className="rounded-xl outline outline-1 outline-offset-2 outline-slate-300 cursor-pointer"
                                     />
                                 ))}
