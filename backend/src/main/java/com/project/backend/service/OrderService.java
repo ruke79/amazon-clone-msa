@@ -56,6 +56,8 @@ public class OrderService {
 
             Order order = new Order();
 
+            order.setOrderNumber(request.getOrderNumber());
+
             List<OrderedProduct> ordered = new ArrayList<>();
                         
             for (CartProductDTO p : request.getProducts()) {
@@ -133,13 +135,13 @@ public class OrderService {
             AddressService.deepCopyShippingAddressDTO(address, data.getShippingAddress());
 
             OrderDTO result = OrderDTO.builder()
-            .id(Long.toString(data.getOrderId()))
+            .orderNumber(data.getOrderNumber())
             .isPaid(data.isPaid())
             .couponApplied(data.getCouponApplied())
             .deliveredAt(data.getDeliveredAt())
             .orderStatus(data.getOrderStatus().name())
             .paymentMethod(data.getPaymentMethod())
-            .paymentResult(data.getPaymentResult().getPayStatus().getValue())
+            .paymentResult(data.getPaymentResult().getPayStatus().getStatus())
             .products(dtos)
             .shippingAddress(address)
             .user(UserDTO.builder()
@@ -150,8 +152,6 @@ public class OrderService {
              .totalBeforeDiscount(data.getTotalBeforeDiscount())
              .total(data.getTotal())
             .build();
-
-
             
             return result;
         }

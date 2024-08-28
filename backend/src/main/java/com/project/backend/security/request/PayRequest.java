@@ -21,7 +21,7 @@ public class PayRequest {
      private PayType payType = PayType.C;
      private OrderStatusEnum orderStatus = OrderStatusEnum.NOT_PROCESSED;
 
-     private String orderId;
+     private String orderNumber;
      private int orderPrice;
 
      @NotNull(message = "결제금액을 입력해주세요.")

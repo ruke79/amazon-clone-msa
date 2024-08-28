@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 public class OrderDTO {
 
-    private String id;
+    private String orderNumber;
 
     private UserDTO user;
 

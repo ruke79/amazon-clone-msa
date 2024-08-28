@@ -24,11 +24,12 @@ public class PaymentService {
 
     public PaymentResultDTO processPayment(String userName, PayRequest request) {
 
-        Long orderId = Long.parseLong(request.getOrderId());
-     
+             
         try {
-            Order order = orderRepository.findById(orderId)
+            Order order = orderRepository.findByOrderNumber(request.getOrderNumber())
             .orElseThrow(() -> new RuntimeException("Order not found"));
+
+            orderRepository.updateIsPaidByOrderNumber(request.getOrderNumber(), true);       
 
             PaymentResult pay = PaymentResult.builder()
             .payPrice(request.getPayPrice())
@@ -52,14 +53,10 @@ public class PaymentService {
             .build();
 
             return result;
-        //      int updatedRowcount = orderRepository.updateIsPaidById(orderId, true);       
-
-        // if (updatedRowcount > 0) {
-        //     return true;
-        // }
-            
+        
+           
         } catch (Exception e) {
-            throw new RuntimeException("Failed to update password");
+            throw new RuntimeException("Failed to process payment");
         }       
         
     }
