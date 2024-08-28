@@ -1,5 +1,7 @@
 package com.project.backend.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,8 +16,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Modifying
     @Transactional    
-    @Query("Update Order o SET o.isPaid = :payStatus WHERE o.orderId = :id")
-    int updateIsPaidById(@Param("id") Long id, @Param("payStatus") Boolean payStatus);
+    @Query("Update Order o SET o.isPaid = :payStatus WHERE o.orderNumber = :orderNumber")
+    int updateIsPaidByOrderNumber(@Param("orderNumber") String orderNumber, @Param("payStatus") Boolean payStatus);
 
     Order findByUser_UserName(String email);
+
+    Optional<Order> findByOrderNumber(String orderNumber);
 }

@@ -4,7 +4,7 @@ import api from "util/api";
 
 import { paymentMethods } from "../checkout/paymentMethods";
 import { useDispatch } from "react-redux";
-import IMP
+import * as PortOne from "@portone/browser-sdk/v2";
 
 const Payment = ({ order, setLoading, setOrder }) => {
     const dispatch = useDispatch();
@@ -12,16 +12,7 @@ const Payment = ({ order, setLoading, setOrder }) => {
     const [paid, setPaid] = useState(null);
 
     useEffect(() => {
-        const jquery = document.createElement("script");
-        jquery.src = "http://code.jquery.com/jquery-1.12.4.min.js";
-        const iamport = document.createElement("script");
-        iamport.src = "https://cdn.iamport.kr/v1/iamport.js";
-        document.head.appendChild(jquery);
-        document.head.appendChild(iamport);
-        return () => {
-          document.head.removeChild(jquery);
-          document.head.removeChild(iamport);
-        };
+        
       }, []);
 
 
@@ -29,68 +20,68 @@ const Payment = ({ order, setLoading, setOrder }) => {
         try {
             setLoading(true);
 
-            const { IMP } = window;
+  //           const { IMP } = window;
 
-            const { IMP } = window;
-    const buyerEmail = member ? member.memberEmail : '';
-    const buyerName = member ? member.memberName : '';
-    const buyerTel = member ? member.memberPhone : '';
-    const name = order ? order.orderNo : '';
-    const buyerAddr = order ? order.resipientAddr : '';
-    const buyerPostcode = order ? order.resipientZipcode : '';
-    const amount = order.orderPrice;
+  //           const { IMP } = window;
+  //   const buyerEmail = member ? member.memberEmail : '';
+  //   const buyerName = member ? member.memberName : '';
+  //   const buyerTel = member ? member.memberPhone : '';
+  //   const name = order ? order.orderNo : '';
+  //   const buyerAddr = order ? order.resipientAddr : '';
+  //   const buyerPostcode = order ? order.resipientZipcode : '';
+  //   const amount = order.orderPrice;
 
-    IMP.init('imp11340204');
+  //   IMP.init('imp11340204');
 
-    IMP.request_pay({
-      pg: 'kakaopay.TC0ONETIME',
-      pay_method: 'card',
-      merchant_uid: new Date().getTime(),
-      name: name,
-      amount: amount,
-      buyer_email: buyerEmail,
-      buyer_name: buyerName,
-      buyer_tel: buyerTel,
-      buyer_addr: buyerAddr,
-      buyer_postcode: buyerPostcode,
-    }, async (rsp) => {
-      console.log('rsp: ', rsp);
-      try {
-        const { data } = await axios.post('/api/pay/verifyIamport/' + rsp.imp_uid);
-        if (rsp.paid_amount === amount) {
-          alert('결제 성공!');
-          const testPay = {
-            orderNo: order.orderNo,
-            payPrice: amount,
-            payStatus: rsp.success ? 'Y' : 'N'
-          }
+  //   IMP.request_pay({
+  //     pg: 'kakaopay.TC0ONETIME',
+  //     pay_method: 'card',
+  //     merchant_uid: new Date().getTime(),
+  //     name: name,
+  //     amount: amount,
+  //     buyer_email: buyerEmail,
+  //     buyer_name: buyerName,
+  //     buyer_tel: buyerTel,
+  //     buyer_addr: buyerAddr,
+  //     buyer_postcode: buyerPostcode,
+  //   }, async (rsp) => {
+  //     console.log('rsp: ', rsp);
+  //     try {
+  //       const { data } = await axios.post('/api/pay/verifyIamport/' + rsp.imp_uid);
+  //       if (rsp.paid_amount === amount) {
+  //         alert('결제 성공!');
+  //         const testPay = {
+  //           orderNo: order.orderNo,
+  //           payPrice: amount,
+  //           payStatus: rsp.success ? 'Y' : 'N'
+  //         }
 
-          //console.log('testPay.payStatus: ', testPay.payStatus);
+  //         //console.log('testPay.payStatus: ', testPay.payStatus);
 
-          axios.post('/api/pay/createPayment', testPay, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-            .then(response => {
-              console.log('Pay data:', response.data);
-              setPay(response.data);
-            })
-            .catch(error => {
-              console.error('Error fetching pay data:', error);
-            });
+  //         axios.post('/api/pay/createPayment', testPay, {
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //         })
+  //           .then(response => {
+  //             console.log('Pay data:', response.data);
+  //             setPay(response.data);
+  //           })
+  //           .catch(error => {
+  //             console.error('Error fetching pay data:', error);
+  //           });
 
-        } else if (rsp.paid_amount == amount) {
-          alert('결제 성공?');
-        } else {
-          alert('결제 실패?');
-        }
-      } catch (error) {
-        console.error('Error while verifying payment:', error);
-        alert('결제 실패');
-      }
-    });
-  };
+  //       } else if (rsp.paid_amount == amount) {
+  //         alert('결제 성공?');
+  //       } else {
+  //         alert('결제 실패?');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error while verifying payment:', error);
+  //       alert('결제 실패');
+  //     }
+  //   });
+  // };
 
 
             // setTimeout(async () => {

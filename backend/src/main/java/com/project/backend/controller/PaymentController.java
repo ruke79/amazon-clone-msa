@@ -19,6 +19,7 @@ import com.project.backend.dto.PaymentResultDTO;
 import com.project.backend.security.request.PayRequest;
 import com.project.backend.service.OrderService;
 import com.project.backend.service.PaymentService;
+import com.project.backend.service.RefundService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -32,15 +33,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("api/pay/")
 public class PaymentController {
 
-    @Value("${imp.key}")
+    @Value("${imp_key}")
     private String restApiKey;
-    @Value("${imp.secret}")
+    @Value("${imp_secret}")
     private String restApiSecret;
 
     private IamportClient iamportClient;
 
     @Autowired
     PaymentService paymentService;
+
+    @Autowired
+    RefundService refundService;
 
 
     @PutMapping("/process")
@@ -52,10 +56,13 @@ public class PaymentController {
             return ResponseEntity.ok(paymentService.processPayment(username, request));
 
         }
-        catch ( Exception e) {
+        catch ( RuntimeException e) {
 
-            log.error("Error creating payment: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            log.info("주문 상품 환불 진행 : 주문 번호 {}", request.getOrderId());
+            String token = refundService.getToken(restApiKey, restApiSecret);
+            refundService.refundRequest(token, request.get, e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            
 
         }
         

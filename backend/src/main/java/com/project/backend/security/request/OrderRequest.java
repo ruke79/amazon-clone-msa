@@ -14,6 +14,7 @@ import lombok.Setter;
 @Getter
 public class OrderRequest {
     
+    private String orderNumber;
     private List<CartProductDTO> products;
     private AddressDTO shippingAddress;    
     private String paymentMethod;

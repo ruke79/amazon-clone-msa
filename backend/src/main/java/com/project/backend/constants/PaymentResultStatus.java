@@ -7,8 +7,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentResultStatus {
 
-    Y("결제완료"),
-    N("결제취소");
+    SUCCESS("결제완료"),
+    REFUND("환불완료"),
+    WAITING_FOR_PAYMENT("결제대기");
+    
+    private String status;
 
-    private final String value;
+    PaymentResultStatus(String status) {
+        this.status = status;
+    }
+
 }
