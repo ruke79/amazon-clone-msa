@@ -1,7 +1,8 @@
 package com.project.backend.controller;
 
-
+import com.project.backend.exception.TokenRefreshException;
 import com.project.backend.model.AppRole;
+import com.project.backend.model.RefreshToken;
 import com.project.backend.model.Role;
 import com.project.backend.model.User;
 import com.project.backend.registration.OnRegistrationCompleteEvent;
@@ -16,6 +17,7 @@ import com.project.backend.security.response.MessageResponse;
 import com.project.backend.security.response.UserInfoResponse;
 import com.project.backend.security.service.UserDetailsImpl;
 import com.project.backend.security.service.UserDetailsServiceImpl;
+import com.project.backend.service.RefreshTokenService;
 import com.project.backend.service.TotpService;
 import com.project.backend.service.UserService;
 import com.project.backend.util.AuthUtil;
@@ -29,6 +31,7 @@ import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/auth")
@@ -90,43 +92,56 @@ public class AuthController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+
     @PostMapping("/public/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication;
-        
+
         try {
             authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(), loginRequest.getPassword()));
-                    
+                            loginRequest.getEmail(), loginRequest.getPassword()));
+
         } catch (AuthenticationException exception) {
-        
+
             Map<String, Object> map = new HashMap<>();
             map.put("message", "Bad credentials");
             map.put("status", false);
             return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
         }
 
-//      Set the authentication
+        // Set the authentication
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
+        // String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
+
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
         // Collect roles from the UserDetails
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
+
         // Prepare the response body, now including the JWT token directly in the body
-        LoginResponse response = new LoginResponse(userDetails.getEmail(),
-                roles, jwtToken);
+        // LoginResponse response = new LoginResponse(userDetails.getEmail(),
+        // roles, jwtCookie);
+        LoginResponse response = new LoginResponse(userDetails.getUsername(), userDetails.getEmail(),
+                roles);
 
         // Return the response entity with the JWT token included in the response body
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+                .body(response);
     }
-
 
     @PostMapping("/public/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -137,25 +152,65 @@ public class AuthController {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
-        
+
         userService.registerNewUserAccount(signUpRequest);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
-    @PostMapping("/public/register")
-    public GenericResponse registerUserAccount(@Valid @RequestBody  SignupRequest accountDto,
-    final HttpServletRequest request) {        
+    @PostMapping("/signout")
+    public ResponseEntity<?> logoutUser() {
+        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principle.toString() != "anonymousUser") {
+            Long userId = ((UserDetailsImpl) principle).getId();
+            refreshTokenService.deleteByUserId(userId);
+        }
 
-        final User registered = userService.registerNewUserAccount(accountDto);
-        //userService.addUserLocation(registered, getClientIP(request));
-        
-        
-        eventPublisher.publishEvent(new com.project.backend.registration.OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
-        return new GenericResponse("success");
+        ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
+        ResponseCookie jwtRefreshCookie = jwtUtils.getCleanJwtRefreshCookie();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+                .body(new MessageResponse("You've been signed out!"));
     }
 
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
+        String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
+
+        if((refreshToken != null) && (refreshToken.length() > 0)) {
+            return refreshTokenService.findByToken(refreshToken)
+            .map(refreshTokenService::verifyExpiration)
+            .map(RefreshToken::getUser)
+            .map(user-> {
+                ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
+            
+            return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(new MessageResponse("Token is refreshed successfully!"));
+          })
+          .orElseThrow(() -> new TokenRefreshException(refreshToken,
+              "Refresh token is not in database!"));
+    }
     
+    return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
+  }
+
+    }
+
+
+    @PostMapping("/public/register")
+    public GenericResponse registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
+            final HttpServletRequest request) {
+
+        final User registered = userService.registerNewUserAccount(accountDto);
+        // userService.addUserLocation(registered, getClientIP(request));
+
+        eventPublisher.publishEvent(new com.project.backend.registration.OnRegistrationCompleteEvent(registered,
+                request.getLocale(), getAppUrl(request)));
+        return new GenericResponse("success");
+    }
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
@@ -176,8 +231,7 @@ public class AuthController {
                 user.getCredentialsExpiryDate(),
                 user.getAccountExpiryDate(),
                 user.isTwoFactorEnabled(),
-                roles
-        );
+                roles);
 
         return ResponseEntity.ok().body(response);
     }
@@ -202,7 +256,7 @@ public class AuthController {
 
     @PostMapping("/public/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String token,
-                                           @RequestParam String newPassword) {
+            @RequestParam String newPassword) {
 
         try {
             userService.resetPassword(token, newPassword);
@@ -230,7 +284,6 @@ public class AuthController {
         return ResponseEntity.ok("2FA disabled");
     }
 
-
     @PostMapping("/verify-2fa")
     public ResponseEntity<String> verify2FA(@RequestParam int code) {
         Long userId = authUtil.loggedInUserId();
@@ -244,11 +297,10 @@ public class AuthController {
         }
     }
 
-
     @GetMapping("/user/2fa-status")
     public ResponseEntity<?> get2FAStatus() {
         User user = authUtil.loggedInUser();
-        if (user != null){
+        if (user != null) {
             return ResponseEntity.ok().body(Map.of("is2faEnabled", user.isTwoFactorEnabled()));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -256,10 +308,9 @@ public class AuthController {
         }
     }
 
-
     @PostMapping("/public/verify-2fa-login")
     public ResponseEntity<String> verify2FALogin(@RequestParam int code,
-                                                 @RequestParam String jwtToken) {
+            @RequestParam String jwtToken) {
         String username = jwtUtils.getUserNameFromJwtToken(jwtToken);
         User user = userService.findByUsername(username);
         boolean isValid = userService.validate2FACode(user.getUserId(), code);
@@ -270,7 +321,6 @@ public class AuthController {
                     .body("Invalid 2FA Code");
         }
     }
-
 
     private String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
