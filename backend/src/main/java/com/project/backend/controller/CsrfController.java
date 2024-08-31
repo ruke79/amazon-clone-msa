@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.security.jwt.AuthEntryPointJwt;
+import com.project.backend.security.jwt.JwtAuthEntryPoint;
 
 @RestController
 public class CsrfController {

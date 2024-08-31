@@ -16,11 +16,16 @@ import com.project.backend.security.request.PayRequest;
 @Service
 public class PaymentService {
 
-    @Autowired
-    PaymentRepository paymentRepository;
+    
+    private final PaymentRepository paymentRepository;
+    
+    private final OrderRepository orderRepository;
 
     @Autowired
-    OrderRepository orderRepository;
+    public PaymentService(PaymentRepository paymentRepository, OrderRepository orderRepository) {
+        this.paymentRepository = paymentRepository;
+        this.orderRepository = orderRepository;
+    }
 
     public PaymentResultDTO processPayment(String userName, PayRequest request) {
 
@@ -61,5 +66,6 @@ public class PaymentService {
         
     }
 
+    
 
 }

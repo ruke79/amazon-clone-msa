@@ -21,14 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class AddressService {
 
-    @Autowired 
-    ShippingAddressRepository shippingAddressRepository;
-
-
+    
+    private final ShippingAddressRepository shippingAddressRepository;
+    private final UserRepository userRepository;
+    
     @Autowired
-    UserRepository userRepository;
-    
-    
+    public AddressService(ShippingAddressRepository shippingAddressRepository, UserRepository userRepository) {
+        this.shippingAddressRepository = shippingAddressRepository;
+        this.userRepository = userRepository;
+    }
+
+
     public List<AddressDTO> saveShippingAddress(AddressRequest request, String username) {
         
         ShippingAddress address = new ShippingAddress();

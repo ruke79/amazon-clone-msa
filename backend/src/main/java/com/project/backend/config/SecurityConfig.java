@@ -21,17 +21,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import com.project.backend.model.AppRole;
+import com.project.backend.model.RefreshToken;
 import com.project.backend.model.Role;
 import com.project.backend.model.User;
 import com.project.backend.repository.RoleRepository;
 import com.project.backend.repository.UserRepository;
-import com.project.backend.security.jwt.AuthEntryPointJwt;
-import com.project.backend.security.jwt.AuthTokenFilter;
+import com.project.backend.security.AuthLoginFilter;
+import com.project.backend.security.AuthLogoutFilter;
+import com.project.backend.security.jwt.JwtAuthEntryPoint;
+import com.project.backend.security.jwt.JwtAuthFilter;
+import com.project.backend.security.jwt.JwtUtils;
+import com.project.backend.service.RefreshTokenService;
+import com.project.backend.service.UserService;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -46,17 +53,38 @@ import org.springframework.boot.CommandLineRunner;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfig {
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
 
-    @Autowired
+    private final AuthenticationConfiguration authenticationConfiguration;
+    
+    private final JwtAuthEntryPoint unauthorizedHandler;
+
+    
     @Lazy
-    OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    private final JwtUtils jwtUtils;
+
+    private final RefreshTokenService refreshTokenService;
+
+    private final UserService userService;
 
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+    public JwtAuthFilter authenticationJwtTokenFilter() {
+        return new JwtAuthFilter();
     }
+
+
+    @Autowired
+    public SecurityConfig(JwtAuthEntryPoint unauthorizedHandler, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+            JwtUtils jwtUtils, AuthenticationConfiguration authenticationConfiguration, RefreshTokenService refreshTokenService, UserService userService) {
+        this.authenticationConfiguration = authenticationConfiguration;
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.jwtUtils = jwtUtils;
+        this.refreshTokenService = refreshTokenService;
+        this.userService = userService;
+    }
+
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -77,6 +105,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/**").permitAll()
                 .requestMatchers("/api/search/**").permitAll()
                 .requestMatchers("/api/csrf-token").permitAll()
+                .requestMatchers("/api/refreshtoken").permitAll()
                 .requestMatchers("/api/auth/public/**").permitAll()
                 .requestMatchers("/registrationConfirm").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
@@ -87,11 +116,15 @@ public class SecurityConfig {
         http.exceptionHandling(exception
                 -> exception.authenticationEntryPoint(unauthorizedHandler));
         http.addFilterBefore(authenticationJwtTokenFilter(),
-                UsernamePasswordAuthenticationFilter.class);
-        http.sessionManagement((sessionManagement) -> sessionManagement.invalidSessionUrl("/invalidSession.html")
+                AuthLoginFilter.class);
+        http .addFilterBefore(new AuthLogoutFilter(jwtUtils, refreshTokenService, userService ), LogoutFilter.class);
+        http.addFilterAt(new AuthLoginFilter(authenticationManager(authenticationConfiguration), jwtUtils, refreshTokenService), UsernamePasswordAuthenticationFilter.class);
+        http.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .invalidSessionUrl("/invalidSession.html")
              .maximumSessions(1)
-              .sessionRegistry(sessionRegistry()));  
-        http.formLogin(withDefaults());
+              .sessionRegistry(sessionRegistry()));
+                
+        //http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
     }

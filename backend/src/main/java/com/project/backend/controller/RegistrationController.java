@@ -78,7 +78,7 @@ public class RegistrationController {
 
             UserDetailsImpl userDetailsimpl = (UserDetailsImpl) authentication.getPrincipal();
 
-            String jwtToken = jwtUtils.generateTokenFromUsername(userDetailsimpl);
+            String jwtToken = jwtUtils.generateTokenFromEmail(userDetailsimpl);
     
             // Collect roles from the UserDetails
             List<String> roles = userDetailsimpl.getAuthorities().stream()

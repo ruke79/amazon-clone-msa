@@ -13,15 +13,19 @@ import com.project.backend.repository.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+   
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // @Override
     // @Transactional
     // public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     //     User user = userRepository.findByUserName(username)
     //             .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
     //     return UserDetailsImpl.build(user);
     // }
     @Override
