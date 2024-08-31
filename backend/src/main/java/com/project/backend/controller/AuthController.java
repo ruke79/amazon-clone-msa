@@ -1,5 +1,6 @@
 package com.project.backend.controller;
 
+import com.project.backend.constants.TokenType;
 import com.project.backend.exception.TokenRefreshException;
 import com.project.backend.model.AppRole;
 import com.project.backend.model.RefreshToken;
@@ -23,7 +24,10 @@ import com.project.backend.service.UserService;
 import com.project.backend.util.AuthUtil;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +59,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -145,6 +150,8 @@ public class AuthController {
 
     @PostMapping("/public/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+       
+       
         if (userRepository.existsByUserName(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
@@ -175,29 +182,9 @@ public class AuthController {
                 .body(new MessageResponse("You've been signed out!"));
     }
 
-    @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
-        String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
-
-        if((refreshToken != null) && (refreshToken.length() > 0)) {
-            return refreshTokenService.findByToken(refreshToken)
-            .map(refreshTokenService::verifyExpiration)
-            .map(RefreshToken::getUser)
-            .map(user-> {
-                ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
-            
-            return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(new MessageResponse("Token is refreshed successfully!"));
-          })
-          .orElseThrow(() -> new TokenRefreshException(refreshToken,
-              "Refresh token is not in database!"));
-    }
     
-    return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
-  }
 
-    }
+    
 
 
     @PostMapping("/public/register")
@@ -311,7 +298,7 @@ public class AuthController {
     @PostMapping("/public/verify-2fa-login")
     public ResponseEntity<String> verify2FALogin(@RequestParam int code,
             @RequestParam String jwtToken) {
-        String username = jwtUtils.getUserNameFromJwtToken(jwtToken);
+        String username = jwtUtils.getEmailFromJwtToken(jwtToken);
         User user = userService.findByUsername(username);
         boolean isValid = userService.validate2FACode(user.getUserId(), code);
         if (isValid) {

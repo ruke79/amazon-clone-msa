@@ -20,8 +20,8 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;      
     }
 
-    let csrfToken = localStorage.getItem("CSRF_TOKEN");
-    if (!csrfToken) {
+    //let csrfToken = localStorage.getItem("CSRF_TOKEN");
+    //if (!csrfToken) {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/csrf-token`,
@@ -29,7 +29,7 @@ api.interceptors.request.use(
           
         );
         csrfToken = response.data.token;
-        localStorage.setItem("CSRF_TOKEN", csrfToken);
+        //localStorage.setItem("CSRF_TOKEN", csrfToken);
       } catch (error) {
         console.error("Failed to fetch CSRF token", error);
       }
@@ -45,6 +45,9 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+
+
 
 
 export const saveCart = async (cart) => {

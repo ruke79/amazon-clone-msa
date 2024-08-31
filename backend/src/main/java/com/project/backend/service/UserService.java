@@ -29,21 +29,21 @@ public interface UserService {
 
     void updateCredentialsExpiryStatus(Long userId, boolean expire);
 
-    void updatePassword(Long userId,String currPassword, String password);
+    void updatePassword(Long userId, String currPassword, String password);
 
-    // Admin  
+    // Admin
     void updatePassword(Long userId, String password);
 
     void generatePasswordResetToken(String email);
 
     void resetPassword(String token, String newPassword);
 
-    Optional<User> findByEmail(String email);
+    User findByEmail(String email);
 
     User getUser(final String verificationToken);
 
     // OAuth 2.0
-    User registerUser(User user); 
+    User registerUser(User user);
 
     User registerNewUserAccount(SignupRequest request);
 
@@ -70,5 +70,5 @@ public interface UserService {
     UserDTO findUserWithAddresses(User user);
 
     UserDTO findUserWithdefaultPaymentMethod(User user);
-    
+
 }

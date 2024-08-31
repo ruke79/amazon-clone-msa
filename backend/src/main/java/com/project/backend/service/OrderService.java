@@ -33,14 +33,20 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class OrderService {
 
-    @Autowired
-    OrderRepository orderRepository;
+    
+    private final OrderRepository orderRepository;
+    
+    private final UserRepository userRepository;
+    
+    private final ProductRepository productRepository;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ProductRepository productRepository;
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository,
+            ProductRepository productRepository) {
+        this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
 
     public Order createOrder(OrderRequest request, String username) {
 

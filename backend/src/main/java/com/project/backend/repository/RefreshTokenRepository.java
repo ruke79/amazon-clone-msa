@@ -9,11 +9,18 @@ import org.springframework.stereotype.Repository;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
     Optional<RefreshToken> findByToken(String token);
 
+    @Transactional
     @Modifying
     int deleteByUser(User user);
+
+    @Transactional
+    @Modifying
+    int deleteByToken(String stoken);
 
 }

@@ -45,29 +45,39 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CartService {
 
-    @Autowired
-    CartRepository cartRepository;
+    
+    private final CartRepository cartRepository;
+    
+    private final CartProductRepository cartProductRepository;
+    
+    private final UserRepository userRepository;
+    
+    private final ProductRepository productRepository;
+    
+    private final ProductSkuRepository productSkuRepository;
 
-    @Autowired
-    CartProductRepository cartProductRepository;
+    private final ShippingAddressRepository shippingAddressRepository;
+    
+    private final WishiListRepository wishiListRepository;
 
-    @Autowired
-    UserRepository userRepository;
+   
+    private final CouponRepository couponRepository;
 
+    
     @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
-    ProductSkuRepository productSkuRepository;
-
-    @Autowired
-    ShippingAddressRepository shippingAddressRepository;
-
-    @Autowired
-    WishiListRepository wishiListRepository;
-
-    @Autowired
-    CouponRepository couponRepository;
+    public CartService(CartRepository cartRepository, CartProductRepository cartProductRepository,
+            UserRepository userRepository, ProductRepository productRepository,
+            ProductSkuRepository productSkuRepository, ShippingAddressRepository shippingAddressRepository,
+            WishiListRepository wishiListRepository, CouponRepository couponRepository) {
+        this.cartRepository = cartRepository;
+        this.cartProductRepository = cartProductRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+        this.productSkuRepository = productSkuRepository;
+        this.shippingAddressRepository = shippingAddressRepository;
+        this.wishiListRepository = wishiListRepository;
+        this.couponRepository = couponRepository;
+    }
 
     public String updatePaymentMethod(String username, String paymentMethod) {
 

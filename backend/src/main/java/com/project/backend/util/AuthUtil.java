@@ -11,8 +11,13 @@ import com.project.backend.repository.UserRepository;
 @Component
 public class AuthUtil {
 
+    
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public AuthUtil(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public Long loggedInUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
