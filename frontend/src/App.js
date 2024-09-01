@@ -22,7 +22,6 @@ import Orders from "pages/profile/orders";
 import Security from "pages/profile/security";
 import Profile, { loader as loaderProfile }  from "pages/profile/profile";
 import Payment,{ loader as loaderPayment } from "pages/profile/payment"
-
 import ProtectedRoute from "components/ProtectedRoute";
 
 
@@ -40,8 +39,8 @@ const router = useMemo( () => createBrowserRouter([
         element: <HomePage />,
         loader: homeLoader,
       },
-      { path: '/signin', element: <SignInPage /> },
-      { path: '/register', element: <RegisterPage /> },      
+      { path: 'signin', element: <SignInPage /> },
+      { path: 'register', element: <RegisterPage /> },      
     ]    
   },
   { path: '/profile',
@@ -123,7 +122,8 @@ const router = useMemo( () => createBrowserRouter([
   ]),   
   [authContext]);
 
-  return <RouterProvider router={router} />          
+  return <RouterProvider router={router}/>         
+      
 };
 
 function App() {
@@ -133,8 +133,8 @@ function App() {
     <>
     <ContextProvider>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>                      
-              <AppRouter />            
+        <PersistGate loading={null} persistor={persistor}>                                  
+              <AppRouter />             
         </PersistGate>
       </Provider>
       </ContextProvider>

@@ -67,86 +67,86 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
+    
     JwtUtils jwtUtils;
 
-    @Autowired
+    
     AuthenticationManager authenticationManager;
 
-    @Autowired
+    
     private ApplicationEventPublisher eventPublisher;
 
-    @Autowired
+    
     UserRepository userRepository;
 
-    @Autowired
+    
     RoleRepository roleRepository;
 
     // @Autowired
     // PasswordEncoder encoder;
 
-    @Autowired
+    
     UserService userService;
 
-    @Autowired
+    
     AuthUtil authUtil;
 
-    @Autowired
+    
     TotpService totpService;
 
-    @Autowired
+    
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
+    
     private RefreshTokenService refreshTokenService;
 
-    @PostMapping("/public/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication;
+    // @PostMapping("/public/signin")
+    // public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    //     Authentication authentication;
 
-        try {
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(), loginRequest.getPassword()));
+    //     try {
+    //         authentication = authenticationManager
+    //                 .authenticate(new UsernamePasswordAuthenticationToken(
+    //                         loginRequest.getEmail(), loginRequest.getPassword()));
 
-        } catch (AuthenticationException exception) {
+    //     } catch (AuthenticationException exception) {
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("message", "Bad credentials");
-            map.put("status", false);
-            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-        }
+    //         Map<String, Object> map = new HashMap<>();
+    //         map.put("message", "Bad credentials");
+    //         map.put("status", false);
+    //         return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+    //     }
 
-        // Set the authentication
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    //     // Set the authentication
+    //     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    //     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        // String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
+    //     // String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
 
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    //     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
-        // Collect roles from the UserDetails
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+    //     // Collect roles from the UserDetails
+    //     List<String> roles = userDetails.getAuthorities().stream()
+    //             .map(item -> item.getAuthority())
+    //             .collect(Collectors.toList());
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+    //     RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
+    //     ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
 
-        // Prepare the response body, now including the JWT token directly in the body
-        // LoginResponse response = new LoginResponse(userDetails.getEmail(),
-        // roles, jwtCookie);
-        LoginResponse response = new LoginResponse(userDetails.getUsername(), userDetails.getEmail(),
-                roles);
+    //     // Prepare the response body, now including the JWT token directly in the body
+    //     // LoginResponse response = new LoginResponse(userDetails.getEmail(),
+    //     // roles, jwtCookie);
+    //     LoginResponse response = new LoginResponse(userDetails.getUsername(), userDetails.getEmail(),
+    //             roles);
 
-        // Return the response entity with the JWT token included in the response body
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-                .body(response);
-    }
+    //     // Return the response entity with the JWT token included in the response body
+    //     return ResponseEntity.ok()
+    //             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+    //             .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+    //             .body(response);
+    // }
 
     @PostMapping("/public/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {

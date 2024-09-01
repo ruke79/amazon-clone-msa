@@ -15,19 +15,9 @@ import { Pagination } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import api from "util/api";
 import keySort from "util/sort_utils";
-// import DotLoaderSpinner from "@/components/loaders/dotLoader/DotLoaderSpinner";
+ import DotLoaderSpinner from "components/loader/Loading";
 
-const Browse = ({
-    // categories,
-    // subCategories,
-    // products,
-    // sizes,
-    // colors,
-    // brands,
-    // styles,
-    // materials,
-    // paginationCount,
-}) => {
+const Browse = ({}) => {
 
     const productsDB = useLoaderData();
 
@@ -56,7 +46,7 @@ const Browse = ({
 
 
     const [searchParams, setSearchParams] = useSearchParams();
-    // const [loading, setloading] = useState(false);
+    const [loading, setloading] = useState(false);
     const navigate = useNavigate();
 
 
@@ -75,7 +65,7 @@ const Browse = ({
         sort,
         page,
     }) => {
-        //const path = router.pathname;
+       
         function isEmptyObject(arg) {
             return typeof arg === 'object' && Object.keys(arg).length === 0;
         }
@@ -84,14 +74,14 @@ const Browse = ({
             if (param && !searchParams.get(param) && !isEmptyObject(param)) {
                 searchParams.set(name, param);
 
-                //setSearchParams(searchParams);    
+                 
                 if (param !== 'page' && searchParams.get('page'))
                     searchParams.delete('page');
 
             }
             else if (param) {
                 searchParams.delete(name);
-                //setSearchParams(searchParams);            
+                      
             }
         }
 
@@ -112,26 +102,26 @@ const Browse = ({
         toggleParam('price', price);
 
         console.log("rating : " + rating);
-        //toggleParam('rating', rating);               
+                   
 
 
         if (shipping && !searchParams.get('shipping')) {
             searchParams.set('shipping', shipping);
-            //setSearchParams(searchParams);                        
+                              
         }
         else if (shipping) {
             searchParams.delete('shipping');
-            //setSearchParams(searchParams);                 
+                       
         }
 
         if (rating && !searchParams.get('rating')) {
-            //console.log('searchParams.set(rating rating)');
+           
             searchParams.set('rating', rating);
-            //setSearchParams(searchParams);
+           
         }
         else if (rating) {
             searchParams.delete('rating');
-            //setSearchParams(searchParams);            
+              
         }
 
         toggleParam('sort', sort);
@@ -167,28 +157,11 @@ const Browse = ({
         filter({ material });
     };
     const genderHandler = (gender) => {
-        // if (gender === "Unisex") {
-        //     filter({ gender: {} });
-        // } else {
-        //     filter({ gender });
-        // }
+       
         filter({ gender });
     };
 
-    // function throttle(fn, delay) {
-    //     let lastInvoke = null;
-    //     console.log('throttle',delay);
-
-    //     return (...args[]) => {
-    //         console.log('not invoke',args[0]);
-    //         if (lastInvoke + delay < Date.now()) {
-    //             console.log('invoke ', args[0]);
-    //             lastInvoke = Date.now();
-    //             fn(args[0]);
-    //         }
-    //     };
-    // }
-
+   
     function debounce(fn, delay) {
         let timeout = null;
         return (...args) => {
@@ -298,7 +271,7 @@ const Browse = ({
 
     return (
         <>
-            {/* {loading && <DotLoaderSpinner loading={loading} />} */}
+            {loading && <DotLoaderSpinner loading={loading} />}
             <Header title={"Browse Products"} searchHandler={searchHandler} />
             <div className="max-w-screen-2xl mx-auto bg-slate-100 p-1 md:p-6 gap-2">
                 <div ref={headerRef}>

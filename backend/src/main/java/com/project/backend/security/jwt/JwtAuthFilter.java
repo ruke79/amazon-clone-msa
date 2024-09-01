@@ -23,11 +23,14 @@ import java.io.PrintWriter;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+    
     @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+         
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
 
@@ -75,7 +78,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            //logger.error("Cannot set user authentication: {}", e);
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
         filterChain.doFilter(request, response);
