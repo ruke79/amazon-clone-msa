@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +17,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 // import org.springframework.security.core.userdetails.User;
@@ -34,9 +38,11 @@ import com.project.backend.repository.RoleRepository;
 import com.project.backend.repository.UserRepository;
 import com.project.backend.security.AuthLoginFilter;
 import com.project.backend.security.AuthLogoutFilter;
+import com.project.backend.security.CustomAuthenticationProvider;
 import com.project.backend.security.jwt.JwtAuthEntryPoint;
 import com.project.backend.security.jwt.JwtAuthFilter;
 import com.project.backend.security.jwt.JwtUtils;
+import com.project.backend.security.service.UserDetailsServiceImpl;
 import com.project.backend.service.RefreshTokenService;
 import com.project.backend.service.UserService;
 
@@ -45,6 +51,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 
 @Configuration
@@ -57,16 +64,19 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     
     private final JwtAuthEntryPoint unauthorizedHandler;
-
     
-    @Lazy
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
-    private final JwtUtils jwtUtils;
+    
+    private final CustomAuthenticationProvider customAuthenticationProvider;
 
+    private final JwtUtils jwtUtils;
+    
     private final RefreshTokenService refreshTokenService;
 
-    private final UserService userService;
+     @Value("${frontend.url}")
+    private String frontendUrl;
+
 
     @Bean
     public JwtAuthFilter authenticationJwtTokenFilter() {
@@ -76,13 +86,14 @@ public class SecurityConfig {
 
     @Autowired
     public SecurityConfig(JwtAuthEntryPoint unauthorizedHandler, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
-            JwtUtils jwtUtils, AuthenticationConfiguration authenticationConfiguration, RefreshTokenService refreshTokenService, UserService userService) {
+             AuthenticationConfiguration authenticationConfiguration, CustomAuthenticationProvider customAuthenticationProvider, 
+             JwtUtils jwtUtils, RefreshTokenService refreshTokenService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.unauthorizedHandler = unauthorizedHandler;
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.customAuthenticationProvider = customAuthenticationProvider;
         this.jwtUtils = jwtUtils;
-        this.refreshTokenService = refreshTokenService;
-        this.userService = userService;
+        this.refreshTokenService = refreshTokenService;        
     }
 
 
@@ -96,7 +107,7 @@ public class SecurityConfig {
                         //.ignoringRequestMatchers("/api/order/**")
                         //.ignoringRequestMatchers("/api/product/**")
         );
-        //http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((requests)
                 -> requests
                 //.requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -105,7 +116,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/**").permitAll()
                 .requestMatchers("/api/search/**").permitAll()
                 .requestMatchers("/api/csrf-token").permitAll()
-                .requestMatchers("/api/refreshtoken").permitAll()
+                .requestMatchers("/api/cookie/**").permitAll()
                 .requestMatchers("/api/auth/public/**").permitAll()
                 .requestMatchers("/registrationConfirm").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
@@ -117,32 +128,31 @@ public class SecurityConfig {
                 -> exception.authenticationEntryPoint(unauthorizedHandler));
         http.addFilterBefore(authenticationJwtTokenFilter(),
                 AuthLoginFilter.class);
-        http .addFilterBefore(new AuthLogoutFilter(jwtUtils, refreshTokenService, userService ), LogoutFilter.class);
-        http.addFilterAt(new AuthLoginFilter(authenticationManager(authenticationConfiguration), jwtUtils, refreshTokenService), UsernamePasswordAuthenticationFilter.class);
+        http .addFilterBefore(new AuthLogoutFilter(), LogoutFilter.class);
+
+        AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(authenticationConfiguration), jwtUtils, refreshTokenService);
+        loginFilter.setFilterProcessesUrl("/api/auth/public/signin");
+        http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .invalidSessionUrl("/invalidSession.html")
-             .maximumSessions(1)
-              .sessionRegistry(sessionRegistry()));
+             .maximumSessions(1));
+              
                 
-        //http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+        http.formLogin(login -> login.disable());
+                
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        ProviderManager providerManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
+        providerManager.getProviders().add(this.customAuthenticationProvider);
         return authenticationConfiguration.getAuthenticationManager();
     }
+    
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
+   
+        
 
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository,

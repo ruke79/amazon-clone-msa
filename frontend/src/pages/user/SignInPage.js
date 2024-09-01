@@ -11,6 +11,9 @@ import toast from "react-hot-toast";
 import api from '../../util/api'
 import { jwtDecode } from "jwt-decode";
 
+
+import {Cookies } from 'react-cookie';
+
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const initialUser = {
@@ -20,14 +23,14 @@ const initialUser = {
 };
 
 const SignInPage = () => {
-    const [step, setStep] = useState(1);
-    const [jwtToken, setJwtToken] = useState("");
+    const [step, setStep] = useState(1);    
     const [loading, setLoading] = useState(false);
     const { setToken, token, setCurrentUser } = useAuthContext();
     const navigate = useNavigate();
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
+    const cookies = new Cookies();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,19 +47,23 @@ const SignInPage = () => {
         password: Yup.string().required("Please enter a password."),
     });
 
-    const handleSuccessfulLogin = (data, decodedToken) => {
-        const user = {
-          email: decodedToken.sub,
-          roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
+    const handleSuccessfulLogin = (response, decodedToken) => {
+        const accessToken = response.headers['access'];
+        
+        const user = {          
+            email: decodedToken.sub,
+            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
         };
-        localStorage.setItem("JWT_TOKEN", data.jwtToken);
-        localStorage.setItem("USER", JSON.stringify(user));
-    
+        localStorage.setItem("access_token", accessToken);
+        //localStorage.setItem("USER", JSON.stringify(user));
+            
         //store the token on the context state  so that it can be shared any where in our application by context provider
-        setToken(data.jwtToken);
-        setCurrentUser(data);        
-    
-        navigate("/");
+        setToken(accessToken);
+
+        setCurrentUser(user);        
+
+        console.log("Login success");
+            
       };
 
     const signInHandler = async () => {
@@ -67,18 +74,26 @@ const SignInPage = () => {
         }
         try {
         setLoading(true);
+
+       
         
         const response = await api.post("/auth/public/signin", data);
 
-        if (response.status === 200 && response.data.jwtToken) {
-            setJwtToken(response.data.jwtToken);            
+        
+        
+        if (response.status === 200 && response.data) {
 
-            const decodedToken = jwtDecode(response.data.jwtToken);
+            const access = response.headers['access'];
+                                             
+            
+            const decodedToken = jwtDecode(access);
+            console.log(decodedToken);
             if (decodedToken.is2faEnabled) {
               setStep(2); // Move to 2FA verification step
             } else {
               //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
-              handleSuccessfulLogin(response.data, decodedToken);
+              
+              handleSuccessfulLogin(response, decodedToken);
             }
           } else {
             toast.error(
@@ -96,7 +111,7 @@ const SignInPage = () => {
 
       useEffect(() => {   
 
-        //if (token) navigate("/");
+        if (token) navigate("/");
       }, [navigate, token]);
 
     return (

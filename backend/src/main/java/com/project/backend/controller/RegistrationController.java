@@ -81,13 +81,13 @@ public class RegistrationController {
             String jwtToken = jwtUtils.generateTokenFromEmail(userDetailsimpl);
     
             // Collect roles from the UserDetails
-            List<String> roles = userDetailsimpl.getAuthorities().stream()
-                    .map(item -> item.getAuthority())
-                    .collect(Collectors.toList());
+            // List<String> roles = userDetailsimpl.getAuthorities().stream()
+            //         .map(item -> item.getAuthority())
+            //         .collect(Collectors.toList());
     
-            // Prepare the response body, now including the JWT token directly in the body
-            LoginResponse response = new LoginResponse(userDetailsimpl.getUsername(),
-                    roles, jwtToken);
+            // // Prepare the response body, now including the JWT token directly in the body
+            // LoginResponse response = new LoginResponse(userDetailsimpl.getUsername(),
+            //         roles);
             
     
             // Return the response entity with the JWT token included in the response body

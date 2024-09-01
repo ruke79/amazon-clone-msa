@@ -38,7 +38,7 @@ public interface UserService {
 
     void resetPassword(String token, String newPassword);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     User getUser(final String verificationToken);
 

@@ -48,8 +48,8 @@ public class PaymentController {
 
 
     @PutMapping("/process")
-    ResponseEntity<PaymentResultDTO> processPayment(@RequestBody PayRequest request, 
-    @AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<?> processPayment(@RequestBody PayRequest request, 
+    @AuthenticationPrincipal UserDetails userDetails) throws IOException {
         
         try {
             String username = userDetails.getUsername();
@@ -58,9 +58,9 @@ public class PaymentController {
         }
         catch ( RuntimeException e) {
 
-            log.info("주문 상품 환불 진행 : 주문 번호 {}", request.getOrderId());
+            log.info("주문 상품 환불 진행 : 주문 번호 {}", request.getOrderNumber());
             String token = refundService.getToken(restApiKey, restApiSecret);
-            refundService.refundRequest(token, request.get, e.getMessage());
+            refundService.refundRequest(token, request.getOrderNumber(), e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             
 

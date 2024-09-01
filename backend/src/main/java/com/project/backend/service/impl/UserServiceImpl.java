@@ -44,36 +44,49 @@ public class UserServiceImpl implements UserService {
     @Value("${frontend.url}")
     String frontendUrl;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    
+    private final PasswordEncoder passwordEncoder;
+
+    
+    private final  SessionRegistry sessionRegistry;
+
+    
+    private final UserRepository userRepository;
+
+    
+    
+
+    private final RoleRepository roleRepository;
+
+    
+    private final  VerificationTokenRepository tokenRepository;
+
+    
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+
+    
+    private final EmailService emailService;
+
+    
+    private final TotpService totpService;
 
     @Autowired
-    private SessionRegistry sessionRegistry;
+    public UserServiceImpl(PasswordEncoder passwordEncoder, SessionRegistry sessionRegistry,
+            UserRepository userRepository, RoleRepository roleRepository, VerificationTokenRepository tokenRepository,
+            PasswordResetTokenRepository passwordResetTokenRepository, EmailService emailService,
+            TotpService totpService) {
+        this.passwordEncoder = passwordEncoder;
+        this.sessionRegistry = sessionRegistry;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.tokenRepository = tokenRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.emailService = emailService;
+        this.totpService = totpService;
+    }
+    
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    private VerificationTokenRepository tokenRepository;
-
-    @Autowired
-    PasswordResetTokenRepository passwordResetTokenRepository;
-
-    @Autowired
-    EmailService emailService;
-
-    @Autowired
-    TotpService totpService;
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    PasswordEncoder encoder;
-
+    
     public static final String TOKEN_INVALID = "invalidToken";
     public static final String TOKEN_EXPIRED = "expired";
     public static final String TOKEN_VALID = "valid";
@@ -227,15 +240,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);        
     }
 
     @Override
     public User registerUser(User user) {
         if (user.getPassword() != null)
-            user.setPassword(encoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -254,7 +266,7 @@ public class UserServiceImpl implements UserService {
         // Create new user's account
         User user = new User(request.getUsername(),
                 request.getEmail(),
-                encoder.encode(request.getPassword()));
+                passwordEncoder.encode(request.getPassword()));
 
         Set<String> strRoles = request.getRole();
         Role role;

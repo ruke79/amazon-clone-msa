@@ -23,7 +23,7 @@ const Account = () => {
       }, [token]);
 
     const handleLogout = () => {
-        localStorage.removeItem("JWT_TOKEN"); // Updated to remove token from localStorage
+        localStorage.removeItem("access_token"); // Updated to remove token from localStorage
         localStorage.removeItem("USER"); // Remove user details as well
         localStorage.removeItem("CSRF_TOKEN");
         localStorage.removeItem("IS_ADMIN");

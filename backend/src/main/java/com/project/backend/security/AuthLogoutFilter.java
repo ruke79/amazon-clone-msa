@@ -26,16 +26,16 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class AuthLogoutFilter extends GenericFilterBean{
 
-    private final JwtUtils jwtUtils;
-    private final RefreshTokenService refreshTokenService;
-    private final UserService userService;
+    private JwtUtils jwtUtils;
+    private RefreshTokenService refreshTokenService;
+    private UserService userService;
     
-    @Autowired
-    public AuthLogoutFilter(JwtUtils jwtUtils, RefreshTokenService refreshTokenService, UserService userService) {
-        this.jwtUtils = jwtUtils;
-        this.refreshTokenService = refreshTokenService;
-        this.userService = userService;
-    }
+    // @Autowired
+    // public AuthLogoutFilter(JwtUtils jwtUtils, RefreshTokenService refreshTokenService, UserService userService) {
+    //     this.jwtUtils = jwtUtils;
+    //     this.refreshTokenService = refreshTokenService;
+    //     this.userService = userService;
+    // }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -109,7 +109,8 @@ public class AuthLogoutFilter extends GenericFilterBean{
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
         String email = jwtUtils.getEmailFromJwtToken(refresh);
-        User user = userService.findByEmail(email);       
+        User user = userService.findByEmail(email).
+                    orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
        
         refreshTokenService.deleteByUserId(user.getUserId());
 

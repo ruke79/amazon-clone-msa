@@ -28,23 +28,33 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
+    
     @Autowired
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
-    private final JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
 
-    @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Value("${frontend.url}")
     private String frontendUrl;
 
-    String username;
-    String idAttributeKey;
+    private String username;
+    private String idAttributeKey;
+
+    // @Autowired
+    // public OAuth2LoginSuccessHandler(UserService userService, JwtUtils jwtUtils, RoleRepository roleRepository,
+    //         String frontendUrl, String username, String idAttributeKey) {
+    //     this.userService = userService;
+    //     this.jwtUtils = jwtUtils;
+    //     this.roleRepository = roleRepository;
+    //     this.frontendUrl = frontendUrl;
+    //     this.username = username;
+    //     this.idAttributeKey = idAttributeKey;
+    // }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {

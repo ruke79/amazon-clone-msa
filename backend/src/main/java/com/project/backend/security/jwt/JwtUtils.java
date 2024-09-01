@@ -1,7 +1,11 @@
 package com.project.backend.security.jwt;
 
+import static org.junit.Assert.assertThat;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -10,7 +14,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
@@ -21,33 +28,47 @@ import com.project.backend.security.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 @Component
 public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
+  
+  
   @Value("${spring.app.jwtSecret}")
   private String jwtSecret;
 
   @Value("${spring.app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
+  @Value("${spring.app.jwtRefreshExpirationMs}")
+  private int jwtRefreshExpirationMs;
+
   @Value("${spring.app.jwtCookieName}")
   private String jwtCookie;
 
   @Value("${spring.app.jwtRefreshCookieName}")
-  private String jwtRefreshCookie;
-
-  private SecretKey secretKey;
-
-  public JwtUtils(String jwtSecret) {
-    secretKey = new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8),
-        Jwts.SIG.HS256.key().build().getAlgorithm());
-  }
+  private  String jwtRefreshCookie;
 
   
+
+  
+  private SecretKey key() {
+    return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8),
+    Jwts.SIG.HS256.key().build().getAlgorithm());
+}
+  
+
+
   public String getJwtFromHeader(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
     logger.debug("Authorization Header: {}", bearerToken);
@@ -69,7 +90,7 @@ public class JwtUtils {
         .claim("is2faEnabled", userDetails.is2faEnabled())
         .issuedAt(new Date())
         .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-        .signWith(secretKey)
+        .signWith(key())
         .compact();
   }
 
@@ -83,25 +104,68 @@ public class JwtUtils {
         .claim("is2faEnabled", user.isTwoFactorEnabled())
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-        .signWith(secretKey)
+        .signWith(key())
         .compact();
+  }
+
+  public String generateRefreshTokenFromEmail(User user) {
+
+    Date issuedAt = new Date(System.currentTimeMillis());
+    Date expiration = new Date(System.currentTimeMillis() + jwtRefreshExpirationMs);
+
+    log.info("Issued at: {}", issuedAt);
+    log.info("Expires at: {}", expiration);
+    
+    String email = user.getEmail();
+    String role = user.getRole().getRoleName().name();
+    String jwt= Jwts.builder()
+        .subject(email)
+        .claim("role", role)
+        .claim("is2faEnabled", user.isTwoFactorEnabled())
+        .issuedAt(issuedAt)
+        .expiration(expiration)
+        .signWith(key())
+        .compact();
+
+        Claims claims = Jwts.parser()
+        .verifyWith(key())
+        .build().parseSignedClaims(jwt)
+        .getPayload();
+
+     if (claims.getIssuedAt() == issuedAt)
+     {
+        log.info("Same ");
+     }
+
+     log.info("Issued at: {}", getExpirationFromJwtToken(jwt));
+     log.info("Expires at: {}", claims.getExpiration());
+     
+     log.info(jwt);
+    
+
+    return jwt;
   }
 
   public String getEmailFromJwtToken(String token) {
     return Jwts.parser()
-        .verifyWith(secretKey)
+        .verifyWith(key())
         .build().parseSignedClaims(token)
         .getPayload().getSubject();
   }
 
   public String getRoleFromJwtToken(String token) {
 
-    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload().get("role", String.class);
+  }
+
+  public Date getExpirationFromJwtToken(String token) {
+
+    return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload().getExpiration();
   }
 
   public Boolean isJwtTokenExpired(String token) {
     return Jwts.parser()
-        .verifyWith(secretKey)
+        .verifyWith(key())
         .build().parseSignedClaims(token)
         .getPayload().getExpiration().before(new Date());
   }
@@ -111,7 +175,7 @@ public class JwtUtils {
   public boolean validateJwtToken(String authToken) {
     try {
       System.out.println("Validate");
-      Jwts.parser().verifyWith(secretKey)
+      Jwts.parser().verifyWith(key())
           .build().parseSignedClaims(authToken);
       return true;
     } catch (MalformedJwtException e) {
@@ -138,7 +202,7 @@ public class JwtUtils {
   }
 
   public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-    return generateCookie(jwtRefreshCookie, refreshToken, "/api/auth/refreshtoken");
+    return generateCookie(jwtRefreshCookie, refreshToken, "/");
   }
 
   public String getJwtFromCookies(HttpServletRequest request) {
@@ -155,12 +219,16 @@ public class JwtUtils {
   }
 
   public ResponseCookie getCleanJwtRefreshCookie() {
-    ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api/auth/refreshtoken").build();
+    ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api/cookie/refresh").build();
     return cookie;
   }
 
   private ResponseCookie generateCookie(String name, String value, String path) {
-    ResponseCookie cookie = ResponseCookie.from(name, value).path(path).maxAge(24 * 60 * 60).httpOnly(true).build();
+    ResponseCookie cookie = ResponseCookie.from(name, value)
+    .path(path).maxAge(24 * 60 * 60)
+    .sameSite("None")    
+    .secure(true)
+    .httpOnly(true).build();
     return cookie;
   }
 
@@ -168,8 +236,8 @@ public class JwtUtils {
 
     Cookie cookie = new Cookie(key, value);
     cookie.setMaxAge(expiry);
-    //cookie.setSecure(true);
-    //cookie.setPath("/");
+    cookie.setSecure(true);
+    cookie.setPath("/");
     cookie.setHttpOnly(true);
 
     return cookie;
