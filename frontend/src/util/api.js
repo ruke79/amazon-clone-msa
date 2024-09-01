@@ -61,7 +61,7 @@ api.interceptors.response.use(
             if (msg === "access token expired") {
 
               
-
+              localStorage.removeItem('access_token');
               
               const rs = await api.post("/cookie/refresh");
     
