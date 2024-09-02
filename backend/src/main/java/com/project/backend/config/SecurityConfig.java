@@ -61,12 +61,10 @@ import org.springframework.boot.CommandLineRunner;
         jsr250Enabled = true)
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-    
+        
     private final JwtAuthEntryPoint unauthorizedHandler;
     
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-
     
     private final CustomAuthenticationProvider customAuthenticationProvider;
 
@@ -86,9 +84,9 @@ public class SecurityConfig {
 
     @Autowired
     public SecurityConfig(JwtAuthEntryPoint unauthorizedHandler, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
-             AuthenticationConfiguration authenticationConfiguration, CustomAuthenticationProvider customAuthenticationProvider, 
+             CustomAuthenticationProvider customAuthenticationProvider, 
              JwtUtils jwtUtils, RefreshTokenService refreshTokenService) {
-        this.authenticationConfiguration = authenticationConfiguration;
+
         this.unauthorizedHandler = unauthorizedHandler;
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.customAuthenticationProvider = customAuthenticationProvider;
@@ -130,12 +128,10 @@ public class SecurityConfig {
                 AuthLoginFilter.class);
         http .addFilterBefore(new AuthLogoutFilter(), LogoutFilter.class);
 
-        AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(authenticationConfiguration), jwtUtils, refreshTokenService);
+        AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(http), jwtUtils, refreshTokenService);
         loginFilter.setFilterProcessesUrl("/api/auth/public/signin");
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
-        http.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .invalidSessionUrl("/invalidSession.html")
-             .maximumSessions(1));
+        http.sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
               
                 
         http.formLogin(login -> login.disable());
@@ -144,14 +140,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        ProviderManager providerManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
-        providerManager.getProviders().add(this.customAuthenticationProvider);
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = 
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(customAuthenticationProvider);
+        return authenticationManagerBuilder.build();
     }
     
-
-   
         
 
     @Bean
