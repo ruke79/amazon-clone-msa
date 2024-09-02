@@ -3,6 +3,7 @@ import TokenUtil from "./tokenUtil";
 import { useAuthContext } from "store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import CookiUtil from "./cookieUtil";
 
 const ResponseInterceptor = () => {
 
@@ -33,11 +34,11 @@ const ResponseInterceptor = () => {
 
                         isRefreshing = true;
 
-                        if (msg === "access token expired") {
+                        if (msg === "access token expired" && !isRefreshExpired) {
 
                             
                             TokenUtil.removeToken();
-
+                            
                             const rs = await api.post("/cookie/refresh");
                            
 
@@ -50,13 +51,14 @@ const ResponseInterceptor = () => {
                                 setRefeshTokenExpired(false);
                                 setToken(accessToken);
 
-                                //originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
+                                originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
                                 
                             }                                              
                             
                         }        
                         isRefreshing = false;                      
-                                                
+                                               
+                        
                         return api(originalConfig);
                     }
                 }
@@ -70,14 +72,19 @@ const ResponseInterceptor = () => {
                     
                         if (msg === "refresh token expired") {
                             
-
                             TokenUtil.remove();
-                            setRefeshTokenExpired(true);     
-                            setToken(null);
+                            setRefeshTokenExpired(true);                                 
                             
-                            
+                            //CookiUtil.delete("REFRESH");                            
+                            console.log(originalConfig.headers);
+
+                            originalConfig.headers['Cookie'] = null;                                            
+
+                            console.log(originalConfig.headers['Cookie']);
+
+                            //window.location.replace('/signin');                            
                         }                           
-                        isRefreshExpired = false;
+                        
                         
                         return api(originalConfig);                     
                     }
