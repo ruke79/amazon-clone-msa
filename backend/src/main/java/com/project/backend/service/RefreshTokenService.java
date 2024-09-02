@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.exception.TokenRefreshException;
+import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
 import com.project.backend.repository.RefreshTokenRepository;

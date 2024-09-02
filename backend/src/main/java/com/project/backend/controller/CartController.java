@@ -43,20 +43,24 @@ public class CartController {
     AddressService addressService;
 
     @PutMapping("/savecart")
-    ResponseEntity<CartResponse> saveCart(@RequestBody CartRequest request,
+    ResponseEntity<?> saveCart(@RequestBody CartRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername();
-        Cart cart = cartService.saveCart(request, username);
+        if (null != userDetails) {
+            String username = userDetails.getUsername();
+            Cart cart = cartService.saveCart(request, username);
 
-        CartResponse response = new CartResponse(cart.getCartTotal());
+            CartResponse response = new CartResponse(cart.getCartTotal());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+        }
+        return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+
     }
 
     @PutMapping("/updatecart")
-    ResponseEntity<List<ProductInfoDTO>> updateCart(@RequestBody ProductInfoRequest products,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<List<ProductInfoDTO>> updateCart(@RequestBody ProductInfoRequest products) {
 
         List<ProductInfoDTO> result = cartService.updateCart(products);
 
@@ -65,58 +69,88 @@ public class CartController {
     }
 
     @GetMapping("/checkout")
-    ResponseEntity<CartDTO> getCart(@AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
+    ResponseEntity<?> getCart(@AuthenticationPrincipal UserDetails userDetails) {
 
-        CartDTO response = cartService.getCart(username);
+        if (null != userDetails) {
+            String username = userDetails.getUsername();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            CartDTO response = cartService.getCart(username);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     @PostMapping("/save_shipping_address")
-    ResponseEntity<List<AddressDTO>> saveShippingAddress(@RequestBody AddressRequest request,
+    ResponseEntity<?> saveShippingAddress(@RequestBody AddressRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername();
+        if (null != userDetails) {
+            String username = userDetails.getUsername();
 
-        List<AddressDTO> response = addressService.saveShippingAddress(request, username);
+            List<AddressDTO> response = addressService.saveShippingAddress(request, username);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping("/coupon")
-    ResponseEntity<CouponResponse> applyCoupon(CouponRequest request,
+    ResponseEntity<?> applyCoupon(CouponRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
 
-        CouponResponse response = cartService.applyCoupon(request, username);
+        if (null != userDetails) {
+            String username = userDetails.getUsername();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            CouponResponse response = cartService.applyCoupon(request, username);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/selectaddress/{addressId}")
-    ResponseEntity<List<AddressDTO>> selectShippingAddresses(@PathVariable String addressId,
+    ResponseEntity<?> selectShippingAddresses(@PathVariable String addressId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
 
-        return new ResponseEntity<>(cartService.getShipAddresses(username, addressId), HttpStatus.OK);
+        if (null != userDetails) {
+
+            String username = userDetails.getUsername();
+
+            return new ResponseEntity<>(cartService.getShipAddresses(username, addressId), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/deleteaddress/{addressId}")
-    ResponseEntity<List<AddressDTO>> deleteShippingAddresses(@PathVariable String addressId,
+    ResponseEntity<?> deleteShippingAddresses(@PathVariable String addressId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
 
-        return new ResponseEntity<>(cartService.deleteShippingAddress(username, addressId), HttpStatus.OK);
+        if (null != userDetails) {
+            String username = userDetails.getUsername();
+
+            return new ResponseEntity<>(cartService.deleteShippingAddress(username, addressId), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PutMapping("/changepm")
-    String changePayment(@RequestParam("paymentMethod") String paymentMethod,
+    ResponseEntity<?> changePayment(@RequestParam("paymentMethod") String paymentMethod,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername();
+        if (null != userDetails) {
+            String username = userDetails.getUsername();
 
-        return cartService.updatePaymentMethod(username, paymentMethod);
+            return new ResponseEntity<>(cartService.updatePaymentMethod(username, paymentMethod), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
     }
 
 }

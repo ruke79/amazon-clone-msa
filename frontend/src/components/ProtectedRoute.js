@@ -4,10 +4,10 @@ import { useAuthContext } from "../store/AuthContext";
 
 const ProtectedRoute = ({ children, adminPage }) => {
   // Access the token and isAdmin state by using the useMyContext hook from the ContextProvider
-  const { token, isAdmin } = useAuthContext();
+  const { token, refreshTokenExpired, isAdmin } = useAuthContext();
 
   //navigate to login page to an unauthenticated
-  if (!token) {
+  if (refreshTokenExpired) {
     return <Navigate to="/signin" />;
   }
 

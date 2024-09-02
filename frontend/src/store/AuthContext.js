@@ -1,23 +1,25 @@
 
 import React, { createContext, useContext, useState } from "react";
 import { useEffect } from "react";
-import api from "../util/api";
+import api from "util/api";
 import toast from "react-hot-toast";
+import TokenUtil from "util/tokenUtil";
 
 const AuthContext = createContext();
 
 export const ContextProvider = ({ children }) => {
   //find the token in the localstorage
-  const getToken = localStorage.getItem("JWT_TOKEN")
-    ? JSON.stringify(localStorage.getItem("JWT_TOKEN"))
+  const getToken = TokenUtil.getToken()
+    ? JSON.stringify(TokenUtil.getToken())
     : null;
   //find is the user status from the localstorage
-  const isADmin = localStorage.getItem("IS_ADMIN")
-    ? JSON.stringify(localStorage.getItem("IS_ADMIN"))
+  const isADmin = TokenUtil.isAdmin()
+    ? JSON.stringify(TokenUtil.isAdmin())
     : false;
 
   //store the token
   const [token, setToken] = useState(getToken);
+  const [refreshTokenExpired, setRefeshTokenExpired] = useState(false);
 
   //store the current loggedin user
   const [currentUser, setCurrentUser] = useState(null);
@@ -27,7 +29,7 @@ export const ContextProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(isADmin);
 
   const fetchUser = async () => {
-    const user = JSON.parse(localStorage.getItem("USER"));
+    const user = TokenUtil.getUser();
 
     if (user?.username) {
       try {
@@ -35,10 +37,12 @@ export const ContextProvider = ({ children }) => {
         const roles = data.roles;
 
         if (roles.includes("ROLE_ADMIN")) {
-          localStorage.setItem("IS_ADMIN", JSON.stringify(true));
+          //localStorage.setItem("IS_ADMIN", JSON.stringify(true));
+          TokenUtil.setIsAdmin(true);
           setIsAdmin(true);
         } else {
-          localStorage.removeItem("IS_ADMIN");
+          //localStorage.removeItem("IS_ADMIN");
+          TokenUtil.removeAdmin();
           setIsAdmin(false);
         }
         
@@ -63,11 +67,13 @@ export const ContextProvider = ({ children }) => {
       value={{
         token,
         setToken,
+        refreshTokenExpired,
+        setRefeshTokenExpired,
         currentUser,
         setCurrentUser,
         openSidebar,
         setOpenSidebar,
-        isAdmin,
+        isAdmin,        
         setIsAdmin,
       }}
     >

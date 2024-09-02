@@ -26,9 +26,8 @@ import com.project.backend.security.request.OrderRequest;
 import com.project.backend.service.OrderService;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
 
-@Slf4j
+
 @RestController
 @RequestMapping("api/user/")
 public class OrderController {
@@ -37,30 +36,28 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/order/create")
-    ResponseEntity<Map<String, String>> createOrder(@RequestBody OrderRequest request,
-    @AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername();
+        if (null != userDetails) {
 
-        Order newOrder = orderService.createOrder(request, username);
+            String username = userDetails.getUsername();
 
-        String orderID = Long.toString(newOrder.getOrderId());
+            Order newOrder = orderService.createOrder(request, username);
 
-        log.info(orderID);
+            String orderID = Long.toString(newOrder.getOrderId());
 
-        Map<String, String> data = new HashMap<>();
-        data.put("orderId", orderID);
 
-        
+            Map<String, String> data = new HashMap<>();
+            data.put("orderId", orderID);
 
-        if (null != newOrder) {
+            
             return new ResponseEntity<>(data, HttpStatus.OK);
+            
+        } else {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
         }
-
-        return null;
     }
-
-    
 
     @GetMapping("/order/{orderId}")
     ResponseEntity<OrderDTO> getOrder(@PathVariable("orderId") String orderId) {

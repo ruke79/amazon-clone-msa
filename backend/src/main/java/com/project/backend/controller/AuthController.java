@@ -1,7 +1,7 @@
 package com.project.backend.controller;
 
 import com.project.backend.constants.TokenType;
-import com.project.backend.exception.TokenRefreshException;
+import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.AppRole;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.Role;

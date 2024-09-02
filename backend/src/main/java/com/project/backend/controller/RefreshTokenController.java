@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.constants.TokenType;
-import com.project.backend.exception.TokenRefreshException;
+import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
 import com.project.backend.security.jwt.JwtUtils;
@@ -66,18 +66,19 @@ public class RefreshTokenController {
 
             log.info("refresh token null");
 
+            
             //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
 
-         SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-        String formattedDate = formatter.format(jwtUtils.getExpirationFromJwtToken(refresh));
+    //      SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+    //     String formattedDate = formatter.format(jwtUtils.getExpirationFromJwtToken(refresh));
 
-      log.info(formattedDate);
+    //   log.info(formattedDate);
 
-      formattedDate = formatter.format(new Date());
+    //   formattedDate = formatter.format(new Date());
 
-      log.info(formattedDate);
+    //   log.info(formattedDate);
 
 
 
@@ -90,6 +91,7 @@ public class RefreshTokenController {
             log.info("refresh token expired");
             //로그인 페이지 
             //response status code
+
             return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
         }
 

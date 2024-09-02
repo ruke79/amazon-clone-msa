@@ -85,6 +85,8 @@ const CartPage = ({ cart }) => {
             setLoading(true);
             
             const res = await saveCart(selected);
+
+            
             navigate("/checkout");
         } else {
             navigate("/signin");
