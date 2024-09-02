@@ -1,20 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// interface msgState {
-//     msg: string,
-//     type: string
-// }
-
-// interface DialogState {
-//     show: boolean,
-//     header: string,
-//     msgs: msgState[],
-//     // link: {
-//     //     link: string,
-//     //     link_text: string
-//     // }
-// }
-
 const initialState = {
     show: false,
     header: "",

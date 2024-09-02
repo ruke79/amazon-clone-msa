@@ -6,7 +6,6 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
 
-
 const rootReducer = combineReducers({
     menu: menuReducer,
     dialog: dialogReducer,

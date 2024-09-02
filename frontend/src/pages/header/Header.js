@@ -6,7 +6,9 @@ import DeliveryTo from "./DeliveryTo";
 import Search from "./Search";
 import Account from './Account'
 import HeaderMenu from "./HeaderMenu";
-import ProtectedRoute from "components/ProtectedRoute";
+import { useAuthContext } from "store/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
 const Header = ({title, searchHandler}) => {
@@ -14,6 +16,16 @@ const Header = ({title, searchHandler}) => {
     const openMenuHandler = () => {
       
     };
+
+    const { refreshTokenExpired } = useAuthContext();
+    const navigate = useNavigate();    
+
+    useEffect(() => {
+
+        if (refreshTokenExpired)
+            navigate("/");
+
+    }, [refreshTokenExpired]);
 
     return (
         <>
