@@ -45,7 +45,7 @@ public class RefreshTokenController {
         this.refreshTokenService = refreshTokenService;
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/token/refresh")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) {
 
         
@@ -132,7 +132,7 @@ public class RefreshTokenController {
         return new ResponseEntity<>(HttpStatus.OK);        
     }
 
-    @PostMapping("/cookie/delete")
+    @PostMapping("/token/delete")
     public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response) {
 
           Cookie cookie = jwtUtils.createCookie(TokenType.REFRESH.getType(), null, 0);

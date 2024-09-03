@@ -39,12 +39,12 @@ const ResponseInterceptor = () => {
 
                                 TokenUtil.removeToken();
 
-                                const rs = await api.post("/refresh");
+                                const rs = await api.post("/token/refresh");
 
 
                                 if (rs.status === 200) {
 
-
+                                    console.log(rs);
                                     const accessToken = rs.headers['access'];
                                     TokenUtil.updateToken(accessToken);
                                     setRefeshTokenExpired(false);
@@ -53,18 +53,15 @@ const ResponseInterceptor = () => {
                                     originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
 
                                 }
-
-
-                                refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-                                    api
-                                        .request(config)
-                                        .then((response) => resolve(response))
-                                        .catch((err) => reject(err));
-                                });
-
-                                refreshAndRetryQueue.length = 0;                                
-
                             }
+                            refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
+                                api
+                                    .request(config)
+                                    .then((response) => resolve(response))
+                                    .catch((err) => reject(err));
+                            });
+
+                            refreshAndRetryQueue.length = 0;
                             return api(originalConfig);
                         } catch (error) {
                             // Handle token refresh error
@@ -76,37 +73,54 @@ const ResponseInterceptor = () => {
                         } finally {
                             isRefreshing = false;
                         }
-
                     }
 
                     return new Promise((resolve, reject) => {
-                        refreshAndRetryQueue.push({ config: originalRequest, resolve, reject })
+                        refreshAndRetryQueue.push({ config: originalConfig, resolve, reject })
                     });
+
                 }
                 else if (status === 400 && err.response) {
 
 
-                    //if (!isRefreshExpired) {
+                    if (!isRefreshing) {
 
-                    //    isRefreshExpired = true;
+                        isRefreshing = true;
 
-                    if (msg === "refresh token expired") {
+                        if (msg === "refresh token expired") {
 
-                        TokenUtil.remove();
-                        setRefeshTokenExpired(true);
+                            TokenUtil.remove();
+                            setRefeshTokenExpired(true);
 
-                        CookiUtil.delete('REFRESH');
+                            CookiUtil.delete('REFRESH');
 
-                        console.log(originalConfig.headers);
+                            console.log(originalConfig.headers);
 
-                        originalConfig.headers['Cookie'] = null;
+                            originalConfig.headers['Cookie'] = null;
 
-                        window.location.replace('/signin');
-                    }
+                            window.location.replace('/signin');
+                        }
 
+                        // refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
+                        //     api
+                        //         .request(config)
+                        //         .then((response) => resolve(response))
+                        //         .catch((err) => reject(err));
+                        // });
 
-                    return api(originalConfig);
+                        // refreshAndRetryQueue.length = 0;
+
+                        isRefreshing = false;
+
+                        return api(originalConfig);
+                    }        
+                    
+                    // return new Promise((resolve, reject) => {
+                    //     refreshAndRetryQueue.push({ config: originalConfig, resolve, reject })
+                    // });
                 }
+
+                
 
                 return Promise.reject(err);
 

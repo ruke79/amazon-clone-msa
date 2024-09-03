@@ -219,7 +219,7 @@ public class JwtUtils {
   }
 
   public ResponseCookie getCleanJwtRefreshCookie() {
-    ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api/cookie/refresh").build();
+    ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api").build();
     return cookie;
   }
 
