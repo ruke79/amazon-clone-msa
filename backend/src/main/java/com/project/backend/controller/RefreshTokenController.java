@@ -45,7 +45,7 @@ public class RefreshTokenController {
         this.refreshTokenService = refreshTokenService;
     }
 
-    @PostMapping("/cookie/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) {
 
         
