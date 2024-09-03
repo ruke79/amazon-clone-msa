@@ -21,8 +21,7 @@ const CartPage = ({ cart }) => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-    
-    
+        
 
     useEffect(() => {
         if (currentUser) {
@@ -85,7 +84,6 @@ const CartPage = ({ cart }) => {
             setLoading(true);
             
             const res = await saveCart(selected);
-
             
             navigate("/checkout");
         } else {

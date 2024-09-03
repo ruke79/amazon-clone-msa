@@ -1,8 +1,8 @@
 package com.project.backend.controller;
 
+import com.project.backend.constants.AppRole;
 import com.project.backend.constants.TokenType;
 import com.project.backend.exceptionHandling.TokenRefreshException;
-import com.project.backend.model.AppRole;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.Role;
 import com.project.backend.model.User;
@@ -298,7 +298,7 @@ public class AuthController {
     @PostMapping("/public/verify-2fa-login")
     public ResponseEntity<String> verify2FALogin(@RequestParam int code,
             @RequestParam String jwtToken) {
-        String username = jwtUtils.getEmailFromJwtToken(jwtToken);
+        String username = jwtUtils.getIdFromJwtToken(jwtToken);
         User user = userService.findByUsername(username);
         boolean isValid = userService.validate2FACode(user.getUserId(), code);
         if (isValid) {

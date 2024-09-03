@@ -1,6 +1,7 @@
 package com.project.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.project.backend.constants.AppRole;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;

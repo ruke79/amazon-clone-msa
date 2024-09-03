@@ -17,7 +17,8 @@ import com.project.backend.model.Role;
 @AllArgsConstructor
 public class UserDTO {
     private String userId;
-    private String userName;
+    private String userName; // 실명
+    private String name; // 별명
     private String email;
     private boolean accountNonLocked;
     private boolean accountNonExpired;
@@ -28,10 +29,10 @@ public class UserDTO {
     private String twoFactorSecret;
     private boolean isTwoFactorEnabled;
     private String signUpMethod;
-    private Role role;
+    private String role;
     private String image;
     private String defaultPaymentMethod;
     private List<AddressDTO> addresses;
     private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;    
+    private LocalDateTime updatedDate;
 }

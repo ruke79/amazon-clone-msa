@@ -6,9 +6,6 @@ import DeliveryTo from "./DeliveryTo";
 import Search from "./Search";
 import Account from './Account'
 import HeaderMenu from "./HeaderMenu";
-import { useAuthContext } from "store/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 
 const Header = ({title, searchHandler}) => {
@@ -16,23 +13,13 @@ const Header = ({title, searchHandler}) => {
     const openMenuHandler = () => {
       
     };
-
-    const { refreshTokenExpired } = useAuthContext();
-    const navigate = useNavigate();    
-
-    useEffect(() => {
-
-        if (refreshTokenExpired)
-            navigate("/");
-
-    }, [refreshTokenExpired]);
+    
 
     return (
         <>
         
                     
-        <header>
-        <script src="http://localhost:8097"></script>
+        <header>        
         <title>{title}</title>
             <meta name="description" content="full amazon clone React" />
             <meta

@@ -108,7 +108,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
 
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
-        String email = jwtUtils.getEmailFromJwtToken(refresh);
+        String email = jwtUtils.getIdFromJwtToken(refresh);
         User user = userService.findByEmail(email).
                     orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
        

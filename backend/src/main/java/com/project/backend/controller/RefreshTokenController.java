@@ -112,12 +112,12 @@ public class RefreshTokenController {
         }
 
 
-        String email = jwtUtils.getEmailFromJwtToken(refresh);
+        String email = jwtUtils.getIdFromJwtToken(refresh);
 
         User user = userService.findByEmail(email).
                     orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
 
-        String newAccess = jwtUtils.generateTokenFromEmail(user);
+        String newAccess = jwtUtils.generateTokenFromUser(user);
 
         refreshTokenService.deleteByUserId(user.getUserId());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());

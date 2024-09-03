@@ -8,7 +8,7 @@ import CookiUtil from "./cookieUtil";
 const ResponseInterceptor = () => {
 
 
-    const { setToken, setRefeshTokenExpired } = useAuthContext();
+    const { setToken, setRefeshTokenExpired, setIsAdmin, setCurrentUser } = useAuthContext();
 
 
     useEffect(() => {
@@ -69,6 +69,7 @@ const ResponseInterceptor = () => {
                             TokenUtil.remove();
                             CookiUtil.delete('REFRESH');
                             window.location.replace('/signin');
+                            throw error;  
 
                         } finally {
                             isRefreshing = false;
@@ -90,34 +91,24 @@ const ResponseInterceptor = () => {
                         if (msg === "refresh token expired") {
 
                             TokenUtil.remove();
+                            setToken(null);
+                            setCurrentUser(null);
+                            setIsAdmin(false);
                             setRefeshTokenExpired(true);
 
-                            CookiUtil.delete('REFRESH');
-
-                            console.log(originalConfig.headers);
+                            CookiUtil.delete('REFRESH');                            
 
                             originalConfig.headers['Cookie'] = null;
 
                             window.location.replace('/signin');
                         }
 
-                        // refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-                        //     api
-                        //         .request(config)
-                        //         .then((response) => resolve(response))
-                        //         .catch((err) => reject(err));
-                        // });
-
-                        // refreshAndRetryQueue.length = 0;
-
-                        isRefreshing = false;
+                        //isRefreshing = false;
 
                         return api(originalConfig);
-                    }        
+                    }     
                     
-                    // return new Promise((resolve, reject) => {
-                    //     refreshAndRetryQueue.push({ config: originalConfig, resolve, reject })
-                    // });
+                    
                 }
 
                 

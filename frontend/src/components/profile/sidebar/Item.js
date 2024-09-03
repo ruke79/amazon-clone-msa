@@ -17,9 +17,8 @@ const Item = ({ item, visible, index }) => {
     const qParam = searchParams.get('q');
 
     const handleLogout = () => {
-        localStorage.removeItem("JWT_TOKEN"); // Updated to remove token from localStorage
-        localStorage.removeItem("USER"); // Remove user details as well
-        localStorage.removeItem("CSRF_TOKEN");
+        localStorage.removeItem("access_token"); // Updated to remove token from localStorage
+        localStorage.removeItem("USER"); // Remove user details as well        
         localStorage.removeItem("IS_ADMIN");
         setToken(null);
         setCurrentUser(null);

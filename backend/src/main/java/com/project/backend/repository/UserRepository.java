@@ -16,13 +16,14 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUserName(String username);
+    Optional<User> findByName(String name);  // 별명으로 검색
 
     Boolean existsByUserName(String username);
+
     Boolean existsByEmail(String email);
 
     Optional<User> findByEmail(String email);
-    
+
     void delete(User user);
 
     @Query(value = "SELECT a FROM User u LEFT JOIN ShippingAddress a  WHERE u.userId = :userId")
@@ -31,9 +32,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query(value = "UPDATE User u SET u.defaultPaymentMethod = :paymentMethod WHERE u.userId = :userId")
-    int updateDefaultPaymentMethod(@Param("userId") Long userId, @Param("paymentMethod") String paymentMethod  );
-    //@Query(value = "SELECT distinct a FROM User u LEFT JOIN ShippingAddress a on a.shippingAddressId =   WHERE u.email = :userEmail")
-    
+    int updateDefaultPaymentMethod(@Param("userId") Long userId, @Param("paymentMethod") String paymentMethod);
+    // @Query(value = "SELECT distinct a FROM User u LEFT JOIN ShippingAddress a on
+    // a.shippingAddressId = WHERE u.email = :userEmail")
 
 }
-

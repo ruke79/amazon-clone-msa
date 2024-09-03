@@ -1,5 +1,7 @@
 package com.project.backend.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
                         .allowedHeaders("*")
                         .allowCredentials(true)
                         .maxAge(3600)
-                        .exposedHeaders(TokenType.ACCESS.getType());                      
-                        
-                        
-
+                        .exposedHeaders(TokenType.ACCESS.getType(), "Set-Cookie");                                            
                         
             }
         };
