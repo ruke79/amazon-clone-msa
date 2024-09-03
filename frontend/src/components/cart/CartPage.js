@@ -21,7 +21,8 @@ const CartPage = ({ cart }) => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-        
+
+    console.log(cart);
 
     useEffect(() => {
         if (currentUser) {
@@ -79,13 +80,18 @@ const CartPage = ({ cart }) => {
         
     }, [selected]);
 
-    const saveCartToDbHandler = async () => {
+    const [state, setState] = useState();
+    const saveCartToDbHandler = async (e) => {
+        e.preventDefault();
+        setState(e);
+        
         if (currentUser) {
             setLoading(true);
             
             const res = await saveCart(selected);
             
             navigate("/checkout");
+            setLoading(false);
         } else {
             navigate("/signin");
         }

@@ -8,12 +8,12 @@ import CookiUtil from "./cookieUtil";
 const ResponseInterceptor = () => {
 
 
-    const { setToken, setRefeshTokenExpired, setIsAdmin, setCurrentUser } = useAuthContext();
+    const { setToken, RefeshTokenExpired, setRefeshTokenExpired, setIsAdmin, setCurrentUser } = useAuthContext();
 
 
     useEffect(() => {
         let isRefreshing = false;
-        let isRefreshExpired = false;
+        
 
         const refreshAndRetryQueue = [];
 
@@ -34,7 +34,7 @@ const ResponseInterceptor = () => {
 
                         try {
 
-                            if (msg === "access token expired" && !isRefreshExpired) {
+                            if (msg === "access token expired" && !RefeshTokenExpired) {
 
 
                                 TokenUtil.removeToken();
@@ -62,13 +62,15 @@ const ResponseInterceptor = () => {
                             });
 
                             refreshAndRetryQueue.length = 0;
+                            
                             return api(originalConfig);
                         } catch (error) {
                             // Handle token refresh error
                             // You can clear all storage and redirect the user to the login page
                             TokenUtil.remove();
                             CookiUtil.delete('REFRESH');
-                            window.location.replace('/signin');
+                            //window.location.replace('/signin');
+                            setRefeshTokenExpired(true);
                             throw error;  
 
                         } finally {
@@ -100,10 +102,10 @@ const ResponseInterceptor = () => {
 
                             originalConfig.headers['Cookie'] = null;
 
-                            window.location.replace('/signin');
+                            //window.location.replace('/signin');
                         }
 
-                        //isRefreshing = false;
+                        isRefreshing = false;
 
                         return api(originalConfig);
                     }     

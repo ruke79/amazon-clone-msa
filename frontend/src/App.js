@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootPage from "./pages/Root";
@@ -24,8 +24,25 @@ import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
 import ProtectedRoute from "components/ProtectedRoute";
 import ResponseInterceptor from 'util/responseInterceptor';
-import { Outlet } from 'react-router-dom';
 import { ErrorBoundary } from "react-error-boundary";
+import { Outlet, useLocation, useNavigationType } from 'react-router-dom';
+import ErrorPage from "pages/Error";
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from 'util/api';
+
+
+
+const DebugLayout = () => {
+  const location = useLocation();
+  const navigationType = useNavigationType(); // "POP" | "PUSH" | "REPLACE"
+
+  useEffect(() => {
+    console.log("The current URL is", {...location});
+    console.log("The last navigation action was", navigationType);
+  }, [location, navigationType]);
+
+  return <Outlet />;
+};
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -50,7 +67,8 @@ const AppRouter = () => {
 
   const router = useMemo(() => createBrowserRouter([
     {
-      element: <ErrorBoundaryLayout />,
+      element: <DebugLayout />,
+      errorElement : <ErrorPage/>,
       children: [
         {
           path: '/',
@@ -67,7 +85,7 @@ const AppRouter = () => {
         },
         {
           path: '/profile',
-          element: <ProtectedRoute><Profile /></ProtectedRoute>,
+          element: <Profile />,
           loader: loaderProfile(authContext),
           // 원인 파악..
           children: [
@@ -92,7 +110,7 @@ const AppRouter = () => {
         },
         {
           path: 'profile/address',
-          element: <ProtectedRoute><Address /></ProtectedRoute>,
+          element: <Address />,
           loader: loaderAddress(authContext),
         },
         {
@@ -101,7 +119,7 @@ const AppRouter = () => {
         },
         {
           path: 'profile/payment',
-          element: <ProtectedRoute><Payment /></ProtectedRoute>,
+          element: <Payment />,
           loader: loaderPayment(authContext),
         },
         {
@@ -145,7 +163,7 @@ const AppRouter = () => {
         }
       ]
     }
-  ]), [authContext]);
+  ]), []);
 
   return <RouterProvider router={router}/>  
 
@@ -156,7 +174,7 @@ function App() {
 
   return (
     <>
-      
+      <QueryClientProvider client={queryClient}>
       <ContextProvider>         
         <ResponseInterceptor/>      
         <Provider store={store}>
@@ -165,7 +183,7 @@ function App() {
           </PersistGate>
         </Provider>
       </ContextProvider>
-      
+      </QueryClientProvider>
     </>
   );
 }

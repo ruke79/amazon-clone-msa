@@ -17,6 +17,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByName(String name);  // 별명으로 검색
+    Optional<User> findByUserName(String name);  // 실명으로 검색
 
     Boolean existsByUserName(String username);
 

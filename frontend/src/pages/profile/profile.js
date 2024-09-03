@@ -1,14 +1,16 @@
 import Layout from "components/profile/Layout";
 import { redirect, useLoaderData } from "react-router-dom";
+import { useAuthContext } from "store/AuthContext";
 import api from "util/api";
 
 const Profile = () => {
-    const { user, tab } = useLoaderData();
-
+    const { tab } = useLoaderData();
+    const { currentUser } = useAuthContext();
+    
     
     return (
         <>
-            <Layout user={user} tab={tab} title={`${user.username}'s Profile`}>
+            <Layout user={currentUser} tab={tab} title={`${currentUser.username}'s Profile`}>
             <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Profile</h2>
             </div>
@@ -23,9 +25,9 @@ export const loader = (authContext) => {
 
     return async ({params, request}) => {
     
-        const { currentUser } = authContext;
+        // const { currentUser } = authContext;
 
-        console.log(currentUser);
+        // console.log(currentUser);
 
         // if (!currentUser) {
         //     return redirect('/')
@@ -35,7 +37,7 @@ export const loader = (authContext) => {
         const tab = Number(searchParams.get('tab')) || 0;
 
         return {
-               user : currentUser,
+               //user : currentUser,
                tab : tab,                          
         }
 

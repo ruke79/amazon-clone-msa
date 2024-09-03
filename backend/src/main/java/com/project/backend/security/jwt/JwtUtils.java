@@ -119,6 +119,18 @@ public class JwtUtils {
         .compact();
   }
 
+  public String generateToken(String id, String role, boolean isTwoFactorEnabled) {
+    
+    return Jwts.builder()
+        .subject(id)
+        .claim("role", role)
+        .claim("is2faEnabled", isTwoFactorEnabled)
+        .issuedAt(new Date(System.currentTimeMillis()))
+        .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+        .signWith(key())
+        .compact();
+  }
+
   public String getIdFromJwtToken(String token) {
     return Jwts.parser()
         .verifyWith(key())

@@ -8,11 +8,10 @@ import * as Yup from "yup";
 import ButtonInput from "./ButtonInput";
 import { useAuthContext } from "../../store/AuthContext";
 import toast from "react-hot-toast";
-import api from '../../util/api'
+import api, { queryClient } from 'util/api'
 import { jwtDecode } from "jwt-decode";
+import {useMutation }   from '@tanstack/react-query';
 
-
-import {Cookies } from 'react-cookie';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -22,15 +21,24 @@ const initialUser = {
     login_error: "",
 };
 
+const login = async (user) => {
+    const data  = await api.post("/auth/public/signin", user);
+    return data;
+}
+
+const LOGIN_QUERY_KEY = 'login';
+
+
 const SignInPage = () => {
-    const [step, setStep] = useState(1);    
+    const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const { setToken, token, setRefeshTokenExpired, setCurrentUser } = useAuthContext();
     const navigate = useNavigate();
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
-    const cookies = new Cookies();
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,6 +47,28 @@ const SignInPage = () => {
             [name]: value,
         });
     };
+
+    const { mutate, isLoading, isError } = useMutation({
+        mutationFn : login, 
+        onSuccess: (response) => {
+
+            console.log(response);
+            const access = response.headers['access'];
+
+            const decodedToken = jwtDecode(access);
+            if (decodedToken.is2faEnabled) {
+                setStep(2); // Move to 2FA verification step
+            } else {
+                //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
+                handleSuccessfulLogin(response, decodedToken);
+            }
+            queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
+            navigate('/');
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
 
     const loginValidation = Yup.object({
         // email: Yup.string()
@@ -49,76 +79,77 @@ const SignInPage = () => {
 
     const handleSuccessfulLogin = (response, decodedToken) => {
         const accessToken = response.headers['access'];
-        
-        const user = {          
+
+        const user = {
             email: decodedToken.sub,
             roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
         };
         localStorage.setItem("access_token", accessToken);
         //localStorage.setItem("USER", JSON.stringify(user));
-            
+
         //store the token on the context state  so that it can be shared any where in our application by context provider
         setToken(accessToken);
 
         setRefeshTokenExpired(false);
 
-        setCurrentUser(user);        
+        setCurrentUser(user);
 
-        console.log("Login success");
-            
-      };
+    };
 
     const signInHandler = async () => {
-        
-        const data = {
-            email,
-            password
-        }
-        try {
-        setLoading(true);
-
-       
-        
-        const response = await api.post("/auth/public/signin", data);
 
         
-        
-        if (response.status === 200 && response.data) {
+        mutate({ email, password });
 
-            const access = response.headers['access'];
-                                             
-            
-            const decodedToken = jwtDecode(access);
-            console.log(decodedToken);
-            if (decodedToken.is2faEnabled) {
-              setStep(2); // Move to 2FA verification step
-            } else {
-              //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
-              
-              handleSuccessfulLogin(response, decodedToken);
-            }
-          } else {
-            toast.error(
-              "Login failed. Please check your credentials and try again."
-            );
-          }
-        } catch (error) {
-          if (error) {
-            toast.error("Invalid credentials");
-          }
-        } finally {
-          setLoading(false);
-        }
-      };
 
-      useEffect(() => {   
 
-        if (token) navigate("/");
-      }, [navigate, token]);
+        // const data = {
+        //     email,
+        //     password
+        // }
+        // try {
+        //     setLoading(true);
+
+
+        //     const response = await api.post("/auth/public/signin", data);
+
+
+        //     if (response.status === 200 && response.data) {
+
+        //         const access = response.headers['access'];
+
+
+        //         const decodedToken = jwtDecode(access);
+
+
+        //         if (decodedToken.is2faEnabled) {
+        //             setStep(2); // Move to 2FA verification step
+        //         } else {
+        //             //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
+
+        //             handleSuccessfulLogin(response, decodedToken);
+        //         }
+
+
+        //     } else {
+        //         toast.error(
+        //             "Login failed. Please check your credentials and try again."
+        //         );
+        //     }
+        // } catch (error) {
+        //     if (error) {
+        //         toast.error("Invalid credentials");
+        //     }
+        // } finally {
+
+        //     setLoading(false);
+        // }
+    };
+
 
     return (
         <>
-        <div className="flex flex-col mx-auto w-full px-4 sm:w-3/5 md:w-3/5 lg:w-2/5  pt-8 pb-16">
+            <div className="flex flex-col mx-auto w-full px-4 sm:w-3/5 md:w-3/5 lg:w-2/5  pt-8 pb-16">
                 <div className="mx-auto my-2">
                     <Link to="/">
                         <img
@@ -140,7 +171,7 @@ const SignInPage = () => {
                         onSubmit={() => signInHandler()}
                     >
                         {(form) => (
-                            <Form >                                
+                            <Form >
                                 <LoginInput
                                     id="input-email"
                                     type="text"
@@ -172,7 +203,7 @@ const SignInPage = () => {
                         {login_error && (
                             <p className="text-red-500">{login_error}</p>
                         )}
-                    </div>                  
+                    </div>
 
                     <div
                         onClick={() => setNeedHelp(!needHelp)}
@@ -180,9 +211,8 @@ const SignInPage = () => {
                     >
                         <div className="flex items-center">
                             <ChevronRightIcon
-                                className={`h-3 text-gray-500" ${
-                                    needHelp && "rotate-90"
-                                }`}
+                                className={`h-3 text-gray-500" ${needHelp && "rotate-90"
+                                    }`}
                             />
                             <span className="text-blue-500 hover:text-amazon-orange hover:underline ml-1">
                                 Need help?
@@ -222,8 +252,8 @@ const SignInPage = () => {
                         Create your Amazon account
                     </Link>
                 </div>
-            </div>        
-        
+            </div>
+
         </>
 
     );

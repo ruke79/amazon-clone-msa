@@ -1,6 +1,5 @@
 package com.project.backend.security;
 
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,66 +38,67 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    
+
     private final JwtUtils jwtUtils;
 
-    
     private final RefreshTokenService refreshTokenService;
-    
+
     @Autowired
-    public AuthLoginFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils, RefreshTokenService refreshTokenService) {
+    public AuthLoginFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
+            RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
-        //jwtUtils = new JwtUtils();
-        //refreshTokenService = new RefreshTokenService();        
+        // jwtUtils = new JwtUtils();
+        // refreshTokenService = new RefreshTokenService();
         this.jwtUtils = jwtUtils;
         this.refreshTokenService = refreshTokenService;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
 
-            
-        
         try {
             ObjectMapper om = new ObjectMapper();
             LoginRequest loginInfo = om.readValue(request.getInputStream(), LoginRequest.class);
-            //String username = request.getParameter("email");
-            //String password = request.getParameter("password");
-            
-            
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginInfo.getEmail(), loginInfo.getPassword());
+            // String username = request.getParameter("email");
+            // String password = request.getParameter("password");
+
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    loginInfo.getEmail(), loginInfo.getPassword());
 
             Authentication authentication = authenticationManager.authenticate(authToken);
 
-            
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            
-                        
-            return authentication;           
+            return authentication;
         } catch (Exception e) {
-            
+
             log.error(e.getMessage());
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return null;
-        }        
+        }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authentication) throws IOException {
 
-        			//UserDetailsS
+        // UserDetailsS
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-
-
-             // Collect roles from the UserDetails
+        // Collect roles from the UserDetails
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        String accessToken = jwtUtils.generateTokenFromEmail(userDetails);
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+
+        String role = auth.getAuthority();
+
+        String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         ObjectMapper om = new ObjectMapper();
@@ -111,26 +111,28 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
 
-            
             response.setHeader(TokenType.ACCESS.getType(), accessToken);
-                        
-            response.addCookie(jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), 24*60*60));
-            //refreshTokenService.deleteByUserId(userDetails.getId());
-            //response.setHeader(HttpHeaders.SET_COOKIE, jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
+
+            response.addCookie(
+                    jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), 24 * 60 * 60));
+            // refreshTokenService.deleteByUserId(userDetails.getId());
+            // response.setHeader(HttpHeaders.SET_COOKIE,
+            // jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
             response.getWriter().write(data);
             response.setStatus(HttpStatus.OK.value());
 
             log.info("Login Success");
 
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block            
+            // TODO Auto-generated catch block
             response.setStatus(401);
-        }       
+        }
 
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) {
 
         response.setStatus(401);
     }

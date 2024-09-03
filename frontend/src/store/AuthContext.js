@@ -58,6 +58,7 @@ export const ContextProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       fetchUser();
+      console.log("fetchUser");
     }
   }, [token]);
 

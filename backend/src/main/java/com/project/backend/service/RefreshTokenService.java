@@ -58,55 +58,19 @@ public class RefreshTokenService {
 
 
     refreshToken.setUser(user);    
-    //refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
-   
     
     refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
-
-    SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-    
-    String formattedDate = formatter.format(jwtUtils.getExpirationFromJwtToken(refreshToken.getToken()));
-
-    log.info(formattedDate);
-    
+   
     Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
-    
-     formattedDate = formatter.format(new Date());
-
-      log.info(formattedDate);
       
-      refreshToken.setExpiryDate(myDate);
-
-    Date date = jwtUtils.getExpirationFromJwtToken(refreshToken.getToken());
-
-    Date date2 = new Date();
-    
-    if (date.getTime() - date2.getTime() > 0) {
-      log.info("is true");
-    }
-
-    if ( date.before(date2)) {
-      log.info("is before");
-    }
-
-     formattedDate = formatter.format(date);
-
-      log.info(formattedDate);
-      
+    refreshToken.setExpiryDate(myDate);
 
 
     refreshToken = refreshTokenRepository.save(refreshToken);
     return refreshToken;
   }
 
-  // public RefreshToken verifyExpiration(RefreshToken token) {
-  //   if (token.getExpiryDate().isBefore(Dis)) < 0) {
-  //     refreshTokenRepository.delete(token);
-  //     throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
-  //   }
 
-  //   return token;
-  // }
 
   @Transactional
   public int deleteByUserId(Long userId) {

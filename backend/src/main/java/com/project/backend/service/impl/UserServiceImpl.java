@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
                 user.getTwoFactorSecret(),
                 user.isTwoFactorEnabled(),
                 user.getSignUpMethod(),
-                user.getRole(),
+                user.getRole().getRoleName().getRole(),
                 user.getImage(),
                 null,
                 null,
