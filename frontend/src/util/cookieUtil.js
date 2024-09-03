@@ -1,38 +1,32 @@
 class  CookiUtil {
 
-    set(key, value) {
-        let date = new Date(); 
-        let validity = 30;
-        date.setDate(date.getDate() + validity);
-        // 쿠키 저장
-        document.cookie = key + '=' + escape(value) + ';expires=' + date.toGMTString();
+    set(key, value, path='/', validity=30) {
+        let date = new Date();         
+        date.setDate(date.getDate() + validity);        
+        document.cookie = key + '=' + encodeURI(value) + '; expires=' + date.toGMTString() + 'path=' + path;
     }
 
-     delete (key) {
+     delete (key, path='/') {
         let date = new Date(); 
         let validity = -1;
         date.setDate(date.getDate() + validity);
         document.cookie =
-            key + "=;expires=" + date.toGMTString();
+            key + '=; expires=' + date.toGMTString() + 'path=' + path;
     }
 
      get (name) {
-        let nameOfCookie = name + "=";
-        let x = 0;
-        let endOfCookie = 0;
-        while (x <= document.cookie.length) {
-            let y = (x + nameOfCookie.length);
-            if (document.cookie.substring(x, y) == nameOfCookie) {
-                if ((endOfCookie = document.cookie.indexOf(";", y)) == -1)
-                    endOfCookie = document.cookie.length;
-                return unescape(document.cookie.substring(y, endOfCookie));
-            }
-
-            x = document.cookie.indexOf(" ", x) + 1;
-
-            if (x == 0) break;
-        }
-        return null;
+        let cookieName = name + '=';
+        let cookies = document.cookie;
+        let start = cookies.indexOf(name);
+        let value = '';
+        if (start != -1) {
+            start += cookieName.length;
+            let end = cookies.indexOf(';', start);
+            if (end === -1) end = cookies.length;
+            value = cookies.substring(start, end);
+        }      
+        
+        return decodeURI(value);
     }
 }
 
