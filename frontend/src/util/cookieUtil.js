@@ -12,6 +12,7 @@ class  CookiUtil {
         date.setDate(date.getDate() + validity);
         document.cookie =
             key + '=; expires=' + date.toGMTString() + 'path=' + path;
+        console.log(document.cookie);
     }
 
      get (name) {

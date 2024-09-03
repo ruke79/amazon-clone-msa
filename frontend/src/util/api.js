@@ -1,5 +1,12 @@
 import axios from "axios";
+import { QueryClient } from "@tanstack/react-query";
 import TokenUtil from "./tokenUtil"
+
+export const queryClient = new QueryClient();
+
+
+
+
 console.log("API URL:", process.env.REACT_APP_API_URL);
 
 

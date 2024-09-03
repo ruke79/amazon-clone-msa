@@ -68,30 +68,15 @@ public class RegistrationController {
             // model.addAttribute("qr", userService.generateQRUrl(user));
             // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
             // }
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
-                UsernamePasswordAuthenticationToken authentication =
+                UsernamePasswordAuthenticationToken authentication = 
                         new UsernamePasswordAuthenticationToken(userDetails,
                                 null,
                                 userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            UserDetailsImpl userDetailsimpl = (UserDetailsImpl) authentication.getPrincipal();
-
-            String jwtToken = jwtUtils.generateTokenFromEmail(userDetailsimpl);
-    
-            // Collect roles from the UserDetails
-            // List<String> roles = userDetailsimpl.getAuthorities().stream()
-            //         .map(item -> item.getAuthority())
-            //         .collect(Collectors.toList());
-    
-            // // Prepare the response body, now including the JWT token directly in the body
-            // LoginResponse response = new LoginResponse(userDetailsimpl.getUsername(),
-            //         roles);
-            
-    
-            // Return the response entity with the JWT token included in the response body
-            //model.addAttribute("messageKey", "message.accountVerified");
+                        
+            model.addAttribute("messageKey", "message.accountVerified");
             return new ModelAndView("redirect:"+frontendUrl+"/signin", model);            
         }
         

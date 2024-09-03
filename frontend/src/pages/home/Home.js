@@ -1,14 +1,40 @@
 import { useState, useEffect } from 'react';
-import { useLoaderData, json } from 'react-router-dom';
+import { useLoaderData, json, defer } from 'react-router-dom';
 import CarouselContainer from "../../components/home/CarouselContainer";
 import CategoriesProduct from "./CategoryProducts";
 import HomeProductSwiper from 'components/home/HomeProductSwiper';
-import api from '../../util/api';
+import api, { queryClient } from '../../util/api';
+import { useMutation } from '@tanstack/react-query';
+
+
+
+const getProductsData = async () => {
+    const data  = await api.get("/admin/product/products");
+    return data;
+}
+
+const HOME_QUERY_KEY = 'home';
+
+
 
 const HomePage = () => {
     //const [products, setProducts] = useState([]);
 
-    const data = useLoaderData();
+    // const { data : products, mutate : loadProducts, isLoading, isSuccess,  isError } = useMutation({
+    //     mutationFn : getProductsData, 
+    //     onSuccess: (response) => {
+           
+    //         queryClient.invalidateQueries({ querykey: [HOME_QUERY_KEY] });            
+    //     },
+    //     onError: (error) => {
+    //         console.log(error);
+    //     }
+    // });
+
+    
+    
+
+    const  data  = useLoaderData();
     //const temp = JSON.parse(JSON.stringify(data));    
     const products = data.data;
 
@@ -28,6 +54,7 @@ const HomePage = () => {
 }
 
 export default HomePage;
+
 
 
 export async function loader() {
