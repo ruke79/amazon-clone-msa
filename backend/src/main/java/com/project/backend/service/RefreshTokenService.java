@@ -61,7 +61,7 @@ public class RefreshTokenService {
     //refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
    
     
-    refreshToken.setToken(jwtUtils.generateRefreshTokenFromEmail(user));
+    refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
     

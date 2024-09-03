@@ -14,18 +14,18 @@ const api = axios.create({
   withCredentials: true,
 });
 
- // Add a request interceptor to include JWT and CSRF tokens
- api.interceptors.request.use(
+// Add a request interceptor to include JWT and CSRF tokens
+api.interceptors.request.use(
   async (config) => {
-      const token = TokenUtil.getToken();
-      if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-      }
+    const token = TokenUtil.getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-      return config;
+    return config;
   },
   (error) => {
-      return Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 

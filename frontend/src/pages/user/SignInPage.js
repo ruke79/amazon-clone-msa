@@ -25,7 +25,7 @@ const initialUser = {
 const SignInPage = () => {
     const [step, setStep] = useState(1);    
     const [loading, setLoading] = useState(false);
-    const { setToken, token, setCurrentUser } = useAuthContext();
+    const { setToken, token, setRefeshTokenExpired, setCurrentUser } = useAuthContext();
     const navigate = useNavigate();
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
@@ -59,6 +59,8 @@ const SignInPage = () => {
             
         //store the token on the context state  so that it can be shared any where in our application by context provider
         setToken(accessToken);
+
+        setRefeshTokenExpired(false);
 
         setCurrentUser(user);        
 

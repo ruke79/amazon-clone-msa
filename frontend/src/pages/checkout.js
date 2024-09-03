@@ -13,21 +13,21 @@ import api from "util/api";
 
 const Checkout = () => {
 
-        
+
     const cart = useLoaderData();
-    const user = { userId : cart.userId, address : cart.address};
-    
-        
+    const user = { userId: cart.userId, address: cart.address };
+
+
     const [addresses, setAddresses] = useState(user?.address || []);
     const [paymentMethod, setPaymentMethod] = useState("paypal");
     const [totalAfterDiscount, setTotalAfterDiscount] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("");
     const [loading, setLoading] = useState(false);
-                     
-       
-    
+
+
+
     useEffect(() => {
-                     
+
         let check = addresses?.find((address) => address.active == true);
         if (check) {
             setSelectedAddress(check);
@@ -35,10 +35,10 @@ const Checkout = () => {
         } else {
             setSelectedAddress("");
         }
-        
+
     }, [addresses]);
 
-    
+
 
     return (
         <>
@@ -52,7 +52,7 @@ const Checkout = () => {
                         setAddresses={setAddresses}
                         setSelectedAddress={setSelectedAddress}
                     />
-                    { <Product cart={cart} /> }
+                    {<Product cart={cart} />}
                 </section>
 
                 <section className="col-span-1">
@@ -81,13 +81,13 @@ export default Checkout;
 
 export const loader = (authContext) => {
 
-    return async ({params, request}) => {
-    
-        const { currentUser } = authContext;
+    return async ({ params, request }) => {
 
-        const { data } = await api.get("/user/cart/checkout");       
-        
-        
-        return data;    
+        //const { currentUser } = authContext;
+
+        const { data } = await api.get("/user/cart/checkout");
+
+
+        return data;
     };
 }

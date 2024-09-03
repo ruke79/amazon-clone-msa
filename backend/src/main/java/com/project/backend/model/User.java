@@ -32,10 +32,16 @@ public class User extends BaseEntity{
     @Column(name = "user_id")
     private Long userId;
 
+    // 실명
     @NotBlank
     @Size(max = 20)
     @Column(name = "username")
     private String userName;
+    
+    // 별명
+    @Size(max = 20)
+    @Column(name = "name")
+    private String name;
 
     @NotBlank
     @Size(max = 50)

@@ -1,8 +1,8 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.constants.AppRole;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.UserDTO;
-import com.project.backend.model.AppRole;
 import com.project.backend.model.PasswordResetToken;
 import com.project.backend.model.Role;
 import com.project.backend.model.ShippingAddress;
@@ -118,6 +118,7 @@ public class UserServiceImpl implements UserService {
         return new UserDTO(
                 Long.toString(user.getUserId()),
                 user.getUserName(),
+                user.getName(),
                 user.getEmail(),
                 user.isAccountNonLocked(),
                 user.isAccountNonExpired(),

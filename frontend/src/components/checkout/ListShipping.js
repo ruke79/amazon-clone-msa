@@ -27,9 +27,6 @@ const ListShipping = ({
                 
         const res = await selectShippingAddress(id);        
 
-        console.log(res);
-        
-
         setAddresses(res);
     };
     const deleteHandler = async (id, e) => {
