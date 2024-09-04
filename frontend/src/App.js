@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { useMemo, useEffect } from "react";
+import { useMemo, Suspense  } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootPage from "./pages/Root";
@@ -23,9 +23,9 @@ import Security from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
 import ProtectedRoute from "components/ProtectedRoute";
-import ResponseInterceptor from 'util/responseInterceptor';
+import ApiErrorHandler from 'error/ApiErrorHandler';
 import { ErrorBoundary } from "react-error-boundary";
-import { Outlet, useLocation, useNavigationType } from 'react-router-dom';
+import { Outlet  } from 'react-router-dom';
 import ErrorPage from "pages/Error";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from 'util/api';
@@ -56,9 +56,13 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 }
 
 const ErrorBoundaryLayout = () => (
+  
+<Suspense fallback={<div>Loading...</div>}>
   <ErrorBoundary FallbackComponent = {ErrorFallback} >    
-    <Outlet />
+  <ApiErrorHandler/>      
+    <Outlet />  
   </ErrorBoundary>
+  </Suspense>
 );
 
 const AppRouter = () => {
@@ -175,8 +179,7 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-      <ContextProvider>         
-        <ResponseInterceptor/>      
+      <ContextProvider>               
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <AppRouter/>            

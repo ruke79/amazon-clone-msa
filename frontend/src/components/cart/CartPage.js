@@ -3,7 +3,7 @@ import CartHeader from "./CartHeader";
 import Checkout from "./Checkout";
 import PaymentMethods from "./PaymentMethods";
 import Product from "./Product";
-import api, {saveCart, postRequest } from "util/api";
+import api, {saveCart, putRequest } from "util/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateCart } from "../../redux/CartSlice";
@@ -11,20 +11,23 @@ import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 
-const updateCart = async (cart) => {
-    const { data} = await postRequest(`/user/cart/updatecart`,
-    {products: cart.cartItems});
+const fetchCart = async (cart) => {
+    console.log(cart);
+     const { data} = await putRequest(`/user/cart/updatecart`,
+     {products: cart.cartItems});    
     return data;
 }
 
-const useCart = (user, cart) => {
+const useCart = (user, cart, enable) => {
 
-    const cart = useQuery({
+    const cartQuery = useQuery({
         queryKey: [user, cart],
-        queryFn : () => updateCart(cart)
-    })
+        queryFn : () => fetchCart(cart),
+        throwOnError : true,
+        enable : enable        
+    });
 
-
+    return cartQuery;
 }
 
 
@@ -38,39 +41,24 @@ const CartPage = ({ cart }) => {
     const [subTotal, setSubTotal] = useState(0);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [enable, setEnable] = useState(cart.cartItems.length > 0);
 
     const navigate = useNavigate();
+    const { data, isSuccess } = useCart(currentUser, cart, enable);
+
+    if (isSuccess) {
+
+        dispatch(updateCart(data));        
+
+    }
 
 
     useEffect(() => {
         if (currentUser) {
-            const update = async () => {
-                //const { data } = await api.put(`/user/cart/updatecart`, {
-                //    products: cart.cartItems,                     
-                //}                
 
-                try {
-                    const { data} = await postRequest(`/user/cart/updatecart`,
-                    {products: cart.cartItems});
-                } catch(error) {
-                    if (!error.response) {
-                        // Network error occurred
-                        console.error('Network error:', error);
-                      } else {
-                        // The server responded with a status other than 200 range
-                        console.error('Error response:', error.response);
-                      }
-
-                }
-
-                if ( data.status === 200 ) {                
-                     dispatch(updateCart(data))
-                };                 
-            };
-
-            if (cart.cartItems.length > 0) {
-                update();
-            }
+            if (cart.cartItems.length == 0) {
+                setEnable(false);
+            }          
             
          } else {            
             navigate("/signin");

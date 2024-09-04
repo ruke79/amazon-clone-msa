@@ -60,15 +60,16 @@ export default HomePage;
 export async function loader() {
 
     const response  = await api.get("/admin/product/products");
-    if(!response) {
+    if(response.status != 200) {
   
-        throw json(
-            { message: 'Could not fetch events.' },
-            {
-              status: 500,
-            }
-          );
-    }    
+        // throw json(
+        //     { message: 'Could not fetch events.' },
+        //     {
+        //       status: 500,
+        //     }
+        //   );
+        throw new Error('Could not fetch events.');
+    }     
       
     return response;
   }
