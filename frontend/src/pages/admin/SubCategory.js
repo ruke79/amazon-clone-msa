@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreateSubCategory from '../../components/admin/CreateSubCategory';
+import CreateSubCategory from 'components/admin/CreateSubCategory';
 
 const SubCategories = ({ categories, subCategories }) => {
     const [data, setData] = useState(subCategories);
