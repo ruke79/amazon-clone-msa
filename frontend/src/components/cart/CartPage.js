@@ -3,12 +3,31 @@ import CartHeader from "./CartHeader";
 import Checkout from "./Checkout";
 import PaymentMethods from "./PaymentMethods";
 import Product from "./Product";
-import api, {saveCart} from "util/api";
+import api, {saveCart, postRequest } from "util/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateCart } from "../../redux/CartSlice";
 import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+
+const updateCart = async (cart) => {
+    const { data} = await postRequest(`/user/cart/updatecart`,
+    {products: cart.cartItems});
+    return data;
+}
+
+const useCart = (user, cart) => {
+
+    const cart = useQuery({
+        queryKey: [user, cart],
+        queryFn : () => updateCart(cart)
+    })
+
+
+}
+
+
 
 const CartPage = ({ cart }) => {
     const { token, currentUser } = useAuthContext();
@@ -22,25 +41,38 @@ const CartPage = ({ cart }) => {
 
     const navigate = useNavigate();
 
-    console.log(cart);
 
     useEffect(() => {
         if (currentUser) {
             const update = async () => {
-                const { data } = await api.put(`/user/cart/updatecart`, {
-                    products: cart.cartItems,                     
-                }                
-            );
-                dispatch(updateCart(data));
-                 //console.log("update cart > ", data);
+                //const { data } = await api.put(`/user/cart/updatecart`, {
+                //    products: cart.cartItems,                     
+                //}                
+
+                try {
+                    const { data} = await postRequest(`/user/cart/updatecart`,
+                    {products: cart.cartItems});
+                } catch(error) {
+                    if (!error.response) {
+                        // Network error occurred
+                        console.error('Network error:', error);
+                      } else {
+                        // The server responded with a status other than 200 range
+                        console.error('Error response:', error.response);
+                      }
+
+                }
+
+                if ( data.status === 200 ) {                
+                     dispatch(updateCart(data))
+                };                 
             };
 
             if (cart.cartItems.length > 0) {
                 update();
             }
             
-         } else {
-            //router.push("/auth/signin");
+         } else {            
             navigate("/signin");
         }
     }, []);

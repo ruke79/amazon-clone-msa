@@ -12,7 +12,7 @@ import { useLoaderData } from "react-router-dom";
 const OrderPage = () => {
     const orderData = useLoaderData();
     
-    
+  
     const [order ,setOrder] = useState(orderData);
     const [loading, setLoading] = useState(false);
 
@@ -47,18 +47,6 @@ const OrderPage = () => {
 };
 
 export default OrderPage;
-
-// export async function getServerSideProps(context) {
-//     const { query } = context;
-//     const id = query.id;
-//     const order = await Order.findById(id).populate("user").lean();
-
-//     return {
-//         props: {
-//             order: JSON.parse(JSON.stringify(order)),
-//         },
-//     };
-// }
 
 
 export const loader = (authContext) => {

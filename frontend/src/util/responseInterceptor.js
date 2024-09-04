@@ -112,8 +112,10 @@ const ResponseInterceptor = () => {
                     
                     
                 }
-
-                
+                if (!err.response) {
+                    // We have a network error
+                    console.error('Network error:', err);
+                }                  
 
                 return Promise.reject(err);
 

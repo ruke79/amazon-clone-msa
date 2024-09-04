@@ -36,6 +36,7 @@ const CreateProduct = ({
 }) => {
     const dispatch = useDispatch();
     const [colors, setColors] = useState([]);
+    const [progress, setProgress] = useState(0);
 
     const validate = Yup.object({
         name: Yup.string()
@@ -68,6 +69,12 @@ const CreateProduct = ({
     const createProductHnadler = async () => {
         setLoading(true);
   
+        const config = {
+            onUploadProgress: progressEvent => {
+              const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+              setProgress(percentCompleted);
+            }
+          };
         
         let imageUploader;
 
@@ -90,8 +97,9 @@ const CreateProduct = ({
                 formData.append("timestamp", (Date.now() / 1000) | 0);
                 
                 
-                const image = await uploadImages(formData);                
+                const image = await uploadImages(formData, config);                
                 uploaded_images.push(image.url);            
+                setProgress(0);
             });                            
         }
         
@@ -104,10 +112,10 @@ const CreateProduct = ({
             formData.append("file", temp);
             formData.append("upload_preset", "nd7idl8b");
             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
-            let cloudinary_style_img = await uploadImages(formData);
+            let cloudinary_style_img = await uploadImages(formData, config);
             style_img = cloudinary_style_img.url;
             console.log("uploaded style image: ", style_img);
-
+            setProgress(0);
         }
         axios.all(imageUploader).then(async() => {
             try {
@@ -136,8 +144,7 @@ const CreateProduct = ({
                 const { data } = await api.post("admin/product", formData,
                     {
                         headers: {
-                        "Content-Type": "multipart/form-data",
-                        //"Content-Type" : "application/json"
+                        "Content-Type": "multipart/form-data",                        
                             
                         },
                         transformRequest: [
@@ -149,22 +156,22 @@ const CreateProduct = ({
                 );
                 
                                     
-                // if (data.status === 200) {
-                //     setProduct(initialProduct);
-                //     setImages([]);
-                //     setColorImage("");
-                //     setColors([]);
-                //     dispatch(
-                //         showDialog({
-                //             header: "post created.",
-                //             msgs:[{
-                //                 msg: data.message,
-                //                 type: "success",
-                //             }],
-                //         })
-                //     );
+                if (data.status === 200) {
+                    setProduct(initialProduct);
+                    setImages([]);
+                    setColorImage("");
+                    setColors([]);                    
+                    dispatch(
+                        showDialog({
+                            header: "post created.",
+                            msgs:[{
+                                msg: data.message,
+                                type: "success",
+                            }],
+                        })
+                    );
                     
-                // }
+                }
                 setLoading(false);
             } catch (error) {
                 setLoading(false);

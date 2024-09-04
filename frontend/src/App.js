@@ -32,17 +32,17 @@ import { queryClient } from 'util/api';
 
 
 
-const DebugLayout = () => {
-  const location = useLocation();
-  const navigationType = useNavigationType(); // "POP" | "PUSH" | "REPLACE"
+// const DebugLayout = () => {
+//   const location = useLocation();
+//   const navigationType = useNavigationType(); // "POP" | "PUSH" | "REPLACE"
 
-  useEffect(() => {
-    console.log("The current URL is", {...location});
-    console.log("The last navigation action was", navigationType);
-  }, [location, navigationType]);
+//   useEffect(() => {
+//     console.log("The current URL is", {...location});
+//     console.log("The last navigation action was", navigationType);
+//   }, [location, navigationType]);
 
-  return <Outlet />;
-};
+//   return <Outlet />;
+// };
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -67,7 +67,7 @@ const AppRouter = () => {
 
   const router = useMemo(() => createBrowserRouter([
     {
-      element: <DebugLayout />,
+      element: <ErrorBoundaryLayout />,
       errorElement : <ErrorPage/>,
       children: [
         {
