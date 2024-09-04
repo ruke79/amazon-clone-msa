@@ -1,23 +1,42 @@
-import api from "./api";
-import TokenUtil from "./tokenUtil";
+import api from "util/api";
+import TokenUtil from "util/tokenUtil";
 import { useAuthContext } from "store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CookiUtil from "./cookieUtil";
-
-const ResponseInterceptor = () => {
 
 
-    const { setToken, RefeshTokenExpired, setRefeshTokenExpired, setIsAdmin, setCurrentUser } = useAuthContext();
 
+function ApiErrorHandler({ children }) {
+
+   
+
+    const { token, setToken, RefeshTokenExpired, setRefeshTokenExpired, setIsAdmin, setCurrentUser } = useAuthContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
+
         let isRefreshing = false;
-        
 
         const refreshAndRetryQueue = [];
 
-        const intercetpor = api.interceptors.response.use(
+        // Add a request interceptor to include JWT and CSRF tokens
+        const requestInterceptor = api.interceptors.request.use(
+            async (config) => {
+                const token = TokenUtil.getToken();
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+
+
+
+        const responseIntercetpor = api.interceptors.response.use(
             (res) => {
                 return res;
             },
@@ -26,7 +45,9 @@ const ResponseInterceptor = () => {
                 const msg = err.response.data;
                 const status = err.response.status;
 
-                if (status === 401 && err.response) {
+                if (err.response) {
+
+                if (status === 401 ) {
 
                     if (!isRefreshing) {
 
@@ -62,16 +83,17 @@ const ResponseInterceptor = () => {
                             });
 
                             refreshAndRetryQueue.length = 0;
-                            
+
                             return api(originalConfig);
                         } catch (error) {
                             // Handle token refresh error
                             // You can clear all storage and redirect the user to the login page
-                            TokenUtil.remove();
-                            CookiUtil.delete('REFRESH');
+                            TokenUtil.remove();                            
                             //window.location.replace('/signin');
                             setRefeshTokenExpired(true);
-                            throw error;  
+                            
+                           // throwAsyncError(error);
+                            throw error;
 
                         } finally {
                             isRefreshing = false;
@@ -79,56 +101,54 @@ const ResponseInterceptor = () => {
                     }
 
                     return new Promise((resolve, reject) => {
-                        refreshAndRetryQueue.push({ config: originalConfig, resolve, reject })
+                        refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
                     });
 
                 }
-                else if (status === 400 && err.response) {
+                else if (status === 400) {
 
+                    originalConfig.headers['Cookie'] = null;
 
-                    if (!isRefreshing) {
+                    if (msg === "refresh token expired") {
 
-                        isRefreshing = true;
+                        TokenUtil.remove();
+                        setToken(null);
+                        setCurrentUser(null);
+                        setIsAdmin(false);
+                        setRefeshTokenExpired(true);
+                       
 
-                        if (msg === "refresh token expired") {
+                        originalConfig.headers['Cookie'] = null;
 
-                            TokenUtil.remove();
-                            setToken(null);
-                            setCurrentUser(null);
-                            setIsAdmin(false);
-                            setRefeshTokenExpired(true);
+                        navigate('/signin');
 
-                            CookiUtil.delete('REFRESH');                            
+                        
+                    }
+                    console.log(originalConfig.headers);
 
-                            originalConfig.headers['Cookie'] = null;
+                    //throwAsyncError(err);                    
 
-                            //window.location.replace('/signin');
-                        }
-
-                        isRefreshing = false;
-
-                        return api(originalConfig);
-                    }     
-                    
-                    
+                    //return api(originalConfig);
                 }
-                if (!err.response) {
+            }
+            else {
                     // We have a network error
                     console.error('Network error:', err);
-                }                  
+            }
 
                 return Promise.reject(err);
 
-            }
-        );
+            }                               
+    );
 
-        return () => {
-            api.interceptors.response.eject(intercetpor);
-        };
-    }, []);
+    return () => {
+        api.interceptors.response.eject(requestInterceptor);
+        api.interceptors.response.eject(responseIntercetpor);
+    };
+}, []);
 
 
-    return <></>;
+return children;
 }
 
-export default ResponseInterceptor;
+export default ApiErrorHandler;

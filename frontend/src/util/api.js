@@ -1,10 +1,21 @@
 import axios from "axios";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryCache } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
 import TokenUtil from "./tokenUtil"
 
+
 export const queryClient = new QueryClient(
   {
+    defaultOptions: {
+      queries: {
+        retry: 0,
+        suspense: true,
+        useErrorBoundary: true,
+      },
+      mutations: {
+        useErrorBoundary: true,
+      },
+    },
     queryCache: new QueryCache({
       onError: (error, query) => {        
         if (query.state.data !== undefined) {
@@ -32,20 +43,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Add a request interceptor to include JWT and CSRF tokens
-api.interceptors.request.use(
-  async (config) => {
-    const token = TokenUtil.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 const config = {
   timeout: 10000,
@@ -55,7 +53,7 @@ const config = {
 }
 
 export function getRequest(URL, contentType = "application/json") {
-  return api.get(`/${URL}`, contentType,
+  return api.get(`${URL}`, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
       validateStatus: config.statusRange
@@ -63,7 +61,16 @@ export function getRequest(URL, contentType = "application/json") {
 }
 
 export function postRequest(URL, payload, contentType = "application/json") {
-  return api.post(`/${URL}`, payload, contentType,
+  return api.post(`${URL}`, payload, contentType,
+    {
+      timeout: config.timeout, // 10 seconds timeout
+      validateStatus: config.statusRange
+    }
+  ).then(response => response);
+}
+
+export function putRequest(URL, payload, contentType = "application/json") {
+  return api.put(`${URL}`, payload, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
       validateStatus: config.statusRange
@@ -72,7 +79,7 @@ export function postRequest(URL, payload, contentType = "application/json") {
 }
 
 export function patchRequest(URL, payload, contentType = "application/json") {
-  return api.patch(`/${URL}`, payload, contentType,
+  return api.patch(`${URL}`, payload, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
       validateStatus: config.statusRange
@@ -80,7 +87,7 @@ export function patchRequest(URL, payload, contentType = "application/json") {
 }
 
 export function deleteRequest(URL, contentType = "application/json") {
-  return api.delete(`/${URL}`, contentType,
+  return api.delete(`${URL}`, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
       validateStatus: config.statusRange
