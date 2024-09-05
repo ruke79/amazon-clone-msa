@@ -107,8 +107,7 @@ function ApiErrorHandler({ children }) {
                 }
                 else if (status === 400) {
 
-                    originalConfig.headers['Cookie'] = null;
-
+                    
                     if (msg === "refresh token expired") {
 
                         TokenUtil.remove();
@@ -116,16 +115,11 @@ function ApiErrorHandler({ children }) {
                         setCurrentUser(null);
                         setIsAdmin(false);
                         setRefeshTokenExpired(true);
-                       
-
-                        originalConfig.headers['Cookie'] = null;
-
+                    
                         navigate('/signin');
-
                         
                     }
-                    console.log(originalConfig.headers);
-
+                    
                     //throwAsyncError(err);                    
 
                     //return api(originalConfig);
@@ -134,6 +128,7 @@ function ApiErrorHandler({ children }) {
             else {
                     // We have a network error
                     console.error('Network error:', err);
+                    navigate('error_server');
             }
 
                 return Promise.reject(err);

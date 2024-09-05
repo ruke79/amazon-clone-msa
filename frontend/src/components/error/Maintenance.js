@@ -1,4 +1,4 @@
-function Maintenance() {
+export default function Maintenance() {
 
     return (
         <>
