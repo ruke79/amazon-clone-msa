@@ -26,7 +26,7 @@ import ProtectedRoute from "components/ProtectedRoute";
 import ApiErrorHandler from 'error/ApiErrorHandler';
 import { ErrorBoundary } from "react-error-boundary";
 import { Outlet  } from 'react-router-dom';
-import ErrorPage from "pages/Error";
+import ErrorPage from "pages/error/Error";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from 'util/api';
 
