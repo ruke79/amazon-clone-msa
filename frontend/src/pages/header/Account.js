@@ -16,11 +16,7 @@ const Account = () => {
     const { token, setToken, currentUser, setCurrentUser, isAdmin, setIsAdmin } =
     useAuthContext();
 
-    useEffect(() => {
-
-        
-        
-      }, [token]);
+   
 
     const handleLogout = () => {
         localStorage.removeItem("access_token"); // Updated to remove token from localStorage

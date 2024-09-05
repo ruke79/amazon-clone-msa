@@ -52,8 +52,8 @@ const config = {
   }
 }
 
-export function getRequest(URL, contentType = "application/json") {
-  return api.get(`${URL}`, contentType,
+export function getRequest(URL, payload = null,  contentType = "application/json") {
+  return api.get(`${URL}`, payload, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
       validateStatus: config.statusRange

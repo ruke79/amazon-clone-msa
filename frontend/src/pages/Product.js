@@ -3,7 +3,7 @@ import Header from "./header/Header";
 //import MenuSideBar from "@/components/Header/MenuSidebar";
 import ProductPage from "../components/product/ProductPage";
 import { useLoaderData, defer } from "react-router-dom";
-import api from "util/api";
+import api, { getRequest } from "util/api";
 
 const SingleProduct = () => {
     
@@ -41,13 +41,14 @@ async function loaderProduct(slug, style, size) {
     
     
     
-    const  response = await api.get(`/product/${slug}`);
+    //const  response = await api.get(`/product/${slug}`);
 
-    
+    try {
 
-    if (response ) {
-        
-        const product = response.data;
+    const  { product } = await getRequest(`/product/${slug}`);
+
+                
+        //const product = response.data;
 
         
         let subProduct = product.sku_products[style];
@@ -125,6 +126,11 @@ async function loaderProduct(slug, style, size) {
             ).toFixed(1);
         }
         
-        return JSON.parse(JSON.stringify(newProduct));            }
+        return JSON.parse(JSON.stringify(newProduct));            
+
+    } catch(err) {
+
+
+    }
 
 }

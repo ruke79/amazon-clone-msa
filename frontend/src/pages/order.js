@@ -6,7 +6,7 @@ import Total from "components/order/Total";
 import UserInfo from "components/order/UserInfo";
 import { useEffect, useState } from "react";
 import DotLoaderSpinner from "components/loader/Loading"
-import api from "util/api";
+import api, { getRequest } from "util/api";
 import { useLoaderData } from "react-router-dom";
 
 const OrderPage = () => {
@@ -55,11 +55,16 @@ export const loader = (authContext) => {
     
         //const { currentUser } = authContext;
         const orderId = params.id;
-
-
-        const { data } = await api.get(`/user/order/${orderId}`);                       
+     
+        try {
+            const { data } = await getRequest(`/user/order/${orderId}`);                       
 
                 
-        return data;    
-    };
+            return data;    
+        }
+        catch(err) {
+
+
+        }
+    }
 }
