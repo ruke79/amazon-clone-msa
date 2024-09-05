@@ -524,7 +524,7 @@ export async function loader({ request, params }) {
 
     try {
 
-        let { productsDB } = await getRequest("/search",
+        let  response = await getRequest("/search",
             {
                 params: {
                     search, category, brand, style,
@@ -533,8 +533,8 @@ export async function loader({ request, params }) {
                 }
             }
         )
-
-        //let productsDB = JSON.parse(JSON.stringify(response)).data;
+        
+        let productsDB = JSON.parse(JSON.stringify(response)).data;
 
 
 
@@ -612,14 +612,14 @@ export async function loader({ request, params }) {
         //     : sortQuery == "priceLowToHight"
         //     ? { "sku_products.sizes.price": 1 }
         //     : {};    
+        console.log(productsDB);
+        return productsDB;
+
     }
     catch(err) {
+        throw err;
 
-
+        
     }
-
-
-    return productsDB;
-
-
+        
 }

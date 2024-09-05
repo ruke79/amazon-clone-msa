@@ -26,10 +26,11 @@ import ProtectedRoute from "components/ProtectedRoute";
 import ApiErrorHandler from 'error/ApiErrorHandler';
 import { ErrorBoundary } from "react-error-boundary";
 import { Outlet  } from 'react-router-dom';
-import ErrorPage from "pages/error/Error";
+import ErrorPage from "pages/Error";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from 'util/api';
-
+import {ReactErrorBoundaryComponent} from 'error/ApiErrorBoundary';
+import Maintenance from 'components/error/Maintenance';
 
 
 // const DebugLayout = () => {
@@ -57,12 +58,12 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 
 const ErrorBoundaryLayout = () => (
   
-<Suspense fallback={<div>Loading...</div>}>
+//<Suspense fallback={<div>Loading...</div>}>
   <ErrorBoundary FallbackComponent = {ErrorFallback} >    
   <ApiErrorHandler/>      
     <Outlet />  
   </ErrorBoundary>
-  </Suspense>
+//  </Suspense>
 );
 
 const AppRouter = () => {
@@ -85,6 +86,7 @@ const AppRouter = () => {
             },
             { path: 'signin', element: <SignInPage /> },
             { path: 'register', element: <RegisterPage /> },
+            { path: 'error_server', element: <Maintenance/> },
           ]
         },
         {

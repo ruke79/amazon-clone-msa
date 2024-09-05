@@ -29,9 +29,9 @@ export const loader = (authContext) => {
 
         // console.log(currentUser);
 
-         if (!currentUser) {
-            throw new Error('');
-         }
+        //  if (!currentUser) {
+        //     throw new Error('');
+        //  }
         //     return redirect('/')
         // }
 

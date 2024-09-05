@@ -45,10 +45,12 @@ async function loaderProduct(slug, style, size) {
 
     try {
 
-    const  { product } = await getRequest(`/product/${slug}`);
+    const  response = await getRequest(`/product/${slug}`);
 
                 
-        //const product = response.data;
+        const product = response.data;
+
+        
 
         
         let subProduct = product.sku_products[style];

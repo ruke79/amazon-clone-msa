@@ -5,7 +5,7 @@ function RootPage() {
 
     return (
         <>      
-      <Header />
+      <Header />      
       <main>
         {/* {navigation.state === 'loading' && <p>Loading...</p>} */}
         <Outlet />
