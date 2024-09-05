@@ -151,6 +151,9 @@ export const loader = (authContext) => {
         const searchParams = new URL(request.url).searchParams;
         const tab = Number(searchParams.get('tab')) || 0;
         
+        if (!currentUser) {
+            throw new Error("User is not Logged in");
+        }
       
             return {
                   user : currentUser,

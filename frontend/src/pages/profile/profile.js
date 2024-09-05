@@ -25,11 +25,13 @@ export const loader = (authContext) => {
 
     return async ({params, request}) => {
     
-        // const { currentUser } = authContext;
+         const { currentUser } = authContext;
 
         // console.log(currentUser);
 
-        // if (!currentUser) {
+         if (!currentUser) {
+            throw new Error('');
+         }
         //     return redirect('/')
         // }
 
@@ -37,7 +39,7 @@ export const loader = (authContext) => {
         const tab = Number(searchParams.get('tab')) || 0;
 
         return {
-               //user : currentUser,
+               user : currentUser,
                tab : tab,                          
         }
 

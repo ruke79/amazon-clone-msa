@@ -2,7 +2,7 @@ import ShippingPage from "components/checkout/ShippingPage";
 import Layout from "components/profile/Layout";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import api from "util/api";
+import api, { getRequest } from "util/api";
 
 const Address = () => {
     
@@ -39,10 +39,9 @@ export const loader = (authContext) => {
         
         try {
 
-            const { data } = await api.get("/user/profile/address"); 
+            const { data } = await getRequest("/user/profile/address"); 
                                                  
-
-            console.log(data);
+            
         
             return {
                   user : data,

@@ -9,7 +9,7 @@ import Summary from "components/checkout/Summary";
 import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useFetcher, useLoaderData } from "react-router-dom";
-import api from "util/api";
+import api, { getRequest } from "util/api";
 
 const Checkout = () => {
 
@@ -83,11 +83,16 @@ export const loader = (authContext) => {
 
     return async ({ params, request }) => {
 
-        //const { currentUser } = authContext;
+        
+        try {
 
-        const { data } = await api.get("/user/cart/checkout");
+            const { data } = await getRequest("/user/cart/checkout");
 
 
-        return data;
+            return data;
+        }
+        catch(err) {
+            
+        }
     };
 }

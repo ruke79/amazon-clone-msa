@@ -13,11 +13,11 @@ import GenderFilter from "components/browse/genderFilter/GenderFilter";
 import HeadingFilter from "components/browse/headingFilter/HeadingFilter";
 import { Pagination } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import api from "util/api";
+import api, { getRequest } from "util/api";
 import keySort from "util/sort_utils";
- import DotLoaderSpinner from "components/loader/Loading";
+import DotLoaderSpinner from "components/loader/Loading";
 
-const Browse = ({}) => {
+const Browse = ({ }) => {
 
     const productsDB = useLoaderData();
 
@@ -65,7 +65,7 @@ const Browse = ({}) => {
         sort,
         page,
     }) => {
-       
+
         function isEmptyObject(arg) {
             return typeof arg === 'object' && Object.keys(arg).length === 0;
         }
@@ -74,14 +74,14 @@ const Browse = ({}) => {
             if (param && !searchParams.get(param) && !isEmptyObject(param)) {
                 searchParams.set(name, param);
 
-                 
+
                 if (param !== 'page' && searchParams.get('page'))
                     searchParams.delete('page');
 
             }
             else if (param) {
                 searchParams.delete(name);
-                      
+
             }
         }
 
@@ -102,26 +102,26 @@ const Browse = ({}) => {
         toggleParam('price', price);
 
         console.log("rating : " + rating);
-                   
+
 
 
         if (shipping && !searchParams.get('shipping')) {
             searchParams.set('shipping', shipping);
-                              
+
         }
         else if (shipping) {
             searchParams.delete('shipping');
-                       
+
         }
 
         if (rating && !searchParams.get('rating')) {
-           
+
             searchParams.set('rating', rating);
-           
+
         }
         else if (rating) {
             searchParams.delete('rating');
-              
+
         }
 
         toggleParam('sort', sort);
@@ -157,11 +157,11 @@ const Browse = ({}) => {
         filter({ material });
     };
     const genderHandler = (gender) => {
-       
+
         filter({ gender });
     };
 
-   
+
     function debounce(fn, delay) {
         let timeout = null;
         return (...args) => {
@@ -522,96 +522,101 @@ export async function loader({ request, params }) {
     // console.log({shipping});
     // console.log({rating});
 
+    try {
 
-    let response = await api.get("/search",
-        {
-            params: {
-                search, category, brand, style,
-                size, color, material, gender, lowPrice: price.lowPrice, highPrice: price.highPrice, shipping: shipping.shipping, rating,
-                page, pageSize
+        let { productsDB } = await getRequest("/search",
+            {
+                params: {
+                    search, category, brand, style,
+                    size, color, material, gender, lowPrice: price.lowPrice, highPrice: price.highPrice, shipping: shipping.shipping, rating,
+                    page, pageSize
+                }
             }
+        )
+
+        //let productsDB = JSON.parse(JSON.stringify(response)).data;
+
+
+
+        if (sortQuery === "popular") {
+
+            productsDB.sort(
+                (a, b) => Number(b.rating) - Number(a.rating)
+            );
+
+            productsDB.map(product => {
+                product.sku_products.sort(
+                    (a, b) => Number(b.sold) - Number(a.sold)
+                )
+            });
         }
-    )
+        else if (sortQuery === "newest") {
+            productsDB.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+        }
+        else if (sortQuery === "topSelling") {
 
-    let productsDB = JSON.parse(JSON.stringify(response)).data;
+            productsDB.map(product => {
+                product.sku_products.sort(
+                    (a, b) => Number(b.sold) - Number(a.sold)
+                )
+            });
+        }
+        else if (sortQuery == "topReviewed") {
+            productsDB.sort(
+                (a, b) => Number(b.rating) - Number(a.rating)
+            );
 
+        }
+        else if (sortQuery == "priceHighToLow") {
+            productsDB.map(product => {
+                product.sku_products
+                    .map(sku => {
+                        sku.sizes.sort(
+                            (a, b) => Number(b.price) - Number(a.price)
+                        )
+                    })
+            });
 
+        }
+        else if (sortQuery == "priceLowToHight") {
+            productsDB.map(product => {
+                product.sku_products
+                    .map(sku => {
+                        sku.sizes.sort(
+                            (a, b) => Number(a.price) - Number(b.price)
+                        )
+                    })
+            });
 
-    if (sortQuery === "popular") {
+        }
 
-        productsDB.sort(
-            (a, b) => Number(b.rating) - Number(a.rating)
-        );
+        //     let sortOps = { rating : "DESC"}
 
-        productsDB.map(product => {
-            product.sku_products.sort(
-                (a, b) => Number(b.sold) - Number(a.sold)
-            )
-        });
+        //     // console.log(products);
+        //      products = products.keySort(sortOps);
+
+        //      sortOps = { sold : "DESC"}
+        //      products.map(product =>{product.sku_products.keySort(sortOps)});    
+        // }
+        //     ? { rating: -1, "sku_products.sold": -1 }
+        //     : sortQuery == "newest"
+        //     ? { createdAt: -1 }
+        //     : sortQuery == "topSelling"
+        //     ? { "sku_products.sold": -1 }
+        //     : sortQuery == "topReviewed"
+        //     ? { rating: -1 }
+        //     : sortQuery == "priceHighToLow"
+        //     ? { "sku_products.sizes.price": -1 }
+        //     : sortQuery == "priceLowToHight"
+        //     ? { "sku_products.sizes.price": 1 }
+        //     : {};    
     }
-    else if (sortQuery === "newest") {
-        productsDB.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-    }
-    else if (sortQuery === "topSelling") {
+    catch(err) {
 
-        productsDB.map(product => {
-            product.sku_products.sort(
-                (a, b) => Number(b.sold) - Number(a.sold)
-            )
-        });
-    }
-    else if (sortQuery == "topReviewed") {
-        productsDB.sort(
-            (a, b) => Number(b.rating) - Number(a.rating)
-        );
 
     }
-    else if (sortQuery == "priceHighToLow") {
-        productsDB.map(product => {
-            product.sku_products
-                .map(sku => {
-                    sku.sizes.sort(
-                        (a, b) => Number(b.price) - Number(a.price)
-                    )
-                })
-        });
-
-    }
-    else if (sortQuery == "priceLowToHight") {
-        productsDB.map(product => {
-            product.sku_products
-                .map(sku => {
-                    sku.sizes.sort(
-                        (a, b) => Number(a.price) - Number(b.price)
-                    )
-                })
-        });
-
-    }
-
-    //     let sortOps = { rating : "DESC"}
-
-    //     // console.log(products);
-    //      products = products.keySort(sortOps);
-
-    //      sortOps = { sold : "DESC"}
-    //      products.map(product =>{product.sku_products.keySort(sortOps)});    
-    // }
-    //     ? { rating: -1, "sku_products.sold": -1 }
-    //     : sortQuery == "newest"
-    //     ? { createdAt: -1 }
-    //     : sortQuery == "topSelling"
-    //     ? { "sku_products.sold": -1 }
-    //     : sortQuery == "topReviewed"
-    //     ? { rating: -1 }
-    //     : sortQuery == "priceHighToLow"
-    //     ? { "sku_products.sizes.price": -1 }
-    //     : sortQuery == "priceLowToHight"
-    //     ? { "sku_products.sizes.price": 1 }
-    //     : {};    
-
 
 
     return productsDB;
