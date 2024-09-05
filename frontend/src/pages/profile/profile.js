@@ -2,9 +2,10 @@ import Layout from "components/profile/Layout";
 import { redirect, useLoaderData } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
 import api from "util/api";
+import tokenUtil from "util/tokenUtil";
 
 const Profile = () => {
-    const { tab } = useLoaderData();
+    const { tab, user } = useLoaderData();
     const { currentUser } = useAuthContext();
     
     
@@ -26,6 +27,7 @@ export const loader = (authContext) => {
     return async ({params, request}) => {
     
          const { currentUser } = authContext;
+         const user = tokenUtil.getUser();
 
         // console.log(currentUser);
 
@@ -39,7 +41,7 @@ export const loader = (authContext) => {
         const tab = Number(searchParams.get('tab')) || 0;
 
         return {
-               user : currentUser,
+               user : user,
                tab : tab,                          
         }
 

@@ -16,8 +16,7 @@ const OrderPage = () => {
     const [order ,setOrder] = useState(orderData);
     const [loading, setLoading] = useState(false);
 
-    console.log(order);
-
+    
     
     return (
         <>
@@ -53,7 +52,7 @@ export const loader = (authContext) => {
 
     return async ({params, request}) => {
     
-        //const { currentUser } = authContext;
+        
         const orderId = params.id;
      
         try {

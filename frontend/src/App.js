@@ -181,13 +181,15 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-      <ContextProvider>               
+      
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
+          <ContextProvider>               
             <AppRouter/>            
+            </ContextProvider>
           </PersistGate>
         </Provider>
-      </ContextProvider>
+      
       </QueryClientProvider>
     </>
   );

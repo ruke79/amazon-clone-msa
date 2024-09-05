@@ -17,7 +17,7 @@ const Checkout = () => {
     const cart = useLoaderData();
     const user = { userId: cart.userId, address: cart.address };
 
-
+    console.log(user);
     const [addresses, setAddresses] = useState(user?.address || []);
     const [paymentMethod, setPaymentMethod] = useState("paypal");
     const [totalAfterDiscount, setTotalAfterDiscount] = useState("");
@@ -31,7 +31,7 @@ const Checkout = () => {
         let check = addresses?.find((address) => address.active == true);
         if (check) {
             setSelectedAddress(check);
-            console.log(selectedAddress);
+         
         } else {
             setSelectedAddress("");
         }

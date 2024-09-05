@@ -54,7 +54,7 @@ const CartPage = ({ cart }) => {
 
 
     useEffect(() => {
-        if (currentUser) {
+        if (token) {
 
             if (cart.cartItems.length == 0) {
                 setEnable(false);
@@ -105,7 +105,7 @@ const CartPage = ({ cart }) => {
         e.preventDefault();
         setState(e);
         
-        if (currentUser) {
+        if (token) {
             setLoading(true);
             
             const res = await saveCart(selected);
