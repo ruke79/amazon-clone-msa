@@ -17,7 +17,7 @@ export const queryClient = new QueryClient(
       },
     },
     queryCache: new QueryCache({
-      onError: (error, query) => {        
+      onError: (error, query) => {
         if (query.state.data !== undefined) {
           toast.error(`Something went wrong: ${error.message}`);
         }
@@ -52,7 +52,7 @@ const config = {
   }
 }
 
-export function getRequest(URL, payload = null,  contentType = "application/json") {
+export function getRequest(URL, payload = null, contentType = "application/json") {
   return api.get(`${URL}`, payload, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
@@ -110,7 +110,7 @@ const axiosRetry = (url, retries, delay) => {
 export const saveCart = async (cart) => {
   try {
 
-    const { data } = await api.put("/user/cart/savecart", {
+    const { data } = await putRequest("/user/cart/savecart", {
       products: cart
     });
     return data;
@@ -123,9 +123,7 @@ export const saveShippingAddress = async (address) => {
 
   try {
 
-
-
-    const { data } = await api.post("/user/cart/save_shipping_address", {
+    const { data } = await postRequest("/user/cart/save_shipping_address", {
       address: address
     });
     return data;
@@ -138,12 +136,7 @@ export const selectShippingAddress = async (addressId) => {
 
   try {
 
-
-
-    // const params = new URLSearchParams();    
-    // params.append('addressId', id);
-
-    const { data } = await api.get(`/user/cart/selectaddress/${addressId}`
+    const { data } = await getRequest(`/user/cart/selectaddress/${addressId}`
 
     );
     return data;
@@ -156,7 +149,7 @@ export const deleteAddress = async (addressId) => {
 
   try {
 
-    const { data } = await api.get(`/user/cart/deleteaddress/${addressId}`
+    const { data } = await getRequest(`/user/cart/deleteaddress/${addressId}`
 
     );
     return data;
@@ -171,7 +164,7 @@ export const applyCoupon = async (coupon) => {
 
   try {
 
-    const { data } = await api.post("/user/cart/coupon", {
+    const { data } = await postRequest("/user/cart/coupon", {
       coupon: coupon
     });
     return data;
