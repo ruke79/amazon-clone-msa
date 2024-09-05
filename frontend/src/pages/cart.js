@@ -8,8 +8,7 @@ import { useSelector } from "react-redux";
 const Cart = () => {
     const cart  = useSelector((state) => { return state.cart; });
 
-    console.log(cart);
-         
+             
     return (
         <>
             <Header />

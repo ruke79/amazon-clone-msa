@@ -8,6 +8,7 @@ import { Link, useNavigate, redirect, useLocation } from "react-router-dom";
 import { useAuthContext } from "../../store/AuthContext";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import tokenUtil from "util/tokenUtil";
 
 const Account = () => {
     const navigate = useNavigate();
@@ -16,9 +17,9 @@ const Account = () => {
 
     const { token, setToken, currentUser, setCurrentUser, isAdmin, setIsAdmin } =
     useAuthContext();
-
+    const  user  = tokenUtil.getUser();
     
-   
+    console.log(user);
 
     const handleLogout = () => {
         localStorage.removeItem("access_token"); // Updated to remove token from localStorage
@@ -54,12 +55,12 @@ const Account = () => {
             {/* popOver Account */}
             <div className="z-20 show-account-popup absolute w-96 -right-14 h-auto bg-white rounded-sm border shadow-md mt-1">
                 <div className="absolute h-3 w-3 bg-white rotate-45 -mt-1 right-[3.85rem] "></div>
-                {currentUser ? (
+                {token ? (
                     <div className="flex items-center justify-between p-3 border-b pb-2">
                         <p className="text-xl text-amazon-blue_light">
                             Hi,{" "}
                             <Link to="/profile">
-                                <b>{ currentUser?.username }</b>
+                                <b>{ user?.email }</b>
                             </Link>
                         </p>
                         <div className="flex space-x-2">
@@ -130,7 +131,7 @@ const Account = () => {
         </div>
 
         <div
-             onClick={() => currentUser ? navigate("/cart") : {}}
+             onClick={() => token ? navigate("/cart") : {}}
             className="relative link flex items-center"
         >
             <span className="flex items-center justify-center absolute top-0 right-[0.44rem] md:right-8 bg-amazon-orange text-amazon-blue_dark font-semibold h-5 w-5 rounded-full">

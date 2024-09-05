@@ -85,7 +85,7 @@ const SignInPage = () => {
             roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
         };
         localStorage.setItem("access_token", accessToken);
-        //localStorage.setItem("USER", JSON.stringify(user));
+        localStorage.setItem("USER", JSON.stringify(user));
 
         //store the token on the context state  so that it can be shared any where in our application by context provider
         setToken(accessToken);
