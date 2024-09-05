@@ -8,12 +8,11 @@ export const queryClient = new QueryClient(
   {
     defaultOptions: {
       queries: {
-        retry: 0,
-        suspense: true,
-        useErrorBoundary: true,
+        retry: false,        
+        throwOnError: true,
       },
       mutations: {
-        useErrorBoundary: true,
+        throwOnError: true,
       },
     },
     queryCache: new QueryCache({
