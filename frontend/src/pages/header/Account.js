@@ -9,6 +9,7 @@ import { useAuthContext } from "../../store/AuthContext";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import tokenUtil from "util/tokenUtil";
+import { postRequest  } from "util/api";
 
 const Account = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Account = () => {
     
     console.log(user);
 
-    const handleLogout = () => {
+    const handleLogout = async() => {
         localStorage.removeItem("access_token"); // Updated to remove token from localStorage
         localStorage.removeItem("USER"); // Remove user details as well
         
@@ -29,7 +30,8 @@ const Account = () => {
         setToken(null);
         setCurrentUser(null);
         setIsAdmin(false);
-        navigate("/signin");
+        //navigate("/signin");
+        await postRequest('/auth/logout', null);
       };
 
     return (

@@ -162,18 +162,19 @@ public class AuthController {
        
        
         if (userRepository.existsByUserName(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse(StatusMessages.USERNAME_IN_USE));
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+            return ResponseEntity.badRequest().body(new MessageResponse(StatusMessages.EMAIL_IN_USE));
         }
 
         userService.registerNewUserAccount(signUpRequest);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity.ok(new MessageResponse(StatusMessages.USER_REGISTRATION_SUCCESS));
     }
 
+    // Email Vertification
     @PostMapping("/public/register")
     public GenericResponse registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
             final HttpServletRequest request) {
@@ -183,8 +184,14 @@ public class AuthController {
 
         eventPublisher.publishEvent(new com.project.backend.registration.OnRegistrationCompleteEvent(registered,
                 request.getLocale(), getAppUrl(request)));
-        return new GenericResponse("success");
+        return new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS);
     }
+
+    // @PostMapping("/auth/logout")
+    // public GenericResponse singout() {
+
+    //     return new GenericResponse("Logout Success");
+    // }
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {

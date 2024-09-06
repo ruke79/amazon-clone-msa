@@ -42,10 +42,11 @@ function ApiErrorHandler({ children }) {
             },
             async (err) => {
                 let originalConfig = err.config;
-                const msg = err.response.data;
-                const status = err.response.status;
-
+                
                 if (err.response) {
+
+                    const msg = err.response.data;
+                    const status = err.response.status;
 
                 if (status === 401 ) {
 
@@ -54,17 +55,17 @@ function ApiErrorHandler({ children }) {
                         isRefreshing = true;
 
                         try {
-
-                            if (msg === "access token expired" && !RefeshTokenExpired) {
+                            
+                            if (msg === "access token expired" && !RefeshTokenExpired  ) {
 
 
                                 TokenUtil.removeToken();
+                                setToken(null);
 
                                 const rs = await api.post("/token/refresh");
 
 
-                                if (rs.status === 200) {
-
+                                
                                     console.log(rs);
                                     const accessToken = rs.headers['access'];
                                     TokenUtil.updateToken(accessToken);
@@ -72,8 +73,7 @@ function ApiErrorHandler({ children }) {
                                     setToken(accessToken);
 
                                     originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
-
-                                }
+                                
                             }
                             refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
                                 api
@@ -88,9 +88,8 @@ function ApiErrorHandler({ children }) {
                         } catch (error) {
                             // Handle token refresh error
                             // You can clear all storage and redirect the user to the login page
-                            TokenUtil.remove();                            
-                            //window.location.replace('/signin');
-                            setRefeshTokenExpired(true);
+                            //TokenUtil.remove();                            
+                            //window.location.replace('/signin');                                                        
                                                       
                             throw error;
 
@@ -109,17 +108,20 @@ function ApiErrorHandler({ children }) {
                     
                     if (msg === "refresh token expired") {
 
-                        TokenUtil.remove();
-                        setToken(null);
-                            setCurrentUser(null);
-                            setIsAdmin(false);
-                            setRefeshTokenExpired(true);
                         
                         try {
-                            const { data } = postRequest('/cookie/delete');
+                            if (token) {
+                            //    const { data } = postRequest('/token/delete');
+                                await postRequest('/auth/loguht', null);
 
+                                TokenUtil.remove();
+                                setToken(null);
+                                setCurrentUser(null);
+                                setIsAdmin(false);
+                                setRefeshTokenExpired(true);           
 
-                            navigate('/signin');
+                                navigate('/signin');
+                            }                            
                         }
                         catch(error) {
 
@@ -146,7 +148,7 @@ function ApiErrorHandler({ children }) {
             else {
                     // We have a network error
                     console.error('Network error:', err);
-                    navigate('error_server');
+                    //navigate('error_server');
             }
 
                 return Promise.reject(err);

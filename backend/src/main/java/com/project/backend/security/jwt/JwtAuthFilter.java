@@ -43,7 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("^\\/signin(?:\\/.*)?$")) {
+        if (requestUri.matches("/api/auth/public/signin(?:\\/.*)?$")) {
 
             filterChain.doFilter(request, response);
             return;

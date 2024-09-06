@@ -18,13 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 @ConfigurationPropertiesScan 
-public class ChatApplication {
+public class ShoppingApplication {
 
 	public static void main(String[] args) {
 
 		//TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 
-		SpringApplication.run(ChatApplication.class, args);
+		SpringApplication.run(ShoppingApplication.class, args);
 
 		//LocalDateTime now = LocalDateTime.now();//LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
         //System.out.println("시간 " + now);

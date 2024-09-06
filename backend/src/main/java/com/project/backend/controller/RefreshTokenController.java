@@ -19,6 +19,7 @@ import com.project.backend.constants.TokenType;
 import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
+import com.project.backend.security.AuthenticationUser;
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.service.RefreshTokenService;
@@ -116,25 +117,24 @@ public class RefreshTokenController {
         return new ResponseEntity<>(HttpStatus.OK);        
     }
 
-    @PostMapping("/cookie/delete")
-    public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response, 
-    @AuthenticationPrincipal UserDetails userDetails) {
+    // @PostMapping("/token/delete")
+    // public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response, 
+    // @AuthenticationUser UserDetails userDetails) {
 
-        if (null != userDetails) {
+    //     if (null != userDetails ) {
         
-          Cookie cookie = jwtUtils.createCookie(TokenType.REFRESH.getType(), null, 0);
+    //       Cookie cookie = jwtUtils.createCookie(TokenType.REFRESH.getType(), null, 0);
 
-          response.addCookie(cookie);
+    //       response.addCookie(cookie);
+          
+    //       return new ResponseEntity<>(HttpStatus.OK);   
+    //     }
+    //     else {                    
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    //                 .body(StatusMessages.USER_NOT_FOUND);
+    //     }            
 
-          return new ResponseEntity<>(HttpStatus.OK);   
-        }
-        else {        
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(StatusMessages.USER_NOT_FOUND);
-        }
-            
-
-    }
+    // }
 
 
 }
