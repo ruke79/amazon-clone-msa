@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.OrderDTO;
 import com.project.backend.dto.PaymentResultDTO;
 import com.project.backend.model.Order;
 import com.project.backend.model.PaymentResult;
 import com.project.backend.security.request.OrderRequest;
+import com.project.backend.security.response.MessageResponse;
 import com.project.backend.service.OrderService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,30 +43,48 @@ public class OrderController {
 
         if (null != userDetails) {
 
-            String username = userDetails.getUsername();
+            try {
 
-            Order newOrder = orderService.createOrder(request, username);
+                String username = userDetails.getUsername();
 
-            String orderID = Long.toString(newOrder.getOrderId());
+                Order newOrder = orderService.createOrder(request, username);
+
+                String orderID = Long.toString(newOrder.getOrderId());
 
 
-            Map<String, String> data = new HashMap<>();
-            data.put("orderId", orderID);
+                Map<String, String> data = new HashMap<>();
+                data.put("orderId", orderID);
 
-            
-            return new ResponseEntity<>(data, HttpStatus.OK);
+                
+                return new ResponseEntity<>(data, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse(e.getMessage()));
+            }
             
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
     }
 
     @GetMapping("/order/{orderId}")
-    ResponseEntity<OrderDTO> getOrder(@PathVariable("orderId") String orderId) {
+    ResponseEntity<?> getOrder(@PathVariable("orderId") String orderId,
+    @AuthenticationPrincipal UserDetails userDetails) {
 
-        OrderDTO response = orderService.getOrder(orderId);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        if (null != userDetails) {
+
+            try {
+                OrderDTO response = orderService.getOrder(orderId);
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse(e.getMessage()));
+            }
+        } else {
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
+        }
     }
 
 }

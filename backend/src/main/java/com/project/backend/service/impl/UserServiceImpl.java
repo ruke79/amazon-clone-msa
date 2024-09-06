@@ -1,6 +1,7 @@
 package com.project.backend.service.impl;
 
 import com.project.backend.constants.AppRole;
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.PasswordResetToken;
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserRole(Long userId, String roleName) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         AppRole appRole = AppRole.valueOf(roleName);
         Role role = roleRepository.findByRoleName(appRole)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -147,7 +148,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateAccountLockStatus(Long userId, boolean lock) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         user.setAccountNonLocked(!lock);
         userRepository.save(user);
     }
@@ -159,21 +160,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateAccountExpiryStatus(Long userId, boolean expire) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         user.setAccountNonExpired(!expire);
         userRepository.save(user);
     }
 
     @Override
     public void updateAccountEnabledStatus(Long userId, boolean enabled) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         user.setEnabled(enabled);
         userRepository.save(user);
     }
 
     @Override
     public void updateCredentialsExpiryStatus(Long userId, boolean expire) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         user.setCredentialsNonExpired(!expire);
         userRepository.save(user);
     }
@@ -182,7 +183,7 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(Long userId, String currPassword, String password) {
         try {
             User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
             if (passwordEncoder.matches(currPassword, user.getPassword())) {
                 user.setPassword(passwordEncoder.encode(password));
@@ -197,7 +198,7 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(Long userId, String password) {
         try {
             User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
@@ -209,7 +210,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void generatePasswordResetToken(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
         String token = UUID.randomUUID().toString();
         Instant expiryDate = Instant.now().plus(24, ChronoUnit.HOURS);
@@ -302,7 +303,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public GoogleAuthenticatorKey generate2FASecret(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         GoogleAuthenticatorKey key = totpService.generateSecret();
         user.setTwoFactorSecret(key.getKey());
         userRepository.save(user);
@@ -312,14 +313,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean validate2FACode(Long userId, int code) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         return totpService.verifyCode(user.getTwoFactorSecret(), code);
     }
 
     @Override
     public void enable2FA(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         user.setTwoFactorEnabled(true);
         userRepository.save(user);
     }
@@ -327,7 +328,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void disable2FA(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
         user.setTwoFactorEnabled(false);
         userRepository.save(user);
     }

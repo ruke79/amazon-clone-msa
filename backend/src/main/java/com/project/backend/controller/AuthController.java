@@ -1,6 +1,7 @@
 package com.project.backend.controller;
 
 import com.project.backend.constants.AppRole;
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.constants.TokenType;
 import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
@@ -68,37 +69,45 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     
-    JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
     
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     
-    private ApplicationEventPublisher eventPublisher;
+    private final  ApplicationEventPublisher eventPublisher;
 
     
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     
-    RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    // @Autowired
-    // PasswordEncoder encoder;
-
-    
-    UserService userService;
+    private final UserService userService;
 
     
-    AuthUtil authUtil;
+    private final AuthUtil authUtil;
 
     
-    TotpService totpService;
+    private final TotpService totpService;
 
-    
-    private UserDetailsServiceImpl userDetailsService;
+            
+    @Autowired
+    public AuthController(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
+            ApplicationEventPublisher eventPublisher, UserRepository userRepository, RoleRepository roleRepository,
+            UserService userService, AuthUtil authUtil, TotpService totpService
+            ) {
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.eventPublisher = eventPublisher;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.userService = userService;
+        this.authUtil = authUtil;
+        this.totpService = totpService;        
+    }
 
-    
-    private RefreshTokenService refreshTokenService;
+  
 
     // @PostMapping("/public/signin")
     // public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -164,28 +173,6 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
-
-    // @PostMapping("/signout")
-    // public ResponseEntity<?> logoutUser() {
-    //     Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    //     if (principle.toString() != "anonymousUser") {
-    //         Long userId = ((UserDetailsImpl) principle).getId();
-    //         refreshTokenService.deleteByUserId(userId);
-    //     }
-
-    //     ResponseCookie jwtCookie = jwtUtils.getCleanJwtCookie();
-    //     ResponseCookie jwtRefreshCookie = jwtUtils.getCleanJwtRefreshCookie();
-
-    //     return ResponseEntity.ok()
-    //             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-    //             .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-    //             .body(new MessageResponse("You've been signed out!"));
-    // }
-
-    
-
-    
-
 
     @PostMapping("/public/register")
     public GenericResponse registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
@@ -291,7 +278,7 @@ public class AuthController {
             return ResponseEntity.ok().body(Map.of("is2faEnabled", user.isTwoFactorEnabled()));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+                    .body(StatusMessages.USER_NOT_FOUND);
         }
     }
 
@@ -320,5 +307,10 @@ public class AuthController {
         }
         return xfHeader.split(",")[0];
     }
+
+   
+
+
+    
 
 }

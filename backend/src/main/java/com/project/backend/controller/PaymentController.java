@@ -38,13 +38,17 @@ public class PaymentController {
     @Value("${imp_secret}")
     private String restApiSecret;
 
-    private IamportClient iamportClient;
+    //private IamportClient iamportClient;
+
+    
+    private final PaymentService paymentService;  
+    private final RefundService refundService;
 
     @Autowired
-    PaymentService paymentService;
-
-    @Autowired
-    RefundService refundService;
+    public PaymentController(PaymentService paymentService, RefundService refundService) {
+        this.paymentService = paymentService;
+        this.refundService = refundService;
+    }
 
 
     @PutMapping("/process")
@@ -57,26 +61,24 @@ public class PaymentController {
 
         }
         catch ( RuntimeException e) {
-
-            log.info("주문 상품 환불 진행 : 주문 번호 {}", request.getOrderNumber());
+            
             String token = refundService.getToken(restApiKey, restApiSecret);
             refundService.refundRequest(token, request.getOrderNumber(), e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);           
 
         }
         
     }
 
-    @PostConstruct
-    public void init() {
-        this.iamportClient = new IamportClient(restApiKey, restApiSecret);
-    }
+    // @PostConstruct
+    // public void init() {
+    //     this.iamportClient = new IamportClient(restApiKey, restApiSecret);
+    // }
 
-        @PostMapping("/verifyIamport/{imp_uid}")
-        public IamportResponse<Payment> paymentByImpUid (@PathVariable("imp_uid") String imp_uid) throws
-        IamportResponseException, IOException {
-            return iamportClient.paymentByImpUid(imp_uid);
-        }
+    //     @PostMapping("/verifyIamport/{imp_uid}")
+    //     public IamportResponse<Payment> paymentByImpUid (@PathVariable("imp_uid") String imp_uid) throws
+    //     IamportResponseException, IOException {
+    //         return iamportClient.paymentByImpUid(imp_uid);
+    //     }
 
 }

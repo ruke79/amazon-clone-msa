@@ -1,4 +1,4 @@
-import api from "util/api";
+import api, { postRequest } from "util/api";
 import TokenUtil from "util/tokenUtil";
 import { useAuthContext } from "store/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -91,8 +91,7 @@ function ApiErrorHandler({ children }) {
                             TokenUtil.remove();                            
                             //window.location.replace('/signin');
                             setRefeshTokenExpired(true);
-                            
-                           // throwAsyncError(error);
+                                                      
                             throw error;
 
                         } finally {
@@ -112,12 +111,31 @@ function ApiErrorHandler({ children }) {
 
                         TokenUtil.remove();
                         setToken(null);
-                        setCurrentUser(null);
-                        setIsAdmin(false);
-                        setRefeshTokenExpired(true);
-                    
-                        navigate('/signin');
+                            setCurrentUser(null);
+                            setIsAdmin(false);
+                            setRefeshTokenExpired(true);
                         
+                        try {
+                            const { data } = postRequest('/cookie/delete');
+
+
+                            navigate('/signin');
+                        }
+                        catch(error) {
+
+                            TokenUtil.remove();
+                            setToken(null);
+                            setCurrentUser(null);
+                            setIsAdmin(false);
+                            setRefeshTokenExpired(true);
+
+
+                            throw error;
+                        }           
+
+                        
+
+                    
                     }
                     
                     //throwAsyncError(err);                    

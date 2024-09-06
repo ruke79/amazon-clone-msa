@@ -11,31 +11,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.model.WishList;
 import com.project.backend.security.request.WishListRequest;
 import com.project.backend.security.response.GenericResponse;
+import com.project.backend.security.response.MessageResponse;
 import com.project.backend.service.CartService;
 
 @RestController
 @RequestMapping("api/user")
 public class WishlistController {
 
+    
+    private final CartService cartService;
+
+    
     @Autowired
-    CartService cartService;
+    public WishlistController(CartService cartService) {
+        this.cartService = cartService;   }
+
+
 
     @PutMapping("/wishlist")
-    ResponseEntity<GenericResponse> addWishList(@RequestBody WishListRequest request, 
+    ResponseEntity<?> addWishList(@RequestBody WishListRequest request, 
     @AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername();
+        if (null != userDetails ) {            
+            String username = userDetails.getUsername();
 
-        cartService.addWishList(username, request);
+            try {
+                cartService.addWishList(username, request);
 
-        GenericResponse response = new GenericResponse("Product successfully added to your wishlist");
+                GenericResponse response = new GenericResponse("Product successfully added to your wishlist");
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(StatusMessages.ADD_WISHLIST_FAILED));       
+            }
+        }  else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(StatusMessages.USER_NOT_FOUND);
+        }
     }
-
 
 
 }
