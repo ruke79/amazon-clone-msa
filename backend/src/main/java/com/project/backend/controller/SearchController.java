@@ -11,31 +11,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.SearchResultDTO;
 import com.project.backend.model.Product;
 import com.project.backend.model.ProductCategory;
+import com.project.backend.model.Review;
 import com.project.backend.repository.CategoryRepository;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.security.request.SearchParamsRequest;
+import com.project.backend.security.response.MessageResponse;
 import com.project.backend.service.ProductService;
 
 @RestController
 @RequestMapping("api/")
 public class SearchController {
 
-    
+    private final ProductService productService;
+
     @Autowired
-    ProductService productService;
+    public SearchController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/search")
-    public ResponseEntity<SearchResultDTO> searchProducts(SearchParamsRequest params)  {
+    public ResponseEntity<?> searchProducts(SearchParamsRequest params)  {
 
-       SearchResultDTO dto = productService.searchProducts(params);       
-       return new ResponseEntity<>(dto, HttpStatus.OK);
-       
 
-    }
-    
+       try {
+        SearchResultDTO dto = productService.searchProducts(params);       
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+       } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(StatusMessages.SERACH_FAILED));       
+       }      
+
+    }    
 
 }

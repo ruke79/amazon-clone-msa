@@ -8,10 +8,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.constants.TokenType;
 import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
@@ -47,9 +50,7 @@ public class RefreshTokenController {
 
     @PostMapping("/token/refresh")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) {
-
         
-
         String refresh = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
@@ -64,31 +65,16 @@ public class RefreshTokenController {
         
         if (refresh == null) {
 
-            log.info("refresh token null");
-
             
             //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
-
-    //      SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
-    //     String formattedDate = formatter.format(jwtUtils.getExpirationFromJwtToken(refresh));
-
-    //   log.info(formattedDate);
-
-    //   formattedDate = formatter.format(new Date());
-
-    //   log.info(formattedDate);
-
-
 
          //expired check
         try {
             jwtUtils.isJwtTokenExpired(refresh);
         } catch (ExpiredJwtException e) {
 
-
-            log.info("refresh token expired");
             //로그인 페이지 
             //response status code
 
@@ -98,17 +84,16 @@ public class RefreshTokenController {
         
         if(!jwtUtils.validateJwtToken(refresh)) {
 
-            log.info("invalid token ");
-
+            
             //response status code
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
         if(!refreshTokenService.findByToken(refresh).isPresent())  {
                 //response body
-            log.info("invalid token ");
-
-		    return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
+            
+             throw new TokenRefreshException(refresh,
+                               "Refresh token is not in database!");
         }
 
 
@@ -128,41 +113,28 @@ public class RefreshTokenController {
         response.addCookie(jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), 24*60*60));
         //response.setHeader(HttpHeaders.SET_COOKIE, jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
 
-
         return new ResponseEntity<>(HttpStatus.OK);        
     }
 
-    @PostMapping("/token/delete")
-    public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/cookie/delete")
+    public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response, 
+    @AuthenticationPrincipal UserDetails userDetails) {
 
+        if (null != userDetails) {
+        
           Cookie cookie = jwtUtils.createCookie(TokenType.REFRESH.getType(), null, 0);
 
           response.addCookie(cookie);
 
           return new ResponseEntity<>(HttpStatus.OK);   
+        }
+        else {        
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(StatusMessages.USER_NOT_FOUND);
+        }
+            
 
     }
 
-//     @PostMapping("/cookie/refresh")
-//     public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
-//         String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
-
-//         if((refreshToken != null) && (refreshToken.length() > 0)) {
-//             return refreshTokenService.findByToken(refreshToken)
-//             .map(refreshTokenService::verifyExpiration)
-//             .map(RefreshToken::getUser)
-//             .map(user-> {
-//                 ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
-            
-//             return ResponseEntity.ok()
-//                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-//                 .body(new MessageResponse("Token is refreshed successfully!"));
-//           })
-//           .orElseThrow(() -> new TokenRefreshException(refreshToken,
-//               "Refresh token is not in database!"));
-//     }
-    
-//     return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
-//   }
 
 }

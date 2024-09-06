@@ -38,25 +38,32 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class RegistrationController {
 
-    @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-
+    
+    private final JwtUtils jwtUtils;
+    
+    private final AuthenticationManager authenticationManager;
       
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Value("${frontend.url}")
     private String frontendUrl;
 
 
+    @Autowired
+     public RegistrationController(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
+            UserService userService, UserDetailsServiceImpl userDetailsService) {
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.userDetailsService = userDetailsService;
+    }
 
-     @GetMapping("/registrationConfirm")
+
+
+    @GetMapping("/registrationConfirm")
     public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
 
         //Locale locale = request.getLocale();

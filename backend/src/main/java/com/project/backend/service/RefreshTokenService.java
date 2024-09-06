@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
@@ -52,7 +53,7 @@ public class RefreshTokenService {
     RefreshToken refreshToken = new RefreshToken();
 
     User user = userRepository.findById(userId)
-    .orElseThrow(() -> new RuntimeException("User not found"));
+    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
     refreshTokenRepository.deleteByUser(user);
 
@@ -75,8 +76,9 @@ public class RefreshTokenService {
   @Transactional
   public int deleteByUserId(Long userId) {
     User user = userRepository.findById(userId)
-    .orElseThrow(() -> new RuntimeException("User not found"));
-    return refreshTokenRepository.deleteByUser(user);
+    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
+    return refreshTokenRepository.deleteByUser(user)
+    ;
   }
 
 }

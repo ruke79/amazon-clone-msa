@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.CartDTO;
 import com.project.backend.dto.ProductInfoDTO;
@@ -29,6 +31,8 @@ import com.project.backend.security.request.ProductInfoRequest;
 import com.project.backend.security.response.CartResponse;
 import com.project.backend.security.response.CouponResponse;
 import com.project.backend.security.response.GenericResponse;
+import com.project.backend.security.response.MessageResponse;
+import com.project.backend.security.service.UserDetailsImpl;
 import com.project.backend.service.AddressService;
 import com.project.backend.service.CartService;
 
@@ -36,11 +40,16 @@ import com.project.backend.service.CartService;
 @RequestMapping("api/user/cart/")
 public class CartController {
 
-    @Autowired
-    CartService cartService;
+    
+    private final CartService cartService;
+    
+    private final AddressService addressService;
 
     @Autowired
-    AddressService addressService;
+    public CartController(CartService cartService, AddressService addressService) {
+        this.cartService = cartService;
+        this.addressService = addressService;
+    }
 
     @PutMapping("/savecart")
     ResponseEntity<?> saveCart(@RequestBody CartRequest request,
@@ -48,23 +57,46 @@ public class CartController {
 
         if (null != userDetails) {
             String username = userDetails.getUsername();
-            Cart cart = cartService.saveCart(request, username);
 
-            CartResponse response = new CartResponse(cart.getCartTotal());
+            try {
+                Cart cart = cartService.saveCart(request, username);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                CartResponse response = new CartResponse(cart.getCartTotal());
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch (RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+            }
         } else {
         }
-        return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
 
     }
 
     @PutMapping("/updatecart")
-    ResponseEntity<List<ProductInfoDTO>> updateCart(@RequestBody ProductInfoRequest products) {
+    ResponseEntity<?> updateCart(@RequestBody ProductInfoRequest products) {
 
-        List<ProductInfoDTO> result = cartService.updateCart(products);
+        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principle.toString() == "anonymousUser") {
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
+        }
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        try {
+
+            try {
+                List<ProductInfoDTO> result = cartService.updateCart(products);
+
+                return new ResponseEntity<>(result, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+            }
+        } catch(RuntimeException e) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+        }
 
     }
 
@@ -74,11 +106,16 @@ public class CartController {
         if (null != userDetails) {
             String username = userDetails.getUsername();
 
-            CartDTO response = cartService.getCart(username);
+            try {
+                CartDTO response = cartService.getCart(username);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+            }
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
 
     }
@@ -90,11 +127,16 @@ public class CartController {
         if (null != userDetails) {
             String username = userDetails.getUsername();
 
-            List<AddressDTO> response = addressService.saveShippingAddress(request, username);
+            try {
+                List<AddressDTO> response = addressService.saveShippingAddress(request, username);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+            }
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -105,11 +147,16 @@ public class CartController {
         if (null != userDetails) {
             String username = userDetails.getUsername();
 
-            CouponResponse response = cartService.applyCoupon(request, username);
+            try {
+                CouponResponse response = cartService.applyCoupon(request, username);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+            }
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -121,9 +168,14 @@ public class CartController {
 
             String username = userDetails.getUsername();
 
-            return new ResponseEntity<>(cartService.getShipAddresses(username, addressId), HttpStatus.OK);
+            try {
+                return new ResponseEntity<>(cartService.getShipAddresses(username, addressId), HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+            }
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -133,10 +185,14 @@ public class CartController {
 
         if (null != userDetails) {
             String username = userDetails.getUsername();
-
-            return new ResponseEntity<>(cartService.deleteShippingAddress(username, addressId), HttpStatus.OK);
+            try {
+                return new ResponseEntity<>(cartService.deleteShippingAddress(username, addressId), HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse(e.getMessage()));
+            }
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -147,9 +203,14 @@ public class CartController {
         if (null != userDetails) {
             String username = userDetails.getUsername();
 
-            return new ResponseEntity<>(cartService.updatePaymentMethod(username, paymentMethod), HttpStatus.OK);
+            try {
+                return new ResponseEntity<>(cartService.updatePaymentMethod(username, paymentMethod), HttpStatus.OK);
+            } catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse(e.getMessage()));
+            }
         } else {
-            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
         }
     }
 
