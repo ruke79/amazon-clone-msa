@@ -10,6 +10,11 @@ public final class StatusMessages {
     public static final String ACCOUNT_ENABLE_STATUS_UPDATED = "Account enabled status updated";
     public static final String CREDENTIALS_EXPIRY_STATUS_UPDATED = "Credentials expiry status updated";
 
+    public static final String USER_REGISTRATION_SUCCESS = "User registered successfully!";
+
+    public static final String USERNAME_IN_USE = "Error: Username is already taken!";
+    public static final String EMAIL_IN_USE = "Error: Email is already in use!";
+
     public static final String PASSWORD_UPDATED = "Password updated";
         
     public static final String CATEGORY_IS_EXISTED = " Category is already existed";
@@ -26,4 +31,5 @@ public final class StatusMessages {
     public static final String GET_USERINFO_FAILED = "Get userinfo failed";
     public static final String ADD_WISHLIST_FAILED = "Add wishlist failed";
 
+    
 }

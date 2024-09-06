@@ -70,6 +70,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
+    private final UserService userService;
+    
     @Value("${frontend.url}")
     private String frontendUrl;
 
@@ -82,13 +84,14 @@ public class SecurityConfig {
     public SecurityConfig(JwtAuthEntryPoint unauthorizedHandler,
             CustomAuthenticationProvider customAuthenticationProvider, JwtUtils jwtUtils,
             RefreshTokenService refreshTokenService, CustomOAuth2UserService customOAuth2UserService,
-            OAuth2SuccessHandler oAuth2SuccessHandler) {
+            OAuth2SuccessHandler oAuth2SuccessHandler, UserService userService) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.customAuthenticationProvider = customAuthenticationProvider;
         this.jwtUtils = jwtUtils;
         this.refreshTokenService = refreshTokenService;
         this.customOAuth2UserService = customOAuth2UserService;
         this.oAuth2SuccessHandler = oAuth2SuccessHandler;
+        this.userService = userService;
     }
 
     @Bean
@@ -109,6 +112,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/search/**").permitAll()
                 .requestMatchers("/api/csrf-token").permitAll()
                 .requestMatchers("/api/token/**").permitAll()
+                .requestMatchers("/api/auth/logout").permitAll()
                 .requestMatchers("/api/auth/public/**").permitAll()
                 .requestMatchers("/registrationConfirm").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
@@ -124,11 +128,14 @@ public class SecurityConfig {
         http.addFilterBefore(authenticationJwtTokenFilter(),
                 AuthLoginFilter.class);
         
-        http.addFilterBefore(new AuthLogoutFilter(), LogoutFilter.class);
+        http.logout((logout)->logout.disable());
+        http.addFilterBefore(new AuthLogoutFilter(jwtUtils, refreshTokenService, userService), LogoutFilter.class);
+        
 
         AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(http), jwtUtils, refreshTokenService);
         loginFilter.setFilterProcessesUrl("/api/auth/public/signin");
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+        
         
         http.sessionManagement(
                 (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

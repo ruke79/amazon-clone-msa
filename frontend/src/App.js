@@ -74,6 +74,7 @@ const AppRouter = () => {
     {
       element: <ErrorBoundaryLayout />,
       errorElement : <ErrorPage/>,
+      
       children: [
         {
           path: '/',
@@ -86,9 +87,10 @@ const AppRouter = () => {
             },
             { path: 'signin', element: <SignInPage /> },
             { path: 'register', element: <RegisterPage /> },
-            { path: 'error_server', element: <Maintenance/> },
+            
           ]
         },
+        { path: 'error_server', element: <Maintenance/> },
         {
           path: '/profile',
           element: <Profile />,

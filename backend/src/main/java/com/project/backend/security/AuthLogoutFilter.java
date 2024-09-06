@@ -1,6 +1,7 @@
 package com.project.backend.security;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,19 +24,24 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AuthLogoutFilter extends GenericFilterBean{
-
-    private JwtUtils jwtUtils;
-    private RefreshTokenService refreshTokenService;
-    private UserService userService;
     
-    // @Autowired
-    // public AuthLogoutFilter(JwtUtils jwtUtils, RefreshTokenService refreshTokenService, UserService userService) {
-    //     this.jwtUtils = jwtUtils;
-    //     this.refreshTokenService = refreshTokenService;
-    //     this.userService = userService;
-    // }
+    
+    private final JwtUtils jwtUtils;
+    
+    private final RefreshTokenService refreshTokenService;
+    
+    private final UserService userService;
+    
+    @Autowired
+    public AuthLogoutFilter(JwtUtils jwtUtils, RefreshTokenService refreshTokenService, UserService userService) {
+        this.jwtUtils = jwtUtils;
+        this.refreshTokenService = refreshTokenService;
+        this.userService = userService;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -48,20 +54,22 @@ public class AuthLogoutFilter extends GenericFilterBean{
 
      private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
+     
         //path and method verify
         String requestUri = request.getRequestURI();
-        if (!requestUri.matches("^\\/logout$")) {
+        if (!requestUri.matches("/api/auth/logout$")) {
 
             filterChain.doFilter(request, response);
             return;
         }
+        
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
 
             filterChain.doFilter(request, response);
             return;
         }
-
+        
         //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
@@ -76,6 +84,9 @@ public class AuthLogoutFilter extends GenericFilterBean{
         //refresh null check
         if (refresh == null) {
 
+            PrintWriter writer = response.getWriter();
+                writer.print("refresh cookie not found");
+
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -85,12 +96,17 @@ public class AuthLogoutFilter extends GenericFilterBean{
             jwtUtils.isJwtTokenExpired(refresh);
         } catch (ExpiredJwtException e) {
 
+            PrintWriter writer = response.getWriter();
+                writer.print("refresh token expired");
             //response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         if(!jwtUtils.validateJwtToken(refresh)) {
+
+            PrintWriter writer = response.getWriter();
+                writer.print("refresh token invalid");
 
             //response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -100,6 +116,9 @@ public class AuthLogoutFilter extends GenericFilterBean{
 
         //DB에 저장되어 있는지 확인
         if(!refreshTokenService.findByToken(refresh).isPresent())  {
+
+            PrintWriter writer = response.getWriter();
+                writer.print("refresh token not found");
 
             //response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -121,6 +140,8 @@ public class AuthLogoutFilter extends GenericFilterBean{
 
         response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
+
+        log.info("Logout Success");
     }    
 
 }
