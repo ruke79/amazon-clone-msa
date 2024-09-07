@@ -1,9 +1,13 @@
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { AxiosError } from 'axios';
+import ApiErrorHandler from './ApiErrorHandler';
 
 export const ReactErrorBoundaryComponent = (props) => {
     const { children } = props;
-    return <ErrorBoundary FallbackComponent={ErrorFallback}>{children}</ErrorBoundary>;
+    return <ErrorBoundary FallbackComponent={ErrorFallback}>      
+       <ApiErrorHandler/>
+        {children}
+      </ErrorBoundary>;
   };
 
   const ErrorFallback = ({ error, resetErrorBoundary }) => {

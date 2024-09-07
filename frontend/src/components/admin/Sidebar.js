@@ -57,11 +57,7 @@ import {
                 flex items-center justify-between
                 overflow-hidden transition-all ${expanded ? 'ml-3 w-52' : 'w-0'}
             `}
-              >
-                <div className="leading-4">
-                  <h4 className="font-semibold">Mark Ruffalo</h4>
-                  <span className="text-xs text-gray-600">mark@gmail.com</span>
-                </div>
+              >                
                 <EllipsisVerticalIcon className="h-6 w-6" />
               </div>
             </div>
@@ -98,6 +94,12 @@ import {
             icon: <CogIcon />,
             text: 'Product',
             link: '/admin/product'
+          },
+
+          {
+            icon: <CogIcon />,
+            text: 'All Products',
+            link: '/admin/allproducts'
           },
           
         ],

@@ -4,13 +4,29 @@ import { showDialog } from "../../../redux/DialogSlice";
 import { uploadImages } from "util/uploadImages";
 import dataURItoBlob from "util/dataURItoBlob";
 import { Rating } from "@mui/material";
-import api from 'util/api';
+import api, { putRequest, getRequest } from 'util/api';
 import { useState } from "react";
 import ImagesReview from "./Images";
 import Select from "./Select";
 import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { useErrorBoundary } from "react-error-boundary";
 
 let fits = ["Small", "True to size", "Large"];
+
+const deleteReview = async(productId) => {
+    const { data } = await getRequest(
+        `/product/deletereview/${productId}`
+    );
+    return data;
+}
+
+const addReview = async({productId, review}) => {
+    console.log(review);
+    const { data } = await putRequest(
+        `/product/${productId}/addreview`, review);
+    return data;
+}
 
 const AddReview = ({ product, setReviews }) => {
     const dispatch = useDispatch();
@@ -21,7 +37,58 @@ const AddReview = ({ product, setReviews }) => {
     const [review, setReview] = useState("");
     const [rating, setRating] = useState(0);
     const [images, setImages] = useState([]);
+    
+    const showBoundary = useErrorBoundary();
+
     let uploaded_images = [];
+
+    const { mutate : addReviewOp } = useMutation({
+        mutationFn : addReview, 
+        onSuccess: (response) => {
+ 
+            setReviews(response);
+            dispatch(
+                showDialog({
+                    header: "Adding review Successfully!",
+                    msgs: [{
+                        msg: "Adding review Successfully.",
+                        type: "success",
+                    }],
+                })
+            );
+            setSize("");
+            setStyle("");
+            setFit("");
+            setRating(0);
+            setImages([]);
+            setReview("");
+            setLoading(false);
+
+            
+        },
+        onError: (error) => {            
+            showBoundary(error);
+        }
+    });
+
+    const { mutate : deleteReviewOp } = useMutation({
+        mutationFn : deleteReview, 
+        onSuccess: (response) => {
+            setReviews(null);
+            dispatch(
+                showDialog({
+                    header: "Delete review Successfully!",
+                    msgs: [{
+                        msg: "Delete review Successfully.",
+                        type: "success",
+                    }],
+                })
+            );            
+        },
+        onError: (error) => {            
+            showBoundary(error);
+        }
+    });
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -88,71 +155,32 @@ const AddReview = ({ product, setReviews }) => {
 
             axios.all(imageUploader).then(async() => {
 
-
-                const { data } = await api.put(
-                    `/product/${product.id}/review`,
-                    {
-                        size,
-                        style,
-                        fit,
-                        rating,
-                        review,
-                        images: uploaded_images,
-                    }
-                );
-                
-
-                setReviews(data);
-                dispatch(
-                    showDialog({
-                        header: "Adding review Successfully!",
-                        msgs: [{
-                            msg: "Adding review Successfully.",
-                            type: "success",
-                        }],
-                    })
-                );
-                setSize("");
-                setStyle("");
-                setFit("");
-                setRating(0);
-                setImages([]);
-                setReview("");
-                setLoading(false);
-    
-            });
-        } else {
-            const { data } = await api.put(
-                `/product/${product.id}/review`,
-                {
+                addReviewOp({productId : product.id, review : {
                     size,
                     style,
                     fit,
                     rating,
                     review,
                     images: uploaded_images,
-                }
-            );
-            console.log(data);
-            setReviews(data);
-            dispatch(
-                showDialog({
-                    header: "Adding review Successfully!",
-                    msgs: [{
-                        msg: "Adding review Successfully.",
-                        type: "success",
-                    }],
-                })
-            );
-            setSize("");
-            setStyle("");
-            setFit("");
-            setRating(0);
-            setImages([]);
-            setReview("");
-            setLoading(false);
-        }
+                }});                
+    
+            });
+        } else {
         
+            addReviewOp({productId : product.id, review : {
+                size,
+                style,
+                fit,
+                rating,
+                review,
+                images: uploaded_images,
+            }});
+        }        
+    }
+
+    const handleDeleteReivew = async () => {
+        
+        deleteReviewOp(product.id);        
     }
 
     return (
@@ -205,6 +233,14 @@ const AddReview = ({ product, setReviews }) => {
                 >
                     {loading ? 'loading ...' : 'Submit Review'}
                 </button>
+                <button
+                    disabled={loading}
+                    onClick={() => handleDeleteReivew()}
+                    className={`w-full mt-4  p-3  font-semibold rounded-md transition-all ${loading ? 'bg-gradient-to-r from-amazon-blue_light to-slate-400 text-white cursor-not-allowed' : 'bg-gradient-to-r from-amazon-orange to-yellow-300 text-amazon-blue_dark hover:scale-95'}`}
+                >
+                    Delete Review
+                </button>
+                
             </div>
         </div>
     );

@@ -24,6 +24,7 @@ import com.project.backend.dto.CartDTO;
 import com.project.backend.dto.ProductInfoDTO;
 import com.project.backend.model.Cart;
 import com.project.backend.model.ShippingAddress;
+
 import com.project.backend.security.request.AddressRequest;
 import com.project.backend.security.request.CartRequest;
 import com.project.backend.security.request.CouponRequest;
@@ -40,9 +41,8 @@ import com.project.backend.service.CartService;
 @RequestMapping("api/user/cart/")
 public class CartController {
 
-    
     private final CartService cartService;
-    
+
     private final AddressService addressService;
 
     @Autowired
@@ -66,7 +66,7 @@ public class CartController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
         }
@@ -83,17 +83,10 @@ public class CartController {
         }
 
         try {
+            List<ProductInfoDTO> result = cartService.updateCart(products);
 
-            try {
-                List<ProductInfoDTO> result = cartService.updateCart(products);
-
-                return new ResponseEntity<>(result, HttpStatus.OK);
-            } catch(RuntimeException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
-            }
-        } catch(RuntimeException e) {
-
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse(e.getMessage()));
         }
@@ -110,9 +103,9 @@ public class CartController {
                 CartDTO response = cartService.getCart(username);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
             return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
@@ -122,7 +115,7 @@ public class CartController {
 
     @PostMapping("/save_shipping_address")
     ResponseEntity<?> saveShippingAddress(@RequestBody AddressRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
             String username = userDetails.getUsername();
@@ -131,9 +124,9 @@ public class CartController {
                 List<AddressDTO> response = addressService.saveShippingAddress(request, username);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
             return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
@@ -142,7 +135,7 @@ public class CartController {
 
     @PostMapping("/coupon")
     ResponseEntity<?> applyCoupon(CouponRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
             String username = userDetails.getUsername();
@@ -151,9 +144,9 @@ public class CartController {
                 CouponResponse response = cartService.applyCoupon(request, username);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
             return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
@@ -162,7 +155,7 @@ public class CartController {
 
     @GetMapping("/selectaddress/{addressId}")
     ResponseEntity<?> selectShippingAddresses(@PathVariable String addressId,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
 
@@ -170,9 +163,9 @@ public class CartController {
 
             try {
                 return new ResponseEntity<>(cartService.getShipAddresses(username, addressId), HttpStatus.OK);
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
             return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
@@ -181,15 +174,15 @@ public class CartController {
 
     @GetMapping("/deleteaddress/{addressId}")
     ResponseEntity<?> deleteShippingAddresses(@PathVariable String addressId,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
             String username = userDetails.getUsername();
             try {
                 return new ResponseEntity<>(cartService.deleteShippingAddress(username, addressId), HttpStatus.OK);
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
             return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
@@ -198,16 +191,16 @@ public class CartController {
 
     @PutMapping("/changepm")
     ResponseEntity<?> changePayment(@RequestParam("paymentMethod") String paymentMethod,
-            @AuthenticationPrincipal UserDetails userDetails) {
+    @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
             String username = userDetails.getUsername();
 
             try {
                 return new ResponseEntity<>(cartService.updatePaymentMethod(username, paymentMethod), HttpStatus.OK);
-            } catch(RuntimeException e) {
+            } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new MessageResponse(e.getMessage()));
+                        .body(new MessageResponse(e.getMessage()));
             }
         } else {
             return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);

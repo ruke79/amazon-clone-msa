@@ -12,14 +12,13 @@ const Reviews = ({ product }) => {
 
     const [reviews, setReviews] = useState(product.reviews)
     const [isAdded, setIsAdded] = useState(false);
-     console.log('product review: ',reviews);
-
+     
     
 
     return (
         <div className="mt-4 bg-slate-100 mx-auto w-full md:w-4/5 p-4 border rounded-md">
             <h3 className="mb-2 font-bold text-2xl">
-                Customer Reviews ({product.reviews.length})
+                Customer Reviews ({product.reviews.length })
             </h3>
             <div className="grid md:grid-cols-2">
                 <div className="flex max-md:items-center md:flex-col md:justify-center">
@@ -77,7 +76,7 @@ const Reviews = ({ product }) => {
                 </button>
             )}
             {
-                reviews.length > 0 && (
+                reviews?.length > 0 && (
                     <Table reviews={reviews} allSizes={product.allSizes} colors={product.colors} />
                 )
             }

@@ -2,8 +2,7 @@ import { HandThumbUpIcon } from "@heroicons/react/24/outline";
 import { Rating } from "@mui/material";
 
 const ReviewCard = ({ review }) => {
-    console.log(review);
-    
+        
     const { name, image } = review.reviewedBy;
 
     

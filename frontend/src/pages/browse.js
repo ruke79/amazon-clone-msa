@@ -13,8 +13,7 @@ import GenderFilter from "components/browse/genderFilter/GenderFilter";
 import HeadingFilter from "components/browse/headingFilter/HeadingFilter";
 import { Pagination } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import api, { getRequest } from "util/api";
-import keySort from "util/sort_utils";
+import { getRequest } from "util/api";
 import DotLoaderSpinner from "components/loader/Loading";
 
 const Browse = ({ }) => {
@@ -460,7 +459,7 @@ export async function loader({ request, params }) {
         categoryQuery && categoryQuery !== ""
             ? categoryQuery
             : {};
-    console.log("categoryQuery: " + categoryQuery);
+    
     // const brand = brandQuery && brandQuery !== "" ? { brand: brandQuery } : {};
     const style =
         styleQuery && styleQuery !== ""
@@ -611,8 +610,7 @@ export async function loader({ request, params }) {
         //     ? { "sku_products.sizes.price": -1 }
         //     : sortQuery == "priceLowToHight"
         //     ? { "sku_products.sizes.price": 1 }
-        //     : {};    
-        console.log(productsDB);
+        //     : {};            
         return productsDB;
 
     }

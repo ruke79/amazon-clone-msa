@@ -8,9 +8,9 @@ const ProtectedRoute = ({ children, adminPage }) => {
 
 
   //navigate to login page to an unauthenticated
-  if (!token) {
-    return <Navigate to="/signin" />;
-  }
+   if (!token) {
+     return <Navigate to="/signin" />;
+   }
 
   //navigate to access-denied page if a user try to access the admin page
   if (token && adminPage && !isAdmin) {

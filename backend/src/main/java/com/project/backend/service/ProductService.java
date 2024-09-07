@@ -59,26 +59,38 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    SubCategoryRepository subCategoryRepository;
+    
+    private final SubCategoryRepository subCategoryRepository;
 
-    @Autowired
-    ProductRepository productRepository;
+    
+    private final ProductRepository productRepository;
 
-    @Autowired
-    ProductSkuRepository productskuRepository;
+    
+    private final ProductSkuRepository productskuRepository;
 
-    @Autowired
-    ProductDetailsRepository productDetailsRepository;
+    
+    private final ProductDetailsRepository productDetailsRepository;
+    
+    private final ProductQARepository productQARepository;
 
-    @Autowired
-    ProductQARepository productQARepository;
+    
+    private final ReviewRepository reviewRepository;
 
-    @Autowired
-    ReviewRepository reviewRepository;
+    public ProductService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
+            ProductRepository productRepository, ProductSkuRepository productskuRepository,
+            ProductDetailsRepository productDetailsRepository, ProductQARepository productQARepository,
+            ReviewRepository reviewRepository) {
+        this.categoryRepository = categoryRepository;
+        this.subCategoryRepository = subCategoryRepository;
+        this.productRepository = productRepository;
+        this.productskuRepository = productskuRepository;
+        this.productDetailsRepository = productDetailsRepository;
+        this.productQARepository = productQARepository;
+        this.reviewRepository = reviewRepository;
+    }
 
     public ProductDTO getProductByName(String productName) {
 
@@ -121,21 +133,17 @@ public class ProductService {
 
     private ProductDTO convertToDto(Product product) {
 
-        // CategoryDTO parent = CategoryDTO.builder()
-        // .id(Long.toString(product.getCategory().getCategoryId()))
-        // .name(product.getCategory().getCategoryName())
-        // .slug(product.getCategory().getSlug()).build();
+        CategoryDTO parent = CategoryDTO.builder()
+        .id(Long.toString(product.getCategory().getCategoryId()))
+        .name(product.getCategory().getCategoryName())
+        .slug(product.getCategory().getSlug()).build();
 
-        // List<SubCategoryDTO> dtos =
-        // product.getSubCategories().stream().map(subcategory ->
-        // new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()), parent,
-        // subcategory.getSubcategoryName())).
-        // collect(Collectors.toList());
-
-        List<String> subcategoryIds = product.getSubCategories().stream().map(subcategory -> {
-            return Long.toString(subcategory.getSubcategoryId());
-        })
-                .collect(Collectors.toList());
+        List<SubCategoryDTO> subCategories =
+        product.getSubCategories().stream().map(subcategory ->
+        new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()), parent,
+        subcategory.getSubcategoryName())).
+        collect(Collectors.toList());
+        
 
         List<ProductDetailDTO> details = product.getDetails().stream().map(detail -> {
             return ProductDetailDTO.builder()
@@ -208,13 +216,9 @@ public class ProductService {
                 .name(product.getName())
                 .description(product.getDescription())
                 .brand(product.getBrand())
-                .slug(product.getSlug())
-                // .category(new
-                // CategoryDTO(Long.toString(product.getCategory().getCategoryId()),
-                // product.getCategory().getCategoryName(), product.getCategory().getSlug()))
-                // .subCategories(dtos)
-                .category(Long.toString(product.getCategory().getCategoryId()))
-                .subCategories(subcategoryIds)
+                .slug(product.getSlug())               
+                .category(parent)
+                .subCategories(subCategories)
                 .details(details)
                 .reviews(reviews)
                 .questions(questions)

@@ -2,45 +2,40 @@ import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import AdminInput from "./AdminInput";
-import api from "../../util/api";
+import { getRequest, postRequest } from "../../util/api";
 import SelectInput from "./SelectInput";
 import slugify from "slugify";
 
 
 export const loadCategories = async(setCategories) => {
     try {
-        const response = await api.get("/admin/categories");
-
+        const response = await getRequest("/admin/categories");
       
-      setCategories(JSON.parse(JSON.stringify(response.data)));     
-
-       return response.data;
+      console.log(response.data);
+      
+      setCategories(response.data);            
 
        } catch(error) {
            console.log(error.response.data.message);
+           throw error;
        }  
 }
 
 const CreateCategory = () => {
     const [name, setName] = useState();
     const [subcategoryName,  setSubcategoryName] = useState();
-
-     
+    
     const [parent, setParent] = useState("");
-    const [isLoaded, setIsLoaded] = useState(false);
-
+    
     const [categories, setCategories ] = useState([]);
-
+    const [add, setAdd] = useState(false);
 
     useEffect( () => {
-        
-        //if (isLoaded) {
-        loadCategories(setCategories);        
-        //}
                 
-        //setIsLoaded(true);        
+        loadCategories(setCategories);        
+        setAdd(false);
         
-      }, [isLoaded]);
+      }, [add]);
 
     const validate = Yup.object({
         name: Yup.string()
@@ -69,18 +64,21 @@ const CreateCategory = () => {
             const reqData = {
                name, slug
             };            
-            const { response } = await api.post("/admin/category", reqData);
+            const { response } = await postRequest("/admin/category", reqData);
 
-            let categoryNames = [] ;     
+             let categoryNames = [] ;     
 
                         
-            categoryNames.push({"id" : response.data.id, "name" : response.data.name});
+             categoryNames.push({"id" : response.data.id, "name" : response.data.name});
               
-              setCategories(categories ||categoryNames);     
+              setCategories(categories || categoryNames );     
+
+              setAdd(true);
             
             //setName("")
         } catch (error ) {
             console.log(error.response.data.message)
+            throw error;
         }
     };
     const handleCategoryChange = (e) => {
@@ -96,17 +94,17 @@ const CreateCategory = () => {
         try {
             
             const slug = slugify(subcategoryName);
-            const { data } = await api.post("/admin/subcategory", {
+            const { data } = await postRequest("/admin/subcategory", {
                 subcategoryName,
                 parent,
                 slug
             });
-            
-            //setSubCategories(data.subCategory);
+                        
             setSubcategoryName("");
             setParent("");
         } catch (error) {
             console.log(error.response.data.message);
+            throw error;
         }
     };
 

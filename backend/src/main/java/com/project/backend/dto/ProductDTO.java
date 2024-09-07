@@ -40,9 +40,9 @@ public class ProductDTO  {
 
     private String slug;
 
-    private String category;
+    private CategoryDTO category;
 
-    private List<String> subCategories;
+    private List<SubCategoryDTO> subCategories;
 
     private List<ProductDetailDTO> details;
     

@@ -19,7 +19,7 @@ import com.project.backend.constants.TokenType;
 import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
-import com.project.backend.security.AuthenticationUser;
+
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.service.RefreshTokenService;
@@ -119,7 +119,7 @@ public class RefreshTokenController {
 
     // @PostMapping("/token/delete")
     // public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response, 
-    // @AuthenticationUser UserDetails userDetails) {
+    // @AuthenticationPrincipal UserDetails userDetails) {
 
     //     if (null != userDetails ) {
         

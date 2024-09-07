@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import api, { queryClient } from 'util/api'
 import { jwtDecode } from "jwt-decode";
 import {useMutation }   from '@tanstack/react-query';
+import { useErrorBoundary } from "react-error-boundary";
 
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -37,7 +38,7 @@ const SignInPage = () => {
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
-
+    const { showBoundary } = useErrorBoundary;
 
 
     const handleChange = (e) => {
@@ -48,7 +49,7 @@ const SignInPage = () => {
         });
     };
 
-    const { mutate, isLoading, isError } = useMutation({
+    const { mutate } = useMutation({
         mutationFn : login, 
         onSuccess: (response) => {
 
@@ -58,22 +59,21 @@ const SignInPage = () => {
             const decodedToken = jwtDecode(access);
             if (decodedToken.is2faEnabled) {
                 setStep(2); // Move to 2FA verification step
-            } else {
-                //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
+            } else {                
                 handleSuccessfulLogin(response, decodedToken);
             }
             queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
             navigate('/');
         },
-        onError: (error) => {
-            console.log(error);
+        onError: (error) => {            
+            showBoundary(error);
         }
     });
 
     const loginValidation = Yup.object({
-        // email: Yup.string()
-        //     .required("Email address is required.")
-        //     .email("Please endter a valid address"),
+         email: Yup.string()
+             .required("Email address is required.")
+             .email("Please endter a valid address"),
         password: Yup.string().required("Please enter a password."),
     });
 
@@ -97,53 +97,8 @@ const SignInPage = () => {
     };
 
     const signInHandler = async () => {
-
-        
+       
         mutate({ email, password });
-
-
-
-        // const data = {
-        //     email,
-        //     password
-        // }
-        // try {
-        //     setLoading(true);
-
-
-        //     const response = await api.post("/auth/public/signin", data);
-
-
-        //     if (response.status === 200 && response.data) {
-
-        //         const access = response.headers['access'];
-
-
-        //         const decodedToken = jwtDecode(access);
-
-
-        //         if (decodedToken.is2faEnabled) {
-        //             setStep(2); // Move to 2FA verification step
-        //         } else {
-        //             //handleSuccessfulLogin(response.data.jwtToken, decodedToken);              
-
-        //             handleSuccessfulLogin(response, decodedToken);
-        //         }
-
-
-        //     } else {
-        //         toast.error(
-        //             "Login failed. Please check your credentials and try again."
-        //         );
-        //     }
-        // } catch (error) {
-        //     if (error) {
-        //         toast.error("Invalid credentials");
-        //     }
-        // } finally {
-
-        //     setLoading(false);
-        // }
     };
 
 

@@ -20,18 +20,25 @@ const Account = () => {
     useAuthContext();
     const  user  = tokenUtil.getUser();
     
-    console.log(user);
-
+    
     const handleLogout = async() => {
-        localStorage.removeItem("access_token"); // Updated to remove token from localStorage
-        localStorage.removeItem("USER"); // Remove user details as well
         
-        localStorage.removeItem("IS_ADMIN");
-        setToken(null);
-        setCurrentUser(null);
-        setIsAdmin(false);
         //navigate("/signin");
-        await postRequest('/auth/logout', null);
+        try {
+            const { response } = await postRequest('/auth/logout', null);
+
+                localStorage.removeItem("access_token"); // Updated to remove token from localStorage
+            localStorage.removeItem("USER"); // Remove user details as well
+            
+            localStorage.removeItem("IS_ADMIN");
+            setToken(null);
+            setCurrentUser(null);
+            setIsAdmin(false);
+        }
+        catch(err) {
+            console.log('logout failed');
+        }
+
       };
 
     return (
