@@ -11,11 +11,16 @@ import lombok.Setter;
 @Getter
 public class ReviewRequest {
 
+    
+    private String productId;
+    
     private String size;
     private ReviewStyleDTO style;
     private String fit;
     private float rating;
     private String review;
-    List<String> images;
+    private List<String> images;
+
+    
 
 }

@@ -108,13 +108,13 @@ public class SecurityConfig {
                 // .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/admin/**").permitAll()
                 .requestMatchers("/api/product/**").permitAll()
-                .requestMatchers("/api/user/**").permitAll()
+                .requestMatchers("/api/user/**").hasRole("USER")
                 .requestMatchers("/api/search/**").permitAll()
                 .requestMatchers("/api/csrf-token").permitAll()
                 .requestMatchers("/api/token/**").permitAll()
-                .requestMatchers("/api/auth/logout").permitAll()
+                .requestMatchers("/api/auth/logout").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/auth/public/**").permitAll()
-                .requestMatchers("/registrationConfirm").permitAll()
+                .requestMatchers("/registrationConfirm").hasAnyRole("USER")
                 .requestMatchers("/oauth2/**").permitAll()
                 .anyRequest().authenticated());
 

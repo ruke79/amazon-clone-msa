@@ -10,6 +10,7 @@ import com.project.backend.model.User;
 import com.project.backend.registration.OnRegistrationCompleteEvent;
 import com.project.backend.repository.RoleRepository;
 import com.project.backend.repository.UserRepository;
+
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.security.request.LoginRequest;
 import com.project.backend.security.request.SignupRequest;

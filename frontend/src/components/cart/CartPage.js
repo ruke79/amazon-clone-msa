@@ -57,7 +57,7 @@ const CartPage = ({ cart }) => {
         if (token) {
 
             if (cart.cartItems.length == 0) {
-                setEnable(false);
+                setEnable(false);   
             }          
             
          } else {            

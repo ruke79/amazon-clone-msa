@@ -3,14 +3,12 @@ import { useLoaderData, json, defer } from 'react-router-dom';
 import CarouselContainer from "components/home/CarouselContainer";
 import CategoriesProduct from "./CategoryProducts";
 import HomeProductSwiper from 'components/home/HomeProductSwiper';
-import api, { getRequest } from '../../util/api';
+import { getRequest, putRequest } from '../../util/api';
 
 const HomePage = () => {
    
-   const  data  = useLoaderData();   
-   const products = data.data;
-
-  
+   const  products  = useLoaderData().data;   
+     
           
         
     return (
@@ -41,7 +39,7 @@ export async function loader() {
 
         return response;
   } catch(err) {
-
+        throw err;
   }
    
 }

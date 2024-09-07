@@ -25,14 +25,59 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ReviewService {
 
-    @Autowired
-    UserRepository userRepository;
+    
+    private final UserRepository userRepository;    
+    
+    private final ProductRepository productRepository;
+    
+    private final ReviewRepository reviewRepository;
 
+    
     @Autowired
-    ProductRepository productRepository;
+    public ReviewService(UserRepository userRepository, ProductRepository productRepository,
+            ReviewRepository reviewRepository) {
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+        this.reviewRepository = reviewRepository;
+    }
 
-    @Autowired
-    ReviewRepository reviewRepository;
+    public boolean deleteReview(String username, String productId) {
+
+        Optional<User> user = userRepository.findByUserName(username);
+
+        if (!user.isPresent()) {
+            
+            return false;
+        }
+        log.info(productId);
+        
+        Long id = Long.parseLong(productId);
+
+        Product p = productRepository.findById(id)
+               .orElseThrow(() -> new RuntimeException("Product not found! " + productId));
+
+      
+        
+        if (null != p) {
+            
+
+            if (!p.getReviews().isEmpty()) {
+
+                Review review = p.getReviews().stream().filter(r -> r.getReviewedBy().equals(user.get())).findFirst()
+                        .get();
+
+
+                if (null != review) {
+                    
+                    reviewRepository.deleteById(review.getReviewId());                    
+                    
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     public List<ReviewDTO> addReview(String username, String productId, ReviewRequest request) {
 
@@ -41,7 +86,6 @@ public class ReviewService {
         if (!user.isPresent()) {
             return null;
         }
-
 
         Long id = Long.parseLong(productId);
 
@@ -57,11 +101,7 @@ public class ReviewService {
                         .get();
 
                 if (null != review) {
-
-                    for(String s : request.getImages())
-                        log.info(s);
                     
-
                     review.setReview(request.getReview());
                     review.setFit(request.getFit());
                     review.setSize(request.getSize());

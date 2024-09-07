@@ -10,7 +10,7 @@ function ApiErrorHandler({ children }) {
 
    
 
-    const { token, setToken, RefeshTokenExpired, setRefeshTokenExpired, setIsAdmin, setCurrentUser } = useAuthContext();
+    const { token, setToken, setIsAdmin, setCurrentUser } = useAuthContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -53,26 +53,28 @@ function ApiErrorHandler({ children }) {
                     if (!isRefreshing) {
 
                         isRefreshing = true;
+                        
 
                         try {
                             
-                            if (msg === "access token expired" && !RefeshTokenExpired  ) {
-
+                            if (msg === "access token expired" || msg === "inavlid access token") {
 
                                 TokenUtil.removeToken();
-                                setToken(null);
-
-                                const rs = await api.post("/token/refresh");
-
 
                                 
-                                    console.log(rs);
-                                    const accessToken = rs.headers['access'];
-                                    TokenUtil.updateToken(accessToken);
-                                    setRefeshTokenExpired(false);
-                                    setToken(accessToken);
+                                    const rs = await postRequest("/token/refresh", null);
 
-                                    originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
+                                    if( rs.status == 200) {
+                                            console.log(rs);
+                                            const accessToken = rs.headers['access'];
+                                            TokenUtil.updateToken(accessToken);
+                                            
+                                            setToken(accessToken);
+
+                                            originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
+
+                                        return api(originalConfig);
+                                    }                                                                   
                                 
                             }
                             refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
@@ -84,15 +86,14 @@ function ApiErrorHandler({ children }) {
 
                             refreshAndRetryQueue.length = 0;
 
-                            return api(originalConfig);
-                        } catch (error) {
-                            // Handle token refresh error
-                            // You can clear all storage and redirect the user to the login page
-                            //TokenUtil.remove();                            
-                            //window.location.replace('/signin');                                                        
-                                                      
-                            throw error;
 
+                        } catch (refreshError) {
+                            refreshAndRetryQueue.length = 0;
+                            
+                            TokenUtil.remove();                            
+                            //setToken(null) ;                            
+                            navigate('/');                                                                                                      
+                            
                         } finally {
                             isRefreshing = false;
                         }
@@ -108,41 +109,12 @@ function ApiErrorHandler({ children }) {
                     
                     if (msg === "refresh token expired") {
 
-                        
-                        try {
-                            if (token) {
-                            //    const { data } = postRequest('/token/delete');
-                                await postRequest('/auth/loguht', null);
-
-                                TokenUtil.remove();
-                                setToken(null);
-                                setCurrentUser(null);
-                                setIsAdmin(false);
-                                setRefeshTokenExpired(true);           
-
-                                navigate('/signin');
-                            }                            
-                        }
-                        catch(error) {
-
-                            TokenUtil.remove();
-                            setToken(null);
-                            setCurrentUser(null);
-                            setIsAdmin(false);
-                            setRefeshTokenExpired(true);
-
-
-                            throw error;
-                        }           
-
-                        
-
-                    
-                    }
-                    
-                    //throwAsyncError(err);                    
-
-                    //return api(originalConfig);
+                                TokenUtil.remove();                                                                                           
+                                 setToken(null);
+                                 setCurrentUser(null);
+                                 setIsAdmin(false);                                
+                                navigate('/signin');                                        
+                    }                
                 }
             }
             else {

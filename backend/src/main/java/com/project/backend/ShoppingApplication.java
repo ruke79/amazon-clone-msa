@@ -8,7 +8,9 @@ import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.annotation.XmlElement.DEFAULT;
@@ -22,19 +24,19 @@ public class ShoppingApplication {
 
 	public static void main(String[] args) {
 
-		//TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+		
 
+		
 		SpringApplication.run(ShoppingApplication.class, args);
 
-		//LocalDateTime now = LocalDateTime.now();//LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
-        //System.out.println("시간 " + now);
+
+
+		
 	}
 
-	// @PostConstruct
-	// void onCounstruct() {
-	// 	log.info("OnCounstrct");
-		
-	// 	TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	// }
+	@Bean
+	public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
+		return new HiddenHttpMethodFilter();
+	}
 
 }

@@ -38,16 +38,17 @@ public class AddressService {
 
         deepCopyShippingAddress(address, request.getAddress());        
 
-        Optional<User> user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username)
+        .orElseThrow(()->new RuntimeException("User not found"));
         
-        address.setUser(user.get());
+        address.setUser(user);
 
-        user.get().getShippingAddresses().add(address);
+        user.getShippingAddresses().add(address);
 
         shippingAddressRepository.save(address);              
 
         List<AddressDTO> result = new ArrayList<>();
-        for ( ShippingAddress src : user.get().getShippingAddresses()) {
+        for ( ShippingAddress src : user.getShippingAddresses()) {
             AddressDTO dto = new AddressDTO();
             deepCopyShippingAddressDTO(dto, src);
             result.add(dto);

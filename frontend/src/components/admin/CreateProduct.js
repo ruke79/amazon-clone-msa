@@ -345,15 +345,7 @@ const CreateProduct = ({
                                 placeholder="Product Discount"
                                 icon="category"
                                 onChange={handleChange}
-                            />
-                            <AdminInput
-                                type="text"
-                                name="sold"
-                                label="Sold"
-                                placeholder="Product Sold"
-                                icon="category"
-                                onChange={handleChange}
-                            />
+                            />                            
                             <AdminInput
                                 type="text"
                                 name="shippingFee"

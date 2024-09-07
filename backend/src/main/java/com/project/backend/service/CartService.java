@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.backend.constants.OperationStatus;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.CartDTO;
 import com.project.backend.dto.CartProductDTO;
@@ -331,42 +332,56 @@ public class CartService {
         return null;
     }
 
-    public Boolean addWishList(String username, WishListRequest request) {
+    public OperationStatus addWishList(String username, WishListRequest request) {
 
         Long id = Long.parseLong(request.getId());
 
-        Optional<User> user = userRepository.findByUserName(username);
+        User user = userRepository.findByUserName(username)
+        .orElseThrow(()->new RuntimeException("User not found"));
 
-        if (user.isPresent()) {
+        if (null != user) {
 
-            Optional<Product> product = productRepository.findById(id);
+            Product product = productRepository.findById(id)
+            .orElseThrow(()->new RuntimeException("Product not found"));
 
-            if (product.isPresent()) {
+            if (null != product) {
 
-                Optional<WishList> existed = user.get().getWishLists().stream()
-                        .filter(x -> x.getProduct().getProductId() == id && x.getStyle() == request.getStyle())
+                
+                for (WishList w : user.getWishLists()) {
+                    log.info(Long.toString(w.getProduct().getProductId()) + 
+                    w.getStyle());
+                }
+
+                Optional<WishList> existed = user.getWishLists().stream()
+                        .filter(x -> x.getProduct().getProductId() == id && x.getStyle().equals(request.getStyle()))
                         .findFirst();
 
                 if (existed.isPresent()) {
-
-                    return false;
+                                       
+                    return OperationStatus.OS_ALREADY_EXISTED;
 
                 } else {
 
                     WishList wish = new WishList();
                     wish.setStyle(request.getStyle());
-                    wish.setProduct(product.get());
-                    wish.setUser(user.get());
+                    wish.setProduct(product);                    
+
+                    user.getWishLists().add(wish);
+
+                    wish.setUser(user);                    
 
                     wishiListRepository.save(wish);
 
-                    return true;
+                    
+
+
+                    return OperationStatus.OS_SUCCESS;
                 }
 
             }
         }
 
-        return false;
+        return OperationStatus.OS_FAILED;
     }
 
     public CouponResponse applyCoupon(CouponRequest request, String username) {

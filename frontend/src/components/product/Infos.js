@@ -9,13 +9,22 @@ import {
     ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import AccoridanProduct from "./AccordianProduct";
-import api from "util/api";
+import api, { getRequest, putRequest } from "util/api";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, emptyCart, updateCart } from "../../redux/CartSlice";
 import { showDialog } from "../../redux/DialogSlice";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useAuthContext } from "../../store/AuthContext";
 import { useSearchParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+
+
+const saveCart = async({productId, style, size}) => {
+    const { data }  = await getRequest(
+        `/product/cart/${productId}?style=${style}&size=${size}`
+    );      
+    return data;
+}
 
 const Infos = ({ product, setActiveImg }) => {
     const { token } = useAuthContext();
@@ -33,6 +42,49 @@ const Infos = ({ product, setActiveImg }) => {
     const [size, setSize] = useState(sizeParam);
     const [qty, setQty] = useState(1);
     const [error, setError] = useState("");
+    
+
+    const { mutate : saveCartOp } = useMutation({
+        mutationFn : saveCart, 
+        onSuccess: (data) => {
+
+            if (qty > data.quantity) {
+                setError(
+                    "the Quantity you have choosed is more than in stock. Try lower the Qty"
+                );
+                setLoading(false);
+            } else if (data.quantity < 1) {
+                setError("this Product is out of stock!");
+                setLoading(false);
+                return;
+            } else {
+                let _uid = `${product.name}_${product.style}_${sizeParam}`;
+                                
+                let exist = cart.find((p) => p._uid === _uid);
+                if (exist) {
+                    
+                    let newCart = cart.map((p) => {
+                        if (p._uid === exist._uid) {
+                            return { ...p, qty: qty };
+                        }
+                        return p;
+                    });
+                    
+                    dispatch(updateCart(newCart));
+                    setError("");
+                    setLoading(false);
+                } else {       
+                    
+                    dispatch(addToCart({ ...data, qty, size: data.size, _uid }));
+
+                    setError("");
+                    setLoading(false);
+                }
+                
+            }
+        },
+        
+    });
     
     
     useEffect(() => {
@@ -53,50 +105,8 @@ const Infos = ({ product, setActiveImg }) => {
             setLoading(false);
             return;
         }
-        
-        
-        const { data }  = await api.get(
-            `/product/cart/${product.id}?style=${product.style}&size=${sizeParam}`
-        );
-
-        
-        
-                
-
-        if (qty > data.quantity) {
-            setError(
-                "the Quantity you have choosed is more than in stock. Try lower the Qty"
-            );
-            setLoading(false);
-        } else if (data.quantity < 1) {
-            setError("this Product is out of stock!");
-            setLoading(false);
-            return;
-        } else {
-            let _uid = `${product.name}_${product.style}_${sizeParam}`;
-            
-            let exist = cart.find((p) => p._uid === _uid);
-            if (exist) {
-                
-                let newCart = cart.map((p) => {
-                    if (p._uid === exist._uid) {
-                        return { ...p, qty: qty };
-                    }
-                    return p;
-                });
-                
-                dispatch(updateCart(newCart));
-                setError("");
-                setLoading(false);
-            } else {       
-                
-                dispatch(addToCart({ ...data, qty, size: data.size, _uid }));
-                setError("");
-                setLoading(false);
-            }
-
-            //dispatch(emptyCart());
-        }
+     
+        saveCartOp({productId : product.id, style : product.style, size : sizeParam});
     };
 
     const handleWishlist = async () => {
@@ -104,8 +114,8 @@ const Infos = ({ product, setActiveImg }) => {
             if (!token) {
                 return navigate('/signin');
             }
-            console.log(product);
-            const { data } = await api.put("/user/wishlist", {
+            
+            const { data } = await putRequest("/user/wishlist", {
                 id: product.id,
                 style: product.style,
             });

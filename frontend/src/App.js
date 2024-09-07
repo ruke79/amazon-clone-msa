@@ -13,7 +13,7 @@ import Categories from './pages/admin/Category';
 import SubCategories from './pages/admin/SubCategory';
 import AdminProduct from './pages/admin/Product';
 import SingleProduct, { loader as productLoader } from "./pages/Product";
-import Browse, { loader as browseLoader } from "pages/browse";
+import Browse, { loader as browseLoader, loader } from "pages/browse";
 import Cart from "pages/cart";
 import Checkout, { loader as loaderCart } from "pages/checkout";
 import OrderPage, { loader as loaderOrder } from "pages/order";
@@ -31,6 +31,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from 'util/api';
 import {ReactErrorBoundaryComponent} from 'error/ApiErrorBoundary';
 import Maintenance from 'components/error/Maintenance';
+import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 
 
 // const DebugLayout = () => {
@@ -163,10 +164,15 @@ const AppRouter = () => {
         {
           path: '/admin',
           element: <DashboardLayout />,
+          
           children: [
             { path: 'category', element: <Categories /> },
             { path: 'subcategory', element: <SubCategories /> },
-            { path: 'product', element: <AdminProduct /> }
+            { path: 'product', element: <AdminProduct />},
+            { path: 'allproducts', 
+              element: <Products />, 
+              loader:loaderProducts
+            }
           ]
         }
       ]

@@ -27,8 +27,7 @@ import java.util.List;
                 @UniqueConstraint(columnNames = "email")
         })
 public class User extends BaseEntity{
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid    
     @Column(name = "user_id")
     private Long userId;
 
@@ -89,13 +88,7 @@ public class User extends BaseEntity{
 
     private String defaultPaymentMethod;
 
-    // @CreationTimestamp
-    // @Column(updatable = false)
-    // private LocalDateTime createdDate;
-
-    // @UpdateTimestamp
-    // private LocalDateTime updatedDate;
-
+   
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;

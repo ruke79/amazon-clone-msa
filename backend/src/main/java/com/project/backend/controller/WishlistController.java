@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.backend.constants.OperationStatus;
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.model.WishList;
+
 import com.project.backend.security.request.WishListRequest;
 import com.project.backend.security.response.GenericResponse;
 import com.project.backend.security.response.MessageResponse;
@@ -40,11 +42,17 @@ public class WishlistController {
             String username = userDetails.getUsername();
 
             try {
-                cartService.addWishList(username, request);
+                if (OperationStatus.OS_SUCCESS == cartService.addWishList(username, request)) {
 
-                GenericResponse response = new GenericResponse("Product successfully added to your wishlist");
+                    GenericResponse response = new GenericResponse("Product successfully added to your wishlist");
 
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                 }
+                 else {
+
+                    GenericResponse response = new GenericResponse("Product ix already added to your wishlist");
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                 }
             } catch(RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse(StatusMessages.ADD_WISHLIST_FAILED));       

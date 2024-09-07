@@ -103,33 +103,33 @@ public class AdminController {
     }
 
     @GetMapping("/roles")
-    public List<Role> getAllRoles() {
+    List<Role> getAllRoles() {
         return userService.getAllRoles();
     }
 
     @PutMapping("/update-expiry-status")
-    public ResponseEntity<String> updateAccountExpiryStatus(@RequestParam Long userId,
+    ResponseEntity<String> updateAccountExpiryStatus(@RequestParam Long userId,
             @RequestParam boolean expire) {
         userService.updateAccountExpiryStatus(userId, expire);
         return ResponseEntity.ok(StatusMessages.ACCOUNT_EXPIRY_STATUS_UPDATED);
     }
 
     @PutMapping("/update-enabled-status")
-    public ResponseEntity<String> updateAccountEnabledStatus(@RequestParam Long userId,
+    ResponseEntity<String> updateAccountEnabledStatus(@RequestParam Long userId,
             @RequestParam boolean enabled) {
         userService.updateAccountEnabledStatus(userId, enabled);
         return ResponseEntity.ok(StatusMessages.ACCOUNT_ENABLE_STATUS_UPDATED);
     }
 
     @PutMapping("/update-credentials-expiry-status")
-    public ResponseEntity<String> updateCredentialsExpiryStatus(@RequestParam Long userId,
+    ResponseEntity<String> updateCredentialsExpiryStatus(@RequestParam Long userId,
             @RequestParam boolean expire) {
         userService.updateCredentialsExpiryStatus(userId, expire);
         return ResponseEntity.ok(StatusMessages.CREDENTIALS_EXPIRY_STATUS_UPDATED);
     }
 
     @PutMapping("/update-password")
-    public ResponseEntity<String> updatePassword(@RequestParam Long userId,
+    ResponseEntity<String> updatePassword(@RequestParam Long userId,
             @RequestParam String password) {
         try {
             userService.updatePassword(userId, password);
@@ -140,31 +140,37 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    public ResponseEntity<?> addCategory(@RequestBody CategoryRequest categoryRequest) {
+    ResponseEntity<?> addCategory(@RequestBody CategoryRequest categoryRequest) {
 
-        if (null != categoryRepository.findByCategoryName(categoryRequest.getName())) {
+        try {
 
-            ProductCategory category = new ProductCategory();
-            category.setCategoryName(categoryRequest.getName());
-            category.setSlug(categoryRequest.getSlug());
+            if (null == categoryRepository.findByCategoryName(categoryRequest.getName())) {
 
-            categoryRepository.save(category);
+                ProductCategory category = new ProductCategory();
+                category.setCategoryName(categoryRequest.getName());
+                category.setSlug(categoryRequest.getSlug());
 
-            CategoryResponse response = new CategoryResponse(
-                    Long.toString(category.getCategoryId()),
-                    category.getCategoryName()
-            // category.getSlug()
-            );
+                categoryRepository.save(category);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(StatusMessages.CATEGORY_IS_EXISTED, HttpStatus.BAD_REQUEST);
+                CategoryResponse response = new CategoryResponse(
+                        Long.toString(category.getCategoryId()),
+                        category.getCategoryName()
+                // category.getSlug()
+                );
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(StatusMessages.CATEGORY_IS_EXISTED, HttpStatus.BAD_REQUEST);
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
         }
 
     }
 
     @PostMapping("/subcategory")
-    public ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest subcategoryRequest) {
+    ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest subcategoryRequest) {
 
         List<String> existed = new ArrayList<String>();
         existed.add(subcategoryRequest.getSubcategoryName());
@@ -201,7 +207,7 @@ public class AdminController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<?> getCategories() {
+    ResponseEntity<?> getCategories() {
 
         try {
 
@@ -225,7 +231,7 @@ public class AdminController {
     }
 
     @GetMapping("/product/subcategories")
-    public ResponseEntity<?> getSubcategories(@RequestParam String category) {
+    ResponseEntity<?> getSubcategories(@RequestParam String category) {
 
         try {
 
@@ -250,7 +256,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "/product/products")
-    public ResponseEntity<?> getProducts() {
+    ResponseEntity<?> getProducts() {
 
         try {
             List<Product> products = productRepository.findAll();
@@ -273,7 +279,7 @@ public class AdminController {
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<?> getParentProduct(@PathVariable String productId) {
+    ResponseEntity<?> getParentProduct(@PathVariable String productId) {
 
         try {
 
@@ -306,7 +312,7 @@ public class AdminController {
     // }
 
     @PostMapping("/product")
-    public ResponseEntity<?> addProduct(
+    ResponseEntity<?> addProduct(
             @RequestPart("product") ProductRequest request,
             @RequestParam(value = "images", required = false) List<String> images,
             @RequestParam(value = "colorImage", required = false) String colorImage) {

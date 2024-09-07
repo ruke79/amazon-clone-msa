@@ -25,6 +25,8 @@ public final class StatusMessages {
     public static final String PRODUCT_IS_EMPTY = "Product is empty";
 
     public static final String REVIEW_REGISTRATION_FAILED = "Review registration failed";
+    public static final String REVIEW_DELETE_SUCCESS = "Review delete success";
+    public static final String REVIEW_DELETE_FAILED = "Review delete failed";
 
     public static final String SERACH_FAILED = "Serach failed";
 

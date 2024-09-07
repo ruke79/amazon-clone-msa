@@ -131,8 +131,7 @@ async function loaderProduct(slug, style, size) {
         return JSON.parse(JSON.stringify(newProduct));            
 
     } catch(err) {
-
-
+            throw err;
     }
 
 }

@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import amazonLogoDark from "../../public/assets/images/amazon-dark.png";
 import * as Yup from "yup";
-import api from '../../util/api'
+import api, { postRequest } from '../../util/api'
 import LoginInput from "./LoginInput";
 import ButtonInput from "./ButtonInput";
 import { useAuthContext } from "../../store/AuthContext";
+import { useErrorBoundary } from "react-error-boundary";
 
 const initialUser = {
     username: "",
@@ -25,6 +26,7 @@ const RegisterPage = () => {
     const { username, email, password, conf_password, success, error } = user;
     const { token } = useAuthContext();
     const navigate = useNavigate();
+    const { showBoundary } = useErrorBoundary();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -63,7 +65,7 @@ const RegisterPage = () => {
         try{
             setLoading(true);
             
-            const response = await api.post("/auth/public/register", sendData);
+            const response = await postRequest("/auth/public/register", sendData);
 
             setUser({
                 ...user, error: "", success: response.message
@@ -77,6 +79,7 @@ const RegisterPage = () => {
             setUser({
                 ...user, success: "", error: error.response.data.message
             })
+            showBoundary(error);
         }
     }
 

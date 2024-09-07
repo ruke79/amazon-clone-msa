@@ -56,6 +56,8 @@ public class ProductInfoDTO {
 
     private List<ReviewDTO> reviews;
     
-    private int discount;       
+    private int discount;     
+    
+    private String _uid;
 
 }
