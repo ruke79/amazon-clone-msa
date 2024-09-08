@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,16 +61,17 @@ public class CartService {
     private final ShippingAddressRepository shippingAddressRepository;
     
     private final WishiListRepository wishiListRepository;
-
    
     private final CouponRepository couponRepository;
 
+    private final ProductService productService;
+
     
-    @Autowired
+    @Autowired    
     public CartService(CartRepository cartRepository, CartProductRepository cartProductRepository,
             UserRepository userRepository, ProductRepository productRepository,
             ProductSkuRepository productSkuRepository, ShippingAddressRepository shippingAddressRepository,
-            WishiListRepository wishiListRepository, CouponRepository couponRepository) {
+            WishiListRepository wishiListRepository, CouponRepository couponRepository, ProductService productService) {
         this.cartRepository = cartRepository;
         this.cartProductRepository = cartProductRepository;
         this.userRepository = userRepository;
@@ -78,6 +80,7 @@ public class CartService {
         this.shippingAddressRepository = shippingAddressRepository;
         this.wishiListRepository = wishiListRepository;
         this.couponRepository = couponRepository;
+        this.productService = productService;
     }
 
     public String updatePaymentMethod(String username, String paymentMethod) {
@@ -235,9 +238,35 @@ public class CartService {
         return result;
     }
 
+    public int deleteCartItem(String productId, String username) {
+
+        log.info(productId);
+
+        CartProduct item = cartProductRepository.findByProduct_ProductId(Long.parseLong(productId))
+        .orElseThrow(()->new RuntimeException("Cart item not found"));
+
+        if (null != item) {
+            
+            Cart cart = cartRepository.findByUser_UserName(username)
+            .orElseThrow(()->new RuntimeException("Cart not found"));
+            cart.setCartTotal(cart.getCartTotal() - (item.getPrice()+ item.getShipping()));
+
+            cartRepository.save(cart);
+
+            if (cart.getCartTotal() <= 0)
+                cartRepository.delete(cart);
+
+            cartProductRepository.delete(item);
+
+            return 1;
+        }
+        return 0;
+    }
+
     public List<ProductInfoDTO> updateCart(ProductInfoRequest request) {
 
         List<ProductInfoDTO> result = new ArrayList<>();
+         
 
         for (ProductInfoDTO cartItem : request.getProducts()) {
 
@@ -256,7 +285,7 @@ public class CartService {
 
             if (discount > 0) {
                 int price = originalPrice - (originalPrice / discount);
-                dto.setPrice(originalPrice);
+                dto.setPrice(price);
             } else {
                 dto.setPrice(originalPrice);
             }
@@ -267,6 +296,59 @@ public class CartService {
 
         return result;
     }
+    public List<ProductInfoDTO> loadCart(String username) {
+
+        Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+        //.orElseThrow(()->new RuntimeException("Cart not found"));
+
+        if (cart.isPresent()) {
+
+            List<CartProduct> products = cart.get().getCartProducts();
+
+            List<ProductInfoDTO> result = new ArrayList<>();
+            for(CartProduct p : products) {
+
+                Product product = productRepository.findById(p.getProduct().getProductId())
+                .orElseThrow(()->new RuntimeException("Product not found"));
+
+                AtomicInteger counter = new AtomicInteger(-1);
+
+                int index = product.getSku_products().get(p.getStyle()).getSizes().stream()
+                .filter(size -> {counter.getAndIncrement(); 
+                return size.getSize().equals(p.getSize());})
+                .mapToInt(size->counter.get())
+                .findFirst()
+                .orElse(-1);
+
+                ProductInfoDTO dto = productService.getCartProductInfo(p.getProduct().getProductId(), 
+                p.getStyle(), index);
+
+                int originalPrice = product.getSku_products().get(p.getStyle()).getSizes().stream()
+                .filter(i -> i.getSize().equals(p.getSize())).findFirst().get().getPrice();    
+        int discount = product.getSku_products().get(p.getStyle()).getDiscount();
+        
+        dto.setPriceBefore(originalPrice);
+        dto.setQty(p.getQty());
+        dto.set_uid(p.get_uid());
+
+        if (discount > 0) {
+            int price = originalPrice - (originalPrice / discount);
+            dto.setPrice(price);
+        } else {
+            dto.setPrice(originalPrice);
+        }
+        dto.setShipping(product.getShipping());
+
+                result.add(dto);     
+
+            }
+
+            return result;      
+        }
+        return null;
+
+    }
+
 
     public Cart saveCart(CartRequest request, String username) {
 
@@ -305,11 +387,14 @@ public class CartService {
                                     .colorId(Long.parseLong(cartItem.getColor().getId()))
                                     .color(cartItem.getColor().getColor())
                                     .colorImage(cartItem.getColor().getColorImage()).build())
+                            .style(cartItem.getStyle())
                             .product(product.get())
                             .image(sku.getImages().get(0))
                             .qty(cartItem.getQty())
                             .price(price)
                             .size(cartItem.getSize())
+                            ._uid(cartItem.get_uid())
+                            .shipping(product.get().getShipping())
                             .build();
 
                     products.add(cartProduct);
@@ -319,7 +404,7 @@ public class CartService {
             }
             int cartTotal = 0;
             for (CartProduct p : products) {
-                cartTotal = cartTotal + p.getPrice() * p.getQty();
+                cartTotal = cartTotal + p.getPrice() * p.getQty() + p.getShipping();
             }
 
             cart.setCartProducts(products);

@@ -3,16 +3,15 @@ import CartHeader from "./CartHeader";
 import Checkout from "./Checkout";
 import PaymentMethods from "./PaymentMethods";
 import Product from "./Product";
-import api, {saveCart, putRequest } from "util/api";
-import { useNavigate } from "react-router-dom";
+import api, {saveCart, putRequest, getRequest } from "util/api";
+import { useLoaderData, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateCart } from "../../redux/CartSlice";
 import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchCart = async (cart) => {
-    console.log(cart);
+const fetchCart = async (cart) => {    
      const { data} = await putRequest(`/user/cart/updatecart`,
      {products: cart.cartItems});    
     return data;
@@ -31,8 +30,7 @@ const useCart = ( cart, enable) => {
 }
 
 
-
-const CartPage = ({ cart }) => {
+const CartPage = ({ cart, setLoadedData }) => {
     const { token } = useAuthContext();
     const dispatch = useDispatch();
     
@@ -44,21 +42,29 @@ const CartPage = ({ cart }) => {
     const [enable, setEnable] = useState(cart.cartItems.length > 0);
 
     const navigate = useNavigate();
-    const { data, isSuccess } = useCart(cart, enable);
+ //   const { data, isSuccess } = useCart(cart, enable);
 
-    if (isSuccess) {
+    // if (isSuccess) {
 
-        dispatch(updateCart(data));        
+    //     //console.log(data);
+    //     //dispatch(updateCart(data));        
 
-    }
+    // }
 
-
+   
+       
+    
     useEffect(() => {
         if (token) {
 
-            if (cart.cartItems.length == 0) {
-                setEnable(false);   
-            }          
+            // if (cartData.length > 0) {
+                
+            //     dispatch(updateCart(cartData));        
+            // }
+
+            // if (cart.cartItems.length == 0) {
+            //     setEnable(false);   
+            // }          
             
          } else {            
             navigate("/signin");
@@ -107,6 +113,8 @@ const CartPage = ({ cart }) => {
         
         if (token) {
             setLoading(true);
+
+            console.log(selected);
             
             const res = await saveCart(selected);
             
@@ -138,6 +146,7 @@ const CartPage = ({ cart }) => {
                                 key={i}
                                 selected={selected}
                                 setSelected={setSelected}
+                                setLoadedData={setLoadedData}
                                 cart={cart}
                             />
                         ))}
@@ -159,3 +168,6 @@ const CartPage = ({ cart }) => {
 };
 
 export default CartPage;
+
+
+

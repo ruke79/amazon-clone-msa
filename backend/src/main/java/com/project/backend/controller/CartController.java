@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,6 +73,50 @@ public class CartController {
         }
         return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
 
+    }
+    @DeleteMapping("/deleteItem/{productId}")
+    ResponseEntity<?> deleteCartItem(@PathVariable(required = true) String productId,
+    @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (null != userDetails) {
+
+            try {
+                cartService.deleteCartItem(productId, userDetails.getUsername());
+
+                return new ResponseEntity<>("Cart item deleted successfuly.", HttpStatus.OK);
+            } 
+            catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse(e.getMessage()));
+            }
+
+            
+        } else {
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
+        }
+        
+
+    }
+
+    @GetMapping("/loadcart") 
+    ResponseEntity<?> loadCart(@AuthenticationPrincipal UserDetails userDetails) {
+
+        if (null != userDetails) {
+
+            try {
+                List<ProductInfoDTO> response = cartService.loadCart(userDetails.getUsername());
+
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } 
+            catch(RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponse(e.getMessage()));
+            }
+            
+        } else {
+            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
+        }
+        
     }
 
     @PutMapping("/updatecart")
@@ -172,7 +217,7 @@ public class CartController {
         }
     }
 
-    @GetMapping("/deleteaddress/{addressId}")
+    @DeleteMapping("/deleteaddress/{addressId}")
     ResponseEntity<?> deleteShippingAddresses(@PathVariable String addressId,
     @AuthenticationPrincipal UserDetails userDetails) {
 

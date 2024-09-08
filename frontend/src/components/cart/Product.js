@@ -5,14 +5,18 @@ import {
     PlusIcon,
     TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Link  } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateCart } from "../../redux/CartSlice";
+import { deleteRequest, getRequest } from "util/api";
 
-const Product = ({ product, selected, setSelected, cart }) => {
+
+const Product = ({ product, selected, setSelected, setLoadedData, cart }) => {
     const dispatch = useDispatch();
-    const {cartItems} = cart;
-    const [active, setActive] = useState(); 
+    const { cartItems } = cart;
+    const [active, setActive] = useState();
+ 
+    
 
 
     useEffect(() => {
@@ -50,10 +54,25 @@ const Product = ({ product, selected, setSelected, cart }) => {
         dispatch(updateCart(newCart));
     };
 
-    const removeItemCart = (id) => {
-        let newCart = cartItems.filter((p) => p._uid !== id);
+    const removeItemCart = async (product) => {
+
+        
+        if(cartItems.length > 0 ) {
+            try {
+                const { data } = await deleteRequest(`/user/cart/deleteItem/${product.id}`);
+                    
+            }
+            catch (err) {
+                console.log(err.response);
+    
+            }
+        }
+      
+        let newCart = cartItems.filter((p) => p._uid !== product._uid);
+
         dispatch(updateCart(newCart));
         setSelected(selected.filter((p) => p._uid !== product._uid));
+                
     };
 
     const handleSelect = () => {
@@ -126,7 +145,7 @@ const Product = ({ product, selected, setSelected, cart }) => {
                     <HeartIcon className="w-6 h-6 cursor-pointer" />
                     <TrashIcon
                         className="w-6 h-6 cursor-pointer"
-                        onClick={() => removeItemCart(product._uid)}
+                        onClick={() => removeItemCart(product)}
                     />
                 </div>
                 <div className="md:mt-4  flex items-center space-x-2">

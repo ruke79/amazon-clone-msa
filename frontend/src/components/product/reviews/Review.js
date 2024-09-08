@@ -4,7 +4,7 @@ import { showDialog } from "../../../redux/DialogSlice";
 import { uploadImages } from "util/uploadImages";
 import dataURItoBlob from "util/dataURItoBlob";
 import { Rating } from "@mui/material";
-import api, { putRequest, getRequest } from 'util/api';
+import api, { putRequest, deleteRequest } from 'util/api';
 import { useState } from "react";
 import ImagesReview from "./Images";
 import Select from "./Select";
@@ -15,7 +15,7 @@ import { useErrorBoundary } from "react-error-boundary";
 let fits = ["Small", "True to size", "Large"];
 
 const deleteReview = async(productId) => {
-    const { data } = await getRequest(
+    const { data } = await deleteRequest(
         `/product/deletereview/${productId}`
     );
     return data;

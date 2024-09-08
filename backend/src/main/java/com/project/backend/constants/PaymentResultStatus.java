@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentResultStatus {
 
-    SUCCESS("결제완료"),
-    REFUND("환불완료"),
-    WAITING_FOR_PAYMENT("결제대기");
+    SUCCESS("SUCCESS"),
+    REFUND("REFUND"),
+    WAITING_FOR_PAYMENT("WAITING");
     
     private String status;
 

@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import com.project.backend.constants.PayType;
 import com.project.backend.constants.PaymentResultStatus;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,8 +31,7 @@ import lombok.NoArgsConstructor;
 @Table(name="payment_result")
 public class PaymentResult extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @Tsid    
     @Column(name = "payment_id")
     private Long paymentId;
 
@@ -51,7 +51,7 @@ public class PaymentResult extends BaseEntity{
     private LocalDateTime payCancelDateTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "pay_result_status")
+    @Column(name = "pay_result_status", length = 30)
     private PaymentResultStatus payStatus;
 
     private String email;

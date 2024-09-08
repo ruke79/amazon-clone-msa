@@ -30,11 +30,15 @@ public class CartProduct extends BaseEntity {
     @Column(name = "cartproduct_id")
     private Long cartproductId;
 
+    private String _uid;
+
     private String name;
 
     private String image;
 
     private String size;
+
+    private int style;
 
     private int qty;
 
@@ -52,5 +56,7 @@ public class CartProduct extends BaseEntity {
 
     private int price;    
 
+    private int shipping;
+    
     
 }
