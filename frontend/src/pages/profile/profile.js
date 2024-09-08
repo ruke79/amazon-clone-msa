@@ -1,17 +1,17 @@
 import Layout from "components/profile/Layout";
 import { redirect, useLoaderData } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
-import api from "util/api";
+import api, {getRequest} from "util/api";
 import tokenUtil from "util/tokenUtil";
 
 const Profile = () => {
     const { tab, user } = useLoaderData();
-    const { currentUser } = useAuthContext();
+    const {  } = useAuthContext();
     
     
     return (
         <>
-            <Layout user={currentUser} tab={tab} title={`${currentUser.username}'s Profile`}>
+            <Layout user={user} tab={tab} title={`${user.email}'s Profile`}>
             <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Profile</h2>
             </div>
@@ -20,30 +20,29 @@ const Profile = () => {
     );
 };
 
+
 export default Profile;
 
 export const loader = (authContext) => {
 
     return async ({params, request}) => {
-    
-         const { currentUser } = authContext;
-         const user = tokenUtil.getUser();
-
-        // console.log(currentUser);
-
-        //  if (!currentUser) {
-        //     throw new Error('');
-        //  }
-        //     return redirect('/')
-        // }
 
         const searchParams = new URL(request.url).searchParams;
-        const tab = Number(searchParams.get('tab')) || 0;
-
-        return {
-               user : user,
-               tab : tab,                          
+            const tab = Number(searchParams.get('tab')) || 0;
+             
+        
+        try {
+            const { data } = await getRequest(`/auth/user`);
+               
+            return {
+                   user : data,
+                   tab : tab,                          
+            }
         }
+        catch(err) {
+            throw err;
+        }
+        
 
     };
 }
@@ -51,25 +50,4 @@ export const loader = (authContext) => {
 
 
 
-// export async function getServerSideProps(context) {
-//     db.connectDb();
-//     const { query } = context;
-//     const session = await getSession(context);
-//     const user = session?.user;
-//     const tab = query.tab || 0;
 
-//     if (!session) {
-//         return {
-//             redirect: {
-//                 destination: "/",
-//             },
-//         };
-//     }
-
-//     return {
-//         props: {
-//             user,
-//             tab,
-//         },
-//     };
-// }

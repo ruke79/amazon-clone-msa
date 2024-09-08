@@ -1,11 +1,30 @@
 
 import React, { createContext, useContext, useState } from "react";
 import { useEffect } from "react";
-import api from "util/api";
+import api, { getRequest } from "util/api";
 import toast from "react-hot-toast";
 import TokenUtil from "util/tokenUtil";
+import { useErrorBoundary } from "react-error-boundary";
+import { useQuery } from "@tanstack/react-query";
 
 const AuthContext = createContext();
+
+const getUser = async () => {  
+  const { data } = await getRequest(`/auth/user`);
+  return data;
+}
+
+const useUser = () => {
+
+  const userQuery = useQuery({
+      queryKey: ['user'],
+      queryFn : getUser,
+      throwOnError : true,      
+  });
+
+  return userQuery;
+}
+
 
 export const ContextProvider = ({ children }) => {
   //find the token in the localstorage
@@ -19,63 +38,40 @@ export const ContextProvider = ({ children }) => {
 
   //store the token
   const [token, setToken] = useState(getToken);
-  const [refreshTokenExpired, setRefeshTokenExpired] = useState(false);
+  
+  const {showBoundary}= useErrorBoundary();
 
-  //store the current loggedin user
-  const [currentUser, setCurrentUser] = useState(null);
-  //handle sidebar opening and closing in the admin panel
-  const [openSidebar, setOpenSidebar] = useState(true);
-  //check the loggedin user is admin or not
-  const [isAdmin, setIsAdmin] = useState(isADmin);
+  const { data, error }  = useUser();
+  
+  if (error)
+    showBoundary(error);
 
-  const fetchUser = async () => {
-    const user = TokenUtil.getUser();
+  
+  useEffect(()=> {
+    
+    if (data) {
+      const user = TokenUtil.getUser();
 
-    if (user?.username) {
-      try {
-        const { data } = await api.get(`/auth/user`);
+      if (user.email) {
         const roles = data.roles;
 
-        if (roles.includes("ROLE_ADMIN")) {
-          //localStorage.setItem("IS_ADMIN", JSON.stringify(true));
-          TokenUtil.setIsAdmin(true);
-          setIsAdmin(true);
-        } else {
-          //localStorage.removeItem("IS_ADMIN");
-          TokenUtil.removeAdmin();
-          setIsAdmin(false);
+          if (roles.includes("ROLE_ADMIN")) {            
+            TokenUtil.setAdmin(true);  
+          } else {            
+            TokenUtil.removeAdmin();
+          }         
+          
         }
-        
-        setCurrentUser(data);
-      } catch (error) {
-        console.error("Error fetching current user", error);
-        toast.error("Error fetching current user");
       }
-    }
-  };
 
-  //if  token exist fetch the current user
-  useEffect(() => {
-    if (token) {
-      fetchUser();      
-      console.log("fetchUser");
-    }
-  }, [token]);
+  }, [data]);
 
-  //through context provider you are sending all the datas so that we access at anywhere in your application
+    
   return (    
     <AuthContext.Provider
       value={{
         token,
-        setToken,
-        refreshTokenExpired,
-        setRefeshTokenExpired,
-        currentUser,
-        setCurrentUser,
-        openSidebar,
-        setOpenSidebar,
-        isAdmin,        
-        setIsAdmin,
+        setToken,                        
       }}
     >
       {children}
@@ -83,6 +79,8 @@ export const ContextProvider = ({ children }) => {
     
   );
 };
+
+
 
 //by using this (useMyContext) custom hook we can reach our context provier and access the datas across our components
 export const useAuthContext = () => {

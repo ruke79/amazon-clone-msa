@@ -1,7 +1,7 @@
 import PaymentCheckout from "components/checkout/Payment";
 import Layout from "components/profile/Layout";
 
-import api from "util/api";
+import { getRequest, putRequest } from "util/api";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
@@ -15,21 +15,22 @@ const Payment = () => {
 
     const handlePM = async () => {
         try {
-            const { data } = await api.put("/user/cart/changepm", null, {
+            const { data } = await putRequest("/user/cart/changepm", null, {
                 params : { paymentMethod: paymentMethod }
             });
             setErorr("");
             setDbPM(data);
-            //window.location.reload();
+            
         } catch (error) {
             setErorr(error.response.data.message);
+            throw error;
         }
     };
 
     return (
         <>
             <Layout
-                user={user.user}
+                user={user}
                 tab={tab}
                 title={`${user.username}'s Address`}
             >
@@ -73,10 +74,8 @@ export const loader = (authContext) => {
         
         try {
 
-            const { data } = await api.get("/user/profile/payment"); 
-                                                 
-
-            console.log(data);
+            const { data } = await getRequest("/user/profile/payment"); 
+                        
         
             return {
                   user : data,
@@ -90,27 +89,3 @@ export const loader = (authContext) => {
 }
 
 
-// export async function getServerSideProps(context) {
-//     db.connectDb();
-//     const { query } = context;
-//     const session = await getSession(context);
-//     const tab = query.tab || 0;
-
-//     if (!session) {
-//         return {
-//             redirect: {
-//                 destination: "/",
-//             },
-//         };
-//     }
-//     const user = await User.findById(session.user?.id).select(
-//         "defaultPaymentMethod"
-//     );
-//     return {
-//         props: {
-//             user: session,
-//             tab,
-//             defaultPaymentMethod: user.defaultPaymentMethod,
-//         },
-//     };
-// }

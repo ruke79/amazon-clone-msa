@@ -9,9 +9,10 @@ const Address = () => {
     const { user, tab } = useLoaderData();
     
         
-    const [addresses, setAddresses] = useState(user?.addresses)
+    const [addresses, setAddresses] = useState(user?.addresses);
+    const [selectedAddress, setSelectedAddress] = useState(null);
     
-    
+    console.log(user);
     
 
     return (
@@ -20,7 +21,8 @@ const Address = () => {
             <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Addresses</h2>
             </div>
-                { <ShippingPage user={user} addresses={addresses} setAddresses={setAddresses} profile={true}/> }                
+                { <ShippingPage user={user} addresses={addresses} setAddresses={setAddresses}
+                setSelectedAddress = {setSelectedAddress} profile={true}/> }                
             </Layout>            
         </>
     );

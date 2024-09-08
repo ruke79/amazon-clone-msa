@@ -425,7 +425,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDTO result = UserDTO.builder()
-                .userName(user.getUserName())
+                .username(user.getUserName())
                 .email(user.getEmail())
                 .image(user.getImage())
                 .addresses(dtos)
@@ -438,7 +438,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findUserWithdefaultPaymentMethod(User user) {
 
         UserDTO result = UserDTO.builder()
-                .userName(user.getUserName())
+                .username(user.getUserName())
                 .email(user.getEmail())
                 .image(user.getImage())
                 .defaultPaymentMethod(user.getDefaultPaymentMethod())

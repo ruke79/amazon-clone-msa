@@ -23,27 +23,27 @@ const CarouselContainer = () => {
         color: "#404040",
     };
     
-    let images = []
+    let imgs = []
     const slidesSrc = [ slider1, slider2, slider3, slider4, slider5 ];
-    const [preloadedImages, setPreloadedImages] = useState([]);
+    const [preloadedimgs, setPreloadedimgs] = useState([]);
 
         
     
     const preloadSlides= () => {
-        if (preloadedImages.length ==0 ) {        
+        if (preloadedimgs.length ==0 ) {        
             for(let i = 0; i < slidesSrc.length; i++)  {
                 
-                images[i] = new Image();
-                images[i].src = slidesSrc[i];
+                imgs[i] = new Image();
+                imgs[i].src = slidesSrc[i];
             }
-            setPreloadedImages(images);            
+            setPreloadedimgs(imgs);            
         }
     }            
 
-    const renderImages = preloadedImages.map((image, i) => {                               
+    const renderimgs = preloadedimgs.map((img, i) => {                               
                          return (
                          <div key={"slider" + i}>
-                         <img src={image.src} alt={"slider" + i} />
+                         <img src={img.src} alt={"slider" + i} />
                         </div>
                          )
                      });
@@ -90,8 +90,9 @@ const CarouselContainer = () => {
                 showThumbs={false}               
             >
                  {       
-                renderImages                                        
-                 }              
+              renderimgs                                        
+                 }             
+            
             </Carousel>             
         </>
     );

@@ -15,12 +15,10 @@ import jakarta.transaction.Transactional;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
     Optional<RefreshToken> findByToken(String token);
 
-    @Transactional
-    @Modifying
+    @Transactional    
     int deleteByUser(User user);
 
-    @Transactional
-    @Modifying
+    @Transactional    
     int deleteByToken(String stoken);
 
 }
