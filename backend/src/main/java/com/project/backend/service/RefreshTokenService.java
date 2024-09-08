@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +56,8 @@ public class RefreshTokenService {
     User user = userRepository.findById(userId)
     .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
+    
+
     refreshTokenRepository.deleteByUser(user);
 
 
@@ -73,7 +76,7 @@ public class RefreshTokenService {
 
 
 
-  @Transactional
+  @Transactional  
   public int deleteByUserId(Long userId) {
     User user = userRepository.findById(userId)
     .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));

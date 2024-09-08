@@ -103,7 +103,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         ObjectMapper om = new ObjectMapper();
 
-        LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(), roles);
+        LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(),  roles);
 
         String data;
         try {

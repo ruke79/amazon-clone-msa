@@ -5,8 +5,10 @@ import { Form, Formik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import DotLoaderSpinner from "components/loader/Loading"
-import api from "util/api";
+import { putRequest, getRequest } from "util/api";
 import { useLoaderData } from "react-router-dom";
+import tokenUtil from "util/tokenUtil";
+import { useAuthContext } from "store/AuthContext";
 
 const initialPassword = {
     current_password: "",
@@ -19,6 +21,9 @@ const initialPassword = {
 const Security = () => {
 
     const { user, tab } = useLoaderData();
+
+    
+   
 
     const [loading, setLoading] = useState(false);
     const [newPassword, setNewPassword] = useState(initialPassword);
@@ -50,7 +55,7 @@ const Security = () => {
         try {            
             setLoading(true);
 
-            const { data } = await api.put("/user/profile/update-password", {
+            const { data } = await putRequest("/user/profile/update-password", {
                 current_password,
                 new_password,
             });            
@@ -146,19 +151,25 @@ const Security = () => {
 export const loader = (authContext) => {
 
     return async ({params, request}) => {
-    
-        const { currentUser } = authContext;
-        const searchParams = new URL(request.url).searchParams;
-        const tab = Number(searchParams.get('tab')) || 0;
+
         
-        if (!currentUser) {
-            throw new Error("User is not Logged in");
-        }
-      
-            return {
-                  user : currentUser,
-                  tab : tab 
+
+        const searchParams = new URL(request.url).searchParams;
+
+        console.log(request.url);
+        
+        const tab = Number(searchParams.get('tab')) || 0;
+
+        try {
+            const { data } = await getRequest(`/auth/user`);
+                  
+            return {                  
+                user : data,  
+                tab : tab                   
             }
+        } catch(err) {
+            throw err;
+        }
         
     };
 }

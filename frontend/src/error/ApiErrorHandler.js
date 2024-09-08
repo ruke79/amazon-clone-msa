@@ -92,7 +92,8 @@ function ApiErrorHandler({ children }) {
                             
                             TokenUtil.remove();                            
                             //setToken(null) ;                            
-                            navigate('/');                                                                                                      
+                            navigate('signin');    
+                            throw refreshError;                                                                                                  
                             
                         } finally {
                             isRefreshing = false;
@@ -113,7 +114,8 @@ function ApiErrorHandler({ children }) {
                                  setToken(null);
                                  setCurrentUser(null);
                                  setIsAdmin(false);                                
-                                navigate('/signin');                                        
+                                navigate('/signin'); 
+                                                                       
                     }                
                 }
             }

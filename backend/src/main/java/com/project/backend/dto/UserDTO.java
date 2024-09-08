@@ -17,7 +17,7 @@ import com.project.backend.model.Role;
 @AllArgsConstructor
 public class UserDTO {
     private String userId;
-    private String userName; // 실명
+    private String username; // 실명
     private String name; // 별명
     private String email;
     private boolean accountNonLocked;

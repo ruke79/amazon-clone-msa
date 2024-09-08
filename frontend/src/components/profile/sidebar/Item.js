@@ -7,8 +7,7 @@ import { useAuthContext } from "store/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 const Item = ({ item, visible, index }) => {
-    const { token, setToken, currentUser, setCurrentUser, isAdmin, setIsAdmin } =
-    useAuthContext();
+    const { token, setToken } = useAuthContext();
 
     const [show, setShow] = useState(visible);
     const navigate = useNavigate();
@@ -20,9 +19,8 @@ const Item = ({ item, visible, index }) => {
         localStorage.removeItem("access_token"); // Updated to remove token from localStorage
         localStorage.removeItem("USER"); // Remove user details as well        
         localStorage.removeItem("IS_ADMIN");
-        setToken(null);
-        setCurrentUser(null);
-        setIsAdmin(false);
+        setToken(null);       
+        
         navigate("/signin");
       };
       

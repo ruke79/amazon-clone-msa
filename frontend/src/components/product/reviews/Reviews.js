@@ -1,7 +1,7 @@
 import { Rating } from "@mui/material";
 import { useAuthContext } from "../../../store/AuthContext";
 import { useState } from "react";
-import AddReview from "./AddReview";
+import AddReview from "./Review";
 import Table from "./Table";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,7 @@ const Reviews = ({ product }) => {
     const { token } = useAuthContext();
 
     const [reviews, setReviews] = useState(product.reviews)
-    const [isAdded, setIsAdded] = useState(false);
+    
      
     
 

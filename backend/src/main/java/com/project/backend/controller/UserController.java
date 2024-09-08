@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,18 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.User;
-
+import com.project.backend.security.request.PasswordRequest;
 import com.project.backend.security.response.MessageResponse;
+import com.project.backend.security.service.UserDetailsImpl;
 import com.project.backend.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/user/profile")
 public class UserController {
 
-    
     private final UserServiceImpl userService;
 
-    
     @Autowired
     public UserController(UserServiceImpl userService) {
         this.userService = userService;
@@ -77,17 +77,25 @@ public class UserController {
         }
 
     }
+    
 
     @PutMapping("/update-password")
-    public ResponseEntity<String> updatePassword(@RequestParam Long userId,
-            @RequestParam String currPassword,
-            @RequestParam String password) {
+    public ResponseEntity<String> updatePassword(@RequestBody PasswordRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+    if (null != userDetails) {
         try {
-            userService.updatePassword(userId, currPassword, password);
+            UserDetailsImpl user =(UserDetailsImpl)userDetails;
+            userService.updatePassword(user.getId(), request.getCurrent_password(), request.getNew_password());
             return ResponseEntity.ok("Password updated");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(StatusMessages.USER_NOT_FOUND);
+    }
+}
 
 }

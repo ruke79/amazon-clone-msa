@@ -109,55 +109,6 @@ public class AuthController {
     }
 
   
-
-    // @PostMapping("/public/signin")
-    // public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-    //     Authentication authentication;
-
-    //     try {
-    //         authentication = authenticationManager
-    //                 .authenticate(new UsernamePasswordAuthenticationToken(
-    //                         loginRequest.getEmail(), loginRequest.getPassword()));
-
-    //     } catch (AuthenticationException exception) {
-
-    //         Map<String, Object> map = new HashMap<>();
-    //         map.put("message", "Bad credentials");
-    //         map.put("status", false);
-    //         return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-    //     }
-
-    //     // Set the authentication
-    //     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-    //     // String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
-
-    //     ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-
-    //     // Collect roles from the UserDetails
-    //     List<String> roles = userDetails.getAuthorities().stream()
-    //             .map(item -> item.getAuthority())
-    //             .collect(Collectors.toList());
-
-    //     RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-    //     ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
-
-    //     // Prepare the response body, now including the JWT token directly in the body
-    //     // LoginResponse response = new LoginResponse(userDetails.getEmail(),
-    //     // roles, jwtCookie);
-    //     LoginResponse response = new LoginResponse(userDetails.getUsername(), userDetails.getEmail(),
-    //             roles);
-
-    //     // Return the response entity with the JWT token included in the response body
-    //     return ResponseEntity.ok()
-    //             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-    //             .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-    //             .body(response);
-    // }
-
     @PostMapping("/public/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
        
@@ -198,6 +149,8 @@ public class AuthController {
     public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
 
+
+
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
@@ -206,6 +159,7 @@ public class AuthController {
                 user.getUserId(),
                 user.getUserName(),
                 user.getEmail(),
+                user.getImage(),
                 user.isAccountNonLocked(),
                 user.isAccountNonExpired(),
                 user.isCredentialsNonExpired(),
@@ -255,7 +209,7 @@ public class AuthController {
         Long userId = authUtil.loggedInUserId();
         GoogleAuthenticatorKey secret = userService.generate2FASecret(userId);
         String qrCodeUrl = totpService.getQrCodeUrl(secret,
-                userService.getUserById(userId).getUserName());
+                userService.getUserById(userId).getUsername());
         return ResponseEntity.ok(qrCodeUrl);
     }
 

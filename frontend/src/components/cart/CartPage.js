@@ -18,10 +18,10 @@ const fetchCart = async (cart) => {
     return data;
 }
 
-const useCart = (user, cart, enable) => {
+const useCart = ( cart, enable) => {
 
     const cartQuery = useQuery({
-        queryKey: [user, cart],
+        queryKey: [ cart],
         queryFn : () => fetchCart(cart),
         throwOnError : true,
         enable : enable        
@@ -33,7 +33,7 @@ const useCart = (user, cart, enable) => {
 
 
 const CartPage = ({ cart }) => {
-    const { token, currentUser } = useAuthContext();
+    const { token } = useAuthContext();
     const dispatch = useDispatch();
     
     const [selected, setSelected] = useState([]);
@@ -44,7 +44,7 @@ const CartPage = ({ cart }) => {
     const [enable, setEnable] = useState(cart.cartItems.length > 0);
 
     const navigate = useNavigate();
-    const { data, isSuccess } = useCart(currentUser, cart, enable);
+    const { data, isSuccess } = useCart(cart, enable);
 
     if (isSuccess) {
 

@@ -152,7 +152,7 @@ public class OrderService {
             .shippingAddress(address)
             .user(UserDTO.builder()
                     .userId(Long.toString(data.getUser().getUserId()))
-                    .userName(data.getUser().getUserName())
+                    .username(data.getUser().getUserName())
                     .image(data.getUser().getImage()).build()
              )
              .totalBeforeDiscount(data.getTotalBeforeDiscount())

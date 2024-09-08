@@ -11,6 +11,8 @@ import { useAuthContext } from "store/AuthContext";
 
 //import { saveAddress } from "../../request/users";
 
+
+
 const AddShipping = ({
     shipping,
     setShipping,    
@@ -74,13 +76,13 @@ const AddShipping = ({
         setShipping({ ...shipping, [name]: value });
     };
 
-    //const { currentUser } = useAuthContext();
-
+    
     const submitHandler = async () => {
         
         const res = await saveShippingAddress(shipping);        
 
-        // ListShipping에서 배열로 참조        
+        console.log(res);
+        
         setAddresses(res);         
 
         setSelectedAddress(initialValue);

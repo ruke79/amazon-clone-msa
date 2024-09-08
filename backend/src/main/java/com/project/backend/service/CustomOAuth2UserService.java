@@ -71,7 +71,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userServiceImpl.registerNewUserAccount(request);
 
             UserDTO userDTO = UserDTO.builder()
-            .userName(oAuth2Response.getName())
+            .username(oAuth2Response.getName())
             .name(name)
             .role(AppRole.ROLE_USER.getRole())
             .build();
@@ -85,7 +85,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(existData);
 
             UserDTO userDTO = new UserDTO();
-            userDTO.setUserName(oAuth2Response.getName());
+            userDTO.setUsername(oAuth2Response.getName());
             userDTO.setName(existData.getName());
             userDTO.setRole(existData.getRole().getRoleName().getRole());
 

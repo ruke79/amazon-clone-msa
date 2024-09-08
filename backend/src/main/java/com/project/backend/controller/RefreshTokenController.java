@@ -105,7 +105,7 @@ public class RefreshTokenController {
 
         String newAccess = jwtUtils.generateTokenFromUser(user);
 
-        refreshTokenService.deleteByUserId(user.getUserId());
+        // delete and create         
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
         log.info("토큰 재발급 성공");

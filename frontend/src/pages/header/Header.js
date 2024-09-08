@@ -25,7 +25,7 @@ const Header = ({title, searchHandler}) => {
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1"
-            />
+            />           
             <div className="bg-amazon-blue_dark flex flex-col md:flex-row">
                 <div className="flex flex-grow items-center p-3 md:space-x-5 md:px-4 text-white">
                     {/* Menu Icon Mobile */}
@@ -62,7 +62,7 @@ const Header = ({title, searchHandler}) => {
                     <Search />
                 </div>
             </div>
-
+            <link rel="icon" href="data:,"></link>
             <HeaderMenu handleOpenMenu={openMenuHandler} />
         </header>
     </>

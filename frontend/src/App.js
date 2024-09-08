@@ -19,7 +19,7 @@ import Checkout, { loader as loaderCart } from "pages/checkout";
 import OrderPage, { loader as loaderOrder } from "pages/order";
 import Address, { loader as loaderAddress } from "pages/profile/address";
 import Orders from "pages/profile/orders";
-import Security from "pages/profile/security";
+import Security, {loader as loaderSecurity } from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
 import ProtectedRoute from "components/ProtectedRoute";
@@ -61,8 +61,10 @@ const ErrorBoundaryLayout = () => (
   
 //<Suspense fallback={<div>Loading...</div>}>
   <ErrorBoundary FallbackComponent = {ErrorFallback} >    
+  <ContextProvider>               
   <ApiErrorHandler/>      
     <Outlet />  
+    </ContextProvider>
   </ErrorBoundary>
 //  </Suspense>
 );
@@ -95,27 +97,8 @@ const AppRouter = () => {
         {
           path: '/profile',
           element: <Profile />,
-          loader: loaderProfile(authContext),
-          // 원인 파악..
-          children: [
-
-            // {
-            //   path : 'orders',
-            //   element : <Orders/>,
-            // },
-            //   {
-            //     path : 'payment', 
-            //     element : <Payment/>,
-            //   },
-            //   {
-            //     path : 'security',
-            //     element : <Security/>,
-            //   },
-            // {
-            //   path : 'wishlist',
-            //   element : 
-            // }
-          ]
+          loader: loaderProfile(authContext),   
+          
         },
         {
           path: 'profile/address',
@@ -134,6 +117,7 @@ const AppRouter = () => {
         {
           path: 'profile/security',
           element: <ProtectedRoute><Security /></ProtectedRoute>,
+          loader : loaderSecurity(authContext)
         },
         {
           path: '/product/:slug',
@@ -192,9 +176,9 @@ function App() {
       
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-          <ContextProvider>               
+          
             <AppRouter/>            
-            </ContextProvider>
+           
           </PersistGate>
         </Provider>
       

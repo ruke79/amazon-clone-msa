@@ -73,6 +73,7 @@ public class AddressService {
 
     static public void deepCopyShippingAddressDTO(AddressDTO address, ShippingAddress src ) {
 
+        address.setId(Long.toString(src.getShippingAddressId()));
         address.setAddress1(src.getAddress1());
         address.setAddress2(src.getAddress2());
         address.setCity(src.getCity());

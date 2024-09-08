@@ -88,7 +88,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String role = jwtUtils.getRoleFromJwtToken(token);
 
             UserDTO userDTO = new UserDTO();
-            userDTO.setUserName(id);
+            userDTO.setUsername(id);
             userDTO.setRole(role);
 
             CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);

@@ -4,11 +4,11 @@ import {
     MapPinIcon,
     MinusCircleIcon,
     PhoneIcon,
-    PlusSmallIcon,
+    PlusIcon,    
     UserIcon,
 } from "@heroicons/react/24/outline";
 import { selectShippingAddress, deleteAddress } from "util/api";
-//import { changeActiveAddress, deleteAddress } from "../../request/users";
+
 
 const ListShipping = ({
     visible,
@@ -19,18 +19,19 @@ const ListShipping = ({
     profile
 }) => {
 
-
-
+    
+    console.log(addresses);
       
     
     const changeActiveHandler = async (id) => {
                 
+        console.log(id);
         const res = await selectShippingAddress(id);        
 
         setAddresses(res);
     };
     const deleteHandler = async (id, e) => {
-        e.stopPropagation();
+        e.stopPropagation();        
         const res = await deleteAddress(id);
         setAddresses(res);
     };
@@ -119,11 +120,11 @@ const ListShipping = ({
                         </span>
                     ) : (
                         <span className="flex items-center">
-                            <PlusSmallIcon className="h-6 w-6" /> Add New
+                            <PlusIcon className="h-6 w-6" /> Add New
                             Address
                         </span>
                     )}
-                </button>
+                </button>                
             </div>
         </>
     );

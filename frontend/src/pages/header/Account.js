@@ -16,27 +16,22 @@ const Account = () => {
     const location = useLocation();
     const cart = useSelector((state) => state.cart.cartItems);
 
-    const { token, setToken, currentUser, setCurrentUser, isAdmin, setIsAdmin } =
-    useAuthContext();
+    const { token, setToken } =  useAuthContext();
     const  user  = tokenUtil.getUser();
     
     
     const handleLogout = async() => {
-        
-        //navigate("/signin");
+                
         try {
-            const { response } = await postRequest('/auth/logout', null);
+            await postRequest('/auth/logout', null);
 
-                localStorage.removeItem("access_token"); // Updated to remove token from localStorage
-            localStorage.removeItem("USER"); // Remove user details as well
-            
-            localStorage.removeItem("IS_ADMIN");
-            setToken(null);
-            setCurrentUser(null);
-            setIsAdmin(false);
+            tokenUtil.remove();
+            setToken(null);            
+            navigate('/signin');
         }
         catch(err) {
             console.log('logout failed');
+            throw err;
         }
 
       };
