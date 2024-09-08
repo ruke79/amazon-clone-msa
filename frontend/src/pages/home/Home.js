@@ -39,7 +39,7 @@ export async function loader() {
 
         return response;
   } catch(err) {
-        throw err;
+   //     throw err;
   }
    
 }

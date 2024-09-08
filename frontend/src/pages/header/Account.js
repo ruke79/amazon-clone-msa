@@ -139,7 +139,7 @@ const Account = () => {
             className="relative link flex items-center"
         >
             <span className="flex items-center justify-center absolute top-0 right-[0.44rem] md:right-8 bg-amazon-orange text-amazon-blue_dark font-semibold h-5 w-5 rounded-full">
-                { cart.length }
+                { cart?.length }
             </span>
             <ShoppingCartIcon className="h-10" />
             <p className="hidden md:inline font-bold mt-2 text-sm">Cart</p>

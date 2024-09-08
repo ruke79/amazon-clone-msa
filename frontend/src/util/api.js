@@ -3,7 +3,6 @@ import { QueryClient, QueryCache } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
 import TokenUtil from "./tokenUtil"
 
-
 export const queryClient = new QueryClient(
   {
     defaultOptions: {
@@ -43,6 +42,121 @@ const api = axios.create({
 });
 
 
+api.interceptors.request.use(
+  async (config) => {
+      const token = TokenUtil.getToken();
+      if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+      }
+    
+
+      return config;
+  },
+  (error) => {
+      return Promise.reject(error);
+  }
+);
+
+let isRefreshing = false;
+
+const refreshAndRetryQueue = [];
+
+api.interceptors.response.use(
+  (res) => {
+      return res;
+  },
+  async (err) => {
+      let originalConfig = err.config;
+      
+      if (err.response) {
+
+          const msg = err.response.data;
+          const status = err.response.status;
+
+       
+      if (status === 401 ) {
+       
+
+          if (!isRefreshing) {
+
+              isRefreshing = true;
+              
+
+              try {
+                  
+                  if (msg === "access token expired" ) {
+
+                      TokenUtil.removeToken();
+
+                      
+                      
+                          const rs = await postRequest("/token/refresh", null);
+
+                          if( rs.status == 200) {
+                                  console.log(rs);
+                                  const accessToken = rs.headers['access'];
+                                  TokenUtil.updateToken(accessToken);
+                                  
+                                  //setToken(accessToken);
+
+                                  originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
+
+                              return api(originalConfig);
+                          }                                                                   
+                      
+                  }
+                  refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
+                      api
+                          .request(config)
+                          .then((response) => resolve(response))
+                          .catch((err) => reject(err));
+                  });
+
+                  refreshAndRetryQueue.length = 0;
+
+
+              } catch (refreshError) {
+                  refreshAndRetryQueue.length = 0;
+                  
+                  console.log(refreshError);
+                  TokenUtil.remove();                            
+                  //setToken(null) ;                            
+                 // navigate('signin');    
+                  throw refreshError;                                                                                                  
+                  
+              } finally {
+                  isRefreshing = false;
+              }
+          }
+
+          return new Promise((resolve, reject) => {
+              refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
+          });
+
+      }
+      else if (status === 400) {
+
+          
+          if (msg === "refresh token expired") {
+
+                      TokenUtil.remove();                                                                                                               
+                                                             
+          }                
+      }
+  }
+  else {
+          // We have a network error
+          console.error('Network error:', err);
+          //navigate('error_server');
+  }
+
+      return Promise.reject(err);
+
+  }                               
+);
+
+
+
 
 const config = {
   timeout: 10000,
@@ -51,12 +165,14 @@ const config = {
   }
 }
 
+
 export function getRequest(URL, payload = null, contentType = "application/json") {
   return api.get(`${URL}`, payload, contentType,
     {
       timeout: config.timeout, // 10 seconds timeout
       validateStatus: config.statusRange
-    }).then(response => response);
+    }
+  ).then(response => response);
 }
 
 export function postRequest(URL, payload, contentType = "application/json") {
@@ -148,7 +264,7 @@ export const deleteAddress = async (addressId) => {
 
   try {
 
-    const { data } = await getRequest(`/user/cart/deleteaddress/${addressId}`
+    const { data } = await deleteRequest(`/user/cart/deleteaddress/${addressId}`
 
     );
     return data;

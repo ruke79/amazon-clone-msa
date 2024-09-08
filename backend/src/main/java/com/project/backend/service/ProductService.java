@@ -483,9 +483,9 @@ public class ProductService {
 
     }
 
-    public ProductInfoDTO getCartProductInfo(String productId, int style, int size) {
+    public ProductInfoDTO getCartProductInfo(Long productId, int style, int size) {
 
-        Optional<Product> data = productRepository.findById(Long.parseLong(productId));
+        Optional<Product> data = productRepository.findById(productId);
 
         if (data.isPresent()) {
 
@@ -555,7 +555,7 @@ public class ProductService {
             .size(product.getSku_products().get(style).getSizes().get(size).getSize())           
             .price(price)
             .priceBefore(priceBefore)
-            .qty(0)
+            .qty(1)
             .quantity(product.getSku_products().get(style).getSizes().get(size).getQuantity())
             .category(Long.toString(product.getCategory().getCategoryId()))
             .subCategories(subcategoryIds)

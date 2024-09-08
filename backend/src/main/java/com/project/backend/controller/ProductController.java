@@ -59,7 +59,7 @@ public class ProductController {
 
      {
         try {
-            ProductInfoDTO dto = productService.getCartProductInfo(product_id, style, size);        
+            ProductInfoDTO dto = productService.getCartProductInfo(Long.parseLong(product_id), style, size);        
 
             return new ResponseEntity<>(dto, HttpStatus.OK);        
         } catch (RuntimeException e) {

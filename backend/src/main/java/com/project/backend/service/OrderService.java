@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.backend.constants.PaymentResultStatus;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.CartProductDTO;
 import com.project.backend.dto.ColorAttributeDTO;
@@ -90,11 +91,18 @@ public class OrderService {
 
             order.setOrderedProducts(ordered);
 
-            PaymentResult pr = PaymentResult.builder().build();
+            PaymentResult pr = PaymentResult.builder()
+            .payPrice(request.getTotal())
+            .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
+            
+          
+            
             order.setPaymentResult(pr);
 
             ShippingAddress shippingAddress = new ShippingAddress();
             AddressService.deepCopyShippingAddress(shippingAddress, request.getShippingAddress());
+            shippingAddress.setUser(user.get());
+            
             order.setShippingAddress(shippingAddress);
             
             order.setCouponApplied(request.getCouponApplied());

@@ -14,8 +14,8 @@ import SubCategories from './pages/admin/SubCategory';
 import AdminProduct from './pages/admin/Product';
 import SingleProduct, { loader as productLoader } from "./pages/Product";
 import Browse, { loader as browseLoader, loader } from "pages/browse";
-import Cart from "pages/cart";
-import Checkout, { loader as loaderCart } from "pages/checkout";
+import Cart, { loader as loaderCart } from "pages/cart";
+import Checkout, { loader as loaderCheckout } from "pages/checkout";
 import OrderPage, { loader as loaderOrder } from "pages/order";
 import Address, { loader as loaderAddress } from "pages/profile/address";
 import Orders from "pages/profile/orders";
@@ -23,7 +23,6 @@ import Security, {loader as loaderSecurity } from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
 import ProtectedRoute from "components/ProtectedRoute";
-import ApiErrorHandler from 'error/ApiErrorHandler';
 import { ErrorBoundary } from "react-error-boundary";
 import { Outlet  } from 'react-router-dom';
 import ErrorPage from "pages/Error";
@@ -32,7 +31,7 @@ import { queryClient } from 'util/api';
 import {ReactErrorBoundaryComponent} from 'error/ApiErrorBoundary';
 import Maintenance from 'components/error/Maintenance';
 import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
-
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 // const DebugLayout = () => {
 //   const location = useLocation();
@@ -61,10 +60,9 @@ const ErrorBoundaryLayout = () => (
   
 //<Suspense fallback={<div>Loading...</div>}>
   <ErrorBoundary FallbackComponent = {ErrorFallback} >    
-  <ContextProvider>               
-  <ApiErrorHandler/>      
-    <Outlet />  
-    </ContextProvider>
+  <ContextProvider>                         
+    <Outlet />      
+    </ContextProvider>      
   </ErrorBoundary>
 //  </Suspense>
 );
@@ -134,11 +132,12 @@ const AppRouter = () => {
         {
           path: '/cart',
           element: <ProtectedRoute><Cart /></ProtectedRoute>,
+          loader : loaderCart(authContext),
         },
         {
           path: '/checkout',
           element: <ProtectedRoute><Checkout /></ProtectedRoute>,
-          loader: loaderCart(authContext),
+          loader: loaderCheckout(authContext),
         },
         {
           path: '/order/:id',
@@ -163,7 +162,7 @@ const AppRouter = () => {
     }
   ]), []);
 
-  return <RouterProvider router={router}/>  
+  return <RouterProvider router={router}/>     
 
 };
 
@@ -172,13 +171,14 @@ function App() {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-      
+      <QueryClientProvider client={queryClient}>      
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-          
+          {/* <PayPalScriptProvider deferLoading={true}> */}
+
             <AppRouter/>            
-           
+                     
+            {/* </PayPalScriptProvider> */}
           </PersistGate>
         </Provider>
       

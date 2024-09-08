@@ -61,8 +61,7 @@ const Header = ({title, searchHandler}) => {
                 <div className="md:hidden">
                     <Search />
                 </div>
-            </div>
-            <link rel="icon" href="data:,"></link>
+            </div>            
             <HeaderMenu handleOpenMenu={openMenuHandler} />
         </header>
     </>

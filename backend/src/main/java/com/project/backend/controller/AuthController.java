@@ -138,12 +138,7 @@ public class AuthController {
                 request.getLocale(), getAppUrl(request)));
         return new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS);
     }
-
-    // @PostMapping("/auth/logout")
-    // public GenericResponse singout() {
-
-    //     return new GenericResponse("Logout Success");
-    // }
+    
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {

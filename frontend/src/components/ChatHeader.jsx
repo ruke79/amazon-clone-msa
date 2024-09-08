@@ -1,9 +1,0 @@
-const ChatHeader = () => {
-
-    return (
-        <>
-        
-        </>
-
-    );
-}

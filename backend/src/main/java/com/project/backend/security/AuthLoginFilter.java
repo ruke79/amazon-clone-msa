@@ -121,6 +121,8 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
             response.getWriter().write(data);
             response.setStatus(HttpStatus.OK.value());
 
+            log.info(role);
+
             log.info("Login Success");
 
         } catch (JsonProcessingException e) {

@@ -34,6 +34,7 @@ const Infos = ({ product, setActiveImg }) => {
     const dispatch = useDispatch();
     const { cartItems: cart } = useSelector((state) => state.cart);
 
+    console.log(cart);
         
     const sizeParam = searchParams.get('size');
     const styleParam = searchParams.get('style');    

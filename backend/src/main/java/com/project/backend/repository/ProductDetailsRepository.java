@@ -14,6 +14,6 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
     
     List<ProductDetails> findDistinctAllByProductProductIdIn(List<Long> productIds);
     
-    @Query("select d from ProductDetails d")
+    @Query("select distinct d from ProductDetails d")
     List<ProductDetails> findDistinctAll();
 }

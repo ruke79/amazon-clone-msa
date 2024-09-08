@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Slf4j
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -43,6 +46,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String requestUri = request.getRequestURI();
 
+        
+
         if (requestUri.matches("/api/auth/public/signin(?:\\/.*)?$")) {
 
             filterChain.doFilter(request, response);
@@ -54,6 +59,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+       
 
         String oauth2 = null;
         Cookie[] cookies = request.getCookies();
@@ -70,6 +77,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String accessToken = parseJwt(request);
+
+        
 
         // 1 OAUTH 2 JWT
         if (oauth2 != null && accessToken == null) {
@@ -101,6 +110,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // 2. NORMAL JWT
         else if (oauth2 == null && accessToken != null) {
 
+            
+
             try {
                 jwtUtils.isJwtTokenExpired(accessToken);
             } catch (ExpiredJwtException e) {
@@ -116,6 +127,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 if (jwtUtils.validateJwtToken(accessToken)) {
                     String email = jwtUtils.getIdFromJwtToken(accessToken);
+
+                    
 
                     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -142,6 +155,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         } else // 토큰이 없다면 다음 필터로 넘김
         if (oauth2 == null && accessToken == null) {
+
+            
 
             filterChain.doFilter(request, response);
 

@@ -18,8 +18,7 @@ const useUser = () => {
 
   const userQuery = useQuery({
       queryKey: ['user'],
-      queryFn : getUser,
-      throwOnError : true,      
+      queryFn : getUser,      
   });
 
   return userQuery;
@@ -39,12 +38,12 @@ export const ContextProvider = ({ children }) => {
   //store the token
   const [token, setToken] = useState(getToken);
   
-  const {showBoundary}= useErrorBoundary();
+  //const {showBoundary}= useErrorBoundary();
 
   const { data, error }  = useUser();
   
-  if (error)
-    showBoundary(error);
+  //if (error)
+  //  showBoundary(error);
 
   
   useEffect(()=> {
