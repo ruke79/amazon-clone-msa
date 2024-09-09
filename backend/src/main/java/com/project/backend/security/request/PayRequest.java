@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.cglib.core.Local;
 
 import com.project.backend.constants.OrderStatusEnum;
-import com.project.backend.constants.PayType;
+
 import com.project.backend.constants.PaymentResultStatus;
 
 import jakarta.validation.constraints.NotNull;
@@ -18,16 +18,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PayRequest {
 
-     private PayType payType = PayType.C;
+     private String id;
+     private String email_address;
      private OrderStatusEnum orderStatus = OrderStatusEnum.NOT_PROCESSED;
 
      private String orderNumber;
      private int orderPrice;
 
-     @NotNull(message = "결제금액을 입력해주세요.")
-     private Integer payPrice;
+     //@NotNull
+     //private Integer payPrice;
 
-     @NotNull
+    @NotNull
     private PaymentResultStatus payStatus;
 
     private LocalDateTime payDateTime;

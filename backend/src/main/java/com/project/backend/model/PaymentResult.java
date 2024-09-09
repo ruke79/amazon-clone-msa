@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.project.backend.constants.PayType;
 import com.project.backend.constants.PaymentResultStatus;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
@@ -35,9 +34,9 @@ public class PaymentResult extends BaseEntity{
     @Column(name = "payment_id")
     private Long paymentId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "pay_type")
-    private PayType payType;
+    // @Enumerated(EnumType.STRING)
+    // @Column(name = "pay_type")
+    // private PayType payType;
 
     @NotNull
     private Integer payPrice;

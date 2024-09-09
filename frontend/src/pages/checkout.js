@@ -16,8 +16,7 @@ const Checkout = () => {
 
     const cart = useLoaderData();
     const user = { userId: cart.userId, address: cart.address };
-
-    console.log(user);
+ 
     const [addresses, setAddresses] = useState(user?.address || []);
     const [paymentMethod, setPaymentMethod] = useState("paypal");
     const [totalAfterDiscount, setTotalAfterDiscount] = useState("");

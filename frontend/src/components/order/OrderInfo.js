@@ -12,7 +12,7 @@ const OrderInfo = ({ order }) => {
                 <ChevronRightIcon className="w-4 mx-2 h-4" />
                 <span>Orders</span>
                 <ChevronRightIcon className="w-4 mx-2 h-4" />
-                <span>{order.id}</span>
+                <span>{order.orderNumber}</span>
             </div>
 
             <div className="mt-3 flex items-center">

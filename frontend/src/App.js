@@ -31,7 +31,7 @@ import { queryClient } from 'util/api';
 import {ReactErrorBoundaryComponent} from 'error/ApiErrorBoundary';
 import Maintenance from 'components/error/Maintenance';
 import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 // const DebugLayout = () => {
 //   const location = useLocation();
@@ -56,13 +56,22 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   )
 }
 
+const initialOptions = {
+  "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
+  currency: "USD",
+  intent: "capture",
+  components: 'buttons'
+};
+
 const ErrorBoundaryLayout = () => (
   
 //<Suspense fallback={<div>Loading...</div>}>
-  <ErrorBoundary FallbackComponent = {ErrorFallback} >    
-  <ContextProvider>                         
-    <Outlet />      
-    </ContextProvider>      
+  <ErrorBoundary FallbackComponent = {ErrorFallback} >        
+  <ContextProvider>                           
+  
+    <Outlet />          
+    
+    </ContextProvider>          
   </ErrorBoundary>
 //  </Suspense>
 );
@@ -166,6 +175,8 @@ const AppRouter = () => {
 
 };
 
+
+
 function App() {
 
 
@@ -174,11 +185,9 @@ function App() {
       <QueryClientProvider client={queryClient}>      
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-          {/* <PayPalScriptProvider deferLoading={true}> */}
-
-            <AppRouter/>            
-                     
-            {/* </PayPalScriptProvider> */}
+          <PayPalScriptProvider options={initialOptions} >
+            <AppRouter/>                                                                       
+             </PayPalScriptProvider>
           </PersistGate>
         </Provider>
       

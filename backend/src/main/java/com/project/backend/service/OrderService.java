@@ -25,6 +25,7 @@ import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
 import com.project.backend.repository.OrderRepository;
 import com.project.backend.repository.ProductRepository;
+import com.project.backend.repository.ShippingAddressRepository;
 import com.project.backend.repository.UserRepository;
 import com.project.backend.security.request.OrderRequest;
 
@@ -41,12 +42,15 @@ public class OrderService {
     
     private final ProductRepository productRepository;
 
+    private final ShippingAddressRepository shippingAddressRepository;
+
     @Autowired
     public OrderService(OrderRepository orderRepository, UserRepository userRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.shippingAddressRepository = shippingAddressRepository;
     }
 
     public Order createOrder(OrderRequest request, String username) {
@@ -54,13 +58,7 @@ public class OrderService {
         Optional<User> user = userRepository.findByUserName(username);
 
         if (user.isPresent()) {
-
-            Order existed = orderRepository.findByUser_UserName(username);
-            if(existed != null)
-            {
-                orderRepository.delete(existed);
-            }
-
+            
             Order order = new Order();
 
             order.setOrderNumber(request.getOrderNumber());
@@ -91,26 +89,32 @@ public class OrderService {
 
             order.setOrderedProducts(ordered);
 
+            order.setPaymentMethod(request.getPaymentMethod());
+
             PaymentResult pr = PaymentResult.builder()
             .payPrice(request.getTotal())
             .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
-            
-          
+                     
             
             order.setPaymentResult(pr);
-
-            ShippingAddress shippingAddress = new ShippingAddress();
-            AddressService.deepCopyShippingAddress(shippingAddress, request.getShippingAddress());
-            shippingAddress.setUser(user.get());
             
-            order.setShippingAddress(shippingAddress);
+            AddressDTO shippingAddress = request.getShippingAddress();
+            ShippingAddress existedAddress = shippingAddressRepository.findById(Long.parseLong(shippingAddress.getId()))
+            .orElseThrow(()->new RuntimeException("Shipping address not found"));
+            ;
+            
+            order.setShippingAddress(existedAddress);
             
             order.setCouponApplied(request.getCouponApplied());
 
             order.setTotal(request.getTotal());
             order.setTotalBeforeDiscount(request.getTotalBeforeDiscount());
 
+            user.get().getOrderLists().add(order);
+
             order.setUser(user.get());
+
+            userRepository.save(user.get());
 
             return orderRepository.save(order);           
         }       

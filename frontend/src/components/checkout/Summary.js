@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import api, { applyCoupon } from "util/api";
 
 
+function generateOrderNumber() {
+    return Math.floor(Math.random() * Date.now())
+    }
+
 const Summary = ({
     selectedAddress,
     user,
@@ -61,8 +65,8 @@ const Summary = ({
             }
 
                         
-            const {data}  = await api.post("/user/order/create", {
-                userId : user.userId,
+            const {data}  = await api.post("/user/order/create", {             
+                orderNumber : generateOrderNumber(),
                 products: cart.products,
                 shippingAddress: selectedAddress,
                 paymentMethod,
@@ -73,7 +77,8 @@ const Summary = ({
                 totalBeforeDiscount: cart.cartTotal,
                 couponApplied: coupon,
             });
-            
+
+                        
             navigate(`/order/${data.orderId}`);
             setLoading(false);
         } catch (error) {
