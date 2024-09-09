@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.constants.PayType;
 import com.project.backend.dto.PaymentResultDTO;
 import com.project.backend.model.Order;
 import com.project.backend.model.PaymentResult;
@@ -37,9 +36,9 @@ public class PaymentService {
             orderRepository.updateIsPaidByOrderNumber(request.getOrderNumber(), true);       
 
             PaymentResult pay = PaymentResult.builder()
-            .payPrice(request.getPayPrice())
+            //.payPrice(request.getPayPrice())
             .payStatus(request.getPayStatus())
-            .payType(PayType.C)
+            //.payType(PayType.C)
             .payDateTime(request.getPayDateTime())
             .payCancelDateTime(request.getPayCancelDateTime())
             .build();
@@ -50,9 +49,9 @@ public class PaymentService {
 
             PaymentResultDTO result = PaymentResultDTO.builder()
             .paymentId(Long.toString(pay.getPaymentId()))
-            .payPrice(pay.getPayPrice())
+            //.payPrice(pay.getPayPrice())
             .payStatus(pay.getPayStatus())
-            .payType(pay.getPayType())
+            //.payType(pay.getPayType())
             .payDateTime(pay.getPayDateTime())
             .payCancelDateTime(pay.getPayCancelDateTime())
             .build();

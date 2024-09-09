@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.project.backend.constants.PayType;
 import com.project.backend.constants.PaymentResultStatus;
 
 import jakarta.persistence.Column;
@@ -24,8 +23,8 @@ public class PaymentResultDTO {
 
     private String paymentId;
 
-    @Enumerated(EnumType.STRING)    
-    private PayType payType;
+    // @Enumerated(EnumType.STRING)    
+    // private PayType payType;
 
     
     private Integer payPrice;
