@@ -91,7 +91,7 @@ export const loader = (authContext) => {
             return data;
         }
         catch(err) {
-            throw err;
+            
         }
     };
 }

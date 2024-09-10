@@ -6,24 +6,9 @@ import toast from "react-hot-toast";
 import TokenUtil from "util/tokenUtil";
 import { useErrorBoundary } from "react-error-boundary";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
-
-const getUser = async () => {  
-  const { data } = await getRequest(`/auth/user`);
-  return data;
-}
-
-const useUser = () => {
-
-  const userQuery = useQuery({
-      queryKey: ['user'],
-      queryFn : getUser,      
-  });
-
-  return userQuery;
-}
-
 
 export const ContextProvider = ({ children }) => {
   //find the token in the localstorage
@@ -37,53 +22,61 @@ export const ContextProvider = ({ children }) => {
 
   //store the token
   const [token, setToken] = useState(getToken);
-  
+
   //const {showBoundary}= useErrorBoundary();
 
-  const { data, error }  = useUser();
-  
-  //if (error)
-  //  showBoundary(error);
+  const fetchUser = async () => {
 
-  
-  useEffect(()=> {
-    
-    if (data) {
-      const user = TokenUtil.getUser();
+    const user = TokenUtil.getUser();
 
-      if (user.email) {
+    if (user.email) {
+
+      try {
+        const { data } = await getRequest(`/auth/user`);
+
         const roles = data.roles;
 
-          if (roles.includes("ROLE_ADMIN")) {            
-            TokenUtil.setAdmin(true);  
-          } else {            
-            TokenUtil.removeAdmin();
-          }         
-          
+        if (roles.includes("ROLE_ADMIN")) {
+          TokenUtil.setAdmin(true);
+        } else {
+          TokenUtil.removeAdmin();
         }
+
+
+      } catch (error) {
+        console.error("Error fetching current user", error);
+        toast.error("Error fetching current user");
       }
-
-  }, [data]);
-
-    
-  return (    
-    <AuthContext.Provider
-      value={{
-        token,
-        setToken,                        
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-    
-  );
-};
+    }
+  }
 
 
+    useEffect(() => {
+      if (token) {
+        fetchUser();
+      }
+    }, [token]);
 
-//by using this (useMyContext) custom hook we can reach our context provier and access the datas across our components
-export const useAuthContext = () => {
-  const context = useContext(AuthContext);
 
-  return context;
-};
+    return (
+      <AuthContext.Provider
+        value={{
+          token,
+          setToken,
+        }}
+      >
+
+        {children}
+      </AuthContext.Provider>
+
+    );
+  };
+
+
+
+  //by using this (useMyContext) custom hook we can reach our context provier and access the datas across our components
+  export const useAuthContext = () => {
+    const context = useContext(AuthContext);
+
+    return context;
+  };

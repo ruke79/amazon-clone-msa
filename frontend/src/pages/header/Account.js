@@ -6,7 +6,7 @@ import {
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Link, useNavigate, redirect, useLocation } from "react-router-dom";
 import { useAuthContext } from "../../store/AuthContext";
-import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import tokenUtil from "util/tokenUtil";
 import { postRequest  } from "util/api";
@@ -28,10 +28,13 @@ const Account = () => {
             tokenUtil.remove();
             setToken(null);            
             navigate('/signin');
+
+            toast.success("Signout successed. ");
         }
         catch(err) {
             console.log('logout failed');
-            throw err;
+            toast.error("Login failed. ");
+
         }
 
       };
