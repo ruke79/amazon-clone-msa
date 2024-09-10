@@ -17,41 +17,50 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name="orders")
+        
 public class Order extends BaseEntity {
 
 
-   @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+   
+   @Id @Tsid    
     @Column(name = "order_id")
     private Long orderId;
 
+    @Column(unique = true)
+    @NotNull
     private String orderNumber;
 
+    
     
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     private User user;    
             
+    
     @OneToMany(mappedBy="order", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class, orphanRemoval = true)
     private List<OrderedProduct> orderedProducts;
 
-
+    
     @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ShippingAddress.class)
     @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id", nullable = false)
     private ShippingAddress shippingAddress;
 
     private String paymentMethod;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class)
+    
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class )
     @JoinColumn(name="payment_id", referencedColumnName = "payment_id", nullable = false)
     private PaymentResult paymentResult;
     

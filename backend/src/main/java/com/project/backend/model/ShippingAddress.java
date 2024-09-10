@@ -1,6 +1,8 @@
 
 package com.project.backend.model;
 
+import java.util.List;
+
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -24,9 +27,7 @@ import lombok.Data;
 public class ShippingAddress extends BaseEntity {
 
     
-     @Id @Tsid
-    //@GeneratedValue(strategy= GenerationType.AUTO, generator="native")
-    //@GenericGenerator(name = "native",strategy = "native")    
+     @Id @Tsid    
     @Column(name = "shipping_address_id")
     private Long shippingAddressId;
 
@@ -58,7 +59,12 @@ public class ShippingAddress extends BaseEntity {
     private String phoneNumber;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable=true)
+    @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable=false)
     private User user;    
-        
+    
+    @OneToOne(mappedBy="shippingAddress", fetch = FetchType.LAZY,
+    cascade = CascadeType.PERSIST,targetEntity = Order.class)
+    private Order order;
+
+           
 }

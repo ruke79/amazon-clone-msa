@@ -8,13 +8,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import com.project.backend.constants.PaymentResultStatus;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -55,4 +58,7 @@ public class PaymentResult extends BaseEntity{
 
     private String email;
 
+    @OneToOne(mappedBy="paymentResult", fetch = FetchType.LAZY,
+    cascade = CascadeType.PERSIST,targetEntity = Order.class)
+    private Order order;
 }
