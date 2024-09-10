@@ -615,7 +615,7 @@ export async function loader({ request, params }) {
 
     }
     catch(err) {
-        throw err;
+        console.log(err);
 
         
     }

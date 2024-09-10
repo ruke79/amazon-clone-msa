@@ -32,6 +32,9 @@ import {ReactErrorBoundaryComponent} from 'error/ApiErrorBoundary';
 import Maintenance from 'components/error/Maintenance';
 import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import ApiNavigationHandler from "error/ApiNavigationHandler";
+import toast, {Toaster} from 'react-hot-toast';
+
 
 // const DebugLayout = () => {
 //   const location = useLocation();
@@ -50,7 +53,8 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <div role="alert">
       <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
+      <p>{error}</p>
+      {/* <p>{error.code}</p> */}
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   )
@@ -66,12 +70,12 @@ const initialOptions = {
 const ErrorBoundaryLayout = () => (
   
 //<Suspense fallback={<div>Loading...</div>}>
-  <ErrorBoundary FallbackComponent = {ErrorFallback} >        
-  <ContextProvider>                           
-  
-    <Outlet />          
+  <ErrorBoundary FallbackComponent = {ErrorFallback} >            
+  <ContextProvider>                               
+  <ApiNavigationHandler/>    
+    <Outlet />              
+    </ContextProvider>              
     
-    </ContextProvider>          
   </ErrorBoundary>
 //  </Suspense>
 );
@@ -100,16 +104,16 @@ const AppRouter = () => {
             
           ]
         },
-        { path: 'error_server', element: <Maintenance/> },
+        { path: 'error/error_server', element: <Maintenance/> },
         {
           path: '/profile',
-          element: <Profile />,
+          element: <ProtectedRoute><Profile /></ProtectedRoute>,
           loader: loaderProfile(authContext),   
           
         },
         {
           path: 'profile/address',
-          element: <Address />,
+          element: <ProtectedRoute><Address /></ProtectedRoute>,
           loader: loaderAddress(authContext),
         },
         {
@@ -175,13 +179,16 @@ const AppRouter = () => {
 
 };
 
-
+const notify = () => toast('Here is your toast.');
 
 function App() {
 
 
   return (
-    <>
+    <>   
+    <div>
+    <Toaster/>
+    </div>
       <QueryClientProvider client={queryClient}>      
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>

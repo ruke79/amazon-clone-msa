@@ -23,8 +23,12 @@ const initialUser = {
 };
 
 const login = async (user) => {
-    const data  = await api.post("/auth/public/signin", user);
-    return data;
+    try {
+        const data  = await api.post("/auth/public/signin", user);
+        return data;
+    } catch(err) {
+        console.log(err);
+    }
 }
 
 const LOGIN_QUERY_KEY = 'login';
@@ -51,6 +55,7 @@ const SignInPage = () => {
 
     const { mutate } = useMutation({
         mutationFn : login, 
+        throwOnError : false,
         onSuccess: (response) => {
 
             console.log(response);
@@ -65,9 +70,9 @@ const SignInPage = () => {
             queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
             navigate('/');
         },
-        onError: (error) => {            
-            //showBoundary(error);            
-            toast.error(error);
+        onError: (error) => {                       
+            
+            toast.error("Login Failed. Please retry.");
         }
     });
 
@@ -90,6 +95,7 @@ const SignInPage = () => {
 
         //store the token on the context state  so that it can be shared any where in our application by context provider
         setToken(accessToken);
+        toast.success("Login successed.");
 
     };
 

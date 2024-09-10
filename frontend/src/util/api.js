@@ -138,12 +138,11 @@ api.interceptors.response.use(
       }
       else if (status === 400) {
 
-          
+                
           if (msg === "refresh token expired") {
 
                       TokenUtil.remove();                                                                                                               
-                     
-                                                             
+                                  
           }                
       }
   }
@@ -151,6 +150,8 @@ api.interceptors.response.use(
           // We have a network error
           console.error('Network error:', err);
           //navigate('error_server');
+          TokenUtil.remove();          
+          window.location.href='error_server';          
   }
 
       return Promise.reject(err);

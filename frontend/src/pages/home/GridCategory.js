@@ -8,6 +8,7 @@ const GridCategory = ({ category, products, gridCols}) => {
     // //add the string to the state
     // setImgSrc(base64_to_imgsrc)
     // <img src={"data:image/jpeg;base64," + imgSrc} />        
+ 
     
     products.map(product => 
     product.sku_products[0].images.map(image => image = JSON.stringify(image))
