@@ -24,6 +24,7 @@ import com.project.backend.model.ProductColorAttribute;
 import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
 import com.project.backend.repository.OrderRepository;
+import com.project.backend.repository.PaymentRepository;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ShippingAddressRepository;
 import com.project.backend.repository.UserRepository;
@@ -42,14 +43,17 @@ public class OrderService {
     
     private final ProductRepository productRepository;
 
+    private final PaymentRepository paymentRepository;
+
     private final ShippingAddressRepository shippingAddressRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, UserRepository userRepository,
-            ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository) {
+            ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, PaymentRepository paymentRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.paymentRepository = paymentRepository;
         this.shippingAddressRepository = shippingAddressRepository;
     }
 
@@ -94,9 +98,12 @@ public class OrderService {
             PaymentResult pr = PaymentResult.builder()
             .payPrice(request.getTotal())
             .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
-                     
             
             order.setPaymentResult(pr);
+
+            paymentRepository.save(pr); 
+            
+            
             
             AddressDTO shippingAddress = request.getShippingAddress();
             ShippingAddress existedAddress = shippingAddressRepository.findById(Long.parseLong(shippingAddress.getId()))
@@ -104,7 +111,8 @@ public class OrderService {
             ;
             
             order.setShippingAddress(existedAddress);
-            
+
+                        
             order.setCouponApplied(request.getCouponApplied());
 
             order.setTotal(request.getTotal());
@@ -113,10 +121,15 @@ public class OrderService {
             user.get().getOrderLists().add(order);
 
             order.setUser(user.get());
+            
+            Order result = orderRepository.save(order);           
 
-            userRepository.save(user.get());
+            userRepository.save(user.get());                       
 
-            return orderRepository.save(order);           
+                        
+            
+
+            return result;
         }       
         return null;
     }

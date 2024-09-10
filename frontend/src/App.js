@@ -28,7 +28,6 @@ import { Outlet  } from 'react-router-dom';
 import ErrorPage from "pages/Error";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from 'util/api';
-import {ReactErrorBoundaryComponent} from 'error/ApiErrorBoundary';
 import Maintenance from 'components/error/Maintenance';
 import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -104,7 +103,7 @@ const AppRouter = () => {
             
           ]
         },
-        { path: 'error/error_server', element: <Maintenance/> },
+        { path: 'error_server', element: <Maintenance/> },
         {
           path: '/profile',
           element: <ProtectedRoute><Profile /></ProtectedRoute>,

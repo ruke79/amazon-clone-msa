@@ -64,6 +64,7 @@ const Summary = ({
                 return;
             }
 
+            console.log(paymentMethod);
                         
             const {data}  = await api.post("/user/order/create", {             
                 orderNumber : generateOrderNumber(),

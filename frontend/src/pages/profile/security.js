@@ -168,7 +168,7 @@ export const loader = (authContext) => {
                 tab : tab                   
             }
         } catch(err) {
-            throw err;
+
         }
         
     };

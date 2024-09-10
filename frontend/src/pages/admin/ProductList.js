@@ -24,7 +24,7 @@ export async function loader(AuthContext) {
 
         return response;
     } catch (err) {        
-        throw err;
+        
     }
 
 }
