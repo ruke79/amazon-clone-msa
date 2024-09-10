@@ -17,7 +17,7 @@ export const loadCategories = async(setCategories) => {
 
        } catch(error) {
            console.log(error.response.data.message);
-           throw error;
+           
        }  
 }
 
@@ -78,7 +78,7 @@ const CreateCategory = () => {
             //setName("")
         } catch (error ) {
             console.log(error.response.data.message)
-            throw error;
+            
         }
     };
     const handleCategoryChange = (e) => {
@@ -104,7 +104,7 @@ const CreateCategory = () => {
             setParent("");
         } catch (error) {
             console.log(error.response.data.message);
-            throw error;
+            
         }
     };
 

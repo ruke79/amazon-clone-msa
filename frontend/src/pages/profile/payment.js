@@ -23,7 +23,7 @@ const Payment = () => {
             
         } catch (error) {
             setErorr(error.response.data.message);
-            throw error;
+            
         }
     };
 

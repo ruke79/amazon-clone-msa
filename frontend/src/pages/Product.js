@@ -39,10 +39,9 @@ export async function loader({request, params}) {
 
 async function loaderProduct(slug, style, size) {
     
-    
-    
-    //const  response = await api.get(`/product/${slug}`);
-
+   
+   
+   
     try {
 
     const  response = await getRequest(`/product/${slug}`);
@@ -131,7 +130,7 @@ async function loaderProduct(slug, style, size) {
         return JSON.parse(JSON.stringify(newProduct));            
 
     } catch(err) {
-            throw err;
+            
     }
 
 }
