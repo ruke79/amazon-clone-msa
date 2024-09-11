@@ -4,6 +4,8 @@ import CarouselContainer from "components/home/CarouselContainer";
 import CategoriesProduct from "./CategoryProducts";
 import HomeProductSwiper from 'components/home/HomeProductSwiper';
 import { getRequest, putRequest } from '../../util/api';
+import MenuSideBar from 'pages/header/MenuSidebar';
+import Footer from 'pages/Footer';
 
 const HomePage = () => {
    
@@ -12,6 +14,7 @@ const HomePage = () => {
           
         
     return (
+        <>
         <main className="max-w-screen-2xl mx-auto bg-gray-100">            
         <CarouselContainer/>
         <CategoriesProduct products={products} />         
@@ -20,11 +23,9 @@ const HomePage = () => {
             <HomeProductSwiper products={products} category="shoes" />
             <HomeProductSwiper products={products} category="Beauty" />
             <HomeProductSwiper products={products} category="Kids" />
-        </div>  
-        
-      
-        
-        </main>
+        </div>          
+        </main>          
+          </>
     )
 }
 

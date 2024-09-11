@@ -84,11 +84,11 @@ import {
             text: 'Category',
             link: '/admin/category'
           },
-          // {
-          //   icon: <CogIcon />,
-          //   text: 'SubCategory',
-          //   link: '/admin/subcategory'
-          // },
+          {
+            icon: <CogIcon />,
+            text: 'Coupon',
+            link: '/admin/coupon'
+          },
 
           {
             icon: <CogIcon />,

@@ -18,6 +18,8 @@ import lombok.Setter;
 public class CouponDTO {
 
     private String id;
+
+    private String name;
      
     private String startDate;
     

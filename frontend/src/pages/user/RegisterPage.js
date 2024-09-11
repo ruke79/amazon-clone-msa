@@ -9,6 +9,7 @@ import LoginInput from "./LoginInput";
 import ButtonInput from "./ButtonInput";
 import { useAuthContext } from "../../store/AuthContext";
 import { useErrorBoundary } from "react-error-boundary";
+import toast from "react-hot-toast";
 
 const initialUser = {
     username: "",
@@ -71,6 +72,7 @@ const RegisterPage = () => {
                 ...user, error: "", success: response.message
             })
             if (response.data) {
+                toast.success("Vertification email sended. Please chek your email.");
                 navigate("/signin");
               }
 

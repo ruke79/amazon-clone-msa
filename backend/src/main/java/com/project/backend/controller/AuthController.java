@@ -1,68 +1,44 @@
 package com.project.backend.controller;
 
-import com.project.backend.constants.AppRole;
+
 import com.project.backend.constants.StatusMessages;
-import com.project.backend.constants.TokenType;
-import com.project.backend.exceptionHandling.TokenRefreshException;
-import com.project.backend.model.RefreshToken;
-import com.project.backend.model.Role;
 import com.project.backend.model.User;
-import com.project.backend.registration.OnRegistrationCompleteEvent;
+
 import com.project.backend.repository.RoleRepository;
 import com.project.backend.repository.UserRepository;
 
 import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.security.request.LoginRequest;
+
 import com.project.backend.security.request.SignupRequest;
 import com.project.backend.security.response.GenericResponse;
-import com.project.backend.security.response.LoginResponse;
+
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.security.response.UserInfoResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.security.service.UserDetailsServiceImpl;
-import com.project.backend.service.RefreshTokenService;
 import com.project.backend.service.TotpService;
 import com.project.backend.service.UserService;
 import com.project.backend.util.AuthUtil;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
-import org.apache.http.protocol.HTTP;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.validation.Valid;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.http.HttpHeaders;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -73,16 +49,13 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     
-    private final AuthenticationManager authenticationManager;
-
-    
     private final  ApplicationEventPublisher eventPublisher;
 
     
     private final UserRepository userRepository;
 
     
-    private final RoleRepository roleRepository;
+    //private final RoleRepository roleRepository;
 
     private final UserService userService;
 
@@ -94,15 +67,14 @@ public class AuthController {
 
             
     @Autowired
-    public AuthController(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
-            ApplicationEventPublisher eventPublisher, UserRepository userRepository, RoleRepository roleRepository,
+    public AuthController(JwtUtils jwtUtils, 
+            ApplicationEventPublisher eventPublisher, UserRepository userRepository, 
             UserService userService, AuthUtil authUtil, TotpService totpService
             ) {
         this.jwtUtils = jwtUtils;
-        this.authenticationManager = authenticationManager;
+        
         this.eventPublisher = eventPublisher;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;        
         this.userService = userService;
         this.authUtil = authUtil;
         this.totpService = totpService;        

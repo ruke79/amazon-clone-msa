@@ -88,7 +88,7 @@ public class OrderService {
                     op.setProduct(data.get());
 
                 ordered.add(op);
-                op.setOrder(order);
+                op.getOrders().add(order);
             }
 
             order.setOrderedProducts(ordered);
@@ -98,10 +98,12 @@ public class OrderService {
             PaymentResult pr = PaymentResult.builder()
             .payPrice(request.getTotal())
             .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
+
+            pr.getOrders().add(order);
             
             order.setPaymentResult(pr);
 
-            paymentRepository.save(pr); 
+            //paymentRepository.save(pr); 
             
             
             
@@ -109,6 +111,8 @@ public class OrderService {
             ShippingAddress existedAddress = shippingAddressRepository.findById(Long.parseLong(shippingAddress.getId()))
             .orElseThrow(()->new RuntimeException("Shipping address not found"));
             ;
+
+            existedAddress.getOrders().add(order);
             
             order.setShippingAddress(existedAddress);
 
@@ -124,10 +128,7 @@ public class OrderService {
             
             Order result = orderRepository.save(order);           
 
-            userRepository.save(user.get());                       
-
-                        
-            
+            //userRepository.save(user.get());                       
 
             return result;
         }       

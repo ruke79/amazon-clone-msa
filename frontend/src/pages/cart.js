@@ -1,5 +1,5 @@
 import Header from "pages/header/Header";
-//import MenuSideBar from "components/Header/MenuSidebar";
+import MenuSideBar from "./header/MenuSidebar";
 import CartPage from "components/cart/CartPage";
 import Empty from "components/cart/Empty";
 import { useSelector, useDispatch } from "react-redux";
@@ -34,7 +34,7 @@ const Cart = () => {
                     <Empty />
                 )}
             </main>
-            {/* <MenuSideBar /> */}
+            <MenuSideBar />
         </>
     );
 };

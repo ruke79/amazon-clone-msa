@@ -2,7 +2,6 @@ import { Form, Formik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import ShippingInput from "./ShippingInput";
-//import { applyCoupon } from "../../../request/users";
 import { useNavigate } from "react-router-dom";
 import api, { applyCoupon } from "util/api";
 
@@ -36,19 +35,19 @@ const Summary = ({
 
     const applyCouponHandler = async () => {
         setLoading(true);
-        //  const result = await applyCoupon(coupon);
+          const result = await applyCoupon(coupon);
 
-        // if (result.message) {
-        //     setError(result.message);
-        //     setDiscount("");
-        //     setTotalAfterDiscount("");
-        //     setLoading(false);
-        // } else {
-        //     setTotalAfterDiscount(result.totalAfterDiscount);
-        //     setDiscount(result.discount);
-        //     setError("");
-        //     setLoading(false);
-        // }
+        if (result.message) {
+            setError(result.message);
+            setDiscount("");
+            setTotalAfterDiscount("");
+            setLoading(false);
+        } else {
+            setTotalAfterDiscount(result.totalAfterDiscount);
+            setDiscount(result.discount);
+            setError("");
+            setLoading(false);
+        }
     };
 
     const placeOrderHandler = async () => {

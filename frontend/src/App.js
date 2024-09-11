@@ -10,8 +10,8 @@ import DashboardLayout from './components/admin/DashboardLayout';
 import { ContextProvider, useAuthContext } from "./store/AuthContext";
 import { persistor, store } from "./redux/store";
 import Categories from './pages/admin/Category';
-import SubCategories from './pages/admin/SubCategory';
 import AdminProduct from './pages/admin/Product';
+import Coupon from "components/admin/coupon/Coupon";
 import SingleProduct, { loader as productLoader } from "./pages/Product";
 import Browse, { loader as browseLoader, loader } from "pages/browse";
 import Cart, { loader as loaderCart } from "pages/cart";
@@ -33,6 +33,7 @@ import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import ApiNavigationHandler from "error/ApiNavigationHandler";
 import toast, {Toaster} from 'react-hot-toast';
+import { ChevronUpIcon } from "@heroicons/react/24/outline";
 
 
 // const DebugLayout = () => {
@@ -161,8 +162,8 @@ const AppRouter = () => {
           element: <DashboardLayout />,
           
           children: [
-            { path: 'category', element: <Categories /> },
-            { path: 'subcategory', element: <SubCategories /> },
+            { path: 'category', element: <Categories /> },            
+            { path: 'coupon', element: <Coupon /> },
             { path: 'product', element: <AdminProduct />},
             { path: 'allproducts', 
               element: <Products />, 

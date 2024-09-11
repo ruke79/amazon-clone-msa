@@ -38,10 +38,7 @@ public class PaymentResult extends BaseEntity{
     @Id @Tsid    
     @Column(name = "payment_id")
     private Long paymentId;
-
-    // @Enumerated(EnumType.STRING)
-    // @Column(name = "pay_type")
-    // private PayType payType;
+    
 
     @NotNull
     private Integer payPrice;

@@ -1,6 +1,6 @@
-//import Footer from "@/components/Footer";
+import Footer from "./Footer";
 import Header from "./header/Header";
-//import MenuSideBar from "@/components/Header/MenuSidebar";
+import MenuSideBar from "./header/MenuSidebar";
 import ProductPage from "../components/product/ProductPage";
 import { useLoaderData, defer } from "react-router-dom";
 import api, { getRequest } from "util/api";
@@ -17,8 +17,7 @@ const SingleProduct = () => {
             <main className="bg-white w-full">
                 <ProductPage product={product} />
             </main>
-            {/* <Footer />
-            <MenuSideBar /> */}
+            
         </>
     );
 };
