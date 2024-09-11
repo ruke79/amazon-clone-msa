@@ -62,9 +62,9 @@ public class ShippingAddress extends BaseEntity {
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable=false)
     private User user;    
     
-    @OneToOne(mappedBy="shippingAddress", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "shippingAddress", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = Order.class)
-    private Order order;
+    private List<Order> orders;
 
            
 }
