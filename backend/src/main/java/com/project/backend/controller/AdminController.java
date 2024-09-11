@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.backend.constants.StatusMessages;
+import com.project.backend.dto.CouponDTO;
 import com.project.backend.dto.ProductDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.Role;
@@ -27,12 +28,14 @@ import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.CategoryRequest;
+import com.project.backend.security.request.CouponRequest;
 import com.project.backend.security.request.ImageRequest;
 import com.project.backend.security.request.ProductRequest;
 import com.project.backend.security.request.SubCategoryRequest;
 import com.project.backend.security.response.CategoryResponse;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.security.response.SubCategoryResponse;
+import com.project.backend.service.CouponService;
 import com.project.backend.service.ProductService;
 import com.project.backend.service.UserService;
 
@@ -56,6 +59,8 @@ public class AdminController {
 
     private final ProductService productService;
 
+    private final CouponService couponService;
+
     private final CategoryRepository categoryRepository;
 
     private final SubCategoryRepository subCategoryRepository;
@@ -65,9 +70,11 @@ public class AdminController {
     @Autowired
     public AdminController(UserService userService, ProductService productService,
             CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
-            ProductRepository productRepository, ProductSkuRepository productskuRepository) {
+            ProductRepository productRepository, ProductSkuRepository productskuRepository,
+            CouponService couponService) {
         this.userService = userService;
         this.productService = productService;
+        this.couponService = couponService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.productRepository = productRepository;
@@ -328,6 +335,45 @@ public class AdminController {
 
         }
 
+    }
+
+    @PostMapping("/coupon")
+    ResponseEntity<?> addCoupon(@RequestBody CouponRequest request) {
+
+        try {
+            CouponDTO result = couponService.create(request);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse("Faield to create a coupon."));
+        }
+    }
+
+    @DeleteMapping("/coupon/delete")
+    ResponseEntity<?> deleteCoupon(@RequestParam String id) {
+
+        try {
+            couponService.delete(id);
+
+            return new ResponseEntity<>(new MessageResponse("succeeded to delete a coupon"), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse("Faield to create a coupon."));
+        }
+    }
+
+    @PostMapping("/coupon/update")
+    ResponseEntity<?> updateCoupon(@RequestBody CouponRequest request) {
+
+        try {
+            CouponDTO result = couponService.update(request);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse("Faield to update a coupon."));
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import AdminInput from "./AdminInput";
+import AdminInput from "../AdminInput";
 import { TextField } from "@material-ui/core";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -10,7 +10,7 @@ import api, { postRequest } from 'util/api';
 
 
 
-export default function Create({ setCoupons }) {
+export default function Coupon({ setCoupons }) {
     const [name, setName] = useState("");
     const [discount, setDiscount] = useState(0);
     const tomorrow = new Date();

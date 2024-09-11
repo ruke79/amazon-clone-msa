@@ -50,24 +50,23 @@ public class Order extends BaseEntity {
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     private User user;    
             
-    
-    
+        
     @ManyToMany(fetch = FetchType.LAZY, 
     cascade = CascadeType.PERSIST)    
     @JoinTable(name="ordered_product",
     joinColumns =  { @JoinColumn(name="order_id", referencedColumnName = "order_id") },
     inverseJoinColumns = { @JoinColumn(name="order_product_id", referencedColumnName = "order_product_id")})    
-    private List<OrderedProduct> orderedProducts;
+    private List<OrderedProduct> orderedProducts = new ArrayList<>();
 
     
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ShippingAddress.class)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id", nullable = false)
     private ShippingAddress shippingAddress;
 
     private String paymentMethod;
 
     
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class )
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="payment_id", referencedColumnName = "payment_id", nullable = false)
     private PaymentResult paymentResult;
     

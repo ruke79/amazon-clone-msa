@@ -29,12 +29,14 @@ public class Coupon extends BaseEntity{
     @Column(name="coupon_id")    
     private Long couponId;
 
+    private String name;
+
     @Column(name="start_date")
     private String startDate;
 
     @Column(name="end_date")
     private String endDate;
 
-    private int discount = 0;
+    private int discount;
 
 }
