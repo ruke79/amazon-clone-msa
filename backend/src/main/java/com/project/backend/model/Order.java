@@ -1,6 +1,7 @@
 package com.project.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.project.backend.constants.OrderStatusEnum;
@@ -16,6 +17,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
@@ -48,8 +51,12 @@ public class Order extends BaseEntity {
     private User user;    
             
     
-    @OneToMany(mappedBy="order", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class, orphanRemoval = true)
+    
+    @ManyToMany(fetch = FetchType.LAZY, 
+    cascade = CascadeType.PERSIST)    
+    @JoinTable(name="ordered_product",
+    joinColumns =  { @JoinColumn(name="order_id", referencedColumnName = "order_id") },
+    inverseJoinColumns = { @JoinColumn(name="order_product_id", referencedColumnName = "order_product_id")})    
     private List<OrderedProduct> orderedProducts;
 
     

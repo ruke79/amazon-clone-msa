@@ -1,5 +1,8 @@
 package com.project.backend.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.text.AttributeSet.ColorAttribute;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
@@ -11,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -43,8 +47,7 @@ public class OrderedProduct extends BaseEntity {
         @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable = true)
         private Product product;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "order_id", nullable = false)
-        private Order order;
+        @ManyToMany(mappedBy = "orderedProducts", fetch= FetchType.EAGER, cascade = CascadeType.PERSIST)    
+        private List<Order> orders = new ArrayList<>();
 
 }
