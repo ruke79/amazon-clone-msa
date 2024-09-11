@@ -4,6 +4,7 @@ import Layout from "components/profile/Layout";
 import { getRequest, putRequest } from "util/api";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Payment = () => {
 
@@ -83,7 +84,7 @@ export const loader = (authContext) => {
             }
         
         } catch (error) {
-            console.log("erorr >>>", error.response.data.message);
+            toast.error(error);
         }
     };
 }

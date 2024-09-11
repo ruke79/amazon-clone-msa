@@ -33,6 +33,7 @@ import com.project.backend.security.request.ImageRequest;
 import com.project.backend.security.request.ProductRequest;
 import com.project.backend.security.request.SubCategoryRequest;
 import com.project.backend.security.response.CategoryResponse;
+import com.project.backend.security.response.GenericResponse;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.security.response.SubCategoryResponse;
 import com.project.backend.service.CouponService;
@@ -216,11 +217,11 @@ public class AdminController {
     @GetMapping("/categories")
     ResponseEntity<?> getCategories() {
 
-        try {
+        
 
             List<ProductCategory> category = categoryRepository.findAll();
 
-            if (!category.isEmpty()) {
+           
 
                 List<CategoryResponse> responses = new ArrayList<>();
                 category.forEach(item -> {
@@ -228,13 +229,8 @@ public class AdminController {
                 });
 
                 return new ResponseEntity<>(responses, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>(StatusMessages.CATEGORY_NOT_FOUND, HttpStatus.BAD_REQUEST);
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
-        }
+           
+        
     }
 
     @GetMapping("/product/subcategories")
@@ -265,24 +261,16 @@ public class AdminController {
     @GetMapping(value = "/product/products")
     ResponseEntity<?> getProducts() {
 
-        try {
-            List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll();
 
-            if (!products.isEmpty()) {
-
-                List<ProductDTO> response = new ArrayList<ProductDTO>();
-                for (Product product : products) {
-                    ProductDTO dto = productService.getProductByName(product.getName());
-                    response.add(dto);
-                }
-
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>(StatusMessages.PRODUCT_IS_EMPTY, HttpStatus.BAD_REQUEST);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
+        List<ProductDTO> response = new ArrayList<ProductDTO>();
+        for (Product product : products) {
+            ProductDTO dto = productService.getProductByName(product.getName());
+            response.add(dto);
         }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @GetMapping("/product/{productId}")

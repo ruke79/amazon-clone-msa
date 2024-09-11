@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import amazonLogo from "../../public/assets/images/amazon-logo.png";
-
+import { useDispatch } from "react-redux";
+import { openMenu } from "../../redux/MenuSlice";
 import DeliveryTo from "./DeliveryTo";
 import Search from "./Search";
 import Account from './Account'
@@ -9,9 +10,9 @@ import HeaderMenu from "./HeaderMenu";
 
 
 const Header = ({title, searchHandler}) => {
-
+    const dispatch = useDispatch();
     const openMenuHandler = () => {
-      
+        dispatch(openMenu());
     };
     
 

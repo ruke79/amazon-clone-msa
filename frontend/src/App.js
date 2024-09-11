@@ -18,7 +18,7 @@ import Cart, { loader as loaderCart } from "pages/cart";
 import Checkout, { loader as loaderCheckout } from "pages/checkout";
 import OrderPage, { loader as loaderOrder } from "pages/order";
 import Address, { loader as loaderAddress } from "pages/profile/address";
-import Orders from "pages/profile/orders";
+import Orders, { loader as loaderOrders } from "pages/profile/orders";
 import Security, {loader as loaderSecurity } from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
@@ -87,7 +87,7 @@ const AppRouter = () => {
   const router = useMemo(() => createBrowserRouter([
     {
       element: <ErrorBoundaryLayout />,
-      errorElement : <ErrorPage/>,
+      //errorElement : <ErrorPage/>,
       
       children: [
         {
@@ -119,10 +119,11 @@ const AppRouter = () => {
         {
           path: 'profile/orders',
           element: <ProtectedRoute><Orders /></ProtectedRoute>,
+          loader : loaderOrders(authContext)
         },
         {
           path: 'profile/payment',
-          element: <Payment />,
+          element: <ProtectedRoute><Payment /></ProtectedRoute>,
           loader: loaderPayment(authContext),
         },
         {

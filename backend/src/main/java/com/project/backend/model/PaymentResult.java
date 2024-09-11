@@ -1,6 +1,7 @@
 package com.project.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,6 +19,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -57,7 +59,11 @@ public class PaymentResult extends BaseEntity{
 
     private String email;
 
-    @OneToMany(mappedBy = "paymentResult", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = Order.class)
-    private List<Order> orders;
+    // @OneToMany(mappedBy = "paymentResult", fetch = FetchType.LAZY,
+    // cascade = CascadeType.PERSIST,targetEntity = Order.class)
+    // private List<Order> orders;
+
+    // @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=Order.class,  optional = true)
+    // @JoinColumn(name="orderNumber", referencedColumnName = "orderNumber")
+    // private Order order;
 }

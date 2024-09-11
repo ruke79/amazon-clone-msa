@@ -70,7 +70,7 @@ const Footer = () => {
             </div>
 
             <div className="flex max-md:flex-col items-center bg-amazon-blue_light justify-center py-1">
-                <Image src={amazonLogo} alt="amazon-log" className="object-contain w-20 h-20 md:mr-20" />
+                <img src={amazonLogo} alt="amazon-log" className="object-contain w-20 h-20 md:mr-20" />
 
                 <div className="flex items-center space-x-2 max-md:mb-4">
                     <div className="flex space-around border rounded border-slate-400 px-2 py-2 text-xs text-slate-100 cursor-pointer">
@@ -82,7 +82,7 @@ const Footer = () => {
                         <span>USD - U.S. Dollar</span>
                     </div>
                     <div className="flex items-center border rounded border-slate-400 px-2 py-2 text-xs text-slate-100 cursor-pointer">
-                        <Image
+                        <img
                             src={enFlag}
                             alt="flag-country"
                             className="object-contain h-4 mr-3"

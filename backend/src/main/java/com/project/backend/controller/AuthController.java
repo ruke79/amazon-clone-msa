@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -100,15 +100,23 @@ public class AuthController {
 
     // Email Vertification
     @PostMapping("/public/register")
-    public GenericResponse registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
+    public ResponseEntity<?> registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
             final HttpServletRequest request) {
 
-        final User registered = userService.registerNewUserAccount(accountDto);
-        // userService.addUserLocation(registered, getClientIP(request));
+                try {
 
-        eventPublisher.publishEvent(new com.project.backend.registration.OnRegistrationCompleteEvent(registered,
-                request.getLocale(), getAppUrl(request)));
-        return new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS);
+            final User registered = userService.registerNewUserAccount(accountDto);
+            // userService.addUserLocation(registered, getClientIP(request));
+
+            eventPublisher.publishEvent(new com.project.backend.registration.OnRegistrationCompleteEvent(registered,
+                    request.getLocale(), getAppUrl(request)));
+            return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS), HttpStatus.OK);
+                }
+                catch(RuntimeException e) {
+
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("User Resigtration failed");
+                }
     }
     
 
@@ -116,27 +124,33 @@ public class AuthController {
     public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByUsername(userDetails.getUsername());
 
+        if (null != user) {
 
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            UserInfoResponse response = new UserInfoResponse(
+                    user.getUserId(),
+                    user.getUserName(),
+                    user.getEmail(),
+                    user.getImage(),
+                    user.isAccountNonLocked(),
+                    user.isAccountNonExpired(),
+                    user.isCredentialsNonExpired(),
+                    user.isEnabled(),
+                    user.getCredentialsExpiryDate(),
+                    user.getAccountExpiryDate(),
+                    user.isTwoFactorEnabled(),
+                    roles);
 
-        UserInfoResponse response = new UserInfoResponse(
-                user.getUserId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getImage(),
-                user.isAccountNonLocked(),
-                user.isAccountNonExpired(),
-                user.isCredentialsNonExpired(),
-                user.isEnabled(),
-                user.getCredentialsExpiryDate(),
-                user.getAccountExpiryDate(),
-                user.isTwoFactorEnabled(),
-                roles);
-
-        return ResponseEntity.ok().body(response);
+            return ResponseEntity.ok().body(response);
+        }
+        else 
+            {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(StatusMessages.USER_NOT_FOUND);
+            }
     }
 
     @GetMapping("/username")

@@ -40,8 +40,7 @@ public class Order extends BaseEntity {
     @Column(name = "order_id")
     private Long orderId;
 
-    @Column(unique = true)
-    @NotNull
+    
     private String orderNumber;
 
     
@@ -50,23 +49,21 @@ public class Order extends BaseEntity {
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     private User user;    
             
-        
-    @ManyToMany(fetch = FetchType.LAZY, 
-    cascade = CascadeType.PERSIST)    
-    @JoinTable(name="ordered_product",
-    joinColumns =  { @JoinColumn(name="order_id", referencedColumnName = "order_id") },
-    inverseJoinColumns = { @JoinColumn(name="order_product_id", referencedColumnName = "order_product_id")})    
+    
+    @OneToMany(mappedBy="order", fetch = FetchType.LAZY,
+    cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class)
     private List<OrderedProduct> orderedProducts = new ArrayList<>();
 
     
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id", nullable = false)
+    @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id")
     private ShippingAddress shippingAddress;
 
     private String paymentMethod;
 
-    
-    @ManyToOne(fetch=FetchType.EAGER)
+      
+        
+    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class)
     @JoinColumn(name="payment_id", referencedColumnName = "payment_id", nullable = false)
     private PaymentResult paymentResult;
     

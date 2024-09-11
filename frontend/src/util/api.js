@@ -75,6 +75,7 @@ api.interceptors.response.use(
           const msg = err.response.data;
           const status = err.response.status;
 
+          console.log(msg);
        
       if (status === 401 ) {
        
@@ -131,9 +132,10 @@ api.interceptors.response.use(
               }
           }
 
-          return new Promise((resolve, reject) => {
-              refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
-          });
+         
+            return new Promise((resolve, reject) => {
+                refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
+            });        
 
       }
       else if (status === 400) {

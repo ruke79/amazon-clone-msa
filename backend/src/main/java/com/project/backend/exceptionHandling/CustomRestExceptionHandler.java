@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -97,6 +98,17 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
+
+        // 401 
+
+        @ExceptionHandler(InsufficientAuthenticationException.class)
+        public final ResponseEntity<Object> handleInsufficientAuthenticationExceptions(Exception ex, WebRequest request) {
+            final List<String> error = new ArrayList<String>();
+            error.add("Insufficient Authentication");
+            final ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage(), error);
+            return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+        }
+
 
     // 404
 
