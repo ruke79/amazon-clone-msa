@@ -1,6 +1,7 @@
 package com.project.backend.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,6 +18,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -58,7 +60,7 @@ public class PaymentResult extends BaseEntity{
 
     private String email;
 
-    @OneToOne(mappedBy="paymentResult", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "paymentResult", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = Order.class)
-    private Order order;
+    private List<Order> orders;
 }
