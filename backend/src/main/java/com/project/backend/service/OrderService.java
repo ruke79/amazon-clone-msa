@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.backend.constants.PaymentResultStatus;
+import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.AddressDTO;
 import com.project.backend.dto.CartProductDTO;
 import com.project.backend.dto.ColorAttributeDTO;
@@ -15,6 +16,7 @@ import com.project.backend.dto.OrderDTO;
 import com.project.backend.dto.OrderedProductDTO;
 import com.project.backend.dto.PaymentResultDTO;
 import com.project.backend.dto.UserDTO;
+import com.project.backend.model.CartProduct;
 import com.project.backend.model.Coupon;
 import com.project.backend.model.Order;
 import com.project.backend.model.OrderedProduct;
@@ -23,7 +25,9 @@ import com.project.backend.model.Product;
 import com.project.backend.model.ProductColorAttribute;
 import com.project.backend.model.ShippingAddress;
 import com.project.backend.model.User;
+import com.project.backend.repository.CartProductRepository;
 import com.project.backend.repository.OrderRepository;
+import com.project.backend.repository.OrderedProductRepository;
 import com.project.backend.repository.PaymentRepository;
 import com.project.backend.repository.ProductRepository;
 import com.project.backend.repository.ShippingAddressRepository;
@@ -40,20 +44,26 @@ public class OrderService {
     private final OrderRepository orderRepository;
     
     private final UserRepository userRepository;
+
+    private final OrderedProductRepository orderedProductRepository;
     
     private final ProductRepository productRepository;
 
     private final PaymentRepository paymentRepository;
 
+    private final CartProductRepository cartProductRepository;
+
     private final ShippingAddressRepository shippingAddressRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, UserRepository userRepository,
-            ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, PaymentRepository paymentRepository) {
+            ProductRepository productRepository, ShippingAddressRepository shippingAddressRepository, PaymentRepository paymentRepository, OrderedProductRepository orderedProductRepository, CartProductRepository cartProductRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.orderedProductRepository = orderedProductRepository;
         this.productRepository = productRepository;
         this.paymentRepository = paymentRepository;
+        this.cartProductRepository = cartProductRepository;
         this.shippingAddressRepository = shippingAddressRepository;
     }
 
@@ -63,60 +73,13 @@ public class OrderService {
 
         if (user.isPresent()) {
             
+
+
             Order order = new Order();
 
             order.setOrderNumber(request.getOrderNumber());
-
-            List<OrderedProduct> ordered = new ArrayList<>();
-                        
-            for (CartProductDTO p : request.getProducts()) {
-
-                OrderedProduct op = new OrderedProduct();
-                
-                op.setName(p.getName());
-                op.setColor(ProductColorAttribute.builder()
-                .colorId(Long.parseLong(p.getColor().getId()))
-                .color(p.getColor().getColor())
-                .colorImage(p.getColor().getColorImage()).build());
-                op.setImage(p.getImage());
-                op.setPrice(p.getPrice());
-                op.setQty(p.getQty());
-                op.setSize(p.getSize());
-                
-                Optional<Product> data= productRepository.findById(Long.parseLong(p.getId()));
-                if (data.isPresent())
-                    op.setProduct(data.get());
-
-                ordered.add(op);
-                op.getOrders().add(order);
-            }
-
-            order.setOrderedProducts(ordered);
-
             order.setPaymentMethod(request.getPaymentMethod());
 
-            PaymentResult pr = PaymentResult.builder()
-            .payPrice(request.getTotal())
-            .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
-
-            pr.getOrders().add(order);
-            
-            order.setPaymentResult(pr);
-
-            //paymentRepository.save(pr); 
-            
-            
-            
-            AddressDTO shippingAddress = request.getShippingAddress();
-            ShippingAddress existedAddress = shippingAddressRepository.findById(Long.parseLong(shippingAddress.getId()))
-            .orElseThrow(()->new RuntimeException("Shipping address not found"));
-            ;
-
-            existedAddress.getOrders().add(order);
-            
-            order.setShippingAddress(existedAddress);
-
-                        
             order.setCouponApplied(request.getCouponApplied());
 
             order.setTotal(request.getTotal());
@@ -125,10 +88,77 @@ public class OrderService {
             user.get().getOrderLists().add(order);
 
             order.setUser(user.get());
-            
-            Order result = orderRepository.save(order);           
 
-            //userRepository.save(user.get());                       
+            AddressDTO shippingAddress = request.getShippingAddress();
+            ShippingAddress existedAddress = shippingAddressRepository.findById(Long.parseLong(shippingAddress.getId()))
+            .orElseThrow(()->new RuntimeException("Shipping address not found"));
+            ;
+
+            existedAddress.getOrders().add(order);
+
+            
+            order.setShippingAddress(existedAddress);
+            
+                        
+            
+
+            PaymentResult pr = PaymentResult.builder()
+            .payPrice(request.getTotal())
+            .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
+           
+            
+            order.setPaymentResult(pr);
+         
+
+            paymentRepository.save(pr);
+
+            List<OrderedProduct> ordered = new ArrayList<>();
+                        
+            for (CartProductDTO p : request.getProducts()) {
+
+                OrderedProduct op = new OrderedProduct();
+
+                ProductColorAttribute color = ProductColorAttribute.builder()
+                .colorId(Long.parseLong(p.getColor().getId()))
+                .color(p.getColor().getColor())
+                .colorImage(p.getColor().getColorImage()).build();
+
+                //color.getOrderedProducts().add(op);
+                
+                op.setName(p.getName());
+                op.setColor(color);
+                op.setImage(p.getImage());
+                op.setPrice(p.getPrice());
+                op.setQty(p.getQty());
+                op.setSize(p.getSize());
+
+                
+
+                CartProduct cartPrdouct = cartProductRepository.findById(Long.parseLong(p.getId()))
+                .orElseThrow(()->new RuntimeException("Product not found in cart."));
+                
+                Product data= productRepository.findById(cartPrdouct.getProduct().getProductId())
+                .orElseThrow(()->new RuntimeException("Product not found"));
+                                
+                op.setProduct(data);            
+
+                data.getOrderedProducts().add(op);
+                    
+                ordered.add(op);
+                op.setOrder(order);
+                orderedProductRepository.save(op);
+
+                
+                
+            }
+
+            order.setOrderedProducts(ordered);
+
+            order.setPaymentResult(pr);
+            
+            Order result = orderRepository.save(order);  
+             
+
 
             return result;
         }       
@@ -191,6 +221,22 @@ public class OrderService {
         return null;
     }
 
+    public List<OrderDTO> getOrders(String username, String filter) {
+
+        User user = userRepository.findByUserName(username)
+        .orElseThrow(()->new RuntimeException(StatusMessages.USER_NOT_FOUND));
+
+        List<OrderDTO> result = new ArrayList<>();
+
+        if (null != user) {
+
+
+                OrderDTO dto = getOrder(filter);
+
+
+        }
+
+    }
     
 
 

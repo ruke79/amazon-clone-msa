@@ -19,6 +19,7 @@ import com.project.backend.model.User;
 import com.project.backend.security.request.PasswordRequest;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.security.service.UserDetailsImpl;
+import com.project.backend.service.OrderService;
 import com.project.backend.service.impl.UserServiceImpl;
 
 @RestController
@@ -27,9 +28,12 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
+    private final OrderService orderService;
+
     @Autowired
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserServiceImpl userService, OrderService orderService) {
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/address")
@@ -76,6 +80,25 @@ public class UserController {
                     .body(StatusMessages.USER_NOT_FOUND);
         }
 
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getOrders(@RequestParam String filter,
+    @AuthenticationPrincipal UserDetails userDetails) {
+
+        if (null != userDetails) {
+
+            try {
+
+                
+                orderService.getOrders(userDetails.getUsername(), filter);
+                
+            }
+            catch(RuntimeException e) {
+
+                                
+            }
+        }
     }
     
 

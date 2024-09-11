@@ -13,9 +13,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -26,7 +28,7 @@ import lombok.Data;
 public class OrderedProduct extends BaseEntity {
         
         @Id @Tsid        
-        @Column(name = "order_product_id")
+        @Column(name = "order_product_id", unique = true)
         private Long  orderProductId; 
 
         private String name;
@@ -37,17 +39,19 @@ public class OrderedProduct extends BaseEntity {
 
         private int qty;
 
-        @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.MERGE, targetEntity=ProductColorAttribute.class)
-        @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)
+        @ManyToOne(fetch=FetchType.LAZY)
+        @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable=false)
         private ProductColorAttribute color;
 
         private int price;       
-
-        @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=Product.class)
-        @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable = true)
+        
+                
+        @ManyToOne(fetch=FetchType.LAZY)
+        @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
         private Product product;
 
-        @ManyToMany(mappedBy = "orderedProducts", fetch= FetchType.EAGER, cascade = CascadeType.PERSIST)    
-        private List<Order> orders = new ArrayList<>();
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
+        private Order order;
 
 }

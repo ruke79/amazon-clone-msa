@@ -5,18 +5,32 @@ import AdminInput from "./AdminInput";
 import { getRequest, postRequest } from "../../util/api";
 import SelectInput from "./SelectInput";
 import slugify from "slugify";
+import toast from "react-hot-toast";
 
 
 export const loadCategories = async(setCategories) => {
     try {
         const response = await getRequest("/admin/categories");
       
-      console.log(response.data);
-      
+            
       setCategories(response.data);            
 
        } catch(error) {
-           console.log(error.response.data.message);
+           toast.error("Faild to load categories");
+           
+       }  
+}
+
+export const loadSubCategories = async(setSubCategories) => {
+    try {
+        const response = await getRequest("/admin/product/subcategories");
+      
+      
+      
+      setSubCategories(response.data);            
+
+       } catch(error) {
+            toast.error("Faild to load subcategories");
            
        }  
 }
@@ -28,14 +42,23 @@ const CreateCategory = () => {
     const [parent, setParent] = useState("");
     
     const [categories, setCategories ] = useState([]);
-    const [add, setAdd] = useState(false);
+    const [subCategories, setSubCategories ] = useState([]);
+    const [refresh, setRefresh] = useState(false);
+    const [refresh2, setRefresh2] = useState(false);
 
     useEffect( () => {
                 
-        loadCategories(setCategories);        
-        setAdd(false);
+        loadCategories(setCategories);                
+        setRefresh(false);
         
-      }, [add]);
+      }, [refresh]);
+
+      useEffect( () => {
+                
+        loadSubCategories(setSubCategories);                
+        setRefresh2(false);
+        
+      }, [refresh2]);
 
     const validate = Yup.object({
         name: Yup.string()
@@ -73,13 +96,12 @@ const CreateCategory = () => {
               
               setCategories(categories || categoryNames );     
 
-              setAdd(true);
-            
             //setName("")
-        } catch (error ) {
-            console.log(error.response.data.message)
-            
+        } catch (error ) {            
+            toast.error("Failed to add a category");
         }
+
+        setRefresh(true);
     };
     const handleCategoryChange = (e) => {
         setName(e.target.value)
@@ -91,21 +113,34 @@ const CreateCategory = () => {
 
     
     const submitSubCategoryHandler = async () => {
+
+        
         try {
             
             const slug = slugify(subcategoryName);
-            const { data } = await postRequest("/admin/subcategory", {
+            const { response } = await postRequest("/admin/subcategory", {
                 subcategoryName,
                 parent,
                 slug
             });
+
+            let categoryNames = [] ;     
+
+                       
+             categoryNames.push({"id" : response.data.id, "name" : response.data.name});
+
+            setSubCategories(subCategories ||categoryNames);
+           
                         
             setSubcategoryName("");
             setParent("");
+
+            setRefresh2(true);
         } catch (error) {
-            console.log(error.response.data.message);
+            toast.error("Failed to add SubCategories");
             
         }
+       
     };
 
 
@@ -137,7 +172,12 @@ const CreateCategory = () => {
                     </Form>
                 )}
             </Formik>            
+            {categories?.map((cat, i) => (
+                    <div key={i}>{cat.name}</div>
+                ))}
         </div>
+        
+        
           <div className="mt-4">
           <div className="flex p-2 border-b pb-1 font-semibold">
               Create a Sub-Category
@@ -171,6 +211,9 @@ const CreateCategory = () => {
                   </Form>
               )}
           </Formik>
+          {subCategories?.map((cat, i) => (
+                    <div key={i}>{cat.name}</div>
+                ))}
       </div>
       </>        
     );

@@ -8,8 +8,9 @@ import api, { postRequest } from '../../util/api'
 import LoginInput from "./LoginInput";
 import ButtonInput from "./ButtonInput";
 import { useAuthContext } from "../../store/AuthContext";
-import { useErrorBoundary } from "react-error-boundary";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../../util/api";
 
 const initialUser = {
     username: "",
@@ -20,6 +21,20 @@ const initialUser = {
     error: ""
 };
 
+const signup = async (userData) => {
+    try {        
+        console.log(userData);
+        const data  = await postRequest("/auth/public/register", userData);
+        return data;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+const REGISTER_QUERY_KEY = 'register';
+
+
+
 const RegisterPage = () => {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(initialUser);
@@ -27,7 +42,7 @@ const RegisterPage = () => {
     const { username, email, password, conf_password, success, error } = user;
     const { token } = useAuthContext();
     const navigate = useNavigate();
-    const { showBoundary } = useErrorBoundary();
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,6 +61,31 @@ const RegisterPage = () => {
         if (token) navigate("/");
       }, [navigate, token]);
 
+      const { mutate } = useMutation({
+        mutationFn : signup, 
+        throwOnError : false,
+        onSuccess: (response) => {
+
+            setUser({
+                ...user, error: "", success: response.message
+            })
+
+            setLoading(false);
+            toast.success("Vertification email sended. Please chek your email.");
+            
+            queryClient.invalidateQueries({ querykey: [REGISTER_QUERY_KEY] });
+            navigate("/signin");
+        },
+        onError: (error) => {                       
+            
+            setLoading(false);            
+            setUser({
+                ...user, success: "", error: error
+            })
+             toast.error(error);
+        }
+    });
+
     const registerValidation = Yup.object({
         username: Yup.string().required("What's your name?").min(2,"First name must be between 2 and 16 characters.").max(16,"First name must be between 2 and 16 characters.").matches(/^[aA-zZ]/,"Numbers and Special characters are not allowed"),
         email: Yup.string()
@@ -62,27 +102,32 @@ const RegisterPage = () => {
             email,
             password,
             role: [role],
-          };    
-        try{
-            setLoading(true);
+          };
+         
+          
+          mutate(sendData);
+          
+        // try{
+        //     setLoading(true);
             
-            const response = await postRequest("/auth/public/register", sendData);
+        //     const response = await postRequest("/auth/public/register", sendData);
+            
+        //     if (response.data) {
+        //         setUser({
+        //             ...user, error: "", success: response.message
+        //         })
+        //         toast.success("Vertification email sended. Please chek your email.");
+        //         navigate("/signin");
+        //       }
 
-            setUser({
-                ...user, error: "", success: response.message
-            })
-            if (response.data) {
-                toast.success("Vertification email sended. Please chek your email.");
-                navigate("/signin");
-              }
-
-        } catch(error) {
-            setLoading(false);
-            setUser({
-                ...user, success: "", error: error.response.data.message
-            })
-            showBoundary(error);
-        }
+        // } catch(error) {
+        //     setLoading(false);
+        //     console.log(error.message);
+        //     setUser({
+        //         ...user, success: "", error: error.message
+        //     })
+        //      toast.error(error.message);
+        // }
     }
 
 

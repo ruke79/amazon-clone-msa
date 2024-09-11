@@ -4,9 +4,9 @@ import * as Yup from "yup";
 import AdminInput from "../AdminInput";
 import { TextField } from "@material-ui/core";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import api, { postRequest } from 'util/api';
-
+import  toast from "react-hot-toast";
 
 
 
@@ -84,7 +84,7 @@ export default function Coupon({ setCoupons }) {
                 placholder="Discount"
                 onChange={(e) => setDiscount(e.target.value)}
               />
-              <div className={styles.date_picker}>
+              <div className="mt-4 flex items-center gap-8">
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label="Start Date"
@@ -104,8 +104,8 @@ export default function Coupon({ setCoupons }) {
                   />
                 </LocalizationProvider>
               </div>
-              <div className={styles.btnWrap}>
-                <button type="submit" className={`${styles.btn} `}>
+              <div className="w-full flex flex-end">
+                <button type="submit" className="min-w-32 py-2.5 px-3.5 font-semibold cursor-pointer text-black mt-2.5 transition-all">
                   <span>Add Coupon</span>
                 </button>
               </div>

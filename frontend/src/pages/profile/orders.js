@@ -4,24 +4,26 @@ import { ordersLinks } from "components/profile/sidebar/ordersLinks";
 import { Link, useSearchParams} from "react-router-dom";
 import { CheckBadgeIcon, EyeIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import slugify from "slugify";
-import api from "util/api";
+import api, { getRequest } from "util/api";
+import toast from "react-hot-toast";
 
 
 const Orders = ({ user, tab, orders }) => {
 
-    const searchParams = useSearchParams();
-    const qParam = searchParams.get('q');
-    
+    // const searchParams = useSearchParams();
+    // const qParam = searchParams.get('q');
+
+        
     return (
         <>
-            <Layout user={user} tab={tab} title={`${user.name}'s Orders`}>
+            {/* <Layout user={user} tab={tab} title={`${user.name}'s Orders`}>
                 <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Orders</h2>
                     <nav>
                         <ul className="flex">
                             {ordersLinks.map((order, i) => (
                                 <li className={`${qParam?.q?.split("__")[0] == slugify(order.name, {lower:true})  ? 'font-bold border-b' : '' } px-1 flex items-center justify-center hover:font-bold hover:border-b`} key={i}>
-                                    <Link to={`/profile/orders?tab=${tab}&q=${slugify(order.name,{lower: true,})}__${order.filter}`}>{order.name}</Link>
+                                    <Link to={`profile/orders?tab=${tab}&q=${slugify(order.name,{lower: true,})}__${order.filter}`}>{order.name}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -71,7 +73,7 @@ const Orders = ({ user, tab, orders }) => {
                         </tbody>
                     </table>
                 </div>
-            </Layout>
+            </Layout> */}
         </>
     );
 };
@@ -82,21 +84,27 @@ export const loader = (authContext) => {
 
     return async ({params, request}) => {
     
-        const { currentUser } = authContext;
+        //const { currentUser } = authContext;
         const searchParams = new URL(request.url).searchParams;
+
+        
+
         const filter = searchParams.get('q').split("__")[1];
+
+        console.log('loader');
 
         try {
 
-         const { data } = await api.get("/profile/orders", null,
+         const { data } = await getRequest("/user/profile/orders", null,
                       { params : { filter : filter }                                  
                        } 
-            );                                   
+            );                             
         
-            return data;    
+          return data;    
         
         } catch (error) {
-            console.log("erorr >>>", error.response.data.message);
+            toast.error("Failed to load orders");
+            
         }
     };
 }

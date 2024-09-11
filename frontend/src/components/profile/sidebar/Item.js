@@ -50,6 +50,7 @@ const Item = ({ item, visible, index }) => {
                 <ul className="ml-2">
                     {item.links.map((link, i) => (
                         <>
+                            {console.log(link)}
                             {link.link.startsWith("/profile/orders") ? (
                                 <li
                                     className={`${
@@ -59,7 +60,7 @@ const Item = ({ item, visible, index }) => {
                                 >
                                     <ArrowLongRightIcon className="w-5 h-5 mr-2" />
                                     <Link
-                                        to={`http://localhost:3000/${
+                                        to={`http://localhost:3000${
                                             link.link
                                         }?tab=${index}&q=${slugify(link.name, {
                                             lower: true,
