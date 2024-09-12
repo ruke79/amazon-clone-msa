@@ -54,7 +54,7 @@ public class PaymentResult extends BaseEntity{
     private LocalDateTime payCancelDateTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "pay_result_status", length = 30)
+    @Column(name = "pay_result_status", length = 60)
     private PaymentResultStatus payStatus;
 
     private String email;

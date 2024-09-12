@@ -11,10 +11,11 @@ const Colors = ({ product, setProduct, colorImage, colors, setColors, ...props }
     useEffect(() => {
         const fetchData = async () => {
             if (colorImage) {
+                
                 const result = await prominent(colorImage, {
                     format: "hex",
                     amount: 6,
-                });
+                });             
                 setColors(result);
             }
         };

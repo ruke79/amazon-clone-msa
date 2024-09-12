@@ -7,9 +7,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentResultStatus {
 
-    SUCCESS("SUCCESS"),
-    REFUND("REFUND"),
-    WAITING_FOR_PAYMENT("WAITING");
+    PAID("paid"),
+    UNPAID("unpaid"),
+    PROCESSING("Processing"),
+    NOT_PROCESSED("Not Processed"),
+    DISPATCHED("Dispatched"),
+    COMPLETED("Completed"),
+    CANCELLED("Cancelled");
     
     private String status;
 

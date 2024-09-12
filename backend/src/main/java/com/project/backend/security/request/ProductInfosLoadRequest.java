@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductsRequest {
+public class ProductInfosLoadRequest {
 
-    List<ProductRequest> products;
+    List<ProductInfoLoadRequest> products;
 }

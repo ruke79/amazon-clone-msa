@@ -1,5 +1,7 @@
 package com.project.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.constants.StatusMessages;
+import com.project.backend.dto.OrderDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.User;
 import com.project.backend.security.request.PasswordRequest;
@@ -89,15 +92,18 @@ public class UserController {
         if (null != userDetails) {
 
             try {
-
                 
-                orderService.getOrders(userDetails.getUsername(), filter);
+                List<OrderDTO> response =  orderService.getOrders(userDetails.getUsername(), filter);
+                return new ResponseEntity<>(response, HttpStatus.OK); 
                 
             }
             catch(RuntimeException e) {
-
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)                .body(new MessageResponse(StatusMessages.ORDER_NOT_FOUND));
                                 
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(StatusMessages.USER_NOT_FOUND);
         }
     }
     

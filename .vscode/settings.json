@@ -3,5 +3,6 @@
     "java.compile.nullAnalysis.mode": "disabled",
     "java.project.sourcePaths": [
         "frontend/src/redux"
-    ]
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }

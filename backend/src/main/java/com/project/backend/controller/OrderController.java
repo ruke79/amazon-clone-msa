@@ -76,7 +76,7 @@ public class OrderController {
         if (null != userDetails) {
 
             try {
-                OrderDTO response = orderService.getOrder(orderId);
+                OrderDTO response = orderService.getOrder(Long.parseLong(orderId), "");
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } catch(RuntimeException e) {

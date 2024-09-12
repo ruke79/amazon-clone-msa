@@ -68,8 +68,7 @@ const Checkout = () => {
                         setLoading={setLoading}
                     />
                 </section>
-            </main>
-            <MenuSideBar />
+            </main>            
         </>
     );
 };
