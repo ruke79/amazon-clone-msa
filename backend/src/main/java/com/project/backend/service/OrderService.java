@@ -104,7 +104,7 @@ public class OrderService {
 
             PaymentResult pr = PaymentResult.builder()
             .payPrice(request.getTotal())
-            .payStatus(PaymentResultStatus.WAITING_FOR_PAYMENT).build();
+            .payStatus(PaymentResultStatus.NOT_PROCESSED).build();
            
             
             order.setPaymentResult(pr);
@@ -165,13 +165,18 @@ public class OrderService {
         return null;
     }
 
-    public OrderDTO getOrder(String orderId)  {
+    public OrderDTO getOrder(Long orderId, String filter)  {
 
-        Optional<Order> order = orderRepository.findById(Long.parseLong(orderId));
+        Order data = null;
 
-        if (order.isPresent()) {
+        if (!filter.isEmpty())             
+            data = orderRepository.findByOrderIdAndPaymentResult_PayStatus(orderId,PaymentResultStatus.valueOf(filter))
+            .orElseThrow(()->new RuntimeException("Order not found."));
+        else         
+            data = orderRepository.findById(orderId)
+            .orElseThrow(()->new RuntimeException("Order not found."));
 
-            Order data = order.get();
+        if (null != data) {            
 
             List<OrderedProductDTO> dtos = new ArrayList<>();
             for(OrderedProduct product : data.getOrderedProducts()) {
@@ -229,15 +234,18 @@ public class OrderService {
         List<OrderDTO> result = new ArrayList<>();
 
         if (null != user) {
+                List<Order> orders = user.getOrderLists();
 
+                for(Order o : orders) {
 
-                OrderDTO dto = getOrder(filter);
+                    OrderDTO dto = getOrder(o.getOrderId(), filter);
 
-
+                    result.add(dto);
+                }
         }
 
-    }
-    
+        return result;
 
+    }   
 
 }

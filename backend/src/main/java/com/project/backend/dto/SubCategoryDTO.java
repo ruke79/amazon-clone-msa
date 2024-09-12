@@ -16,4 +16,5 @@ public class SubCategoryDTO {
     private String id;
     private CategoryDTO parent;
     private String name;
+    private String slug;
 }

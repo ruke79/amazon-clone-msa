@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.backend.constants.PaymentResultStatus;
 import com.project.backend.model.Order;
 
 @Repository
@@ -22,4 +23,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findByUser_UserName(String email);
 
     Optional<Order> findByOrderNumber(String orderNumber);
+    
+    Optional<Order> findByOrderIdAndPaymentResult_PayStatus(Long orderId, PaymentResultStatus payStatus);
 }

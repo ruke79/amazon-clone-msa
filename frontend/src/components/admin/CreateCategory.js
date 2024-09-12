@@ -23,8 +23,7 @@ export const loadCategories = async(setCategories) => {
 
 export const loadSubCategories = async(setSubCategories) => {
     try {
-        const response = await getRequest("/admin/product/subcategories");
-      
+        const response = await getRequest("/admin/product/allsubcategories");      
       
       
       setSubCategories(response.data);            
@@ -89,12 +88,12 @@ const CreateCategory = () => {
             };            
             const { response } = await postRequest("/admin/category", reqData);
 
-             let categoryNames = [] ;     
+            //  let categoryNames = [] ;     
 
                         
-             categoryNames.push({"id" : response.data.id, "name" : response.data.name});
+            //  categoryNames.push({"id" : response.data.id, "name" : response.data.name});
               
-              setCategories(categories || categoryNames );     
+            //   setCategories(categories || categoryNames );     
 
             //setName("")
         } catch (error ) {            
@@ -124,19 +123,13 @@ const CreateCategory = () => {
                 slug
             });
 
-            let categoryNames = [] ;     
-
-                       
-             categoryNames.push({"id" : response.data.id, "name" : response.data.name});
-
-            setSubCategories(subCategories ||categoryNames);
-           
                         
             setSubcategoryName("");
             setParent("");
 
             setRefresh2(true);
         } catch (error) {
+            console.log(error);
             toast.error("Failed to add SubCategories");
             
         }
@@ -212,7 +205,7 @@ const CreateCategory = () => {
               )}
           </Formik>
           {subCategories?.map((cat, i) => (
-                    <div key={i}>{cat.name}</div>
+                    <div key={i}>Category : {cat.parentName} Subcategory : {cat.name}</div>
                 ))}
       </div>
       </>        

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.backend.constants.StatusMessages;
+import com.project.backend.dto.CategoryDTO;
 import com.project.backend.dto.CouponDTO;
 import com.project.backend.dto.ProductDTO;
+import com.project.backend.dto.SubCategoryDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.Role;
 import com.project.backend.model.SubCategory;
@@ -30,13 +32,15 @@ import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.CategoryRequest;
 import com.project.backend.security.request.CouponRequest;
 import com.project.backend.security.request.ImageRequest;
+import com.project.backend.security.request.ProductInfosLoadRequest;
 import com.project.backend.security.request.ProductRequest;
-import com.project.backend.security.request.ProductsRequest;
+
 import com.project.backend.security.request.SubCategoryRequest;
 import com.project.backend.security.response.CategoryResponse;
 import com.project.backend.security.response.GenericResponse;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.security.response.SubCategoryResponse;
+import com.project.backend.service.CategoryService;
 import com.project.backend.service.CouponService;
 import com.project.backend.service.ProductService;
 import com.project.backend.service.UserService;
@@ -63,6 +67,8 @@ public class AdminController {
 
     private final CouponService couponService;
 
+    private final CategoryService categoryService;
+
     private final CategoryRepository categoryRepository;
 
     private final SubCategoryRepository subCategoryRepository;
@@ -70,13 +76,14 @@ public class AdminController {
     private final ProductRepository productRepository;
 
     @Autowired
-    public AdminController(UserService userService, ProductService productService,
-            CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
-            ProductRepository productRepository, ProductSkuRepository productskuRepository,
-            CouponService couponService) {
+    public AdminController(UserService userService, ProductService productService, CouponService couponService,
+            CategoryService categoryService, CategoryRepository categoryRepository,
+            SubCategoryRepository subCategoryRepository, ProductRepository productRepository,
+            ProductSkuRepository productskuRepository) {
         this.userService = userService;
         this.productService = productService;
         this.couponService = couponService;
+        this.categoryService = categoryService;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.productRepository = productRepository;
@@ -149,21 +156,25 @@ public class AdminController {
     }
 
     @PostMapping("/category")
-    ResponseEntity<?> addCategory(@RequestBody CategoryRequest categoryRequest) {
+    ResponseEntity<?> addCategory(@RequestBody CategoryRequest request) {
 
         try {
 
-            if (null == categoryRepository.findByCategoryName(categoryRequest.getName())) {
+            boolean exist = categoryService.findCategory(request.getName());
 
-                ProductCategory category = new ProductCategory();
-                category.setCategoryName(categoryRequest.getName());
-                category.setSlug(categoryRequest.getSlug());
+             if (!exist) {
 
-                categoryRepository.save(category);
+            //     ProductCategory category = new ProductCategory();
+            //     category.setCategoryName(categoryRequest.getName());
+            //     category.setSlug(categoryRequest.getSlug());
+
+            //     categoryRepository.save(category);
+
+                CategoryDTO dto = categoryService.createCategory(request.getName(), request.getSlug());
 
                 CategoryResponse response = new CategoryResponse(
-                        Long.toString(category.getCategoryId()),
-                        category.getCategoryName()
+                        dto.getId(),
+                        dto.getName()
                 // category.getSlug()
                 );
 
@@ -181,30 +192,20 @@ public class AdminController {
     @PostMapping("/subcategory")
     ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest request) {
 
-        
         try {
+            boolean exist = categoryService.findSubCategory(request.getSubcategoryName(), request.getParent());
 
-            SubCategory data = subCategoryRepository.findByNameAndCategory_CategoryId(request.getSubcategoryName(), Long.parseLong(request.getParent()));
+            if (!exist) {
 
-            if (data == null) {
-
-                SubCategory subcategory = new SubCategory();
-                subcategory.setSubcategoryName(request.getSubcategoryName());
-
-                Optional<ProductCategory> category = categoryRepository
-                        .findById(Long.parseLong(request.getParent()));
-
-                subcategory.setCategory(category.get());
-
-                subcategory.setSlug(request.getSlug());
-
-                subCategoryRepository.save(subcategory);
+                SubCategoryDTO subcategory = categoryService.createSubCategory(request.getSubcategoryName(),
+                        request.getParent(), request.getSlug());
 
                 SubCategoryResponse response = new SubCategoryResponse(
-                        Long.toString(subcategory.getSubcategoryId()),
-                        subcategory.getSubcategoryName());
+                        subcategory.getId(),
+                        subcategory.getName(), subcategory.getParent().getName());
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
+
             } else
                 return new ResponseEntity<>(StatusMessages.SUBCATEGORY_IS_EXISTED, HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
@@ -227,6 +228,35 @@ public class AdminController {
 
     }
 
+    @GetMapping("/product/allsubcategories")
+    ResponseEntity<?> loadAllSubcategories() {
+
+        try {
+
+            List<SubCategory> subcategories = subCategoryRepository.findAll();
+
+            if (!subcategories.isEmpty()) {
+
+                ArrayList<SubCategoryResponse> subCategoryList = new ArrayList<>();
+
+                subcategories.forEach(item -> {
+                    ProductCategory category = categoryRepository.findById(item.getCategory().getCategoryId())
+                            .orElseThrow(() -> new RuntimeException("Category not found"));
+
+                    subCategoryList
+                            .add(new SubCategoryResponse(Long.toString(item.getSubcategoryId()),
+                                    item.getSubcategoryName(), category.getCategoryName()));
+                });
+
+                return new ResponseEntity<>(subCategoryList, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>(StatusMessages.SUBCATEGORY_NOT_FOUND, HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+        }
+    }
+
     @GetMapping("/product/subcategories")
     ResponseEntity<?> getSubcategories(@RequestParam String category) {
 
@@ -241,7 +271,7 @@ public class AdminController {
 
                 subcategories.forEach(item -> subCategoryList
                         .add(new SubCategoryResponse(Long.toString(item.getSubcategoryId()),
-                                item.getSubcategoryName())));
+                                item.getSubcategoryName(), item.getCategory().getCategoryName())));
 
                 return new ResponseEntity<>(subCategoryList, HttpStatus.OK);
             } else
@@ -322,12 +352,15 @@ public class AdminController {
 
     // Create Products
     @PostMapping("/products")
-    ResponseEntity<?> addProduct(@RequestBody ProductsRequest request) {
+    ResponseEntity<?> addProducts(@RequestBody ProductInfosLoadRequest products) {
+    
 
-        try {
-            List<ProductSku> response = productService.creates(request);
+        log.info("/Products");
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                try {
+            List<ProductSku> response = productService.load(products);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);            
 
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -335,7 +368,6 @@ public class AdminController {
 
         }
     }
-        
 
     @PostMapping("/coupon")
     ResponseEntity<?> addCoupon(@RequestBody CouponRequest request) {

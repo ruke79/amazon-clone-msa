@@ -33,5 +33,5 @@ public final class StatusMessages {
     public static final String GET_USERINFO_FAILED = "Get userinfo failed";
     public static final String ADD_WISHLIST_FAILED = "Add wishlist failed";
 
-    
+    public static final String ORDER_NOT_FOUND = "Order not found";
 }

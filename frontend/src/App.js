@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { useMemo, Suspense  } from "react";
+import { useMemo, Suspense, useEffect, useState  } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootPage from "./pages/Root";
@@ -34,7 +34,8 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import ApiNavigationHandler from "error/ApiNavigationHandler";
 import toast, {Toaster} from 'react-hot-toast';
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
-
+import loadFakeData from "util/loadFake";
+import { postRequest, getRequest } from "util/api";
 
 // const DebugLayout = () => {
 //   const location = useLocation();
@@ -180,10 +181,36 @@ const AppRouter = () => {
 
 };
 
-const notify = () => toast('Here is your toast.');
+
 
 function App() {
 
+  const [products, setProducts] = useState([]);
+
+  useEffect(()=>{
+
+    const loadData = async () => {
+      const products = await loadFakeData();
+      
+      setProducts(products);      
+    }
+
+    loadData();
+
+  },[])
+
+  useEffect(() => {
+    const load = () => {
+     
+     if(products.length > 0) {
+      console.log(products);
+      //const { response } = postRequest('admin/products', { products : products});         
+     }
+    }
+    load();
+    
+
+  }, [products])
 
   return (
     <>   
