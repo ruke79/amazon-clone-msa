@@ -70,7 +70,7 @@ let product = {
 
 let uploaded_images = [];
     
-
+let products = [];
 
 function getRandom(min, max) {
      return Math.floor((Math.random() * (max - min+ 1)) + min);
@@ -78,182 +78,180 @@ function getRandom(min, max) {
  
 const loadFakeData = async() => {
 
-    let products = [];
+    if (products.length == 0) {
     
-    await axios.get('https://fakestoreapi.com/products')
-    .then(function(response) {
-        let category, subcategory;
-            
-        const data = response.data;
-        if (data.length > 0) {
-        
-            
-
-            for (let i = 0 ; i < data.length; i++) {
-
+        await axios.get('https://fakestoreapi.com/products')
+        .then(function(response) {
+            let category, subcategory;
                 
-                let p = data[i];
-
-                            
-                category = { name : p.category, slug : slugify(p.category)};                
-                product.category = category;
+            const data = response.data;
+            if (data.length > 0) {
+            
                 
-                product.subCategories = [];
-                subcategory = { name : p.category, slug : slugify(p.category)};
-                product.subCategories.push(subcategory);
 
-                product.name = p.title;
-                product.description = p.description;
-                product.brand = faker.company.name();
-                product.sku = p.category + p.id;
-                product.discount = getRandom(5,70);
-                product.slug = slugify(product.name);
+                for (let i = 0 ; i < data.length; i++) {
 
-                product.images = [];
-                product.images.push(p.image);
+                    
+                    let p = data[i];
 
-                if ( p.category === 'men\'s clothing' || 
-                    p.category === 'women\'s clothing' ) {
-                    product.sizes =  [
-                        {
-                            size: "Small",
-                            quantity: "100",
-                            price: p.price,
-                        },
-                        {
-                            size: "Normal",
-                            quantity: "100",
-                            price: p.price,
-                        },
-                        {
-                            size: "Large",
-                            quantity: "100",
-                            price: p.price,
-                        },
-                    ]            
-                }
-                else {
-                    product.sizes = [
-                        {
-                            size: "",
-                            quantity: "100",
-                            price: p.price,
-                        }
-                    ]
-                };
+                                
+                    category = { name : p.category, slug : slugify(p.category)};                
+                    product.category = category;
+                    
+                    product.subCategories = [];
+                    subcategory = { name : p.category, slug : slugify(p.category)};
+                    product.subCategories.push(subcategory);
 
-                product.details = [ 
-                    {
-                        name: "Product Detail Name 1",
-                        value: "Product Detal Value 1",
-                    },
-                    {
-                        name: "Product Detail Name 2",
-                        value: "Product Detal Value 2",
-                    },
-                ];
-                product.questions = [
-                    {
-                        question: "Product Question 1",
-                        answer: "Product Answer 1",
-                    },
-                ];
+                    product.name = p.title;
+                    product.description = p.description;
+                    product.brand = faker.company.name();
+                    product.sku = p.category + p.id;
+                    product.discount = getRandom(5,70);
+                    product.slug = slugify(product.name);
 
-                product.shippingFee = "5";
+                    product.images = [];
+                    product.images.push(p.image);
 
-
-                const config = {
-                    onUploadProgress: progressEvent => {
-                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);                
+                    if ( p.category === 'men\'s clothing' || 
+                        p.category === 'women\'s clothing' ) {
+                        product.sizes =  [
+                            {
+                                size: "Small",
+                                quantity: "100",
+                                price: p.price,
+                            },
+                            {
+                                size: "Normal",
+                                quantity: "100",
+                                price: p.price,
+                            },
+                            {
+                                size: "Large",
+                                quantity: "100",
+                                price: p.price,
+                            },
+                        ]            
                     }
-                };
+                    else {
+                        product.sizes = [
+                            {
+                                size: "",
+                                quantity: "100",
+                                price: p.price,
+                            }
+                        ]
+                    };
 
-                // let imageUploader;
+                    product.details = [ 
+                        {
+                            name: "Product Detail Name 1",
+                            value: "Product Detal Value 1",
+                        },
+                        {
+                            name: "Product Detail Name 2",
+                            value: "Product Detal Value 2",
+                        },
+                    ];
+                    product.questions = [
+                        {
+                            question: "Product Question 1",
+                            answer: "Product Answer 1",
+                        },
+                    ];
 
-                
-                //     if (p.image) {
-                //         let images = [p.image];
+                    product.shippingFee = "5";
 
-                //         // let files = images.map((img) => {
-                //         //     return dataURItoBlob(img);
-                //         // });
 
-                //         console.log(images);
-                //         const path = "product images";
-                
-                //         imageUploader = images.map(async (file) => {
-                //             let formData = new FormData();
-                //             formData.append("folder", path);
-                //             formData.append("file", file);
-                //             formData.append("upload_preset", "nd7idl8b");
-                //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);                
-                
-                //             const image = await uploadImages(formData, config);
-                //             uploaded_images.push(image.url);            
-                //         });
-                //     }
+                    const config = {
+                        onUploadProgress: progressEvent => {
+                            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);                
+                        }
+                    };
+
+                    // let imageUploader;
+
                     
+                    //     if (p.image) {
+                    //         let images = [p.image];
 
-                //         let temp = p.image;        
-                //         const colorLoader = async(temp) => {
+                    //         // let files = images.map((img) => {
+                    //         //     return dataURItoBlob(img);
+                    //         // });
 
-                //             console.log(temp);
-                            
-                //             let path = "product style images";
-                //             let formData = new FormData();
-                //             formData.append("folder", path);
-                //             formData.append("file", temp);
-                //             formData.append("upload_preset", "nd7idl8b");
-                //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
-                //             let cloudinary_style_img = await uploadImages(formData, config);
-                //             const style_img = cloudinary_style_img.url;
-                //             //console.log("uploaded style image: ", style_img);
-                //         };
+                    //         console.log(images);
+                    //         const path = "product images";
                     
-                //         colorLoader(temp);
-                //         axios.all(imageUploader, colorLoader).then(async () => {
+                    //         imageUploader = images.map(async (file) => {
+                    //             let formData = new FormData();
+                    //             formData.append("folder", path);
+                    //             formData.append("file", file);
+                    //             formData.append("upload_preset", "nd7idl8b");
+                    //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);                
+                    
+                    //             const image = await uploadImages(formData, config);
+                    //             uploaded_images.push(image.url);            
+                    //         });
+                    //     }
+                        
 
-                //             const result = fetchColor(p.image);
+                    //         let temp = p.image;        
+                    //         const colorLoader = async(temp) => {
 
-                //             console.log(result);
-                //         }
-                //     );
-                
-                
-                prominent(p.image, {
-                    format: "hex",
-                    amount: 6,
-                }).then((result) => {                                    
-                    product.color.color = result[getRandom(0, 5)];            
-               
-                 }
-                )
+                    //             console.log(temp);
+                                
+                    //             let path = "product style images";
+                    //             let formData = new FormData();
+                    //             formData.append("folder", path);
+                    //             formData.append("file", temp);
+                    //             formData.append("upload_preset", "nd7idl8b");
+                    //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
+                    //             let cloudinary_style_img = await uploadImages(formData, config);
+                    //             const style_img = cloudinary_style_img.url;
+                    //             //console.log("uploaded style image: ", style_img);
+                    //         };
+                        
+                    //         colorLoader(temp);
+                    //         axios.all(imageUploader, colorLoader).then(async () => {
 
-                product.color.colorImage = p.image;                                
+                    //             const result = fetchColor(p.image);
+
+                    //             console.log(result);
+                    //         }
+                    //     );
+                    
+                    
+                    prominent(p.image, {
+                        format: "hex",
+                        amount: 6,
+                    }).then((result) => {                                    
+                        product.color.color = result[getRandom(0, 5)];            
                 
-                
-                
-                products.push(structuredClone(product));
+                    }
+                    )
+
+                    product.color.colorImage = p.image;                                
+                    
+                    
+                    
+                    products.push(structuredClone(product));
+                    
+                }
                 
             }
+        });
 
-            
+        console.log(products.length);
 
-            
+        try {
+            const { response } = await postRequest('admin/products', { products : products})
+        
+                
+
+        }
+        catch(err) {
             
         }
-    });
-
-    try {
-    
-        return products;
-        
-
-    }
-    catch(err) {
-        
-    }
-    
+    }    
 
 }
 

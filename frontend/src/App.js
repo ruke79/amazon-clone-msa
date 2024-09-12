@@ -133,9 +133,8 @@ const AppRouter = () => {
           loader : loaderSecurity(authContext)
         },
         {
-          path: '/product/:slug',
-          //id: 'slug',
-          element: <ProtectedRoute><SingleProduct /></ProtectedRoute>,
+          path: '/product/:slug',          
+          element: <SingleProduct />,
           loader: productLoader,
 
         },
@@ -185,32 +184,34 @@ const AppRouter = () => {
 
 function App() {
 
-  const [products, setProducts] = useState([]);
+  //const [products, setProducts] = useState([]);
+  const [loaded, setLoaded ] = useState(false);
 
   useEffect(()=>{
-
+    
     const loadData = async () => {
-      const products = await loadFakeData();
-      
-      setProducts(products);      
+
+  //      await loadFakeData();            
     }
 
-    loadData();
+    if(loaded === false)
+      loadData();
+    setLoaded(true);
 
   },[])
 
-  useEffect(() => {
-    const load = () => {
+  // useEffect(() => {
+  //   const load = () => {
      
-     if(products.length > 0) {
-      console.log(products);
-      //const { response } = postRequest('admin/products', { products : products});         
-     }
-    }
-    load();
+  //    if(products.length > 0) {
+  //     console.log(products);
+  //     const { response } = ;         
+  //    }
+  //   }
+  //   load();
     
 
-  }, [products])
+  // }, [])
 
   return (
     <>   
