@@ -9,14 +9,14 @@ const initialState = {
     brand: "",
     sku: "",
     discount: 0,
-    //images: [],
+    images: [],
     //description_images: [],
     parent: "",
     category: "",
     subCategories: [],
     color: {
         color: "",
-       // image: "",
+        image: "",
     },
     sizes: [
         {

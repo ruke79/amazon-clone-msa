@@ -7,6 +7,10 @@ import DeliveryTo from "./DeliveryTo";
 import Search from "./Search";
 import Account from './Account'
 import HeaderMenu from "./HeaderMenu";
+import loadFakeData from 'util/loadFake'
+import { useEffect } from "react";
+
+
 
 
 const Header = ({title, searchHandler}) => {
@@ -14,7 +18,14 @@ const Header = ({title, searchHandler}) => {
     const openMenuHandler = () => {
         dispatch(openMenu());
     };
-    
+
+    useEffect(()=>{
+
+        loadFakeData();
+
+
+    }, [])
+       
 
     return (
         <>
@@ -55,12 +66,12 @@ const Header = ({title, searchHandler}) => {
                     </div>
 
                     {/* <Language /> */}
-                    <Account />
+                    {/* <Account /> */}
                 </div>
 
                 {/* Search Mobile*/}
                 <div className="md:hidden">
-                    <Search />
+                    {/* <Search /> */}
                 </div>
             </div>            
             <HeaderMenu handleOpenMenu={openMenuHandler} />

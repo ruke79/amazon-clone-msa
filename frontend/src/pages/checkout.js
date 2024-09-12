@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import Header from "pages/header/Header";
-import MenuSideBar from "./header/MenuSidebar";
 import ShippingPage from "components/checkout/ShippingPage";
 import Product from "components/checkout/ChekoutProduct";
 import Payment from "components/checkout/Payment";

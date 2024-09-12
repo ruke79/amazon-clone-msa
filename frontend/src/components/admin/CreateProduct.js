@@ -63,51 +63,51 @@ const CreateProduct = ({
             );
         }
     };
-    
+
     let uploaded_images = [];
     let style_img = "";
     const createProductHnadler = async () => {
         setLoading(true);
-  
+
         const config = {
             onUploadProgress: progressEvent => {
-              const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
-              setProgress(percentCompleted);
+                const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                setProgress(percentCompleted);
             }
-          };
-        
+        };
+
         let imageUploader;
 
-        
-        
-        if (images) {            
+
+
+        if (images) {
 
             let files = images.map((img) => {
                 return dataURItoBlob(img);
             });
-                
+
             const path = "product images";
-            
-            imageUploader = files.map(async( file ) => {
-                let formData = new FormData();    
+
+            imageUploader = files.map(async (file) => {
+                let formData = new FormData();
                 formData.append("path", path);
-                formData.append("file", file);                                          
+                formData.append("file", file);
                 formData.append("upload_preset", "nd7idl8b");
                 formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
                 formData.append("timestamp", (Date.now() / 1000) | 0);
-                
-                
-                const image = await uploadImages(formData, config);                
-                uploaded_images.push(image.url);            
+
+
+                const image = await uploadImages(formData, config);
+                uploaded_images.push(image.url);
                 setProgress(0);
-            });                            
+            });
         }
-        
+
         if (product.color.image) {
-            let temp = dataURItoBlob(product.color.image);        
+            let temp = dataURItoBlob(product.color.image);
             //formData.append("colorImage", temp);               
             let path = "product style images";
-            let formData = new FormData();            
+            let formData = new FormData();
             formData.append("path", path);
             formData.append("file", temp);
             formData.append("upload_preset", "nd7idl8b");
@@ -117,60 +117,52 @@ const CreateProduct = ({
             console.log("uploaded style image: ", style_img);
             setProgress(0);
         }
-        axios.all(imageUploader).then(async() => {
+        axios.all(imageUploader).then(async () => {
             try {
                 let formData = new FormData();
-                
-                formData.append("images", uploaded_images);                        
+
+                formData.append("images", uploaded_images);
                 formData.append("colorImage", style_img);
 
-                               
-                product.slug = slugify(product.name);
-                
-                
-                formData.append("product", new Blob([JSON.stringify(product)], { 
-                    type: 'application/json'
-                }));            
 
-                //  product.sku_products.map(sku =>
-                //     { sku.images.map((idx, image) => 
-                //         {
-                //             image = uploadImages[idx].url
-                //         });
-                //       sku.color.colorImage = style_img;                
-                //     }
-                //  );                 
-                                        
+                product.slug = slugify(product.name);
+
+
+                formData.append("product", new Blob([JSON.stringify(product)], {
+                    type: 'application/json'
+                }));
+
+
                 const { data } = await api.post("admin/product", formData,
                     {
                         headers: {
-                        "Content-Type": "multipart/form-data",                        
-                            
+                            "Content-Type": "multipart/form-data",
+
                         },
                         transformRequest: [
-                        function () {
-                            return formData;
-                        },
+                            function () {
+                                return formData;
+                            },
                         ],
-                    }                              
+                    }
                 );
-                
-                                    
+
+
                 if (data.status === 200) {
                     setProduct(initialProduct);
                     setImages([]);
                     setColorImage("");
-                    setColors([]);                    
+                    setColors([]);
                     dispatch(
                         showDialog({
                             header: "post created.",
-                            msgs:[{
+                            msgs: [{
                                 msg: data.message,
                                 type: "success",
                             }],
                         })
                     );
-                    
+
                 }
                 setLoading(false);
             } catch (error) {
@@ -178,21 +170,21 @@ const CreateProduct = ({
                 console.log(error.message);
             }
         });
-    }    
+    }
     const handleChange = (e) => {
-       
-        
-        const { value, name } = e.target;        
-        if (name === "subCategories") {            
 
-            const data = typeof value === "string" ? value.split(",") : value;            
+
+        const { value, name } = e.target;
+        if (name === "subCategories") {
+
+            const data = typeof value === "string" ? value.split(",") : value;
             setProduct({
                 ...product,
                 [name]: data,
-                
-            });   
-            
-            
+
+            });
+
+
         } else {
             setProduct({
                 ...product,
@@ -201,7 +193,7 @@ const CreateProduct = ({
         }
     };
 
-    
+
 
     return (
         <div className="my-4">
@@ -249,7 +241,7 @@ const CreateProduct = ({
                                             alt="color-image"
                                             //fill
                                             className="object-contain"
-                                            width = "30"
+                                            width="30"
                                         />
                                     </div>
                                 )}
@@ -345,7 +337,7 @@ const CreateProduct = ({
                                 placeholder="Product Discount"
                                 icon="category"
                                 onChange={handleChange}
-                            />                            
+                            />
                             <AdminInput
                                 type="text"
                                 name="shippingFee"
