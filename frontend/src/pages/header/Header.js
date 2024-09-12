@@ -7,7 +7,7 @@ import DeliveryTo from "./DeliveryTo";
 import Search from "./Search";
 import Account from './Account'
 import HeaderMenu from "./HeaderMenu";
-import loadFakeData from 'util/loadFake'
+import Language from "./Language";
 import { useEffect } from "react";
 
 
@@ -19,12 +19,7 @@ const Header = ({title, searchHandler}) => {
         dispatch(openMenu());
     };
 
-    useEffect(()=>{
-
-        loadFakeData();
-
-
-    }, [])
+   
        
 
     return (
@@ -60,18 +55,18 @@ const Header = ({title, searchHandler}) => {
 
                     <DeliveryTo />
 
-                    {/* Search Desktop*/}
+                    Search Desktop
                     <div className="hidden md:flex flex-grow">
                         <Search searchHandler={searchHandler} />
                     </div>
 
-                    {/* <Language /> */}
-                    {/* <Account /> */}
+                    <Language />
+                    <Account />
                 </div>
 
                 {/* Search Mobile*/}
                 <div className="md:hidden">
-                    {/* <Search /> */}
+                    <Search />
                 </div>
             </div>            
             <HeaderMenu handleOpenMenu={openMenuHandler} />

@@ -14,9 +14,10 @@ const GridCategory = ({ category, products, gridCols}) => {
     product.sku_products[0].images.map(image => image = JSON.stringify(image))
     );    
 
+    console.log(category)    ;
+    const selectedProducts = products.filter( (product) => 
+        ( category === product.category.name)).slice(0, length);
     
-    
-    const selectedProducts = products.filter( (product) => ( category === product.category.slug)).slice(0, length);
     
     
 
@@ -26,12 +27,12 @@ const GridCategory = ({ category, products, gridCols}) => {
                 <div className={`h-full grid grid-cols-1 gap-4 m-1 `}>
                 
                 {selectedProducts.map((product) => (
-                        <Link to={`/product/${product.name}`} key={product.product_id}>
+                        <Link to={`/product/${product.slug}`} key={product.product_id}>
                             <div className={`relative`}>
                                                             
                                 <img
                                     //  src={"data:image/jpeg;base64,"+product.sku_products[0].images[0]}                                    
-                                    src={product.sku_products[1].images[0]}
+                                    src={product.sku_products[0].images[0]}
                                     alt={product.name}                                    
                                     className="h-[420px]  object-cover rounded  "
                                 />  

@@ -19,10 +19,10 @@ const HomePage = () => {
         <CarouselContainer/>
         <CategoriesProduct products={products} />         
         <div className="z-10 relative">
-            <HomeProductSwiper products={products} category="women clothing" />
-            <HomeProductSwiper products={products} category="shoes" />
-            <HomeProductSwiper products={products} category="Beauty" />
-            <HomeProductSwiper products={products} category="Kids" />
+            <HomeProductSwiper products={products} category="women's clothing" />
+            <HomeProductSwiper products={products} category="men's clothing" />
+            <HomeProductSwiper products={products} category="electronics" />
+            <HomeProductSwiper products={products} category="jewelery" />
         </div>          
         </main>          
           </>
