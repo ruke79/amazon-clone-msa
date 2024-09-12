@@ -48,6 +48,7 @@ import com.project.backend.repository.ProductSkuRepository;
 import com.project.backend.repository.ReviewRepository;
 import com.project.backend.repository.SubCategoryRepository;
 import com.project.backend.security.request.ProductRequest;
+import com.project.backend.security.request.ProductsRequest;
 import com.project.backend.security.request.ReviewRequest;
 import com.project.backend.security.request.SearchParamsRequest;
 import com.project.backend.security.request.WishListRequest;
@@ -230,6 +231,21 @@ public class ProductService {
                 .build();
     }
 
+    public List<ProductSku> creates(ProductsRequest rquest) throws IOException{
+
+            List<ProductSku> result = new ArrayList<>();
+            for (ProductRequest pr : rquest.getProducts()) {
+
+                ProductSku sku;
+                
+                sku = addProduct(pr, pr.getImages(), pr.getColor().getColorImage());
+                result.add(sku);
+                               
+            }
+
+            return result;
+    }
+
     public ProductSku addProduct(ProductRequest request, List<String> images, String colorImage) throws IOException {
 
         if (request.getParent() != null && request.getParent().length() > 0) {
@@ -323,15 +339,7 @@ public class ProductService {
                 detail.setProduct(product);
             });
         }
-
-        if (request.getQuestions() != null) {
-
-            // request.getQuestions().forEach(q -> q.setProduct(product)); -
-
-            // for(ProductQA i : product.getQuestions())
-            // log.info(i.getQuestion());
-        }
-
+        
         product.setQuestions(request.getQuestions());
         product.getQuestions().forEach(question -> {
             question.setProduct(product);

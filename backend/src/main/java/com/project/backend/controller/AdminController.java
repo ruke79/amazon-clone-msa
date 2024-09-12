@@ -31,6 +31,7 @@ import com.project.backend.security.request.CategoryRequest;
 import com.project.backend.security.request.CouponRequest;
 import com.project.backend.security.request.ImageRequest;
 import com.project.backend.security.request.ProductRequest;
+import com.project.backend.security.request.ProductsRequest;
 import com.project.backend.security.request.SubCategoryRequest;
 import com.project.backend.security.response.CategoryResponse;
 import com.project.backend.security.response.GenericResponse;
@@ -178,26 +179,24 @@ public class AdminController {
     }
 
     @PostMapping("/subcategory")
-    ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest subcategoryRequest) {
+    ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest request) {
 
-        List<String> existed = new ArrayList<String>();
-        existed.add(subcategoryRequest.getSubcategoryName());
-
+        
         try {
 
-            List<SubCategory> data = subCategoryRepository.findBySubcategoryNameIn(existed);
+            SubCategory data = subCategoryRepository.findByNameAndCategory_CategoryId(request.getSubcategoryName(), Long.parseLong(request.getParent()));
 
-            if (data.isEmpty()) {
+            if (data == null) {
 
                 SubCategory subcategory = new SubCategory();
-                subcategory.setSubcategoryName(subcategoryRequest.getSubcategoryName());
+                subcategory.setSubcategoryName(request.getSubcategoryName());
 
                 Optional<ProductCategory> category = categoryRepository
-                        .findById(Long.parseLong(subcategoryRequest.getParent()));
+                        .findById(Long.parseLong(request.getParent()));
 
                 subcategory.setCategory(category.get());
 
-                subcategory.setSlug(subcategoryRequest.getSlug());
+                subcategory.setSlug(request.getSlug());
 
                 subCategoryRepository.save(subcategory);
 
@@ -217,20 +216,15 @@ public class AdminController {
     @GetMapping("/categories")
     ResponseEntity<?> getCategories() {
 
-        
+        List<ProductCategory> category = categoryRepository.findAll();
 
-            List<ProductCategory> category = categoryRepository.findAll();
+        List<CategoryResponse> responses = new ArrayList<>();
+        category.forEach(item -> {
+            responses.add(new CategoryResponse(Long.toString(item.getCategoryId()), item.getCategoryName()));
+        });
 
-           
+        return new ResponseEntity<>(responses, HttpStatus.OK);
 
-                List<CategoryResponse> responses = new ArrayList<>();
-                category.forEach(item -> {
-                    responses.add(new CategoryResponse(Long.toString(item.getCategoryId()), item.getCategoryName()));
-                });
-
-                return new ResponseEntity<>(responses, HttpStatus.OK);
-           
-        
     }
 
     @GetMapping("/product/subcategories")
@@ -306,6 +300,7 @@ public class AdminController {
 
     // }
 
+    // Create Product
     @PostMapping("/product")
     ResponseEntity<?> addProduct(
             @RequestPart("product") ProductRequest request,
@@ -324,6 +319,23 @@ public class AdminController {
         }
 
     }
+
+    // Create Products
+    @PostMapping("/products")
+    ResponseEntity<?> addProduct(@RequestBody ProductsRequest request) {
+
+        try {
+            List<ProductSku> response = productService.creates(request);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+
+        }
+    }
+        
 
     @PostMapping("/coupon")
     ResponseEntity<?> addCoupon(@RequestBody CouponRequest request) {

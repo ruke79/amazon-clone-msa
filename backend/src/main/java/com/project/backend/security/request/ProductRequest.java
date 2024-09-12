@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 import com.project.backend.model.ProductColorAttribute;
 import com.project.backend.model.ProductDetails;
 import com.project.backend.model.ProductQA;
 import com.project.backend.model.ProductSizeAttribute;
-import com.project.backend.model.SubCategory;
+
 
 @Setter
 @Getter
@@ -24,6 +23,8 @@ public class ProductRequest {
     private String brand;
 
     private String sku;
+
+    private List<String> images;
 
     private String discount;
 
