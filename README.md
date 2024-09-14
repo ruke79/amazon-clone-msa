@@ -1,6 +1,12 @@
 https://github.com/no2ehi/full-amazon-clone fork repository
 
+back end : Spring boot 
+front end : react 
 
 
-react and spring boot 
+## Technologies
 
+  
+
+
+## Screenshot
