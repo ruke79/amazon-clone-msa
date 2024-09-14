@@ -22,6 +22,12 @@ front end : react
 5. Cloudinary
 
 ## Features
+### Back end 
+1. Access token(localStorage), Refresh Token(Httponly Cookie),  Refresh token rotation
+2. Email Verfication Registration
+3. OAuth2 login ready
+   
+### Front end
 1. https://github.com/no2ehi/full-amazon-clone features
 2. load cart
 3. view orders(my profile)
