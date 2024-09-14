@@ -8,7 +8,7 @@ front end : react
 ## Technologies
 - **Back End**
 1. Spring Boot
-2. Srping Security
+2. Spring Security 6
 3. MySql 8.4
 4. Java 17
 
