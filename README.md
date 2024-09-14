@@ -1,5 +1,7 @@
 https://github.com/no2ehi/full-amazon-clone fork repository
 
+2024. 7 ~ 9.14
+
 back end : Spring 
 <br>
 front end : react 
