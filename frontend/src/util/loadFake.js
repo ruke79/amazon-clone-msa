@@ -186,7 +186,7 @@ const loadFakeData = async () => {
                         //             let formData = new FormData();
                         //             formData.append("folder", path);
                         //             formData.append("file", file);
-                        //             formData.append("upload_preset", "nd7idl8b");
+                        //             formData.append("upload_preset","");
                         //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);                
 
                         //             const image = await uploadImages(formData, config);
@@ -204,7 +204,7 @@ const loadFakeData = async () => {
                         //             let formData = new FormData();
                         //             formData.append("folder", path);
                         //             formData.append("file", temp);
-                        //             formData.append("upload_preset", "nd7idl8b");
+                        //             formData.append("upload_preset", "");
                         //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
                         //             let cloudinary_style_img = await uploadImages(formData, config);
                         //             const style_img = cloudinary_style_img.url;
