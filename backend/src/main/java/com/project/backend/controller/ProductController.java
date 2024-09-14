@@ -1,6 +1,7 @@
 package com.project.backend.controller;
 
 import java.io.ObjectInputFilter.Status;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,11 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/product")
 public class ProductController {
 
+    final ProductService productService;
 
-    
-     final ProductService productService;
-
-    
     private final ProductRepository productRepository;
 
     public ProductController(ProductService productService, ProductRepository productRepository) {
@@ -40,12 +38,12 @@ public class ProductController {
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity<?> getProductInfo(@PathVariable(required = true) String slug 
-    ) {
+    public ResponseEntity<?> getProductInfo(@PathVariable(required = true) String slug
+            ) {
         try {
-            ProductDTO dto = productService.getProductBySlug(slug);        
-            
-            return new ResponseEntity<>(dto, HttpStatus.OK);
+            List<ProductDTO> dto = productService.getProductsBySlug(slug);
+
+            return new ResponseEntity<>(dto.get(0), HttpStatus.OK);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse(StatusMessages.PRODUCT_IS_EMPTY));
@@ -54,19 +52,19 @@ public class ProductController {
     }
 
     @GetMapping("/cart/{product_id}")
-    public ResponseEntity<?> getProductInfoWithParams(@PathVariable(required = true) String product_id, 
-                    @RequestParam("style") int style, @RequestParam("size") int size )     
+    public ResponseEntity<?> getProductInfoWithParams(@PathVariable(required = true) String product_id,
+            @RequestParam("style") int style, @RequestParam("size") int size)
 
-     {
+    {
         try {
-            ProductInfoDTO dto = productService.getCartProductInfo(Long.parseLong(product_id), style, size);        
+            ProductInfoDTO dto = productService.getCartProductInfo(Long.parseLong(product_id), style, size);
 
-            return new ResponseEntity<>(dto, HttpStatus.OK);        
+            return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse(StatusMessages.PRODUCT_IS_EMPTY));
         }
 
     }
-    
+
 }

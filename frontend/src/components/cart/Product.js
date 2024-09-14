@@ -57,16 +57,16 @@ const Product = ({ product, selected, setSelected, setLoadedData, cart }) => {
     const removeItemCart = async (product) => {
 
         
-        if(cartItems.length > 0 ) {
-            try {
-                const { data } = await deleteRequest(`/user/cart/deleteItem/${product.id}`);
+        // if(cartItems.length > 0 ) {
+        //     try {
+        //         const { data } = await deleteRequest(`/user/cart/deleteItem/${product._uid}`);
                     
-            }
-            catch (err) {
-                console.log(err.response);
+        //     }
+        //     catch (err) {
+        //         console.log(err.response);
     
-            }
-        }
+        //     }
+        // }
       
         let newCart = cartItems.filter((p) => p._uid !== product._uid);
 

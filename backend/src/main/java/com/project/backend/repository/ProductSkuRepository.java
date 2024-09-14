@@ -36,15 +36,14 @@ public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
     List<Long> findProductIDBySizeAndPriceAndColorOrderBySoldDesc(@Param("low_price") Integer lowPrice, @Param("high_price") Integer highPrice,
     @Param("size") String size, @Param("color") String color);
 
-    
-
+ 
     @Query(value = "select distinct b.color from product_sku a " +    
-    "left join product_color b on a.color_id = b.color_id " +
+    "inner join product_color b " +
     "where a.product_id in :productIds", nativeQuery = true)
     List<String> findColorsByProductId(@Param("productIds") List<Long> productIds);
 
     @Query(value = "select distinct b.size from product_sku a " +    
-    "left join product_size b on a.skuproduct_id = b.skuproduct_id " +
-    "where a.product_id in :productIds", nativeQuery =  true)
+    "inner join product_size b " +
+    "where a.product_id in :productIds and b.size <> '' and b.size is not null", nativeQuery =  true)
     List<String> findSizesByProductId(@Param("productIds") List<Long> productIds);
 }

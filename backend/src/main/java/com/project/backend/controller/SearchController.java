@@ -37,14 +37,8 @@ public class SearchController {
     @GetMapping("/search")
     public ResponseEntity<?> searchProducts(SearchParamsRequest params)  {
 
-
-       try {
         SearchResultDTO dto = productService.searchProducts(params);       
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-       } catch(RuntimeException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(StatusMessages.SERACH_FAILED));       
-       }      
+        return new ResponseEntity<>(dto, HttpStatus.OK);      
 
     }    
 

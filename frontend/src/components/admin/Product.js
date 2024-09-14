@@ -10,7 +10,7 @@ const AllProcuct = ({ products }) => {
             </div>
             <div className="flex flex-wrap">
                 {products.map((product, i) => {
-                   // let created = new Date(product.createdAt);
+                    let created = new Date(product.createdAt);
                     return (
                         <div
                             className="flex flex-col w-56 m-2 p-2 border rounded hover:shadow hover:bg-slate-100 transition"
@@ -32,8 +32,8 @@ const AllProcuct = ({ products }) => {
                                 <div>Sku: {product.sku_products[0].sku}</div>
                                 <div>Category: {product.category.name}</div>
                                 <div>
-                                    {/* Created:{" "}
-                                    {`${created.getFullYear()}-${created.getMonth()}-${created.getDate()}`} */}
+                                    Created:{" "}
+                                    {`${created.getFullYear()}-${created.getMonth()}-${created.getDate()}`}
                                 </div>
                             </div>
                         </div>

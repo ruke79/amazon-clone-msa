@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.CategoryDTO;
+import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.CouponDTO;
 import com.project.backend.dto.ProductDTO;
 import com.project.backend.dto.SubCategoryDTO;
@@ -162,13 +163,13 @@ public class AdminController {
 
             boolean exist = categoryService.findCategory(request.getName());
 
-             if (!exist) {
+            if (!exist) {
 
-            //     ProductCategory category = new ProductCategory();
-            //     category.setCategoryName(categoryRequest.getName());
-            //     category.setSlug(categoryRequest.getSlug());
+                // ProductCategory category = new ProductCategory();
+                // category.setCategoryName(categoryRequest.getName());
+                // category.setSlug(categoryRequest.getSlug());
 
-            //     categoryRepository.save(category);
+                // categoryRepository.save(category);
 
                 CategoryDTO dto = categoryService.createCategory(request.getName(), request.getSlug());
 
@@ -285,15 +286,25 @@ public class AdminController {
     @GetMapping(value = "/product/products")
     ResponseEntity<?> getProducts() {
 
-        List<Product> products = productRepository.findAll();
+        try {
+            List<Product> products = productRepository.findAll();
 
-        List<ProductDTO> response = new ArrayList<ProductDTO>();
-        for (Product product : products) {
-            ProductDTO dto = productService.getProductByName(product.getName());
-            response.add(dto);
+            List<ProductDTO> response = new ArrayList<ProductDTO>();
+
+            for (Product product : products) {
+                List<ProductDTO> sameNameeProducts = productService.getProductsByName(product.getName());
+
+                for (ProductDTO p : sameNameeProducts) {
+                    response.add(p);
+                }
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
         }
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
@@ -349,18 +360,19 @@ public class AdminController {
         }
 
     }
+    
 
     // Create Products
     @PostMapping("/products")
-    ResponseEntity<?> addProducts(@RequestBody ProductInfosLoadRequest products) {
-    
+    ResponseEntity<?> addProducts(@RequestBody ProductInfosLoadRequest products
+    ) {
 
         log.info("/Products");
 
-                try {
+        try {
             List<ProductSku> response = productService.load(products);
 
-            return new ResponseEntity<>(response, HttpStatus.OK);            
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -373,9 +385,12 @@ public class AdminController {
     ResponseEntity<?> addCoupon(@RequestBody CouponRequest request) {
 
         try {
-            CouponDTO result = couponService.create(request);
+            if(couponService.create(request)) {
 
-            return new ResponseEntity<>(result, HttpStatus.OK);
+                return new ResponseEntity<>(couponService.getCoupons(), HttpStatus.OK);
+            }
+            else 
+                return new ResponseEntity<>("Coupon not found", HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new MessageResponse("Faield to create a coupon."));

@@ -26,21 +26,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="product_color")
+@Table(name = "product_color")
 public class ProductColorAttribute {
 
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Tsid
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "color_id")
     private Long colorId;
     private String color;
-       
-    //@Lob
-    //@Column(length = 1048576)
+
+    // @Lob
+    // @Column(length = 1048576)
     private String colorImage;
 
-
-    @OneToMany(mappedBy="color", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST,
-    targetEntity = OrderedProduct.class, orphanRemoval = true)
+    @OneToMany(mappedBy = "color", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = OrderedProduct.class, orphanRemoval = true)
     private List<OrderedProduct> orderedProducts;
+
+    @OneToMany(mappedBy = "color", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, targetEntity = CartProduct.class, orphanRemoval = true)
+    private List<CartProduct> cartProducts;
 }

@@ -16,7 +16,7 @@ import dataURItoBlob from "../../util/dataURItoBlob";
 import { uploadImages, instance, } from "../../util/uploadImages";
 import { useState } from "react";
 import validateCreateProduct from '../../util/validation';
-import api from "../../util/api";
+import {postRequest } from "../../util/api";
 import axios from "axios";
 import slugify from "slugify";
 
@@ -133,7 +133,7 @@ const CreateProduct = ({
                 }));
 
 
-                const { data } = await api.post("admin/product", formData,
+                const { data } = await postRequest("admin/product", formData,
                     {
                         headers: {
                             "Content-Type": "multipart/form-data",

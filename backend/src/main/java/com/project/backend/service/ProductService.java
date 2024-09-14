@@ -33,6 +33,7 @@ import com.project.backend.dto.SubCategoryDTO;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.Product;
 import com.project.backend.model.ProductCategory;
+import com.project.backend.model.ProductColorAttribute;
 import com.project.backend.model.ProductDetails;
 import com.project.backend.model.ProductQA;
 import com.project.backend.model.ProductSku;
@@ -41,6 +42,7 @@ import com.project.backend.model.SubCategory;
 import com.project.backend.model.User;
 import com.project.backend.model.WishList;
 import com.project.backend.repository.CategoryRepository;
+import com.project.backend.repository.ProductColorRepository;
 import com.project.backend.repository.ProductDetailsRepository;
 import com.project.backend.repository.ProductQARepository;
 import com.project.backend.repository.ProductRepository;
@@ -62,51 +64,54 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 
-    
     private final CategoryRepository categoryRepository;
 
-    
     private final SubCategoryRepository subCategoryRepository;
 
-    
     private final ProductRepository productRepository;
 
     private final CategoryService categoryService;
 
-    
     private final ProductSkuRepository productskuRepository;
 
-    
     private final ProductDetailsRepository productDetailsRepository;
-    
+
+    private final ProductColorRepository productColorRepository;
+
     private final ProductQARepository productQARepository;
 
-    
     private final ReviewRepository reviewRepository;
 
     public ProductService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
             ProductRepository productRepository, ProductSkuRepository productskuRepository,
             ProductDetailsRepository productDetailsRepository, ProductQARepository productQARepository,
-            ReviewRepository reviewRepository, CategoryService categoryService) {
+            ReviewRepository reviewRepository, CategoryService categoryService,
+            ProductColorRepository productColorRepository) {
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.productskuRepository = productskuRepository;
         this.productDetailsRepository = productDetailsRepository;
+        this.productColorRepository = productColorRepository;
         this.productQARepository = productQARepository;
         this.reviewRepository = reviewRepository;
     }
 
-    public ProductDTO getProductByName(String productName) {
+    public List<ProductDTO> getProductsByName(String productName) {
 
-        Product product = productRepository.findByName(productName);
+        List<Product> products = productRepository.findByName(productName);
 
-        if (product != null) {
+        List<ProductDTO> result = new ArrayList<>();
 
-            ProductDTO dto = convertToDto(product);
+        if (products != null) {
 
-            return dto;
+            for (Product p : products) {
+                ProductDTO dto = convertToDto(p);
+                result.add(dto);
+            }
+
+            return result;
         }
         return null;
     }
@@ -124,15 +129,19 @@ public class ProductService {
         return null;
     }
 
-    public ProductDTO getProductBySlug(String slug) {
+    public List<ProductDTO> getProductsBySlug(String slug) {
 
-        Product product = productRepository.findBySlug(slug);
+        List<Product> products = productRepository.findBySlug(slug);
 
-        if (product != null) {
+        List<ProductDTO> result = new ArrayList<>();
+        if (products != null) {
 
-            ProductDTO dto = convertToDto(product);
+            for (Product p : products) {
+                ProductDTO dto = convertToDto(p);
+                result.add(dto);
+            }
 
-            return dto;
+            return result;
         }
         return null;
     }
@@ -140,16 +149,14 @@ public class ProductService {
     private ProductDTO convertToDto(Product product) {
 
         CategoryDTO parent = CategoryDTO.builder()
-        .id(Long.toString(product.getCategory().getCategoryId()))
-        .name(product.getCategory().getCategoryName())
-        .slug(product.getCategory().getSlug()).build();
+                .id(Long.toString(product.getCategory().getCategoryId()))
+                .name(product.getCategory().getCategoryName())
+                .slug(product.getCategory().getSlug()).build();
 
-        List<SubCategoryDTO> subCategories =
-        product.getSubCategories().stream().map(subcategory ->
-        new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()), parent,
-        subcategory.getSubcategoryName(), subcategory.getSlug())).
-        collect(Collectors.toList());
-        
+        List<SubCategoryDTO> subCategories = product.getSubCategories().stream()
+                .map(subcategory -> new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()), parent,
+                        subcategory.getSubcategoryName(), subcategory.getSlug()))
+                .collect(Collectors.toList());
 
         List<ProductDetailDTO> details = product.getDetails().stream().map(detail -> {
             return ProductDetailDTO.builder()
@@ -157,35 +164,32 @@ public class ProductService {
                     .value(detail.getValue()).build();
         }).collect(Collectors.toList());
 
-        List<ReviewDTO> reviews = product.getReviews().stream().map(review -> 
-        {
-         return ReviewDTO.builder()
-         .images(review.getImages())
-         .rating(review.getRating())
-         .fit(review.getFit())
-         .review(review.getReview())
-         .reviewedBy(ReviewerDTO.builder()
-         .name(review.getReviewedBy().getUserName())
-         .image(review.getReviewedBy().getImage())
-         .build())
-         .likes(review.getLikes())
-         .size(review.getSize())
-         .style(ReviewStyleDTO.builder()
-         .color(review.getStyle().getColor())
-         .image(review.getStyle().getImage())               
-         .build())
-         .build();
+        List<ReviewDTO> reviews = product.getReviews().stream().map(review -> {
+            return ReviewDTO.builder()
+                    .images(review.getImages())
+                    .rating(review.getRating())
+                    .fit(review.getFit())
+                    .review(review.getReview())
+                    .reviewedBy(ReviewerDTO.builder()
+                            .name(review.getReviewedBy().getUserName())
+                            .image(review.getReviewedBy().getImage())
+                            .build())
+                    .likes(review.getLikes())
+                    .size(review.getSize())
+                    .style(ReviewStyleDTO.builder()
+                            .color(review.getStyle().getColor())
+                            .image(review.getStyle().getImage())
+                            .build())
+                    .build();
 
         }).collect(Collectors.toList());
 
-        List<ProductQADTO> questions =   product.getQuestions().stream().map(q -> 
-        {
+        List<ProductQADTO> questions = product.getQuestions().stream().map(q -> {
             return ProductQADTO.builder()
-            .question(q.getQuestion())
-            .answer(q.getAnswer())
-            .build();
+                    .question(q.getQuestion())
+                    .answer(q.getAnswer())
+                    .build();
         }).collect(Collectors.toList());
-
 
         List<ProductSkuDTO> skus = product.getSku_products().stream().map(sku -> {
 
@@ -222,7 +226,7 @@ public class ProductService {
                 .name(product.getName())
                 .description(product.getDescription())
                 .brand(product.getBrand())
-                .slug(product.getSlug())               
+                .slug(product.getSlug())
                 .category(parent)
                 .subCategories(subCategories)
                 .details(details)
@@ -233,28 +237,31 @@ public class ProductService {
                 .rating(product.getRating())
                 .num_reviews(product.getNum_reviews())
                 .shipping(product.getShipping())
+                .createdAt(product.getCreatedAt().toString())
                 .build();
-    }
 
-    public List<ProductSku> load(ProductInfosLoadRequest request) throws IOException{
-
-        
-        List<ProductSku> result = new ArrayList<>();
-            
-            for (ProductInfoLoadRequest pr : request.getProducts()) {
-
-                ProductSku sku = null;
                 
-                sku = createCategorysAndLoadProduct(pr, pr.getImages(), pr.getColor().getColorImage());
-                result.add(sku);
-                               
-            }
+    }
+    
 
-            return result;
+    public List<ProductSku> load(ProductInfosLoadRequest request) throws IOException {
+
+        List<ProductSku> result = new ArrayList<>();
+
+        for (ProductInfoLoadRequest pr : request.getProducts()) {
+
+            ProductSku sku = null;
+
+            sku = createCategorysAndLoadProduct(pr, pr.getImages(), pr.getColor().getColorImage());
+            result.add(sku);
+
+        }
+
+        return result;
     }
 
-
-    public ProductSku createCategorysAndLoadProduct(ProductInfoLoadRequest request, List<String> images, String colorImage) throws IOException {
+    public ProductSku createCategorysAndLoadProduct(ProductInfoLoadRequest request, List<String> images,
+            String colorImage) throws IOException {
 
         if (request.getParent() != null && request.getParent().length() > 0) {
 
@@ -271,7 +278,6 @@ public class ProductService {
             }
         } else {
 
-            
             Product product = new Product();
 
             product.setBrand(request.getBrand());
@@ -289,12 +295,12 @@ public class ProductService {
                 product.setCategory(category);
 
                 List<String> subcategoryNames = new ArrayList<>();
-                for (SubCategoryDTO subcategory : request.getSubCategories()) {                    
+                for (SubCategoryDTO subcategory : request.getSubCategories()) {
                     subcategoryNames.add(subcategory.getName());
                 }
 
                 List<SubCategory> subCategories = subCategoryRepository.findByCategory_CategoryNameAndSubcategoryNameIn(
-                category.getCategoryName(), subcategoryNames);
+                        category.getCategoryName(), subcategoryNames);
 
                 if (subCategories != null) {
 
@@ -304,20 +310,19 @@ public class ProductService {
 
                     return loadSku(request, product, images, colorImage);
                 }
-            }
-            else {
-                
+            } else {
+
                 category = new ProductCategory();
                 category.setCategoryName(request.getCategory().getName());
                 category.setSlug(request.getCategory().getSlug());
-    
+
                 category = categoryRepository.save(category);
 
                 product.setCategory(category);
 
                 List<SubCategory> subCategories = new ArrayList<>();
 
-                for(SubCategoryDTO dto : request.getSubCategories()) {
+                for (SubCategoryDTO dto : request.getSubCategories()) {
 
                     SubCategory subcategory = new SubCategory();
                     subcategory.setSubcategoryName(dto.getName());
@@ -330,7 +335,7 @@ public class ProductService {
 
                     subCategoryRepository.save(subcategory);
                 }
-                
+
                 product.setSubCategories(subCategories);
 
                 productRepository.save(product);
@@ -342,7 +347,6 @@ public class ProductService {
 
         return null;
     }
-
 
     public ProductSku addProduct(ProductRequest request, List<String> images, String colorImage) throws IOException {
 
@@ -399,7 +403,8 @@ public class ProductService {
         return null;
     }
 
-    private ProductSku loadSku(ProductInfoLoadRequest request, Product product, List<String> images, String colorImage) {
+    private ProductSku loadSku(ProductInfoLoadRequest request, Product product, List<String> images,
+            String colorImage) {
 
         ProductSku skuProject = new ProductSku();
 
@@ -408,7 +413,8 @@ public class ProductService {
         if (request.getDiscount() != null)
             skuProject.setDiscount(Integer.parseInt(request.getDiscount()));
 
-        skuProject.setColor(request.getColor());
+        skuProject.setColor(ProductColorAttribute.builder().colorImage(colorImage)
+                .color(request.getColor().getColor()).build());
 
         // ArrayList<String> bytes = new ArrayList<String>();
         // for(MultipartFile image : images) {
@@ -422,6 +428,8 @@ public class ProductService {
         skuProject.setImages(images);
         // cloudinary에 저장된 이미지 URL
         skuProject.getColor().setColorImage(colorImage);
+
+        productColorRepository.save(skuProject.getColor());
 
         request.getSizes().forEach(size -> size.setSku_product(skuProject));
 
@@ -437,10 +445,11 @@ public class ProductService {
                 detail.setProduct(product);
             });
         }
-        
+
         product.setQuestions(request.getQuestions());
         product.getQuestions().forEach(question -> {
             question.setProduct(product);
+            productQARepository.save(question);
         });
 
         return productskuRepository.save(skuProject);
@@ -485,10 +494,11 @@ public class ProductService {
                 detail.setProduct(product);
             });
         }
-        
+
         product.setQuestions(request.getQuestions());
         product.getQuestions().forEach(question -> {
             question.setProduct(product);
+            productQARepository.save(question);
         });
 
         return productskuRepository.save(skuProject);
@@ -526,63 +536,67 @@ public class ProductService {
         productIds = productskuRepository.findProductIDBySizeAndPriceAndColor(params.getLowPrice(),
                 params.getHighPrice(), params.getSize(), params.getColor());
 
-        products = productRepository.findProductBySearchParams(params.getSearch(), categoryId,
-                params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
-                params.getRating(), productIds);
+        if (!productIds.isEmpty()) {
 
-        int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), categoryId,
-                params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
-                params.getRating(), productIds);
+            products = productRepository.findProductBySearchParams(params.getSearch(), categoryId,
+                    params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
+                    params.getRating(), productIds);
 
-        List<ProductDTO> pDtos = products.stream().map(product -> {
+            int totalProducts = productRepository.countProductsBySearchParams(params.getSearch(), categoryId,
+                    params.getStyle(), params.getBrand(), params.getMaterial(), params.getGender(),
+                    params.getRating(), productIds);
 
-            ProductDTO dto = convertToDto(product);
-            return dto;
-        }).collect(Collectors.toList());
+            List<ProductDTO> pDtos = products.stream().map(product -> {
 
-        Pageable pageRequest = createPageRequestUsing(params.getPage() - 1, params.getPageSize());
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), totalProducts);
+                ProductDTO dto = convertToDto(product);
+                return dto;
+            }).collect(Collectors.toList());
 
-        log.info(Integer.toString(start));
-        log.info(Integer.toString(end));
+            Pageable pageRequest = createPageRequestUsing(params.getPage() - 1, params.getPageSize());
+            int start = (int) pageRequest.getOffset();
+            int end = Math.min((start + pageRequest.getPageSize()), totalProducts);
 
-        List<ProductDTO> pageContent = pDtos.subList(start, end);
+            log.info(Integer.toString(start));
+            log.info(Integer.toString(end));
 
-        // List<String> subs = null;
-        // List<SubCategory> subcategories =
-        // categoryRepository.findSubCategoriesByCategoryName(params.getCategory());
-        // subs = subcategories.stream().map(sub-> {return
-        // sub.getSubcategoryName();}).collect(Collectors.toList());
+            List<ProductDTO> pageContent = pDtos.subList(start, end);
 
-        List<String> brandDB = productRepository.findBrandsByCategoryId(categoryId);
+            // List<String> subs = null;
+            // List<SubCategory> subcategories =
+            // categoryRepository.findSubCategoriesByCategoryName(params.getCategory());
+            // subs = subcategories.stream().map(sub-> {return
+            // sub.getSubcategoryName();}).collect(Collectors.toList());
 
-        List<CategoryDTO> categoryDTOs = categoryRepository.findAll().stream().map(category -> {
-            return new CategoryDTO(Long.toString(category.getCategoryId()), category.getCategoryName(),
-                    category.getSlug());
-        }).collect(Collectors.toList());
+            List<String> brandDB = productRepository.findBrandsByCategoryId(categoryId);
 
-        List<SubCategoryDTO> subCategoryDTOs = subCategoryRepository.findAll().stream().map(
-                subcategory -> {
-                    return new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()),
-                            new CategoryDTO(Long.toString(subcategory.getCategory().getCategoryId()),
-                                    subcategory.getCategory().getCategoryName(),
-                                    subcategory.getCategory().getSlug()),
-                            subcategory.getSubcategoryName(), subcategory.getSlug());
-                }).collect(Collectors.toList());
+            List<CategoryDTO> categoryDTOs = categoryRepository.findAll().stream().map(category -> {
+                return new CategoryDTO(Long.toString(category.getCategoryId()), category.getCategoryName(),
+                        category.getSlug());
+            }).collect(Collectors.toList());
 
-        SearchResultDTO result = SearchResultDTO.builder()
-                .product(new PageImpl<>(pageContent, pageRequest, pDtos.size()))
-                .categories(categoryDTOs)
-                .subCategories(subCategoryDTOs)
-                .colors(getColors(categoryId))
-                .sizes(getSizes(categoryId))
-                .details(getDetails(categoryId))
-                .brandsDB(brandDB)
-                .totalProducts(totalProducts)
-                .build();
+            List<SubCategoryDTO> subCategoryDTOs = subCategoryRepository.findAll().stream().map(
+                    subcategory -> {
+                        return new SubCategoryDTO(Long.toString(subcategory.getSubcategoryId()),
+                                new CategoryDTO(Long.toString(subcategory.getCategory().getCategoryId()),
+                                        subcategory.getCategory().getCategoryName(),
+                                        subcategory.getCategory().getSlug()),
+                                subcategory.getSubcategoryName(), subcategory.getSlug());
+                    }).collect(Collectors.toList());
 
-        return result;
+            SearchResultDTO result = SearchResultDTO.builder()
+                    .product(new PageImpl<>(pageContent, pageRequest, pDtos.size()))
+                    .categories(categoryDTOs)
+                    .subCategories(subCategoryDTOs)
+                    .colors(getColors(categoryId))
+                    .sizes(getSizes(categoryId))
+                    .details(getDetails(categoryId))
+                    .brandsDB(brandDB)
+                    .totalProducts(totalProducts)
+                    .build();
+
+            return result;
+        }
+        return null;
     }
 
     public List<String> getColors(String categoryName) {
@@ -644,87 +658,82 @@ public class ProductService {
         if (data.isPresent()) {
 
             Product product = data.get();
-                
+
             int discount = product.getSku_products().get(style).getDiscount();
             int priceBefore = product.getSku_products().get(style).getSizes().get(size).getPrice();
-            int price = discount > 0  ? priceBefore - priceBefore / discount : priceBefore;
+            int price = discount > 0 ? priceBefore - priceBefore / discount : priceBefore;
 
             ColorAttributeDTO color = ColorAttributeDTO.builder()
-            .id(Long.toString(product.getSku_products().get(style).getColor().getColorId()))
-            .color(product.getSku_products().get(style).getColor().getColor())
-            .colorImage(product.getSku_products().get(style).getColor().getColorImage())
-            .build();
+                    .id(Long.toString(product.getSku_products().get(style).getColor().getColorId()))
+                    .color(product.getSku_products().get(style).getColor().getColor())
+                    .colorImage(product.getSku_products().get(style).getColor().getColorImage())
+                    .build();
 
             List<String> subcategoryIds = product.getSubCategories().stream().map(subcategory -> {
-                return Long.toString(subcategory.getSubcategoryId()); })
-               .collect(Collectors.toList());
-            
-               List<ProductDetailDTO> details = product.getDetails().stream().map(detail->
-               {
-                     return ProductDetailDTO.builder()
-                     .name(detail.getName())
-                     .value(detail.getValue()).build();          
-               }).collect(Collectors.toList());
+                return Long.toString(subcategory.getSubcategoryId());
+            })
+                    .collect(Collectors.toList());
 
-               List<ProductQADTO> questions =   product.getQuestions().stream().map(q -> 
-                {
-                    return ProductQADTO.builder()
-                    .question(q.getQuestion())
-                    .answer(q.getAnswer())
-                    .build();
-                }).collect(Collectors.toList());
+            List<ProductDetailDTO> details = product.getDetails().stream().map(detail -> {
+                return ProductDetailDTO.builder()
+                        .name(detail.getName())
+                        .value(detail.getValue()).build();
+            }).collect(Collectors.toList());
 
-               List<ReviewDTO> reviews = product.getReviews().stream().map(review -> 
-               {
+            List<ProductQADTO> questions = product.getQuestions().stream().map(q -> {
+                return ProductQADTO.builder()
+                        .question(q.getQuestion())
+                        .answer(q.getAnswer())
+                        .build();
+            }).collect(Collectors.toList());
+
+            List<ReviewDTO> reviews = product.getReviews().stream().map(review -> {
                 return ReviewDTO.builder()
-                .images(review.getImages())
-                .rating(review.getRating())
-                .fit(review.getFit())
-                .review(review.getReview())
-                .reviewedBy(ReviewerDTO.builder()
-                .name(review.getReviewedBy().getUserName())
-                .image(review.getReviewedBy().getImage())
-                .build())
-                .size(review.getSize())
-                .style(ReviewStyleDTO.builder()
-                .color(review.getStyle().getColor())
-                .image(review.getStyle().getImage())               
-                .build())
-                .build();
+                        .images(review.getImages())
+                        .rating(review.getRating())
+                        .fit(review.getFit())
+                        .review(review.getReview())
+                        .reviewedBy(ReviewerDTO.builder()
+                                .name(review.getReviewedBy().getUserName())
+                                .image(review.getReviewedBy().getImage())
+                                .build())
+                        .size(review.getSize())
+                        .style(ReviewStyleDTO.builder()
+                                .color(review.getStyle().getColor())
+                                .image(review.getStyle().getImage())
+                                .build())
+                        .build();
 
-               }).collect(Collectors.toList());
-
+            }).collect(Collectors.toList());
 
             ProductInfoDTO dto = ProductInfoDTO.builder()
-            .id(Long.toString(product.getProductId()))
-            .style(style)
-            .name(product.getName())
-            .description(product.getDescription())
-            .slug(product.getSlug())
-            .sku(product.getSku_products().get(style).getSku())
-            .brand(product.getBrand())
-            .shipping(product.getShipping())
-            .images(product.getSku_products().get(style).getImages())
-            .color(color)
-            .size(product.getSku_products().get(style).getSizes().get(size).getSize())           
-            .price(price)
-            .priceBefore(priceBefore)
-            .qty(1)
-            .quantity(product.getSku_products().get(style).getSizes().get(size).getQuantity())
-            .category(Long.toString(product.getCategory().getCategoryId()))
-            .subCategories(subcategoryIds)
-            .questions(questions)
-            .details(details)
-            .reviews(reviews)
-            .discount(discount)
-            .build();
+                    .id(Long.toString(product.getProductId()))
+                    .style(style)
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .slug(product.getSlug())
+                    .sku(product.getSku_products().get(style).getSku())
+                    .brand(product.getBrand())
+                    .shipping(product.getShipping())
+                    .images(product.getSku_products().get(style).getImages())
+                    .color(color)
+                    .size(product.getSku_products().get(style).getSizes().get(size).getSize())
+                    .price(price)
+                    .priceBefore(priceBefore)
+                    .qty(1)
+                    .quantity(product.getSku_products().get(style).getSizes().get(size).getQuantity())
+                    .category(Long.toString(product.getCategory().getCategoryId()))
+                    .subCategories(subcategoryIds)
+                    .questions(questions)
+                    .details(details)
+                    .reviews(reviews)
+                    .discount(discount)
+                    .build();
 
             return dto;
         }
 
         return null;
     }
-
-  
 
 }

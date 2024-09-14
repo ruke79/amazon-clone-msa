@@ -6,7 +6,7 @@ import Product from "./Product";
 import api, {saveCart, putRequest, getRequest } from "util/api";
 import { useLoaderData, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { updateCart } from "../../redux/CartSlice";
+import { emptyCart, updateCart } from "../../redux/CartSlice";
 import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -42,30 +42,17 @@ const CartPage = ({ cart, setLoadedData }) => {
     const [enable, setEnable] = useState(cart.cartItems.length > 0);
 
     const navigate = useNavigate();
- //   const { data, isSuccess } = useCart(cart, enable);
-
-    // if (isSuccess) {
-
-    //     //console.log(data);
-    //     //dispatch(updateCart(data));        
-
-    // }
-
    
+    useCart(cart, enable);
        
     
     useEffect(() => {
         if (token) {
-
-            // if (cartData.length > 0) {
-                
-            //     dispatch(updateCart(cartData));        
-            // }
-
-            // if (cart.cartItems.length == 0) {
-            //     setEnable(false);   
-            // }          
-            
+            if(cart.cartItems.length === 0)
+                setEnable(false);
+            else 
+                setEnable(true);
+                      
          } else {            
             navigate("/signin");
         }
@@ -117,7 +104,8 @@ const CartPage = ({ cart, setLoadedData }) => {
             console.log(selected);
             
             const res = await saveCart(selected);
-            
+
+           
             navigate("/checkout");
             setLoading(false);
         } else {

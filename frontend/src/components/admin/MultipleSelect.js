@@ -45,11 +45,10 @@ const MultipleSelect = ({ data, label, fn, handleChange, ...rest }) => {
     //     );
     // };
 
-    
-        
+            
     const result = data.length ? data.reduce((obj , cur) => ({ ...obj, [cur.id]: cur.name}), {}) : {};
 
-          
+    console.log(field)      ;
     
     return (
         <div className="mt-2">

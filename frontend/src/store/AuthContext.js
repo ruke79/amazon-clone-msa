@@ -23,6 +23,8 @@ export const ContextProvider = ({ children }) => {
   //store the token
   const [token, setToken] = useState(getToken);
 
+  const [user, setUser] = useState(null);
+
   //const {showBoundary}= useErrorBoundary();
 
   const fetchUser = async () => {
@@ -41,6 +43,8 @@ export const ContextProvider = ({ children }) => {
         } else {
           TokenUtil.removeAdmin();
         }
+
+        setUser(data);
 
 
       } catch (error) {
@@ -63,6 +67,8 @@ export const ContextProvider = ({ children }) => {
         value={{
           token,
           setToken,
+          user,
+          setUser
         }}
       >
 
