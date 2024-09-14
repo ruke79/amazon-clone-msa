@@ -1,5 +1,7 @@
 https://github.com/no2ehi/full-amazon-clone fork repository
 
+This is my first contribution in the github. 
+
 2024. 7 ~ 9.14
 
 back end : Spring 
