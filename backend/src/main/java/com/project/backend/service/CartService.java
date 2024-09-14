@@ -47,27 +47,25 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CartService {
 
-    
     private final CartRepository cartRepository;
-    
+
     private final CartProductRepository cartProductRepository;
-    
+
     private final UserRepository userRepository;
-    
+
     private final ProductRepository productRepository;
-    
+
     private final ProductSkuRepository productSkuRepository;
 
     private final ShippingAddressRepository shippingAddressRepository;
-    
+
     private final WishiListRepository wishiListRepository;
-   
+
     private final CouponRepository couponRepository;
 
     private final ProductService productService;
 
-    
-    @Autowired    
+    @Autowired
     public CartService(CartRepository cartRepository, CartProductRepository cartProductRepository,
             UserRepository userRepository, ProductRepository productRepository,
             ProductSkuRepository productSkuRepository, ShippingAddressRepository shippingAddressRepository,
@@ -238,18 +236,18 @@ public class CartService {
         return result;
     }
 
-    public int deleteCartItem(String productId, String username) {
+    public int deleteCartItem(String uid, String username) {
 
-        log.info(productId);
+        
 
-        CartProduct item = cartProductRepository.findByProduct_ProductId(Long.parseLong(productId))
-        .orElseThrow(()->new RuntimeException("Cart item not found"));
+        CartProduct item = cartProductRepository.findBy_uid(uid)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
         if (null != item) {
-            
+
             Cart cart = cartRepository.findByUser_UserName(username)
-            .orElseThrow(()->new RuntimeException("Cart not found"));
-            cart.setCartTotal(cart.getCartTotal() - (item.getPrice()+ item.getShipping()));
+                    .orElseThrow(() -> new RuntimeException("Cart not found"));
+            cart.setCartTotal(cart.getCartTotal() - (item.getPrice() + item.getShipping()));
 
             cartRepository.save(cart);
 
@@ -266,7 +264,6 @@ public class CartService {
     public List<ProductInfoDTO> updateCart(ProductInfoRequest request) {
 
         List<ProductInfoDTO> result = new ArrayList<>();
-         
 
         for (ProductInfoDTO cartItem : request.getProducts()) {
 
@@ -296,59 +293,61 @@ public class CartService {
 
         return result;
     }
+
     public List<ProductInfoDTO> loadCart(String username) {
 
         Optional<Cart> cart = cartRepository.findByUser_UserName(username);
-        //.orElseThrow(()->new RuntimeException("Cart not found"));
+        // .orElseThrow(()->new RuntimeException("Cart not found"));
 
         if (cart.isPresent()) {
 
             List<CartProduct> products = cart.get().getCartProducts();
 
             List<ProductInfoDTO> result = new ArrayList<>();
-            for(CartProduct p : products) {
+            for (CartProduct p : products) {
 
                 Product product = productRepository.findById(p.getProduct().getProductId())
-                .orElseThrow(()->new RuntimeException("Product not found"));
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
 
                 AtomicInteger counter = new AtomicInteger(-1);
 
                 int index = product.getSku_products().get(p.getStyle()).getSizes().stream()
-                .filter(size -> {counter.getAndIncrement(); 
-                return size.getSize().equals(p.getSize());})
-                .mapToInt(size->counter.get())
-                .findFirst()
-                .orElse(-1);
+                        .filter(size -> {
+                            counter.getAndIncrement();
+                            return size.getSize().equals(p.getSize());
+                        })
+                        .mapToInt(size -> counter.get())
+                        .findFirst()
+                        .orElse(-1);
 
-                ProductInfoDTO dto = productService.getCartProductInfo(p.getProduct().getProductId(), 
-                p.getStyle(), index);
+                ProductInfoDTO dto = productService.getCartProductInfo(p.getProduct().getProductId(),
+                        p.getStyle(), index);
 
                 int originalPrice = product.getSku_products().get(p.getStyle()).getSizes().stream()
-                .filter(i -> i.getSize().equals(p.getSize())).findFirst().get().getPrice();    
-        int discount = product.getSku_products().get(p.getStyle()).getDiscount();
-        
-        dto.setPriceBefore(originalPrice);
-        dto.setQty(p.getQty());
-        dto.set_uid(p.get_uid());
+                        .filter(i -> i.getSize().equals(p.getSize())).findFirst().get().getPrice();
+                int discount = product.getSku_products().get(p.getStyle()).getDiscount();
 
-        if (discount > 0) {
-            int price = originalPrice - (originalPrice / discount);
-            dto.setPrice(price);
-        } else {
-            dto.setPrice(originalPrice);
-        }
-        dto.setShipping(product.getShipping());
+                dto.setPriceBefore(originalPrice);
+                dto.setQty(p.getQty());
+                dto.set_uid(p.get_uid());
 
-                result.add(dto);     
+                if (discount > 0) {
+                    int price = originalPrice - (originalPrice / discount);
+                    dto.setPrice(price);
+                } else {
+                    dto.setPrice(originalPrice);
+                }
+                dto.setShipping(product.getShipping());
+
+                result.add(dto);
 
             }
 
-            return result;      
+            return result;
         }
         return null;
 
     }
-
 
     public Cart saveCart(CartRequest request, String username) {
 
@@ -371,6 +370,7 @@ public class CartService {
 
             for (ProductInfoDTO cartItem : request.getProducts()) {
 
+                
                 Optional<Product> product = productRepository.findById(Long.parseLong(cartItem.getId()));
 
                 if (product.isPresent()) {
@@ -381,12 +381,14 @@ public class CartService {
                     if (sku.getDiscount() > 0)
                         price = (price - price / sku.getDiscount());
 
+                    ProductColorAttribute color = ProductColorAttribute.builder()
+                            .colorId(Long.parseLong(cartItem.getColor().getId()))
+                            .color(cartItem.getColor().getColor())
+                            .colorImage(cartItem.getColor().getColorImage()).build();
+
                     CartProduct cartProduct = CartProduct.builder()
                             .name(product.get().getName())
-                            .color(ProductColorAttribute.builder()
-                                    .colorId(Long.parseLong(cartItem.getColor().getId()))
-                                    .color(cartItem.getColor().getColor())
-                                    .colorImage(cartItem.getColor().getColorImage()).build())
+                            .color(color)
                             .style(cartItem.getStyle())
                             .product(product.get())
                             .image(sku.getImages().get(0))
@@ -422,19 +424,18 @@ public class CartService {
         Long id = Long.parseLong(request.getId());
 
         User user = userRepository.findByUserName(username)
-        .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (null != user) {
 
             Product product = productRepository.findById(id)
-            .orElseThrow(()->new RuntimeException("Product not found"));
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
 
             if (null != product) {
 
-                
                 for (WishList w : user.getWishLists()) {
-                    log.info(Long.toString(w.getProduct().getProductId()) + 
-                    w.getStyle());
+                    log.info(Long.toString(w.getProduct().getProductId()) +
+                            w.getStyle());
                 }
 
                 Optional<WishList> existed = user.getWishLists().stream()
@@ -442,23 +443,20 @@ public class CartService {
                         .findFirst();
 
                 if (existed.isPresent()) {
-                                       
+
                     return OperationStatus.OS_ALREADY_EXISTED;
 
                 } else {
 
                     WishList wish = new WishList();
                     wish.setStyle(request.getStyle());
-                    wish.setProduct(product);                    
+                    wish.setProduct(product);
 
                     user.getWishLists().add(wish);
 
-                    wish.setUser(user);                    
+                    wish.setUser(user);
 
                     wishiListRepository.save(wish);
-
-                    
-
 
                     return OperationStatus.OS_SUCCESS;
                 }

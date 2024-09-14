@@ -3,27 +3,28 @@ import MenuSideBar from "./header/MenuSidebar";
 import CartPage from "components/cart/CartPage";
 import Empty from "components/cart/Empty";
 import { useSelector, useDispatch } from "react-redux";
-import { getRequest   } from "util/api";
+import { getRequest } from "util/api";
 import { useFetcher, useLoaderData } from "react-router-dom";
-import { updateCart } from "../redux/CartSlice";
+import { addToCart, updateCart } from "../redux/CartSlice";
 import { useEffect, useState } from "react";
 
 const Cart = () => {
-    let cart  = useSelector((state) => { return state.cart; });
+    let cart = useSelector((state) => { return state.cart; });
     const dispatch = useDispatch();
 
     const data = useLoaderData();
+
     
     useEffect(() => {
 
-        if (data.length > 0) {        
-            dispatch(updateCart(data));
-        } 
-    },[])
-          
-       
-        
-                 
+        if (cart.cartItems.length === 0 && data.length > 0) {
+            dispatch(updateCart(data));            
+        }
+    }, [])
+
+
+
+
     return (
         <>
             <Header />
@@ -45,14 +46,14 @@ export const loader = (authContext) => {
 
     return async ({ params, request }) => {
 
-        
+
         try {
 
             const { data } = await getRequest("/user/cart/loadcart");
 
             return data;
         }
-        catch(err) {
+        catch (err) {
             console.log(err);
         }
     };

@@ -47,8 +47,8 @@ export function useApiNavigation() {
                         }
                         break;                       
                     default:
-                        console.error('Network error:', error);
-                        navRef.current('error_server', {replace : true}); 
+                        //console.error('Network error:', error);
+                        //navRef.current('error_server', {replace : true}); 
                         break;
                 }
                 return Promise.reject(error);

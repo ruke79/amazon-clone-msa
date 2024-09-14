@@ -10,8 +10,7 @@ import DashboardLayout from './components/admin/DashboardLayout';
 import { ContextProvider, useAuthContext } from "./store/AuthContext";
 import { persistor, store } from "./redux/store";
 import Categories from './pages/admin/Category';
-import AdminProduct from './pages/admin/Product';
-import Coupon from "components/admin/coupon/Coupon";
+import AdminProduct from './pages/admin/Index';
 import SingleProduct, { loader as productLoader } from "./pages/Product";
 import Browse, { loader as browseLoader, loader } from "pages/browse";
 import Cart, { loader as loaderCart } from "pages/cart";
@@ -163,8 +162,7 @@ const AppRouter = () => {
           element: <DashboardLayout />,
           
           children: [
-            { path: 'category', element: <Categories /> },            
-            { path: 'coupon', element: <Coupon /> },
+            { path: 'category', element: <Categories /> },                        
             { path: 'product', element: <AdminProduct />},
             { path: 'allproducts', 
               element: <Products />, 
@@ -184,14 +182,14 @@ const AppRouter = () => {
 
 function App() {
 
-  //const [products, setProducts] = useState([]);
+  
   const [loaded, setLoaded ] = useState(false);
 
   useEffect(()=>{
     
     const loadData = async () => {
 
-  //      await loadFakeData();            
+        //await loadFakeData();            
     }
 
     if(loaded === false)
@@ -200,19 +198,7 @@ function App() {
 
   },[])
 
-  // useEffect(() => {
-  //   const load = () => {
-     
-  //    if(products.length > 0) {
-  //     console.log(products);
-  //     const { response } = ;         
-  //    }
-  //   }
-  //   load();
-    
-
-  // }, [])
-
+  
   return (
     <>   
     <div>

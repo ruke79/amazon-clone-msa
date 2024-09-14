@@ -169,12 +169,15 @@ public class OrderService {
 
         Order data = null;
 
-        if (!filter.isEmpty())             
-            data = orderRepository.findByOrderIdAndPaymentResult_PayStatus(orderId,PaymentResultStatus.valueOf(filter))
-            .orElseThrow(()->new RuntimeException("Order not found."));
-        else         
+        if(filter.isEmpty()) {
             data = orderRepository.findById(orderId)
             .orElseThrow(()->new RuntimeException("Order not found."));
+        }
+        else {
+            data = orderRepository.findByOrderIdAndPaymentResult_PayStatus(orderId,PaymentResultStatus.getStatus(filter))
+            .orElseThrow(()->new RuntimeException("Order not found."));
+        }       
+        
 
         if (null != data) {            
 

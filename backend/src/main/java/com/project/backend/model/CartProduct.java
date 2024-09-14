@@ -42,13 +42,13 @@ public class CartProduct extends BaseEntity {
 
     private int qty;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=Product.class)
-    @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable = true)
-    private Product product;
+    @ManyToOne(fetch=FetchType.LAZY)
+        @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
+        private Product product;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.MERGE, targetEntity=ProductColorAttribute.class)
-    @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)
-    private ProductColorAttribute color;
+        @ManyToOne(fetch=FetchType.LAZY)
+        @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable=false)
+        private ProductColorAttribute color;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = true)

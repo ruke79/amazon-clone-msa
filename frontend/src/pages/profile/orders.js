@@ -1,28 +1,35 @@
 import Layout from "components/profile/Layout";
 
 import { ordersLinks } from "components/profile/sidebar/ordersLinks";
-import { Link, useSearchParams} from "react-router-dom";
+import { Link, useLoaderData, useSearchParams} from "react-router-dom";
 import { CheckBadgeIcon, EyeIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import slugify from "slugify";
 import api, { getRequest } from "util/api";
 import toast from "react-hot-toast";
+import { useAuthContext } from "store/AuthContext";
 
 
-const Orders = ({ user, tab, orders }) => {
+const Orders = () => {
 
-    // const searchParams = useSearchParams();
-    // const qParam = searchParams.get('q');
+     const searchParams = useSearchParams();     
+     const qParam = searchParams[0].get('q');
+     console.log(qParam?.split("__")[1]);
 
+     const { user} = useAuthContext();
+     const { orders, tab } = useLoaderData();
+
+     console.log(user);
+     
         
     return (
         <>
-            {/* <Layout user={user} tab={tab} title={`${user.name}'s Orders`}>
+            <Layout user={user} tab={tab} title={`${user.name}'s Orders`}>
                 <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Orders</h2>
                     <nav>
                         <ul className="flex">
                             {ordersLinks.map((order, i) => (
-                                <li className={`${qParam?.q?.split("__")[0] == slugify(order.name, {lower:true})  ? 'font-bold border-b' : '' } px-1 flex items-center justify-center hover:font-bold hover:border-b`} key={i}>
+                                <li className={`${qParam?.split("__")[0] == slugify(order.name, {lower:true})  ? 'font-bold border-b' : '' } px-1 flex items-center justify-center hover:font-bold hover:border-b`} key={i}>
                                     <Link to={`profile/orders?tab=${tab}&q=${slugify(order.name,{lower: true,})}__${order.filter}`}>{order.name}</Link>
                                 </li>
                             ))}
@@ -73,7 +80,7 @@ const Orders = ({ user, tab, orders }) => {
                         </tbody>
                     </table>
                 </div>
-            </Layout> */}
+            </Layout>
         </>
     );
 };
@@ -86,69 +93,28 @@ export const loader = (authContext) => {
     
         //const { currentUser } = authContext;
         const searchParams = new URL(request.url).searchParams;
-
+        
+        const tab = Number(searchParams.get('tab')) || 0;
         
 
         const filter = searchParams.get('q').split("__")[1];
 
-        console.log('loader');
+        console.log(filter);
 
         try {
 
-         const { data } = await getRequest("/user/profile/orders", null,
+         const { data } = await getRequest("/user/profile/orders", 
                       { params : { filter : filter }                                  
                        } 
             );                             
         
-          return data;    
+          return { orders : data, tab : tab };    
         
         } catch (error) {
-            toast.error("Failed to load orders");
-            
+            toast.error("Failed to load orders");            
         }
+
+        return { orders : [], tab : tab };    
     };
 }
 
-// export async function getServerSideProps(context) {
-//     db.connectDb();
-//     const { query } = context;
-//     const session = await getSession(context);
-//     const tab = query.tab || 0;
-
-//     if (!session) {
-//         return {
-//             redirect: {
-//                 destination: "/",
-//             },
-//         };
-//     }
-//     // --------------------------------
-//     const filter = query.q.split("__")[1];
-//     let orders = [];
-
-//     if (!filter) {
-//         orders = await Order.find({ user: session.user?.id })
-//             .sort({ createdAt: -1 })
-//             .lean();
-//     } else if (filter == "paid") {
-//         orders = await Order.find({ user: session.user?.id, isPaid: true })
-//             .sort({ createdAt: -1 })
-//             .lean();
-//     } else if (filter == "unpaid") {
-//         orders = await Order.find({ user: session.user?.id, isPaid: false })
-//             .sort({ createdAt: -1 })
-//             .lean();
-//     } else {
-//         orders = await Order.find({ user: session.user?.id, status: filter })
-//             .sort({ createdAt: -1 })
-//             .lean();
-//     }
-//     // console.log("filter", filter, "orders > ", orders);
-//     return {
-//         props: {
-//             user: session.user,
-//             tab,
-//             orders: JSON.parse(JSON.stringify(orders)),
-//         },
-//     };
-// }

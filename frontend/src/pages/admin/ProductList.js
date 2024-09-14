@@ -1,4 +1,4 @@
-import AllProduct from "components/admin/index";
+import AllProduct from "components/admin/Product";
 import { useLoaderData } from "react-router-dom";
 import { getRequest } from "util/api";
 

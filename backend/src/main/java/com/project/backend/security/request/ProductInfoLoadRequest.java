@@ -39,6 +39,7 @@ public class ProductInfoLoadRequest {
 
    private List<SubCategoryDTO> subCategories;
 
+  
    private ProductColorAttribute color;
 
     private List<ProductSizeAttribute> sizes;

@@ -26,8 +26,8 @@ const GridCategory = ({ category, products, gridCols}) => {
                 <h3 className="font-bold my-2 uppercase">{category.replace("-"," ")}</h3>
                 <div className={`h-full grid grid-cols-1 gap-4 m-1 `}>
                 
-                {selectedProducts.map((product) => (
-                        <Link to={`/product/${product.slug}`} key={product.product_id}>
+                {selectedProducts.map((product, i) => (
+                        <Link to={`/product/${product.slug}?index=${i}`} key={product.id}>
                             <div className={`relative`}>
                                                             
                                 <img

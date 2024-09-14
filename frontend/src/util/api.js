@@ -152,8 +152,7 @@ api.interceptors.response.use(
           // We have a network error
           console.error('Network error:', err);
           //navigate('error_server');
-          TokenUtil.remove();          
-          window.location.href='error_server';          
+          TokenUtil.remove();                    
   }
 
       return Promise.reject(err);

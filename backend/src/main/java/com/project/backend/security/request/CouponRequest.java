@@ -1,6 +1,5 @@
 package com.project.backend.security.request;
 
-
 import com.project.backend.dto.CouponDTO;
 
 import lombok.Getter;

@@ -84,6 +84,10 @@ public class Product extends BaseEntity {
             cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class, orphanRemoval = true)
     private List<OrderedProduct> orderedProducts;
 
+    @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST,targetEntity = CartProduct.class, orphanRemoval = true)
+    private List<CartProduct> cartProducts;
+
     private String refund_policy = "30 days";
 
     private float rating = 0F;

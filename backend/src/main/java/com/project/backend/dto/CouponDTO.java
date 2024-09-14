@@ -25,6 +25,6 @@ public class CouponDTO {
     
     private String endDate;
 
-    private int discount;
+    private String discount;
     
 }

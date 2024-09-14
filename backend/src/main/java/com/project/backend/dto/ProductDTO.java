@@ -60,4 +60,6 @@ public class ProductDTO  {
 
     private int shipping;    
 
+    private String createdAt;
+
 }

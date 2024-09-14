@@ -1,5 +1,10 @@
 package com.project.backend.service;
 
+import java.lang.StackWalker.Option;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.project.backend.dto.CouponDTO;
@@ -7,12 +12,13 @@ import com.project.backend.model.Coupon;
 import com.project.backend.repository.CouponRepository;
 import com.project.backend.security.request.CouponRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CouponService {
 
     private final CouponRepository couponRepository;
-
-    
 
     public CouponService(CouponRepository couponRepository) {
         this.couponRepository = couponRepository;
@@ -20,8 +26,8 @@ public class CouponService {
 
     public boolean delete(String id) {
 
-        Coupon coupon= couponRepository.findById(Long.parseLong(id))
-        .orElseThrow(()->new RuntimeException("Coupon not found. "));
+        Coupon coupon = couponRepository.findById(Long.parseLong(id))
+                .orElseThrow(() -> new RuntimeException("Coupon not found. "));
 
         if (null != coupon) {
             couponRepository.delete(coupon);
@@ -33,63 +39,73 @@ public class CouponService {
 
     public CouponDTO update(CouponRequest request) {
 
-        Long id =Long.parseLong(request.getCoupon().getId());
-        Coupon coupon= couponRepository.findById(id)
-        .orElseThrow(()->new RuntimeException("Coupon not found. "));
+        Long id = Long.parseLong(request.getCoupon().getId());
+        Coupon coupon = couponRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Coupon not found. "));
 
         if (null != coupon) {
             coupon.setName(request.getCoupon().getName());
             coupon.setStartDate(request.getCoupon().getStartDate());
             coupon.setEndDate(request.getCoupon().getEndDate());
-            coupon.setDiscount(request.getCoupon().getDiscount());
+            coupon.setDiscount(Integer.parseInt(request.getCoupon().getDiscount()));
 
             couponRepository.save(coupon);
 
             return CouponDTO.builder()
-            .id(Long.toString(coupon.getCouponId()))
-            .name(coupon.getName())
-            .startDate(coupon.getStartDate())
-            .endDate(coupon.getEndDate())
-            .discount(coupon.getDiscount())
-            .build();
+                    .id(Long.toString(coupon.getCouponId()))
+                    .name(coupon.getName())
+                    .startDate(coupon.getStartDate())
+                    .endDate(coupon.getEndDate())
+                    .discount(Integer.toString(coupon.getDiscount()))
+                    .build();
         }
 
         return null;
     }
 
+    private CouponDTO convertToDTO(Coupon coupon) {
+        return CouponDTO.builder()
+                .id(Long.toString(coupon.getCouponId()))
+                .name(coupon.getName())
+                .startDate(coupon.getStartDate())
+                .endDate(coupon.getEndDate())
+                .discount(Integer.toString(coupon.getDiscount()))
+                .build();
 
-    public CouponDTO create(CouponRequest request) {
+    }
 
-        
-        Coupon coupon= couponRepository.findByName(request.getCoupon().getName())
-        .orElseThrow(()->new RuntimeException("Coupon already exist. "));
-        
-        if (null != coupon) {
-            return CouponDTO.builder()
-            .id(Long.toString(coupon.getCouponId()))
-            .name(coupon.getName())
-            .startDate(coupon.getStartDate())
-            .endDate(coupon.getEndDate())
-            .discount(coupon.getDiscount())
-            .build();
+    public List<CouponDTO> getCoupons() {
+
+        List<Coupon> coupons = couponRepository.findAll();
+
+        List<CouponDTO> result = new ArrayList<CouponDTO>();
+        for (Coupon coupon : coupons) {
+
+            result.add(convertToDTO(coupon));
+        }
+
+        return result;
+    }
+
+    public boolean create(CouponRequest request) {
+
+        Optional<Coupon> data = couponRepository.findByName(request.getCoupon().getName());
+
+        if (data.isPresent()) {
+
+            return false;
         }
 
         Coupon newCoupon = Coupon.builder()
-        .name(request.getCoupon().getName())
-            .startDate(request.getCoupon().getStartDate())
-            .endDate(request.getCoupon().getEndDate())
-            .discount(request.getCoupon().getDiscount())
-            .build();
+                .name(request.getCoupon().getName())
+                .startDate(request.getCoupon().getStartDate())
+                .endDate(request.getCoupon().getEndDate())
+                .discount(Integer.parseInt(request.getCoupon().getDiscount()))
+                .build();
 
         couponRepository.save(newCoupon);
 
-         return CouponDTO.builder()
-        .id(Long.toString(newCoupon.getCouponId()))
-        .name(newCoupon.getName())
-        .startDate(newCoupon.getStartDate())
-        .endDate(newCoupon.getEndDate())
-        .discount(newCoupon.getDiscount())
-        .build();
+        return true;
     }
 
 }
