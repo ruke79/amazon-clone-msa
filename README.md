@@ -68,7 +68,7 @@ front end : react
 **1. .env.development**
 ```  
   REACT_APP_API_URL=http://localhost:8080
-  REACT_APP_CLOUDINARY_NAME=0
+  REACT_APP_CLOUDINARY_NAME=
   REACT_APP_CLOUDINARY_KEY=
   REACT_APP_CLOUDINARY_SECRET=
   NODE_ENV = "development"
