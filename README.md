@@ -76,12 +76,7 @@ front end : react
   REACT_APP_PAYPAL_CLIENT_ID=
   REACT_APP_PAYPAL_CLIENT_SECRET=  
 ```
-**2. /components/admin/createProduct.js line 95, 113**
-```
-  formData.append("upload_preset", <Your Clodinary Cloud name>);
-```
-
-**3. terminal command**
+**2. terminal command**
  ```
  - cd frontend
  - npm i 
