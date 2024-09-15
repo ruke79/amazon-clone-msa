@@ -92,7 +92,7 @@ const CreateProduct = ({
                 let formData = new FormData();
                 formData.append("path", path);
                 formData.append("file", file);
-                formData.append("upload_preset", "");
+                formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_NAME);
                 formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
                 formData.append("timestamp", (Date.now() / 1000) | 0);
 
@@ -110,7 +110,7 @@ const CreateProduct = ({
             let formData = new FormData();
             formData.append("path", path);
             formData.append("file", temp);
-            formData.append("upload_preset", "");
+            formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_NAME);
             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
             let cloudinary_style_img = await uploadImages(formData, config);
             style_img = cloudinary_style_img.url;
