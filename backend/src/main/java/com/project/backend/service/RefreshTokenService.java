@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.backend.constants.AppRole;
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.exceptionHandling.TokenRefreshException;
 import com.project.backend.model.RefreshToken;
@@ -51,37 +52,44 @@ public class RefreshTokenService {
   }
 
   public RefreshToken createRefreshToken(Long userId) {
-    RefreshToken refreshToken = new RefreshToken();
+        
+    // RefreshToken refreshToken = new RefreshToken();
+
+    // User user = userRepository.findById(userId)
+    // .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
+
+    
+
+    // refreshTokenRepository.deleteByUser(user);
+
+
+    // refreshToken.setUser(user);    
+    
+    // refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
+   
+    // Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
+      
+    // refreshToken.setExpiryDate(myDate);
+
+
+    // refreshToken = refreshTokenRepository.save(refreshToken);
 
     User user = userRepository.findById(userId)
-    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
+     .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
-    
+    RefreshToken refreshToken = new RefreshToken(jwtUtils.generateTokenFromUser(user), userId);
+    refreshTokenRepository.save(refreshToken);
 
-    refreshTokenRepository.deleteByUser(user);
-
-
-    refreshToken.setUser(user);    
-    
-    refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
-   
-    Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
-      
-    refreshToken.setExpiryDate(myDate);
-
-
-    refreshToken = refreshTokenRepository.save(refreshToken);
     return refreshToken;
   }
 
-
-
-  @Transactional  
-  public int deleteByUserId(Long userId) {
-    User user = userRepository.findById(userId)
-    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
-    return refreshTokenRepository.deleteByUser(user)
-    ;
-  }
+  
+  // @Transactional  
+  // public int deleteByUserId(Long userId) {
+  //   User user = userRepository.findById(userId)
+  //   .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
+  //   return refreshTokenRepository.deleteByUser(user)
+  //   ;
+  // }
 
 }

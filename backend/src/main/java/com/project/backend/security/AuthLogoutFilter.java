@@ -131,7 +131,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
         User user = userService.findByEmail(email).
                     orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
        
-        refreshTokenService.deleteByUserId(user.getUserId());
+        //refreshTokenService.deleteByUserId(user.getUserId());
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie(TokenType.REFRESH.getType(), null);
