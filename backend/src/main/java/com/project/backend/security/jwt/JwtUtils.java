@@ -132,10 +132,16 @@ public class JwtUtils {
   }
 
   public String getIdFromJwtToken(String token) {
+    try {
     return Jwts.parser()
         .verifyWith(key())
         .build().parseSignedClaims(token)
         .getPayload().getSubject();
+    } catch (ExpiredJwtException e) {
+   
+      return e.getClaims().getSubject();
+    }
+
   }
 
   public String getRoleFromJwtToken(String token) {
