@@ -1,4 +1,4 @@
-/*
+
 package com.project.backend.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -41,4 +41,3 @@ public class RedisConfig {
         return stringRedisTemplate;
     }
 }
-*/
