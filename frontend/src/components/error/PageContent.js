@@ -1,8 +1,8 @@
-import classes from 'components/error/PageContent.module.css';
+import 'components/error/PageContent.module.css';
 
 function PageContent({ title, children }) {
   return (
-    <div className={classes.content}>
+    <div className={content}>
       <h1>{title}</h1>
       {children}
     </div>
