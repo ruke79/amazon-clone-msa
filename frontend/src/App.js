@@ -88,7 +88,7 @@ const AppRouter = () => {
     {
       element: <ErrorBoundaryLayout />,
       //errorElement : <ErrorPage/>,
-      
+         
       children: [
         {
           path: '/',
