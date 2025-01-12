@@ -1,6 +1,5 @@
 package com.project.chatserver.common.config.kafka;
 
-import com.project.chatserver.dto.chat.Message;
 import com.project.chatserver.dto.notification.NotificationEventDto;
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -13,7 +12,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import java.util.List;
+
 import java.util.Map;
 
 @EnableKafka
