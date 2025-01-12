@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -135,7 +136,13 @@ public class SecurityConfig {
         AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(http), jwtUtils, refreshTokenService);
         loginFilter.setFilterProcessesUrl("/api/auth/public/signin");
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
-        
+
+        http.sessionManagement(s-> s
+                .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::changeSessionId)
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .expiredUrl("/session-expired")
+        );
         
         http.sessionManagement(
                 (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -143,6 +150,11 @@ public class SecurityConfig {
         http.formLogin(login -> login.disable());
 
         return http.build();
+    }
+
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean
