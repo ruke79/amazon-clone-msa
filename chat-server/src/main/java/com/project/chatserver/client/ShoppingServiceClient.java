@@ -8,4 +8,5 @@ import org.springframework.cloud.openfeign.FeignClient;
 @FeignClient(name="shopping-service")
 public interface ShoppingServiceClient {
 
+    ///api/auth/users
 }

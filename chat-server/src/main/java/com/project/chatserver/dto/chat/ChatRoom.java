@@ -1,6 +1,5 @@
 package com.project.chatserver.dto.chat;
 
-import com.project.chatserver.domain.ChatUser;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
