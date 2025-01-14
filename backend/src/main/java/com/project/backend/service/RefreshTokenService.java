@@ -53,32 +53,36 @@ public class RefreshTokenService {
 
   public RefreshToken createRefreshToken(Long userId) {
         
-    // RefreshToken refreshToken = new RefreshToken();
-
-    // User user = userRepository.findById(userId)
-    // .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
-
-    
-
-    // refreshTokenRepository.deleteByUser(user);
-
-
-    // refreshToken.setUser(user);    
-    
-    // refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
-   
-    // Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
-      
-    // refreshToken.setExpiryDate(myDate);
-
-
-    // refreshToken = refreshTokenRepository.save(refreshToken);
+    RefreshToken refreshToken = new RefreshToken();
 
     User user = userRepository.findById(userId)
-     .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
+    .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
-    RefreshToken refreshToken = new RefreshToken(jwtUtils.generateTokenFromUser(user), userId);
-    refreshTokenRepository.save(refreshToken);
+    
+
+    refreshTokenRepository.deleteByUser(user);
+
+
+    refreshToken.setUser(user);    
+    
+    refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
+   
+    Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
+      
+    refreshToken.setExpiryDate(myDate);
+
+
+    refreshToken = refreshTokenRepository.save(refreshToken);
+
+    // Redis start 
+
+    // User user = userRepository.findById(userId)
+    //  .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
+
+    // RefreshToken refreshToken = new RefreshToken(jwtUtils.generateTokenFromUser(user), userId);
+    // refreshTokenRepository.save(refreshToken);
+
+    // Redis End
 
     return refreshToken;
   }
