@@ -21,6 +21,8 @@ import Orders, { loader as loaderOrders } from "pages/profile/orders";
 import Security, {loader as loaderSecurity } from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
+import Chat from "pages/chat/Index";
+
 import ProtectedRoute from "components/ProtectedRoute";
 import { ErrorBoundary } from "react-error-boundary";
 import { Outlet  } from 'react-router-dom';
@@ -105,12 +107,18 @@ const AppRouter = () => {
           ]
         },
         { path: 'error_server', element: <Maintenance/> },
+
+        {
+          path: 'chat',
+          element: <ProtectedRoute><Chat /></ProtectedRoute>,
+        },
+
         {
           path: '/profile',
           element: <ProtectedRoute><Profile /></ProtectedRoute>,
           loader: loaderProfile(authContext),   
           
-        },
+        },     
         {
           path: 'profile/address',
           element: <ProtectedRoute><Address /></ProtectedRoute>,

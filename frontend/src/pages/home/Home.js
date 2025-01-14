@@ -6,6 +6,7 @@ import HomeProductSwiper from 'components/home/HomeProductSwiper';
 import { getRequest, putRequest } from '../../util/api';
 import MenuSideBar from 'pages/header/MenuSidebar';
 import Footer from 'pages/Footer';
+import MicroServices from './MicroServices';
 
 const HomePage = () => {
    
@@ -16,6 +17,7 @@ const HomePage = () => {
     return (
         <>
         <main className="max-w-screen-2xl mx-auto bg-gray-100">            
+        <MicroServices/>
         <CarouselContainer/>
         <CategoriesProduct products={products} />         
         <div className="z-10 relative">

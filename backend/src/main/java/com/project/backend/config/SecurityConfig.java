@@ -152,11 +152,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-
+    
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http
@@ -176,20 +172,35 @@ public class SecurityConfig {
             Role adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
                     .orElseGet(() -> roleRepository.save(new Role(AppRole.ROLE_ADMIN)));
 
-            // if (!userRepository.existsByUserName("user1")) {
-            // User user1 = new User("user1", "user1@example.com",
-            // passwordEncoder.encode("password1"));
-            // user1.setAccountNonLocked(false);
-            // user1.setAccountNonExpired(true);
-            // user1.setCredentialsNonExpired(true);
-            // user1.setEnabled(true);
-            // user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
-            // user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
-            // user1.setTwoFactorEnabled(false);
-            // user1.setSignUpMethod("email");
-            // user1.setRole(userRole);
-            // userRepository.save(user1);
-            // }
+            if (!userRepository.existsByUserName("user1")) {
+            User user1 = new User("user1", "user1@example.com",
+            passwordEncoder.encode("12345678#"));
+            user1.setAccountNonLocked(false);
+            user1.setAccountNonExpired(true);
+            user1.setCredentialsNonExpired(true);
+            user1.setEnabled(true);
+            user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
+            user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
+            user1.setTwoFactorEnabled(false);
+            user1.setSignUpMethod("email");
+            user1.setRole(userRole);
+            userRepository.save(user1);
+            }
+
+            if (!userRepository.existsByUserName("user2")) {
+                User user1 = new User("user2", "user2@example.com",
+                passwordEncoder.encode("1234"));
+                user1.setAccountNonLocked(false);
+                user1.setAccountNonExpired(true);
+                user1.setCredentialsNonExpired(true);
+                user1.setEnabled(true);
+                user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
+                user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
+                user1.setTwoFactorEnabled(false);
+                user1.setSignUpMethod("email");
+                user1.setRole(userRole);
+                userRepository.save(user1);
+                }
 
             // if (!userRepository.existsByUserName("admin")) {
             // User admin = new User("admin", "admin@example.com",
