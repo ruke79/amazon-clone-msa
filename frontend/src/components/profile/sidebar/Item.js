@@ -60,7 +60,7 @@ const Item = ({ item, visible, index }) => {
                                 >
                                     <ArrowLongRightIcon className="w-5 h-5 mr-2" />
                                     <Link
-                                        to={`http://localhost:3000${
+                                        to={`${process.env.PUBLIC_URL}${
                                             link.link
                                         }?tab=${index}&q=${slugify(link.name, {
                                             lower: true,

@@ -1,6 +1,7 @@
 package com.project.chatserver.common.config.kafka;
 
-import com.project.chatserver.dto.notification.NotificationEventDto;
+import com.project.chatserver.domain.ChatMessage;
+import com.project.chatserver.dto.notification.AlarmEventDto;
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -21,14 +22,14 @@ public class ListenerConfiguration {
     @Value("${kafka.url}")
     private String kafkaServerUrl;
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, Message> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Message> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
     @Bean
-    public ConsumerFactory<String, Message> consumerFactory() {
-        JsonDeserializer<Message> deserializer = new JsonDeserializer<>();
+    public ConsumerFactory<String, ChatMessage> consumerFactory() {
+        JsonDeserializer<ChatMessage> deserializer = new JsonDeserializer<>();
         deserializer.addTrustedPackages("*");
         Map<String, Object> consumerConfigurations =
                 ImmutableMap.<String, Object>builder()
@@ -41,22 +42,22 @@ public class ListenerConfiguration {
 
         return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
     }
-    @Bean
-    ConcurrentKafkaListenerContainerFactory<String, String> kafkaDeletePostContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(deletePostConsumer());
-        return factory;
-    }
+    // @Bean
+    // ConcurrentKafkaListenerContainerFactory<String, String> kafkaDeletePostContainerFactory() {
+    //     ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    //     factory.setConsumerFactory(deletePostConsumer());
+    //     return factory;
+    // }
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, NotificationEventDto> kafkaNotificationContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, NotificationEventDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, AlarmEventDto> kafkaNotificationContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, AlarmEventDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(kafkaNotificationConsumer());
         return factory;
     }
     @Bean
-    public ConsumerFactory<String, NotificationEventDto> kafkaNotificationConsumer() {
-        JsonDeserializer<NotificationEventDto> deserializer = new JsonDeserializer<>(NotificationEventDto.class, false);
+    public ConsumerFactory<String, AlarmEventDto> kafkaNotificationConsumer() {
+        JsonDeserializer<AlarmEventDto> deserializer = new JsonDeserializer<>(AlarmEventDto.class, false);
         deserializer.addTrustedPackages("*");
         Map<String, Object> consumerConfigurations =
                 ImmutableMap.<String, Object>builder()

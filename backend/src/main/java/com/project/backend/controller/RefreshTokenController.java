@@ -99,10 +99,13 @@ public class RefreshTokenController {
         }
 
 
+        
         String email = jwtUtils.getIdFromJwtToken(refresh);
 
+        log.info("userService.findByEmail(email) start");
         User user = userService.findByEmail(email).
                     orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
+        log.info("userService.findByEmail(email) End");
 
         String newAccess = jwtUtils.generateTokenFromUser(user);
 

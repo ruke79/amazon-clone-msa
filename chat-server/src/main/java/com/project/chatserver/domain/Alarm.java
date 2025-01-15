@@ -15,17 +15,16 @@ import  jakarta.persistence.*;
  */
 @Entity
 @Getter
-@Table(name = "NOTIFICATION")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Notification extends BaseTimeEntity{
+@Table(name = "alarm")
+public class Alarm extends BaseEntity{
     @Id
-    @Column(name = "notifi_No")
+    @Column(name = "alarm_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notifiNo;
+    private Long alarmId;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
-    private NotifiTypeEnum typeEnum;
+    private AlarmEnum typeEnum;
 
     @Column(name = "url")
     private String url;
@@ -39,26 +38,16 @@ public class Notification extends BaseTimeEntity{
     @Column(name = "read_status")
     private boolean isRead;
 
-    @Column(name = "sender_No")
-    private Integer senderNo;
+    @Column(name = "sender_id")
+    private Long senderId;
 
-    @Column(name = "receiver_No")
-    private Integer receiverNo;
+    @Column(name = "receiver_id")
+    private Long receiverId;
 
-    @Column(name = "sender_Name")
+    @Column(name = "sender_name")
     private String senderName;
 
-    @Builder
-    public Notification(Long notifiNo, NotifiTypeEnum typeEnum, String url, String content, boolean isDel, boolean isRead, Integer senderNo, Integer receiverNo) {
-        this.notifiNo = notifiNo;
-        this.typeEnum = typeEnum;
-        this.url = url;
-        this.content = content;
-        this.isDel = isDel;
-        this.isRead = isRead;
-        this.senderNo = senderNo;
-        this.receiverNo = receiverNo;
-    }
+    
     public void read() {
         this.isRead = true;
     }

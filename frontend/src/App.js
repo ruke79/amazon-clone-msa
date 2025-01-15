@@ -37,6 +37,7 @@ import toast, {Toaster} from 'react-hot-toast';
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import loadFakeData from "util/loadFake";
 import { postRequest, getRequest } from "util/api";
+import { ChatRoomList } from "components/chat/ChatRoomList";
 
 // const DebugLayout = () => {
 //   const location = useLocation();
@@ -111,6 +112,9 @@ const AppRouter = () => {
         {
           path: 'chat',
           element: <ProtectedRoute><Chat /></ProtectedRoute>,
+          children: [
+            { path : 'chatrooms', element: <ChatRoomList/> },
+          ]
         },
 
         {

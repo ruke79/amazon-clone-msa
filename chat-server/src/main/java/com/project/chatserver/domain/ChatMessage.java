@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import  jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
-@Document(collection="chatting")
+@Document(collection="chatmessage")
 @Getter
 @Setter
 @ToString
@@ -15,28 +15,25 @@ import java.time.LocalDateTime;
 public class ChatMessage {
     private MessageType type;
 
-    private String nickname;
-
-    private String email;
-
-    private String roomCode;
+    private Long senderId;
+    
+    private String roomId;
 
     private String message;
 
     // @CreatedDate
     private String createdAt;
 
-    private String imageUrl;
+    //private String imageUrl;
 
-    private ChatMessage(MessageType type, String nickname, String email, String roomCode, String message) {
+    private ChatMessage(MessageType type, Long senderId,  String roomId, String message) {
         this.type = type;
-        this.nickname = nickname;
-        this.email = email;
-        this.roomCode = roomCode;
+        this.senderId = senderId;        
+        this.roomId = roomId;
         this.message = message;
     }
 
-    public static ChatMessage of(MessageType type, String nickname, String email, String roomCode, String message) {
-        return new ChatMessage(type, nickname, email, roomCode, message);
+    public static ChatMessage get(MessageType type, Long senderId, String roomId, String message) {
+        return new ChatMessage(type, senderId, roomId, message);
     }
 }

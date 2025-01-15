@@ -3,9 +3,8 @@ package com.project.chatserver.domain;
 import lombok.Getter;
 
 @Getter
-public enum NotifiTypeEnum {
-    SNS_COMMENT("snspostlist/","댓글"),
-    TRADEBOARD_GOODS("bbsdetail/","찜"),
+public enum AlarmEnum {
+    SNS_COMMENT("snspostlist/","댓글"),    
     SNS_HEART("snspostlist/","좋아요"),
     KEYWORD("bbsdetail/", "키워드"),
     CHAT("chatroom/","채팅");
@@ -13,7 +12,7 @@ public enum NotifiTypeEnum {
     private final String path;
     private final String alias;
 
-    NotifiTypeEnum(String path, String alias) {
+    AlarmEnum(String path, String alias) {
         this.path = path;
         this.alias = alias;
     }

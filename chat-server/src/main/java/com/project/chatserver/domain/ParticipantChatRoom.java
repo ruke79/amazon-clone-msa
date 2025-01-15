@@ -1,5 +1,17 @@
 package com.project.chatserver.domain;
 
+
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -7,24 +19,23 @@ public class ParticipantChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "memberroom_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ROOM_ID")
+    @JoinColumn(name = "room_id")
     private ChatRoom room;
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
-    private Member member;
+    @JoinColumn(name = "member_id")
+    private ChatMember member;
 
-    private MemberChatRoom(ChatRoom room, Member member) {
+    private ParticipantChatRoom(ChatRoom room, ChatMember member) {
         this.room = room;
-        this.member = member;
-        // room.getMemberList().add(this);
-        // member.getRoomList().add(this);
+        this.member = member;        
     }
 
-    public static MemberChatRoom of(ChatRoom room, Member member) {
-        return new MemberChatRoom(room, member);
+    public static ParticipantChatRoom get(ChatRoom room, ChatMember member) {
+        return new ParticipantChatRoom(room, member);
     }
 }

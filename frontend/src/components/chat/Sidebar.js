@@ -153,15 +153,15 @@ function Sidebar() {
             <ListItemButton onClick={handleOpen}>
               <HomeRoundedIcon />
               <ListItemText>
-                <Typography level="title-sm">Home</Typography>                
+                <Typography level="title-sm">Create Room</Typography>                
               </ListItemText>
             </ListItemButton>            
           </ListItem>
-          <ListItem component={NavLink} to='/menu/searchmessage'>
+          <ListItem component={NavLink} to='/chat/chatrooms'>
             <ListItemButton>
               <DashboardRoundedIcon />
               <ListItemText>
-                <Typography level="title-sm">Search Message</Typography>
+                <Typography level="title-sm">Room List</Typography>
               </ListItemText>
             </ListItemButton>
           </ListItem>          

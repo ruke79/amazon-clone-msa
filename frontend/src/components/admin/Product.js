@@ -23,7 +23,7 @@ const AllProcuct = ({ products }) => {
                                     alt={product.name}
                                 />
                             </div>
-                            <Link href={`http://localhost:3000/product/${product.slug}`} target="_blank">
+                            <Link href={`${process.env.PUBLIC_URL}/product/${product.slug}`} target="_blank">
                                 <h3 className="text-sm font-semibold">
                                     {product.name}
                                 </h3>
