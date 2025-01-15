@@ -1,4 +1,4 @@
-package com.challenge.chat.domain.member.constant;
+package com.project.chatserver.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

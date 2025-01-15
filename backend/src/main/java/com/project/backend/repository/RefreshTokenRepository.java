@@ -17,14 +17,14 @@ import com.project.backend.model.User;
 
 import jakarta.transaction.Transactional;
 
+@Transactional    
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
     Optional<RefreshToken> findByToken(String token);
-
-    @Transactional    
+    
     int deleteByUser(User user);
 
-    @Transactional    
+    
     int deleteByToken(String stoken);
 
 }

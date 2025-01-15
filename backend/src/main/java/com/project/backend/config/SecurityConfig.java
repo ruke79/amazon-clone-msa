@@ -116,6 +116,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/user").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/auth/public/**").permitAll()
                 .requestMatchers("/registrationConfirm").permitAll()
+                .requestMatchers("/chat/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .anyRequest().authenticated());
 
@@ -137,13 +138,7 @@ public class SecurityConfig {
         loginFilter.setFilterProcessesUrl("/api/auth/public/signin");
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.sessionManagement(s-> s
-                .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::changeSessionId)
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(false)
-                .expiredUrl("/session-expired")
-        );
-        
+                
         http.sessionManagement(
                 (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

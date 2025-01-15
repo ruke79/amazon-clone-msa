@@ -24,10 +24,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
             case 404:
                 if (methodKey.contains("find")) {
                     throw ErrorCode.throwMemberNotFound();
-                }
-                if (methodKey.contains("boardContent")) {
-                    throw ErrorCode.throwTradeBoardNotFound();
-                }
+                }                
                 break;
             default:
                 return new Exception(response.reason());

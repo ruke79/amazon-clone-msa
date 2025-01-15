@@ -1,28 +1,27 @@
-package com.challenge.chat.domain.member.entity;
+package com.project.chatserver.domain;
 
 import java.util.List;
 
-import com.challenge.chat.domain.chat.entity.MemberChatRoom;
-import com.challenge.chat.domain.member.constant.MemberRole;
-import com.challenge.chat.domain.member.constant.SocialType;
 import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Member {
+@Table(name="chatmember")
+public class ChatMember {
 
 	@Id
 	@Column(name = "member_id")
@@ -43,7 +42,7 @@ public class Member {
 
 
 	@OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
-	private List<MemberChatRoom> roomList;
+	private List<ParticipantChatRoom> roomList;
 
 
 

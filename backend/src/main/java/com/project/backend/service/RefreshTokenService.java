@@ -60,9 +60,12 @@ public class RefreshTokenService {
 
     
 
+    log.info("refreshTokenRepository.deleteByUser(user) start");
     refreshTokenRepository.deleteByUser(user);
 
+    log.info("refreshTokenRepository.deleteByUser(user) End");
 
+    
     refreshToken.setUser(user);    
     
     refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
@@ -71,8 +74,11 @@ public class RefreshTokenService {
       
     refreshToken.setExpiryDate(myDate);
 
+    log.info("refreshTokenRepository.save(refreshToken) start");
 
     refreshToken = refreshTokenRepository.save(refreshToken);
+
+    log.info("refreshTokenRepository.save(refreshToken) end");
 
     // Redis start 
 

@@ -1,4 +1,4 @@
-package com.challenge.chat.domain.chat.entity;
+package com.project.chatserver.domain;
 
 public enum MessageType {
 	ENTER,
