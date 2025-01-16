@@ -10,9 +10,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 
 import { useDispatch, useSelector } from "react-redux";
+import { ChatProvider } from "store/ChatContext";
 
 
-export const myContext = createContext();
+
 function Chat() {
   const dispatch = useDispatch();
   const lightTheme = useSelector((state) => state.themeKey);
@@ -20,16 +21,16 @@ function Chat() {
 
   return (
     
-    <myContext.Provider value={{ refresh: refresh, setRefresh: setRefresh }}>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-        <Sidebar />
-        <Header />
-        <Box component="main" className="MainContent" sx={{ flex: 1 }}>
-          <ChatPage />          
-        </Box>
-      </Box>    
-      </myContext.Provider>      
+      <ChatProvider>
+        <CssBaseline />
+        <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
+          <Sidebar />
+          <Header />
+          <Box component="main" className="MainContent" sx={{ flex: 1 }}>
+            <ChatPage />          
+          </Box>
+        </Box>    
+      </ChatProvider>
   );
 }
 

@@ -1,4 +1,4 @@
- import React, { useContext, useEffect, useState } from "react";
+ import { useContext, useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -18,6 +18,8 @@ import IconButton from '@mui/material/IconButton';
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
+
 import axios from "axios";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -34,12 +36,21 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton, { listItemButtonClasses } from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import CreateChatRoomDialog from './CreateChatRoomDialog';
+import { useCreateChatRoom } from "hook/chatHooks";
+
 
 
 function Sidebar() {
   
+  
+  const [chatMessageList, setChatMessageList] = useState([]);
+  
+  const [open, setOpen] = useState(false);
+  const [roomName, setRoomName] = useState("");
+  
+
   // const dispatch = useDispatch();
-  // const lightTheme = useSelector((state) => state.themeKey);
+  // const lightTheme = useSelectornpm install sockjs-client ((state) => state.themeKey);
   // const refresh = useSelector((state) => state.refreshKey);
   // const { refresh, setRefresh } = useContext(myContext);
   //console.log("Context API : refresh : ", refresh);
@@ -47,9 +58,7 @@ function Sidebar() {
   // console.log("Conversations of Sidebar : ", conversations);
   const userData = JSON.parse(localStorage.getItem("userData"));
   // console.log("Data from LocalStorage : ", userData);
-  const [open, setOpen] = React.useState(false);
-
-  const [roomName, setRoomName] = useState("");
+  
   
   const handleRoomName = (e) => {
     setRoomName(e.target.value);
@@ -67,6 +76,8 @@ function Sidebar() {
       setOpen(false);
     };
 
+    const { createChatRoom } = useCreateChatRoom({name : roomName})
+
 
   
   // if (!userData) {
@@ -74,21 +85,10 @@ function Sidebar() {
   //   nav("/");
   // }
 
-  // const user = userData.data;
-  // useEffect(() => {
-  //   // console.log("Sidebar : ", user.token);
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${user.token}`,
-  //     },
-  //   };
+ 
 
-  //   axios.get("http://localhost:8080/chat/", config).then((response) => {
-  //     console.log("Data refresh in sidebar ", response.data);
-  //     setConversations(response.data);
-  //     // setRefresh(!refresh);
-  //   });
-  // }, [refresh]);
+
+  
 
   return (
     <Paper
@@ -171,6 +171,7 @@ function Sidebar() {
         <CreateChatRoomDialog  
       roomName={roomName}
         open={open}
+        createChatRoom={createChatRoom}
         handleRoomName={handleRoomName}
         handleClose={handleClose}        
         handleDeleteRoomName={handleDeleteRoomName}

@@ -24,6 +24,7 @@ module.exports = {
         "pages": path.resolve(__dirname, './src/pages'),
         "util": path.resolve(__dirname, './src/util'),
         "store": path.resolve(__dirname, './src/store'),
+        "hook": path.resolve(__dirname, './src/hook'),
         "public": path.resolve(__dirname, './public'),
         "error" : path.resolve(__dirname, './src/error'),
     },
