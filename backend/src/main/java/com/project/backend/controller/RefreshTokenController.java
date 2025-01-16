@@ -1,9 +1,11 @@
 package com.project.backend.controller;
 
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -40,8 +42,12 @@ public class RefreshTokenController {
 
     private final JwtUtils jwtUtils;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     private final RefreshTokenService refreshTokenService;
 
+    
     @Autowired
     public RefreshTokenController(UserServiceImpl userService, JwtUtils jwtUtils, RefreshTokenService refreshTokenService) {
         this.userService = userService;
@@ -66,7 +72,8 @@ public class RefreshTokenController {
         
         if (refresh == null) {
 
-            
+         
+            log.info("refresh == null");
             //response status code
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
         }
@@ -79,14 +86,20 @@ public class RefreshTokenController {
             //로그인 페이지 
             //response status code
             
+            //return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
 
-            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
+            log.info("Redirect signin");
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(URI.create(frontendUrl + "/signin"));
+            return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);            
         }
 
         
         if(!jwtUtils.validateJwtToken(refresh)) {
 
             
+            log.info("invalid refresh token");
             //response status code
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }

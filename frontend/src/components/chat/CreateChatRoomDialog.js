@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 function CreateChatRoomDialog({
   roomName,  
   open,
+  createChatRoom,
   handleRoomName,  
   handleDeleteRoomName,
   handleClose 
@@ -60,7 +61,7 @@ function CreateChatRoomDialog({
   };
 
   return (
-    <>
+    
       <div>
         <Dialog
           open={open}
@@ -87,7 +88,7 @@ function CreateChatRoomDialog({
             <Button onClick={handleClose}>Disagree</Button>
             <Button
               onClick={() => {
-                CreateChatRoom();
+                createChatRoom();
                 handleClose();
               }}
               autoFocus
@@ -96,26 +97,7 @@ function CreateChatRoomDialog({
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-      {/* <div className={"createGroups-container" + (lightTheme ? "" : " dark")}>
-        <input
-          placeholder="Enter Group Name"
-          className={"search-box" + (lightTheme ? "" : " dark")}
-          onChange={(e) => {
-            setGroupName(e.target.value);
-          }}
-        />
-        <IconButton
-          className={"icon" + (lightTheme ? "" : " dark")}
-          onClick={() => {
-            handleClickOpen();
-             createGroup();
-          }}
-        >
-          <DoneOutlineRoundedIcon />
-        </IconButton>
-      </div> */}
-    </>
+      </div>        
   );
 }
 

@@ -39,6 +39,7 @@
     "save-dev": "^0.0.1-security",
     "slugify": "^1.6.6",
     "socket.io-client": "^4.7.5",
+    "sockjs-client": "^1.6.1",
     "sweetalert2": "^11.6.13",
     "swiper": "^11.1.9",
     "toast": "^0.5.4",
