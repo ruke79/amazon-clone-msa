@@ -55,20 +55,24 @@ const SignInPage = () => {
 
     const { mutate } = useMutation({
         mutationFn : login, 
-        throwOnError : false,
+        throwOnError : true,
         onSuccess: (response) => {
 
-            console.log(response);
-            const access = response.headers['access'];
+            try {
+                console.log(response);
+                const access = response.headers['access'];
 
-            const decodedToken = jwtDecode(access);
-            if (decodedToken.is2faEnabled) {
-                setStep(2); // Move to 2FA verification step
-            } else {                
-                handleSuccessfulLogin(response, decodedToken);
+                const decodedToken = jwtDecode(access);
+                if (decodedToken.is2faEnabled) {
+                    setStep(2); // Move to 2FA verification step
+                } else {                
+                    handleSuccessfulLogin(response, decodedToken);
+                }
+                queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
+                navigate('/');
+            } catch(error) {
+                console.log("error: " + JSON.stringify(localStorage));
             }
-            queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
-            navigate('/');
         },
         onError: (error) => {                       
             

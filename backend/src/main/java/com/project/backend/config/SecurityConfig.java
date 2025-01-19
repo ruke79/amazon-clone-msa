@@ -54,11 +54,15 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
+
+    private final CorsConfigurationSource corsConfigurationSource;
 
     private final JwtAuthEntryPoint unauthorizedHandler;
 
@@ -82,10 +86,12 @@ public class SecurityConfig {
     }
 
     @Autowired
-    public SecurityConfig(JwtAuthEntryPoint unauthorizedHandler,
+    public SecurityConfig(CorsConfigurationSource corsConfigurationSource,
+                          JwtAuthEntryPoint unauthorizedHandler,
             CustomAuthenticationProvider customAuthenticationProvider, JwtUtils jwtUtils,
             RefreshTokenService refreshTokenService, CustomOAuth2UserService customOAuth2UserService,
             OAuth2SuccessHandler oAuth2SuccessHandler, UserService userService) {
+        this.corsConfigurationSource = corsConfigurationSource;
         this.unauthorizedHandler = unauthorizedHandler;
         this.customAuthenticationProvider = customAuthenticationProvider;
         this.jwtUtils = jwtUtils;
@@ -104,14 +110,17 @@ public class SecurityConfig {
         // // .ignoringRequestMatchers("/api/order/**")
         // .ignoringRequestMatchers("/api/product/**")
         //);
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource));
+
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((requests) -> requests
                 // .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers("/api/admin/**").permitAll()
                 .requestMatchers("/api/product/**").permitAll()
                 .requestMatchers("/api/user/**").hasRole("USER")
                 .requestMatchers("/api/search/**").permitAll()
-                .requestMatchers("/api/csrf-token").permitAll()
+                //.requestMatchers("/api/csrf-token").permitAll()
                 .requestMatchers("/api/token/**").permitAll()                
                 .requestMatchers("/api/auth/user").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/auth/public/**").permitAll()

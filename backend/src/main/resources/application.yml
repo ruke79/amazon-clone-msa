@@ -1,0 +1,77 @@
+server:
+    port: 8080
+
+frontend:
+    url: http://localhost:3000
+
+kafka:
+  url: http://localhost:29091
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+spring:
+    application:
+        name: shopping-service
+
+    config:
+      import: "optional:configserver:http://localhost:8888"
+
+    datasource:
+       url: jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul
+       username: admin
+       password: ysY2273!
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+             hibernate:
+                 format_sql: true
+                 dialect : org.hibernate.dialect.MySQLDialect
+    app:
+       jwtCookieName: shopping-cookie
+       jwtRefreshCookieName: shopping-refresh-cookie
+       jwtSecret: "mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm"
+       jwtExpirationMs: 7200
+       jwtRefreshExpirationMs: 18000
+
+    mail: 
+      host: smtp.gmail.com
+      port: 587
+      username: Sangyong79@gmail.com
+      password: qfpp cubv ieio rodd
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+               enable: true
+
+    security:
+       oauth2:
+         client:
+           registration:
+                google:
+                   client-id: 1015215671564-2l317hkb9l48r3fflfvr0eucto00ik88.apps.googleusercontent.com
+                   client-secret: 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
+    
+
+logging:
+    level:
+        org:
+            springframework:
+                security: TRACE
+
+
+
+imp_key : 5002247850887847
+imp_secret : FCnHJ8YbqoufsYPuw40VJYwP9em2l8ZULaAIwCvfbGwU0cH1Pr14ENrT8o8wqzPWZD0cLfwL3B25DkeD

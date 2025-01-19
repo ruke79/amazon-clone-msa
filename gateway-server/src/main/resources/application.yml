@@ -1,0 +1,102 @@
+server:
+  port: 8000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: gateway-server
+  
+  config:    
+    import: optional:configserver:http://localhost:8888
+
+
+
+  main:
+    web-application-type: reactive
+  
+  cloud:   
+    gateway:
+      default-filters:
+       - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - 'http://localhost:3000' 
+              - 'http://localhost:8000'
+              - 'http://localhost:8080'
+            allow-credentials: true 
+            allowedHeaders: '*'
+            allowedMethods: 
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+            exposedHeaders: '*'
+#              - 'ACCESS'
+#              - 'Set-Cookie'
+
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+
+      routes:
+        - id:  shopping-service
+          uri: lb://shopping-service
+          predicates:
+            - Path=/shopping-service/api/auth/public/login, /shopping-service/registrationConfirm, /shopping-service/api/token/**, /shopping-service/api/admin/**, /shopping-service/api/search/**, /shopping-service/api/product/**
+            - Method=POST, GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shopping-service/(?<segment>. *) , /$\{segment}
+        - id: shopping-service
+          uri: lb://shopping-service
+          predicates:
+            - Path=/shopping-service/api/token/**, /shopping-service/api/user/**, /shopping-service/api/auth/user
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shopping-service/(?<segment>. *) , /$\{segment}
+            - AuthorizationHeaderFilter
+
+        - id: chat-service
+          uri: lb:ws://chat-service
+          predicates:
+              - Path=/chat-service/chat/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/chat-service/(?<segment>.*), /$\{segment}
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: 1234
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway, refresh, health, beans, http, busrefresh, info, metrics, prometheus
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+
