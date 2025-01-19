@@ -7,7 +7,7 @@ export const queryClient = new QueryClient(
   {
     defaultOptions: {
       queries: {
-        retry: false,        
+        retry: false,
         throwOnError: true,
       },
       mutations: {
@@ -33,7 +33,7 @@ console.log("API URL:", process.env.REACT_APP_API_URL);
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  baseURL: `${process.env.REACT_APP_API_URL}/shopping-service/api`,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -44,16 +44,16 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-      const token = TokenUtil.getToken();
-      if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-      }
-    
+    const token = TokenUtil.getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-      return config;
+
+    return config;
   },
   (error) => {
-      return Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 
@@ -65,99 +65,98 @@ const refreshAndRetryQueue = [];
 
 api.interceptors.response.use(
   (res) => {
-      return res;
+    console.log(res.data)
+    return res;
   },
   async (err) => {
-      let originalConfig = err.config;
+    let originalConfig = err.config;
+
+    if (err.response) {
+
+      const msg = err.response.data;
+      const status = err.response.status;
+
       
-      if (err.response) {
-
-          const msg = err.response.data;
-          const status = err.response.status;
-
-          console.log(msg);
-       
-      if (status === 401 ) {
-       
-
-          if (!isRefreshing) {
-
-              isRefreshing = true;
-              
-
-              try {
-                  
-                  if (msg === "access token expired" ) {
-
-                      TokenUtil.removeToken();
-
-                      
-                      
-                          const rs = await postRequest("/token/refresh", null);
-
-                          if( rs.status == 200) {
-                                  console.log(rs);
-                                  const accessToken = rs.headers['access'];
-                                  TokenUtil.updateToken(accessToken);
-                                  
-                                  //setToken(accessToken);
-
-                                  originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
-
-                              return api(originalConfig);
-                          }                                                                   
-                      
-                  }
-                  refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-                      api
-                          .request(config)
-                          .then((response) => resolve(response))
-                          .catch((err) => reject(err));
-                  });
-
-                  refreshAndRetryQueue.length = 0;
+      if (status === 401) {
 
 
-              } catch (refreshError) {
-                  refreshAndRetryQueue.length = 0;
-                  
-                  console.log(refreshError);
-                  TokenUtil.remove();                            
-                  //setToken(null) ;                            
-                 // navigate('signin');    
-                  throw refreshError;                                                                                                  
-                  
-              } finally {
-                  isRefreshing = false;
+        if (!isRefreshing) {
+
+          isRefreshing = true;
+
+
+          try {
+
+            if (msg === "access token expired") {
+
+              TokenUtil.removeToken();
+
+
+
+              const rs = await getRequest("/token/refresh");
+
+              if (rs.status == 200) {
+                console.log(rs);
+                const accessToken = rs.headers['access'];
+                TokenUtil.updateToken(accessToken);
+
+                //setToken(accessToken);
+
+                originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
+
+                return api(originalConfig);
               }
-          }
 
-         
-            return new Promise((resolve, reject) => {
-                refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
-            });        
+            }
+            refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
+              api
+                .request(config)
+                .then((response) => resolve(response))
+                .catch((err) => reject(err));
+            });
+
+            refreshAndRetryQueue.length = 0;
+
+
+          } catch (refreshError) {
+            refreshAndRetryQueue.length = 0;
+
+            console.log(refreshError);
+            TokenUtil.remove();
+            throw refreshError;
+
+          } finally {
+            isRefreshing = false;
+          }
+        }
+
+
+        return new Promise((resolve, reject) => {
+          refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
+        });
 
       }
       else if (status === 400) {
 
-                
-          if (msg === "refresh token expired") {
 
-                      TokenUtil.remove();                                                                                                               
-                                  
-          }                
+        if (msg === "refresh token expired") {
+
+          TokenUtil.remove();
+          //document.location.href = '/signin'
+
+        }
       }
-  }
-  else {
-          // We have a network error
-          console.error('Network error:', err);
-          //navigate('error_server');
-          TokenUtil.remove();                    
-  }
+    }
+    else {
+      // We have a network error
+      console.error('Network error:', err);
+      //navigate('error_server');
+      TokenUtil.remove();
+    }
 
-      return Promise.reject(err);
+    return Promise.reject(err);
 
-  }                               
+  }
 );
 
 

@@ -1,8 +1,10 @@
 package com.project.backend.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,8 +58,8 @@ public class RefreshTokenController {
         this.refreshTokenService = refreshTokenService;
     }
 
-    @PostMapping("/token/refresh")
-    public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/token/refresh")
+    public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         String refresh = null;
         Cookie[] cookies = request.getCookies();
@@ -85,14 +88,9 @@ public class RefreshTokenController {
 
             //로그인 페이지 
             //response status code
-            
-            //return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
-
             log.info("Redirect signin");
 
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(URI.create(frontendUrl + "/signin"));
-            return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);            
+            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
         }
 
         
@@ -133,6 +131,8 @@ public class RefreshTokenController {
 
         return new ResponseEntity<>(HttpStatus.OK);        
     }
+
+
 
     // @PostMapping("/token/delete")
     // public ResponseEntity<?> delete(HttpServletRequest request, HttpServletResponse response, 

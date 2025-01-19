@@ -1,15 +1,25 @@
 import axios from "axios";
 
+const chatapi = axios.create({
+  baseURL: `${process.env.REACT_APP_API_URL}/chat-service/api`,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  withCredentials: true,
+});
+
+
 export const createChatRoom = ({ name }) => {
     const url = `/chat/createroom`;
-    return axios.post(url, { name }).then((res) => {
+    return chatapi.post(url, { name }).then((res) => {
       return res.data;
     });
   };
   
   export const getChatRoomList = () => {
     const url = `chat/chatrooms`;
-    return axios.get(url).then((res) => {
+    return chatapi.get(url).then((res) => {
       return res.data;
     });
   };

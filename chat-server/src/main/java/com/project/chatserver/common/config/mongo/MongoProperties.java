@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "mongodb")
+@ConfigurationProperties(prefix = "spring.data.mongodb")
 public class MongoProperties {
     String client;
     String name;

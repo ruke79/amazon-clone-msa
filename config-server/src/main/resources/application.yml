@@ -1,6 +1,16 @@
 server:
   port: 8888
 
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true #eureka server를 registry에 등록할지 여부
+    fetch-registry: true       #registry에 있는 정보들을 가져올지 여부
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
 spring:
   application:
     name: config-server
@@ -23,7 +33,7 @@ spring:
     host: localhost
     port: 5672
     username: admin
-    password: admin
+    password: 1234
             
 management:
   endpoints:

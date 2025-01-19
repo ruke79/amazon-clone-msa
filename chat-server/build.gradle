@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.project'
@@ -22,11 +21,11 @@ configurations {
 
 repositories {
 	mavenCentral()
+
 }
 
 ext {
 	set('springCloudVersion', "2024.0.0")
-	set('queryDslVersion', "5.0.0")
 }
 
 dependencies {
@@ -57,12 +56,9 @@ dependencies {
 
 	implementation 'org.springframework.kafka:spring-kafka'
 
-	// QueryDSL
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
-	implementation "com.querydsl:querydsl-core:${queryDslVersion}"
+	implementation group: 'com.google.guava', name: 'guava', version: '33.3.0-jre'
 
-	implementation group: 'com.google.common', name: 'google-collect', version: '0.5'
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '9.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -82,27 +78,3 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-//QueryDSL 플로그인 설정 START
-
-def querydslDir = "$projectDir/build/generated/querydsl" //QueryDSL로 생성된 소스가 저장되는 위치
-
-querydsl {
-	jpa = true //JPA 사용여부 설정
-	querydslSourcesDir = querydslDir
-}
-
-sourceSets {
-	main.java.srcDir querydslDir// 빌드시 컴파일이 필요한 소스위치
-}
-
-//QueryDSL 컴파일시 참조할 설정정보
-compileQuerydsl{
-	options.annotationProcessorPath = configurations.querydsl
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath //외부라이브러리 컴파일 경로 상속
-}

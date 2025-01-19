@@ -9,7 +9,7 @@ import com.project.chatserver.domain.ChatRoom;
 import com.project.chatserver.dto.ChatRoomDto;
 import com.project.chatserver.service.ChatService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.net.MalformedURLException;
 import java.util.*;
 

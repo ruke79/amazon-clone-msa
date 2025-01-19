@@ -13,12 +13,12 @@ import java.util.Date;
 @Slf4j
 @Component
 public class TokenHandler {
-    @Value("${JWT.SECRET}")
+    @Value("${spring.app.jwtSecret}")
     private String secretKey;
     private final Algorithm algorithm;
 
     public TokenHandler() {
-        this.algorithm = Algorithm.HMAC256("secretKey".getBytes());
+        this.algorithm = Algorithm.HMAC256("mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm".getBytes());
     }
 
     public String getUid(String token) {
