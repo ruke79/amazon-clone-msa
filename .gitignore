@@ -304,3 +304,4 @@ node_modules/.package-lock.json
 hs_err_pid15756.log
 replay_pid15756.log
 backend/src/main/resources/application.properties
+backend/src/main/resources/application.yml
