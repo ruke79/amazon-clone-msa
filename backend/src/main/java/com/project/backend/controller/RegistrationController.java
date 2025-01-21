@@ -24,9 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.backend.model.User;
 import com.project.backend.repository.RoleRepository;
 import com.project.backend.repository.UserRepository;
+
+
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.security.response.LoginResponse;
 import com.project.backend.security.service.UserDetailsImpl;
@@ -34,54 +37,50 @@ import com.project.backend.security.service.UserDetailsServiceImpl;
 import com.project.backend.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class RegistrationController {
 
     
-    private final JwtUtils jwtUtils;
-    
-    private final AuthenticationManager authenticationManager;
+ 
       
     private final UserService userService;
-
     
-    private final UserDetailsServiceImpl userDetailsService;
+     
 
     @Value("${frontend.url}")
     private String frontendUrl;
 
 
-    @Autowired
-     public RegistrationController(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
-            UserService userService, UserDetailsServiceImpl userDetailsService) {
-        this.jwtUtils = jwtUtils;
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.userDetailsService = userDetailsService;
-    }
+    // @Autowired
+    //  public RegistrationController(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
+    //         UserService userService, UserDetailsServiceImpl userDetailsService) {
+    //     this.jwtUtils = jwtUtils;
+    //     this.authenticationManager = authenticationManager;
+    //     this.userService = userService;
+    //     this.userDetailsService = userDetailsService;
+    // }
 
 
 
     @GetMapping("/registrationConfirm")
-    public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
+    public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token)  throws JsonProcessingException {
 
         //Locale locale = request.getLocale();
         //model.addAttribute("lang", locale.getLanguage());
         final String result = userService.validateVerificationToken(token);
+         
         if (result.equals("valid")) {
             final User user = userService.getUser(token);
+
             // if (user.isUsing2FA()) {
             // model.addAttribute("qr", userService.generateQRUrl(user));
             // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
             // }
-             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
-                UsernamePasswordAuthenticationToken authentication = 
-                        new UsernamePasswordAuthenticationToken(userDetails,
-                                null,
-                                userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            userService.registerConfirmed(user);
                         
             model.addAttribute("messageKey", "message.accountVerified");
             return new ModelAndView("redirect:"+frontendUrl+"/signin", model);            
@@ -92,5 +91,7 @@ public class RegistrationController {
         model.addAttribute("token", token);
         return new ModelAndView("redirect:/badUser", model);
     }      
+
+    
 
 }

@@ -1,5 +1,6 @@
 package com.project.backend.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.backend.dto.UserDTO;
 import com.project.backend.model.Role;
 import com.project.backend.model.User;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+
     void updateUserRole(Long userId, String roleName);
 
     List<User> getAllUsers();
@@ -43,9 +45,11 @@ public interface UserService {
     User getUser(final String verificationToken);
 
     // OAuth 2.0
-    User registerUser(User user);
+    User registerOAuthUser(User user);
 
     User registerNewUserAccount(SignupRequest request);
+
+    void registerConfirmed(User user) throws JsonProcessingException;
 
     void deleteUser(User user);
 

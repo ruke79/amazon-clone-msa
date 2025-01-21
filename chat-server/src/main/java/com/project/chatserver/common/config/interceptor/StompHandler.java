@@ -32,13 +32,13 @@ public class StompHandler implements ChannelInterceptor {
         if (accessToken == null) {
             throw ErrorCode.missingTokenException();
         }
-        String username = verifyAccessToken(accessToken);
+        String email = verifyAccessToken(accessToken);
         log.info("StompAccessor = {}", accessor);
-        handleMessage(accessor.getCommand(), accessor, username);
+        handleMessage(accessor.getCommand(), accessor, email);
         return message;
     }
 
-    private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String username) {
+    private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String email) {
         switch (stompCommand) {
             case CONNECT:
                 break;
@@ -59,5 +59,8 @@ public class StompHandler implements ChannelInterceptor {
         return tokenHandler.getUid(accessToken);
     }
 
+    private Integer getChatRoomNo(StompHeaderAccessor accessor) {
+        return Integer.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("chatRoomNo")));
+    }
 
 }

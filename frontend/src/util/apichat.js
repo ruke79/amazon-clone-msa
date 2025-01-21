@@ -10,9 +10,9 @@ const chatapi = axios.create({
 });
 
 
-export const createChatRoom = ({ name }) => {
+export const createChatRoom = ({ id, name }) => {
     const url = `/chat/createroom`;
-    return chatapi.post(url, { name }).then((res) => {
+    return chatapi.post(url, { id, name }).then((res) => {
       return res.data;
     });
   };
