@@ -1,7 +1,7 @@
 package com.project.chatserver.common.config.kafka;
 
 import com.google.common.collect.ImmutableMap;
-import com.project.chatserver.domain.ChatMessage;
+import com.project.chatserver.model.ChatMessage;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
