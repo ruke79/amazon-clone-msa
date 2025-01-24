@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @RequiredArgsConstructor
-@EnableMongoRepositories(basePackages = "com.project.chatserver.repository.mongo")
+@EnableMongoRepositories(basePackages = "com.project.chatserver.repository")
 public class MongoConfig {
     private final MongoProperties mongoProperties;
 

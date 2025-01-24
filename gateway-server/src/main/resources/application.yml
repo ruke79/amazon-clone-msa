@@ -83,7 +83,7 @@ spring:
     host: localhost
     port: 5672
     username: admin
-    password: 1234
+    password: admin
 
 management:
   endpoint:

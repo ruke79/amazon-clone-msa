@@ -1,7 +1,7 @@
 package com.project.chatserver.dto.notification;
 
-import com.project.chatserver.domain.Alarm;
 import com.project.chatserver.common.util.LocalDateTimeUtils;
+import com.project.chatserver.model.Alarm;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;

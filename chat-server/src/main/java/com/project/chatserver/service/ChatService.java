@@ -5,8 +5,8 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.chatserver.domain.ChatMessage;
-import com.project.chatserver.domain.ChatRoom;
+import com.project.chatserver.model.ChatMessage;
+import com.project.chatserver.model.ChatRoom;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
