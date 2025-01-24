@@ -1,6 +1,6 @@
 package com.project.backend.dto;
 
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,9 +13,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public class CustomOAuth2User implements OAuth2User {
 
-    private final UserDTO userDTO;
+    private final UserProfileDTO userDTO;
 
-    public CustomOAuth2User(UserDTO userDTO) {
+    public CustomOAuth2User(UserProfileDTO userDTO) {
 
         this.userDTO = userDTO;
     }

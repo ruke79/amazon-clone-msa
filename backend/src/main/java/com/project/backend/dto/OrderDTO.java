@@ -23,7 +23,7 @@ public class OrderDTO {
 
     private String orderNumber;
 
-    private UserDTO user;
+    private UserProfileDTO user;
 
     private List<OrderedProductDTO> products;
 

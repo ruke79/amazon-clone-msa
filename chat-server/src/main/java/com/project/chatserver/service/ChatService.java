@@ -6,11 +6,15 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.chatserver.client.ShoppingServiceClient;
 import com.project.chatserver.common.util.TokenHandler;
 import com.project.chatserver.dto.ChatRoomDTO;
+import com.project.chatserver.dto.ServiceUserDTO;
+import com.project.chatserver.dto.request.MessageRequest;
 import com.project.chatserver.model.ChatMember;
 import com.project.chatserver.model.ChatMessage;
 import com.project.chatserver.model.ChatRoom;
@@ -34,6 +38,7 @@ public class ChatService {
     private final ChatMessageRepository mongoChatRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberService chatMemberService;
+    private final ShoppingServiceClient shoppingServiceClient;
 
     public void connect(String roomId, String email ) {
 
@@ -56,9 +61,12 @@ public class ChatService {
     }
 
 
-    public void sendChatMessage(ChatMessage chatMessage) {
+    public void sendMessage(MessageRequest message, String accessToken) {
 
-  
+        ResponseEntity<?> user = shoppingServiceClient.findUserByEmail(tokenHandler.getUid(accessToken));
+        
+        
+
     }
 
     public List<ChatRoom> fildAllRooms() {

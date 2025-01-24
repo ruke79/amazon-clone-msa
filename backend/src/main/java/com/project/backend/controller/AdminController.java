@@ -15,7 +15,7 @@ import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.CouponDTO;
 import com.project.backend.dto.ProductDTO;
 import com.project.backend.dto.SubCategoryDTO;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.Role;
 import com.project.backend.model.SubCategory;
 import com.project.backend.model.ProductCategory;
@@ -107,7 +107,7 @@ public class AdminController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserProfileDTO> getUser(@PathVariable Long id) {
         return new ResponseEntity<>(userService.getUserById(id),
                 HttpStatus.OK);
     }

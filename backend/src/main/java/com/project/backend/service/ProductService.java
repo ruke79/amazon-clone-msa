@@ -30,7 +30,7 @@ import com.project.backend.dto.ReviewerDTO;
 import com.project.backend.dto.SearchResultDTO;
 import com.project.backend.dto.SizeAttributeDTO;
 import com.project.backend.dto.SubCategoryDTO;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.Product;
 import com.project.backend.model.ProductCategory;
 import com.project.backend.model.ProductColorAttribute;
