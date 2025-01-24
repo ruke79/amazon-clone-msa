@@ -2,6 +2,8 @@ package com.project.backend.controller;
 
 
 import com.project.backend.constants.StatusMessages;
+import com.project.backend.dto.ServiceUserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.User;
 
 import com.project.backend.repository.RoleRepository;
@@ -13,7 +15,7 @@ import com.project.backend.security.request.SignupRequest;
 import com.project.backend.security.response.GenericResponse;
 
 import com.project.backend.security.response.MessageResponse;
-import com.project.backend.security.response.UserInfoResponse;
+import com.project.backend.security.response.UserAccountResponse;
 import com.project.backend.service.TotpService;
 import com.project.backend.service.UserService;
 import com.project.backend.util.AuthUtil;
@@ -130,7 +132,7 @@ public class AuthController {
                     .map(item -> item.getAuthority())
                     .collect(Collectors.toList());
 
-            UserInfoResponse response = new UserInfoResponse(
+            UserAccountResponse response = new UserAccountResponse(
                     user.getUserId(),
                     user.getUserName(),
                     user.getEmail(),
@@ -146,12 +148,37 @@ public class AuthController {
 
             return ResponseEntity.ok().body(response);
         }
-        else 
-            {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(StatusMessages.USER_NOT_FOUND);
-            }
+        
     }
+
+
+    @GetMapping("/user/id")
+    public ResponseEntity<?> findUserByEmail(@RequestParam String email) {
+
+        User user = userService.findByEmail(email);
+
+        if (null != user ) {
+
+            ServiceUserDTO response = ServiceUserDTO.builder()
+            .userId(Long.toString(user.getUserId()))
+            .username(user.getUserName())
+            .nickname(user.getName())
+            .email(email)
+            .image(user.getImage())
+            .build();
+
+           return  ResponseEntity.ok().body(response);
+
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(StatusMessages.USER_NOT_FOUND);
+    }    
+
 
     @GetMapping("/username")
     public String currentUserName(@AuthenticationPrincipal UserDetails userDetails) {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.backend.constants.AppRole;
 import com.project.backend.dto.CustomOAuth2User;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.User;
 import com.project.backend.repository.UserRepository;
 import com.project.backend.security.request.SignupRequest;
@@ -73,7 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             //userServiceImpl.registerNewUserAccount(request);
 
-            UserDTO userDTO = UserDTO.builder()
+            UserProfileDTO userDTO = UserProfileDTO.builder()
             .username(oAuth2Response.getName())
             .name(name)
             .role(AppRole.ROLE_USER.getRole())
@@ -87,7 +87,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             userRepository.save(existData);
 
-            UserDTO userDTO = new UserDTO();
+            UserProfileDTO userDTO = new UserProfileDTO();
             userDTO.setUsername(oAuth2Response.getName());
             userDTO.setName(existData.getName());
             userDTO.setRole(existData.getRole().getRoleName().getRole());

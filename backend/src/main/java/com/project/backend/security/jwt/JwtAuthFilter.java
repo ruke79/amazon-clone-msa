@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.project.backend.constants.TokenType;
 import com.project.backend.dto.CustomOAuth2User;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.security.service.UserDetailsServiceImpl;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -96,7 +96,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String id = jwtUtils.getIdFromJwtToken(token);
             String role = jwtUtils.getRoleFromJwtToken(token);
 
-            UserDTO userDTO = new UserDTO();
+            UserProfileDTO userDTO = new UserProfileDTO();
             userDTO.setUsername(id);
             userDTO.setRole(role);
 

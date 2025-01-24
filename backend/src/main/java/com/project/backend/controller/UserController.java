@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.OrderDTO;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.User;
 import com.project.backend.security.request.PasswordRequest;
 import com.project.backend.security.response.MessageResponse;
@@ -48,7 +48,7 @@ public class UserController {
 
                 User user = userService.findByUsername(userDetails.getUsername());
 
-                UserDTO repsonse = userService.findUserWithAddresses(user);
+                UserProfileDTO repsonse = userService.findUserWithAddresses(user);
 
                 return new ResponseEntity<>(repsonse, HttpStatus.OK);
             } catch (RuntimeException e) {
@@ -71,7 +71,7 @@ public class UserController {
 
                 User user = userService.findByUsername(userDetails.getUsername());
 
-                UserDTO repsonse = userService.findUserWithdefaultPaymentMethod(user);
+                UserProfileDTO repsonse = userService.findUserWithdefaultPaymentMethod(user);
 
                 return new ResponseEntity<>(repsonse, HttpStatus.OK);
             } catch (RuntimeException e) {

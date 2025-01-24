@@ -15,7 +15,7 @@ import com.project.backend.dto.ColorAttributeDTO;
 import com.project.backend.dto.OrderDTO;
 import com.project.backend.dto.OrderedProductDTO;
 import com.project.backend.dto.PaymentResultDTO;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.CartProduct;
 import com.project.backend.model.Coupon;
 import com.project.backend.model.Order;
@@ -214,7 +214,7 @@ public class OrderService {
             .paymentResult(data.getPaymentResult().getPayStatus().getStatus())
             .products(dtos)
             .shippingAddress(address)
-            .user(UserDTO.builder()
+            .user(UserProfileDTO.builder()
                     .userId(Long.toString(data.getUser().getUserId()))
                     .username(data.getUser().getUserName())
                     .image(data.getUser().getImage()).build()

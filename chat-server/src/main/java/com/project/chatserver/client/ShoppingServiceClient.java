@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name="shopping-service")
 public interface ShoppingServiceClient {
 
-   //@GetMapping("api/auth/user/email")
-   // ResponseEntity<SharedUserDTO> findByEmail(@RequestParam String email);
+   @GetMapping("api/auth/user/id")
+    ResponseEntity<?> findUserByEmail(@RequestParam String email);
 }

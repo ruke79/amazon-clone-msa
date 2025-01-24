@@ -1,7 +1,7 @@
 package com.project.backend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.Role;
 import com.project.backend.model.User;
 import com.project.backend.model.VerificationToken;
@@ -17,7 +17,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    UserDTO getUserById(Long id);
+    UserProfileDTO getUserById(Long id);
 
     User findByUsername(String username);
 
@@ -40,7 +40,7 @@ public interface UserService {
 
     void resetPassword(String token, String newPassword);
 
-    Optional<User> findByEmail(String email);
+    User findByEmail(String email);
 
     User getUser(final String verificationToken);
 
@@ -71,8 +71,8 @@ public interface UserService {
 
     List<String> getUsersFromSessionRegistry();
 
-    UserDTO findUserWithAddresses(User user);
+    UserProfileDTO findUserWithAddresses(User user);
 
-    UserDTO findUserWithdefaultPaymentMethod(User user);
+    UserProfileDTO findUserWithdefaultPaymentMethod(User user);
 
 }

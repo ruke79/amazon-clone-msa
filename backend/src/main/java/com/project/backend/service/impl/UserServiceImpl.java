@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.backend.constants.AppRole;
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.UserDTO;
+import com.project.backend.dto.UserProfileDTO;
 import com.project.backend.model.PasswordResetToken;
 import com.project.backend.model.Role;
 import com.project.backend.model.ShippingAddress;
@@ -128,15 +128,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(Long id) {
+    public UserProfileDTO getUserById(Long id) {
         // return userRepository.findById(id).orElseThrow();
         User user = userRepository.findById(id).orElseThrow();
         return convertToDto(user);
     }
 
-    private UserDTO convertToDto(User user) {
+    private UserProfileDTO convertToDto(User user) {
 
-        return new UserDTO(
+        return new UserProfileDTO(
                 Long.toString(user.getUserId()),
                 user.getUserName(),
                 user.getName(),
@@ -266,8 +266,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).
+        orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
 
     @Override
@@ -440,7 +441,7 @@ public class UserServiceImpl implements UserService {
                 }).collect(Collectors.toList());
     }
 
-    public UserDTO findUserWithAddresses(User user) {
+    public UserProfileDTO findUserWithAddresses(User user) {
 
         List<AddressDTO> dtos = new ArrayList<>();
         for (ShippingAddress src : user.getShippingAddresses()) {
@@ -450,7 +451,7 @@ public class UserServiceImpl implements UserService {
             dtos.add(address);
         }
 
-        UserDTO result = UserDTO.builder()
+        UserProfileDTO result = UserProfileDTO.builder()
                 .username(user.getUserName())
                 .email(user.getEmail())
                 .image(user.getImage())
@@ -461,9 +462,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public UserDTO findUserWithdefaultPaymentMethod(User user) {
+    public UserProfileDTO findUserWithdefaultPaymentMethod(User user) {
 
-        UserDTO result = UserDTO.builder()
+        UserProfileDTO result = UserProfileDTO.builder()
                 .username(user.getUserName())
                 .email(user.getEmail())
                 .image(user.getImage())
