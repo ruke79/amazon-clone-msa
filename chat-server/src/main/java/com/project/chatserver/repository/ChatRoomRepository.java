@@ -5,8 +5,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
-import com.project.chatserver.domain.ChatRoom;
 import com.project.chatserver.dto.ChatRoomDto;
+import com.project.chatserver.model.ChatRoom;
 import com.project.chatserver.service.ChatService;
 
 import jakarta.annotation.Resource;

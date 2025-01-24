@@ -1,7 +1,7 @@
 package com.project.chatserver.common.config.kafka;
 
-import com.project.chatserver.domain.ChatMessage;
 import com.project.chatserver.dto.notification.AlarmEventDto;
+import com.project.chatserver.model.ChatMessage;
 import com.google.common.collect.ImmutableMap;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

@@ -1,11 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useAuthContext } from "store/AuthContext";
 
 import { useChatState } from "store/ChatContext";
+
 
 import { createChatRoom, getChatRoomList } from "util/apichat";
 
 export const useCreateChatRoom = (props) => {
-    const user = useChatState();
+    const chatContext = useChatState();
+    const {user} = useAuthContext();
     
     const {
       mutate : createChatRoomOp,
@@ -17,7 +20,7 @@ export const useCreateChatRoom = (props) => {
         console.log(data)
         if (data) {
           console.log(data);
-          user.rooms = user.rooms.concat(data);
+          chatContext.rooms = chatContext.rooms.concat(data);
         }
       },
       onError: (e) => {
