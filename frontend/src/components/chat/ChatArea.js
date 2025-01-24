@@ -4,97 +4,48 @@ import { IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { Box, Paper, Stack, List } from "@mui/material";
 
-//import MessageSelf from "./MessageSelf";
-//import MessageOthers from "./MessageOthers";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
+
 import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
+import RoomContentHeader from "./RoomContentHeader";
+import ChatFooter from "./ChatFooter";
+import RoomConversation from "./RoomConversation";
+import {
+  selectedRoom
+} from "../../redux/ChatSelectors"
 
-import { ChatInput } from "./ChatInput";
+
 
 export function ChatArea() {
-  const lightTheme = useSelector((state) => state.themeKey);
-  const [messageContent, setMessageContent] = useState("");
-  const messagesEndRef = useRef(null);
-  //const dyParams = useParams();
-  //const [chat_id, chat_user] = dyParams._id.split("&");
-  // console.log(chat_id, chat_user);
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const [allMessages, setAllMessages] = useState([]);
-  // console.log("Chat area id : ", chat_id._id);
-  // const refresh = useSelector((state) => state.refreshKey);
-  // const { refresh, setRefresh } = useContext(myContext);
-  const [loaded, setloaded] = useState(false);
-  // const sendMessage = () => {
-  //   // console.log("SendMessage Fired to", chat_id._id);
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${userData.data.token}`,
-  //     },
-  //   };
-  //   axios
-  //     .post(
-  //       "http://localhost:8080/message/",
-  //       {
-  //         content: messageContent,
-  //         chatId: chat_id,
-  //       },
-  //       config
-  //     )
-  //     .then(({ data }) => {
-  //       console.log("Message Fired");
-  //     });
-  // };
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
 
-  // useEffect(() => {
-  //   console.log("Users refreshed");
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${userData.data.token}`,
-  //     },
-  //   };
-  //   axios
-  //     .get("http://localhost:8080/message/" + chat_id, config)
-  //     .then(({ data }) => {
-  //       setAllMessages(data);
-  //       setloaded(true);
-  //       // console.log("Data from Acess Chat API ", data);
-  //     });
-  //   // scrollToBottom();
-  // }, [refresh, chat_id, userData.data.token]);
-   return (
-    <Paper
-    sx={{
-      height: { xs: 'calc(100dvh - var(--Header-height))', md: '100dvh' },
-      display: 'flex',
-      flexDirection: 'column',
-      backgroundColor: 'background.level1',
-    }}
-   >
-     <Box
-        sx={{
-          display: 'flex',
-          flex: 1,
-          minHeight: 0,
-          px: 2,
-          py: 3,
-          overflowY: 'scroll',
-          flexDirection: 'column-reverse',
-        }}
-      >
-        <Stack spacing={2} sx={{ justifyContent: 'flex-end' }}>
+  const dispatch = useDispatch();
 
-        </Stack>
-        </Box>
-        <ChatInput />
-      </Paper>
-
-   ); 
+  const room = useSelector(selectedRoom);
+  const theme = useTheme();
   
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: theme.palette.background.default,
+        width: "100%",
+        height: "100%",
+        transition: "all 0.3s ease",
+        zIndex: 999,
+      }}
+    >
+      {room && (
+        <>
+          <RoomContentHeader room={room} />
+        </>
+      )}
+ 
+    </Box>
+    )
 }
 
 export default ChatArea;

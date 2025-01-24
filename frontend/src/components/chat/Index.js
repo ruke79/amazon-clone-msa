@@ -79,5 +79,5 @@ import ChatArea from "./ChatArea";
 import { ChatInput } from "./ChatInput";
 import { ChatRoomList } from "./ChatRoomList";
 import { ChatRoomListItem } from "./ChatRoomListItem";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar_";
 import CreateChatRoomDialog from './CreateChatRoomDialog';

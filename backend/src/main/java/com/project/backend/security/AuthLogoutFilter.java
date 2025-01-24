@@ -32,15 +32,13 @@ public class AuthLogoutFilter extends GenericFilterBean{
     
     private final JwtUtils jwtUtils;
     
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenService refreshTokenService;    
     
-    private final UserService userService;
     
     @Autowired
-    public AuthLogoutFilter(JwtUtils jwtUtils, RefreshTokenService refreshTokenService, UserService userService) {
+    public AuthLogoutFilter(JwtUtils jwtUtils, RefreshTokenService refreshTokenService) {
         this.jwtUtils = jwtUtils;
-        this.refreshTokenService = refreshTokenService;
-        this.userService = userService;
+        this.refreshTokenService = refreshTokenService;        
     }
 
     @Override
@@ -127,10 +125,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
 
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
-        String email = jwtUtils.getIdFromJwtToken(refresh);
-        User user = userService.findByEmail(email).
-                    orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
-       
+        String email = jwtUtils.getIdFromJwtToken(refresh);        
         //refreshTokenService.deleteByUserId(user.getUserId());
 
         //Refresh 토큰 Cookie 값 0

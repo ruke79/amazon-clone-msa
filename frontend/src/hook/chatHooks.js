@@ -4,7 +4,7 @@ import { useAuthContext } from "store/AuthContext";
 import { useChatState } from "store/ChatContext";
 
 
-import { createChatRoom, getChatRoomList } from "util/apichat";
+import { createChatRoom, getChatRoomList, getRoomMessages } from "util/apichat";
 
 export const useCreateChatRoom = (props) => {
     const chatContext = useChatState();
@@ -43,8 +43,7 @@ export const useCreateChatRoom = (props) => {
         return chatRoomList;
       }
     );
-  
-  
+    
     return {
       chatRoomList: data,
       isLoadingRoom: isLoading,
@@ -52,4 +51,47 @@ export const useCreateChatRoom = (props) => {
       updateChatRoomList: refetch,
     };
   };
+
+  export const useFetchRoomMessages = () => {
+    const user = useChatState();
+    const { data, isLoading, refetch, isSuccess } = useQuery(
+      `room_messages`,
+      async () => {
+        const res = await getRoomMessages();
+        const messages = res;
+        return messages;
+      }
+    );
+    
+    return {
+      chatRoomList: data,
+      isLoadingRoom: isLoading,
+      isFetch: isSuccess,
+      updateRoomMessages: refetch,
+    };
+  };
   
+
+  export const useSendMessage = ({
+    type,
+    client,
+    roomId,
+    sender,
+    message,
+    deleteMessage,
+  } ) => {
+    
+    client.send(
+      "/pub/chat/message",
+      {
+        Authorization: axios.defaults.headers.common["Authorization"],
+      },
+      JSON.stringify({
+        type: type,
+        roomId: roomId,
+        sender: sender,
+        message: message,
+      })
+    );
+    deleteMessage();
+  };

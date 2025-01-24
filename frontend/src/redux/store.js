@@ -9,7 +9,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 const rootReducer = combineReducers({
     menu: menuReducer,
     dialog: dialogReducer,
-    cart: cartReducer,
+    cart: cartReducer,     
 });
 
 const persistConfig = {

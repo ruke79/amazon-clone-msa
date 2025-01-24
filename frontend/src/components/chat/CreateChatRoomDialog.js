@@ -28,38 +28,9 @@ function CreateChatRoomDialog({
   handleClose 
 }
 ) {
-  const lightTheme = useSelector((state) => state.themeKey);
-  //const userData = JSON.parse(localStorage.getItem("userData"));
-  // console.log("Data from LocalStorage : ", userData);
+  const lightTheme = useSelector((state) => state.themeKey);  
   const nav = useNavigate();
-  // if (!userData) {
-  //   console.log("User not Authenticated");
-  //   nav("/");
-  // }
-  //const user = userData.data;
   
-  
-  
-//  console.log("User Data from CreateGroups : ", userData);
-
-  const createGroup = () => {
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${user.token}`,
-    //   },
-    // };
-
-    // axios.post(
-    //   "http://localhost:8080/chat/createGroup",
-    //   {
-    //     name: groupName,
-    //     users: '["647d94aea97e40a17278c7e5","647d999e4c3dd7ca9a2e6543"]',
-    //   },
-    //   config
-    // );
-    //nav("/app/groups");
-  };
-
   return (
     
       <div>

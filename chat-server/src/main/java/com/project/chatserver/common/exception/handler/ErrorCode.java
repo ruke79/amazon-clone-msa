@@ -15,7 +15,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(NOT_FOUND, "해당 회원 정보를 찾을 수 없습니다.", "015"),
 
     NOTIFICATION_NOT_FOUND(NOT_FOUND, "해당 알림을 찾을 수 없습니다." , "020"),
-    MISSING_TOKEN_EXCEPTION(UNAUTHORIZED, "다시 채팅을 시작해주세요.", "028");
+    UNAUTHORIZED_TOKEN_EXCEPTION(UNAUTHORIZED, "다시 채팅을 시작해주세요.", "028");
 
 
     private final HttpStatus httpStatus;
@@ -29,8 +29,8 @@ public enum ErrorCode {
     public static CustomException throwMemberNotFound() {
         throw new CustomException(USER_NOT_FOUND);
     }
-    public static CustomException missingTokenException() {
-        throw new CustomException(MISSING_TOKEN_EXCEPTION);
+    public static CustomException unauthorizedTokenException() {
+        throw new CustomException(UNAUTHORIZED_TOKEN_EXCEPTION);
     }
 
 }
