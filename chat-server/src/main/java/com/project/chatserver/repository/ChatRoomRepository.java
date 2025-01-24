@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
-import com.project.chatserver.dto.ChatRoomDto;
+import com.project.chatserver.dto.ChatRoomDTO;
 import com.project.chatserver.model.ChatRoom;
 import com.project.chatserver.service.ChatService;
 
@@ -40,13 +40,13 @@ public class ChatRoomRepository {
     }
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
-    public ChatRoomDto createChatRoom(String name) throws MalformedURLException {
+    public ChatRoomDTO createChatRoom(String name) throws MalformedURLException {
         ChatRoom chatRoom = ChatRoom.create(name);
 
         chatService.saveChatRoom(chatRoom);
 
         hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
-        return ChatRoomDto.builder()
+        return ChatRoomDTO.builder()
                 .name(chatRoom.getRoomName())
                 .roomId(chatRoom.getRoomId())                
                 .build();

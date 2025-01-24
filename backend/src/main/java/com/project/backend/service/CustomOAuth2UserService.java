@@ -21,19 +21,22 @@ import com.project.backend.security.response.NaverResponse;
 import com.project.backend.security.response.OAuth2Response;
 import com.project.backend.service.impl.UserServiceImpl;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
      private final UserRepository userRepository;
 
-     private final UserServiceImpl  userServiceImpl;
+     //private final UserServiceImpl  userServiceImpl;
 
-     @Autowired
-     public CustomOAuth2UserService(UserRepository userRepository, UserServiceImpl userServiceImpl) {
-        this.userRepository = userRepository;
-        this.userServiceImpl = userServiceImpl;
-    }
+    //  @Autowired
+    //  public CustomOAuth2UserService(UserRepository userRepository, UserServiceImpl userServiceImpl) {
+    //     this.userRepository = userRepository;
+    //     this.userServiceImpl = userServiceImpl;
+    // }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -68,7 +71,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             roles.add(AppRole.ROLE_USER.getRole());
             request.setRole(roles);
 
-            userServiceImpl.registerNewUserAccount(request);
+            //userServiceImpl.registerNewUserAccount(request);
 
             UserDTO userDTO = UserDTO.builder()
             .username(oAuth2Response.getName())

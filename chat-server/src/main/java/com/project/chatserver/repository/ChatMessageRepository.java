@@ -8,7 +8,7 @@ import com.project.chatserver.model.ChatMessage;
 
 import java.util.List;
 
-public interface ChatMesageRepository extends MongoRepository<ChatMessage, String> {
+public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
 
 
 

@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 
-import Sidebar from "components/chat/Sidebar";
+import Sidebar from "components/chat/Sidebar/Sidebar";
 import Header from "./Header";
 import { ChatPage } from "./ChatPage";
 import { Outlet } from "react-router-dom";

@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.project.chatserver.dto.SharedUserDTO;
 
 /**
  * 마이크로서비스 간의 호출을 위한 feignclient
@@ -13,6 +12,6 @@ import com.project.chatserver.dto.SharedUserDTO;
 @FeignClient(name="shopping-service")
 public interface ShoppingServiceClient {
 
-    @GetMapping("api/auth/user/email")
-    ResponseEntity<SharedUserDTO> findByEmail(@RequestParam String email);
+   //@GetMapping("api/auth/user/email")
+   // ResponseEntity<SharedUserDTO> findByEmail(@RequestParam String email);
 }
