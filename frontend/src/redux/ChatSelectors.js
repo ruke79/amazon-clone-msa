@@ -1,9 +1,10 @@
 
 
-export const selectedUser = (state) => state.app.selectedUser;
-export const selectedRoom = (state) => state.selectedRoom;
-export const message = (state) => state.app.message;
-export const rooms = (state) => state.app.rooms;
-export const users = (state) => state.app.users;
-export const conversation = (state) => state.app.conversation;
-export const roomConversation = (state) => state.app.roomConversation;
+export const selectedUser = (state) => state.chat.selectedUser;
+export const selectedRoom = (state) => state.chat.selectedRoom;
+export const message = (state) => state.chat.message;
+export const rooms = (state) => state.chat.rooms;
+export const users = (state) => state.chat.users;
+export const conversation = (state) => state.chat.conversation;
+export const roomConversation = (state) => state.chat.roomConversation;
+

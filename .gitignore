@@ -507,3 +507,6 @@ gateway-server/src/main/resources/application.yml
 chat-server/src/main/resources/application.yml
 gateway-server/src/main/resources/application.yml
 chat-server/src/main/resources/application.yml
+gateway-server/src/main/resources/application.yml
+chat-server/src/main/resources/application.yml
+backend/src/main/resources/application.yml

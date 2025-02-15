@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.project.backend.constants.TokenType;
-import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.service.RefreshTokenService;
@@ -93,6 +92,8 @@ public class AuthLogoutFilter extends GenericFilterBean{
         try {
             jwtUtils.isJwtTokenExpired(refresh);
         } catch (ExpiredJwtException e) {
+
+            log.info(e.getMessage());
 
             PrintWriter writer = response.getWriter();
                 writer.print("refresh token expired");

@@ -32,7 +32,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import com.project.backend.constants.AppRole;
 import com.project.backend.handler.OAuth2SuccessHandler;
-import com.project.backend.model.RefreshToken;
 import com.project.backend.model.Role;
 import com.project.backend.model.User;
 import com.project.backend.repository.RoleRepository;
@@ -40,6 +39,7 @@ import com.project.backend.repository.UserRepository;
 import com.project.backend.security.AuthLoginFilter;
 import com.project.backend.security.AuthLogoutFilter;
 import com.project.backend.security.CustomAuthenticationProvider;
+import com.project.backend.security.RefreshToken;
 import com.project.backend.security.jwt.JwtAuthEntryPoint;
 import com.project.backend.security.jwt.JwtAuthFilter;
 import com.project.backend.security.jwt.JwtUtils;
@@ -80,9 +80,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-        
-    @Value("${frontend.url}")
-    private String frontendUrl;
+     
+    
 
     @Bean
     public JwtAuthFilter authenticationJwtTokenFilter() {

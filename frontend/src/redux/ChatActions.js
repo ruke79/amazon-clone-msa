@@ -27,7 +27,7 @@ import {
     FETCH_SUCCESS,
     UPDATE_THEME,
 
-} from "../constants/ActionTypes";
+} from "../constants/ChatActionType";
 
 
 
@@ -182,11 +182,12 @@ export const onRoomSelect = (user) => {
     };
   };
   
-  export const addRoomToList = (room) => {
+  export const addRoomToList = (room) => {    
     return (dispatch) => {
       dispatch({
         type: ADD_ROOM_TO_LIST,
         payload: room,
-      });
+      }).then(response => console.log(response))
+      .catch(err => console.log(err));
     };
   };

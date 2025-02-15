@@ -29,11 +29,9 @@ export const queryClient = new QueryClient(
 
 console.log("API URL:", process.env.REACT_APP_API_URL);
 
-
-
 // Create an Axios instance
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  baseURL: `${process.env.REACT_APP_API_URL}/shopping-service/api`,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -87,7 +85,9 @@ api.interceptors.response.use(
 
           try {
 
-            if (msg === "access token expired") {
+            if (msg === "access token expired" ||
+              msg === "Jwt token is not valid"
+            ) {
 
               TokenUtil.removeToken();
 

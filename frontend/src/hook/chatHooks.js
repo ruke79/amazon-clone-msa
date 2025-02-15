@@ -1,14 +1,15 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthContext } from "store/AuthContext";
-
-import { useChatState } from "store/ChatContext";
-
+import { useRef, useEffect  } from "react";
+import { useDispatch } from "react-redux";
+import { addRoomToList, setRooms, setRoomConversation } from "../redux/ChatSlice";
 
 import { createChatRoom, getChatRoomList, getRoomMessages } from "util/apichat";
 
+
 export const useCreateChatRoom = (props) => {
-    const chatContext = useChatState();
-    const {user} = useAuthContext();
+    
+    const dispatch = useDispatch();
     
     const {
       mutate : createChatRoomOp,
@@ -16,11 +17,10 @@ export const useCreateChatRoom = (props) => {
       isLoading,
       isSuccess,
     } = useMutation({mutationFn : createChatRoom,
-      onSuccess: (data) => {
-        console.log(data)
+      onSuccess: (data) => {        
         if (data) {
           console.log(data);
-          chatContext.rooms = chatContext.rooms.concat(data);
+          dispatch(addRoomToList(data));
         }
       },
       onError: (e) => {
@@ -34,43 +34,68 @@ export const useCreateChatRoom = (props) => {
   };
 
   export const useFetchChatRooms = () => {
-    const user = useChatState();
-    const { data, isLoading, refetch, isSuccess } = useQuery(
-      `rooms`,
-      async () => {
-        const res = await getChatRoomList();
-        const chatRoomList = res;
-        return chatRoomList;
-      }
-    );
+   
+    
+    const { data, isLoading, refetch, isSuccess, error, isError } = useQuery({
+      queryKey : ["rooms"],
+      queryFn : async () => {
+        const res = await getChatRoomList();          
+        console.log(res)  
+        return res;
+      },            
+      throwOnError : true,      
+  });
+    
     
     return {
-      chatRoomList: data,
-      isLoadingRoom: isLoading,
+      roomList: data,
+      isLoading: isLoading,
       isFetch: isSuccess,
+      error : error, isError : isError,
       updateChatRoomList: refetch,
     };
   };
 
-  export const useFetchRoomMessages = () => {
-    const user = useChatState();
-    const { data, isLoading, refetch, isSuccess } = useQuery(
-      `room_messages`,
-      async () => {
-        const res = await getRoomMessages();
-        const messages = res;
+  export const useFetchRoomMessages = (room, cursor) => {
+    
+    //const dispatch = useDispatch();
+    const queryClient = useQueryClient();
+
+    
+    const { data, isLoading, refetch, isSuccess } = useQuery({
+      queryKey : [`room_messages/${room?.roomId}`, cursor ],
+      queryFn : async () => {
+
+        const res = await getRoomMessages(room, cursor);        
+        //console.log(res);
+        const messages = res.reverse();
+        //dispatch(setRoomConversation(messages));
         return messages;
-      }
-    );
+      },
+      //onSuccess: (data) => queryClient.invalidateQueries([`room_messages/${room?.roomId}`, cursor ]),
+      throwOnError : true,      
+      staleTime : 1000
+  });
     
     return {
-      chatRoomList: data,
-      isLoadingRoom: isLoading,
+      roomMessages : data,
+      isLoading: isLoading,
       isFetch: isSuccess,
       updateRoomMessages: refetch,
     };
   };
   
+  export const fetchMessages = (room, cursor) => {
+    
+    let promise = new Promise(async function (resolve, reject) {        
+        const res = await getRoomMessages(room , cursor);              
+        resolve(res);                         
+      }
+    );
+
+    return promise;         
+  }
+
 
   export const useSendMessage = ({
     type,
@@ -95,3 +120,12 @@ export const useCreateChatRoom = (props) => {
     );
     deleteMessage();
   };
+
+  export function usePrevState(state) {
+    const ref = useRef(state);
+    useEffect(() => {
+      ref.current = state;
+    }, [state]);
+    return ref.current;
+  }
+  

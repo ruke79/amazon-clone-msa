@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/config-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/config-server.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/config-server.test.iml" filepath="$PROJECT_DIR$/.idea/modules/config-server.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/amazon-clone-msa.iml" filepath="$PROJECT_DIR$/.idea/amazon-clone-msa.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka-server.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka-server.test.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka-server.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway-server.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway-server.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway-server.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/shopping.iml" filepath="$PROJECT_DIR$/.idea/shopping.iml" />
     </modules>
   </component>
 </project>

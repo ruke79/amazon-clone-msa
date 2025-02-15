@@ -22,9 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.constants.TokenType;
 import com.project.backend.exceptionHandling.TokenRefreshException;
-import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
-
+import com.project.backend.security.RefreshToken;
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.security.response.MessageResponse;
 import com.project.backend.service.RefreshTokenService;
@@ -44,9 +43,6 @@ public class RefreshTokenController {
     private final UserServiceImpl userService;
 
     private final JwtUtils jwtUtils;
-
-    @Value("${frontend.url}")
-    private String frontendUrl;
 
     private final RefreshTokenService refreshTokenService;
 
@@ -88,7 +84,7 @@ public class RefreshTokenController {
 
             //로그인 페이지 
             //response status code
-            log.info("Redirect signin");
+            log.info(e.getMessage());
 
             return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
         }
@@ -114,8 +110,7 @@ public class RefreshTokenController {
         String email = jwtUtils.getIdFromJwtToken(refresh);
 
         log.info("userService.findByEmail(email) start");
-        User user = userService.findByEmail(email).
-                    orElseThrow(() -> new RuntimeException("User not found with email: " + email));       
+        User user = userService.findByEmail(email);                    
         log.info("userService.findByEmail(email) End");
 
         String newAccess = jwtUtils.generateTokenFromUser(user);
@@ -126,7 +121,7 @@ public class RefreshTokenController {
         log.info("토큰 재발급 성공");
 
         response.setHeader(TokenType.ACCESS.getType(), newAccess);
-        response.addCookie(jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), 24*60*60));
+        response.addCookie(jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), jwtUtils.getJwtRefreshExpirationMs()));
         //response.setHeader(HttpHeaders.SET_COOKIE, jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
 
         return new ResponseEntity<>(HttpStatus.OK);        

@@ -8,35 +8,43 @@ import com.project.chatserver.constants.MessageType;
 import  jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
-@Document(collection="chatmessage")
+@Document(collection="chat")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //MongoDB 채팅 모델
 public class ChatMessage {
-    private MessageType type;
 
-    private Long senderId;
+    @Id 
+    private String id;
     
-    private String roomId;
+    private MessageType type;    
+    
+    private String roomId;        
+    private String email;
+    private String nickname;
+               
+    private String content;    
 
-    private String content;
-
+    private String imageUrl;
+        
     private Integer readCount;
     
-    private LocalDateTime createdAt;
-    
+    private String createdAt;
 
-    private ChatMessage(MessageType type, Long senderId,  String roomId, String content, Integer readCount,  LocalDateTime createdAt) {
+    private ChatMessage(MessageType type, String nickname, String email, String roomId, String content, String imageUrl, Integer readCount,  String createdAt) {
         this.type = type;
-        this.senderId = senderId;        
+        this.nickname = nickname;     
+        this.email = email;           
         this.roomId = roomId;
         this.content = content;
-        this.createdAt = createdAt;
+        this.imageUrl = imageUrl;
+        this.createdAt = createdAt;        
+        this.readCount = readCount;
     }
 
-    public static ChatMessage get(MessageType type, Long senderId, String roomId, String content, Integer readCount, LocalDateTime createdAt) {
-        return new ChatMessage(type, senderId, roomId, content, readCount, createdAt);
+    public static ChatMessage get(MessageType type, String nickname, String email, String roomId, String content, String imageUrl, Integer readCount, String createdAt) {
+        return new ChatMessage(type, nickname, email, roomId, content, imageUrl, readCount, createdAt);
     }
 }
