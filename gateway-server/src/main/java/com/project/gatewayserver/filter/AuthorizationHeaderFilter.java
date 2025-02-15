@@ -46,6 +46,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             }
 
             String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            log.info(authorizationHeader);
             String jwt = authorizationHeader.replace("Bearer ", "");
 
             if (!isJwtValid(jwt)) {
@@ -54,8 +55,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             // JWT에서 user id 추출
             String userId = extractUserIdFromJwt(jwt);
-
-            // 새 요청 객체 생성 및 memberNo 헤더 추가
+            
             ServerHttpRequest newRequest = request.mutate()
                     .header("X-User-Id", userId)
                     .build();
@@ -70,8 +70,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             Algorithm algorithm = Algorithm.HMAC256("mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm".getBytes());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(jwt);
-
-            // JWT 클레임에서 memberNo 추출
+            
             return decodedJWT.getSubject();
         } catch (Exception e) {
             log.error("Failed to extract memberNo from JWT", e);

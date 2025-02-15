@@ -10,7 +10,7 @@ dotenv.config({path: './.env.development'})
 
 module.exports = {
   mode: "development",
-  entry: "./src/index.js",
+  entry: "./src/index.jsx",
   output: {
     publicPath: '/',
 	  path: path.resolve(__dirname, "dist"),
@@ -28,6 +28,7 @@ module.exports = {
         "public": path.resolve(__dirname, './public'),
         "error" : path.resolve(__dirname, './src/error'),
     },
+    extensions: ['.js', '.jsx'],
   },
   module: {    
 

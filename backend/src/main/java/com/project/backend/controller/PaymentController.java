@@ -2,6 +2,7 @@ package com.project.backend.controller;
 
 import java.io.IOException;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,7 @@ import com.project.backend.dto.PaymentResultDTO;
 import com.project.backend.security.request.PayRequest;
 import com.project.backend.service.OrderService;
 import com.project.backend.service.PaymentService;
-import com.project.backend.service.RefundService;
-import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
+//import com.project.backend.service.RefundService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -32,24 +29,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("api/pay/")
+@RequiredArgsConstructor
 public class PaymentController {
 
-    @Value("${imp_key}")
-    private String restApiKey;
-    @Value("${imp_secret}")
-    private String restApiSecret;
+//    @Value("${imp_key}")
+//    private String restApiKey;
+//    @Value("${imp_secret}")
+//    private String restApiSecret;
 
     //private IamportClient iamportClient;
 
     
     private final PaymentService paymentService;  
-    private final RefundService refundService;
+    //private final RefundService refundService;
 
-    @Autowired
-    public PaymentController(PaymentService paymentService, RefundService refundService) {
-        this.paymentService = paymentService;
-        this.refundService = refundService;
-    }
+
 
 
     @PutMapping("/process")
@@ -63,8 +57,8 @@ public class PaymentController {
         }
         catch ( RuntimeException e) {
             
-            String token = refundService.getToken(restApiKey, restApiSecret);
-            refundService.refundRequest(token, request.getOrderNumber(), e.getMessage());
+//            String token = refundService.getToken(restApiKey, restApiSecret);
+//            refundService.refundRequest(token, request.getOrderNumber(), e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);           
 
         }

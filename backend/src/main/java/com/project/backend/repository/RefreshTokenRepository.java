@@ -12,19 +12,19 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
+import com.project.backend.security.RefreshToken;
 
 import jakarta.transaction.Transactional;
 
 @Transactional    
 @Repository
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+//public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long> {   
+    Optional<RefreshToken> findByUserId(Long userId);
     Optional<RefreshToken> findByToken(String token);
     
-    int deleteByUser(User user);
-
-    
+    //int deleteByUser(User user);    
     int deleteByToken(String stoken);
 
 }
@@ -60,7 +60,4 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 //     public void delete(final RefreshToken refreshToken) {
 //         redisTemplate.delete(refreshToken.getToken());
 //     }
-
-
-
-// }
+//}

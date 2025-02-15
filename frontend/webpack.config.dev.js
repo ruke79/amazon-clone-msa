@@ -4,7 +4,7 @@ const baseConfig = require("./webpack.config.base");
 module.exports = merge(baseConfig, {
   mode: "development",
   devServer: {     
-    port: 3000,
+    port: 3001,
     // proxy: [
     //   {
     //     context : ['/api'],
@@ -14,6 +14,7 @@ module.exports = merge(baseConfig, {
     // ],
     open: true,
     historyApiFallback: true,    
-    hot: true
+    hot: true,
+    liveReload: false, 
   },
 });

@@ -5,7 +5,7 @@ frontend:
     url: http://localhost:3000
 
 kafka:
-    url: http://localhost:29091
+    url: http://localhost:9092
 
 
 eureka:
@@ -18,11 +18,11 @@ eureka:
       service-url:
         defaultZone: http://localhost:8761/eureka
 
-openapi:
-  service:
-    title: chat service
-    version: 0.1
-    url: http:localhost:8081
+# openapi:
+#   service:
+#     title: chat-service
+#     version: 0.1
+#     url: http://localhost:8081
 
 
     
@@ -34,22 +34,54 @@ spring:
     config:
       import: "optional:configserver:http://localhost:8888"
 
+    cloud:
+      openfeign:
+       httpclient:
+        hc5:
+          enabled: true
+       client:
+        shopping-service:
+          url: http://localhost:8080
+          connectTimeout: 3000
+          readTimeout: 3000
+        default:
+          connectTimeout: 3000
+          readTimeout: 3000
+
+
+
     datasource:
       url: jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul
       username: admin
       password: ysY2273!
 
+    jpa:
+      hibernate:
+         ddl-auto: update
+
     data:
       mongodb:
-        client: mongodb://localhost:27017
-        name: test
-        #username:
-        #password:
+        client: mongodb://admin:1234@localhost:27017
+        name: chat
+        # username: admin
+        # password: 1234
+        auto-index-creation: true
       redis:
         repositories:
           enabled: false
+        lettuce:
+          pool:
+            max-active: 5
+            max-idle: 5
+            min-idle: 2  
         host: localhost
         port: 6379
+        password: ysY2273!
 
     app:
       jwtSecret: "mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm"
+
+logging:
+    level:
+        org:
+            springframework: DEBUG

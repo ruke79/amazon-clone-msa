@@ -22,7 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.backend.constants.TokenType;
-import com.project.backend.model.RefreshToken;
 import com.project.backend.security.jwt.JwtUtils;
 import com.project.backend.security.request.LoginRequest;
 import com.project.backend.security.response.LoginResponse;
@@ -99,7 +98,11 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        RefreshToken refreshToken = refreshTokenService.findByUserId(userDetails.getId()).orElse(null);        
+        if (null == refreshToken) {
+            refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        }
 
         ObjectMapper om = new ObjectMapper();
 
@@ -114,7 +117,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
             response.setHeader(TokenType.ACCESS.getType(), accessToken);
 
             response.addCookie(
-                    jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), 24 * 60 * 60));
+                    jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), jwtUtils.getJwtRefreshExpirationMs() ));
             // refreshTokenService.deleteByUserId(userDetails.getId());
             // response.setHeader(HttpHeaders.SET_COOKIE,
             // jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());

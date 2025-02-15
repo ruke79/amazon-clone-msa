@@ -5,7 +5,6 @@ import api, { getRequest } from "util/api";
 import toast from "react-hot-toast";
 import TokenUtil from "util/tokenUtil";
 import { useErrorBoundary } from "react-error-boundary";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
@@ -77,7 +76,6 @@ export const ContextProvider = ({ children }) => {
 
     );
   };
-
 
 
   //by using this (useMyContext) custom hook we can reach our context provier and access the datas across our components

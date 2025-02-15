@@ -15,16 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.backend.constants.AppRole;
 import com.project.backend.constants.StatusMessages;
 import com.project.backend.exceptionHandling.TokenRefreshException;
-import com.project.backend.model.RefreshToken;
 import com.project.backend.model.User;
 import com.project.backend.repository.RefreshTokenRepository;
 import com.project.backend.repository.UserRepository;
+import com.project.backend.security.RefreshToken;
 import com.project.backend.security.jwt.JwtUtils;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RefreshTokenService {
 
   @Value("${spring.app.jwtRefreshExpirationMs}")
@@ -38,55 +40,51 @@ public class RefreshTokenService {
 
   private final JwtUtils jwtUtils;
 
-  
-  @Autowired
-  public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository,
-      JwtUtils jwtUtils) {
-    this.refreshTokenRepository = refreshTokenRepository;
-    this.userRepository = userRepository;
-    this.jwtUtils = jwtUtils;
+    
+  public Optional<RefreshToken> findByUserId(Long userId) {
+    return refreshTokenRepository.findByUserId(userId);
   }
 
   public Optional<RefreshToken> findByToken(String token) {
     return refreshTokenRepository.findByToken(token);
   }
 
+  public int  deleteByToken(String token) {
+    return refreshTokenRepository.deleteByToken(token);
+  }
+
   public RefreshToken createRefreshToken(Long userId) {
         
-    RefreshToken refreshToken = new RefreshToken();
-
+    
     User user = userRepository.findById(userId)
     .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
 
     
 
-    log.info("refreshTokenRepository.deleteByUser(user) start");
-    refreshTokenRepository.deleteByUser(user);
+    // log.info("refreshTokenRepository.deleteByUser(user) start");
+    // refreshTokenRepository.deleteByUser(user);
 
-    log.info("refreshTokenRepository.deleteByUser(user) End");
+    // log.info("refreshTokenRepository.deleteByUser(user) End");
 
     
-    refreshToken.setUser(user);    
+    // refreshToken.setUser(user);    
     
-    refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
+    // refreshToken.setToken(jwtUtils.generatRefreshTokenFromUser(user));
    
-    Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
+    // Date myDate = Date.from(Instant.now().plusMillis(refreshTokenDurationMs));
       
-    refreshToken.setExpiryDate(myDate);
+    // refreshToken.setExpiryDate(myDate);
 
-    log.info("refreshTokenRepository.save(refreshToken) start");
+    // log.info("refreshTokenRepository.save(refreshToken) start");
 
-    refreshToken = refreshTokenRepository.save(refreshToken);
+    // refreshToken = refreshTokenRepository.save(refreshToken);
 
-    log.info("refreshTokenRepository.save(refreshToken) end");
+    // log.info("refreshTokenRepository.save(refreshToken) end");
 
     // Redis start 
-
-    // User user = userRepository.findById(userId)
-    //  .orElseThrow(() -> new RuntimeException(StatusMessages.USER_NOT_FOUND));
-
-    // RefreshToken refreshToken = new RefreshToken(jwtUtils.generateTokenFromUser(user), userId);
-    // refreshTokenRepository.save(refreshToken);
+    
+    RefreshToken refreshToken = new RefreshToken(jwtUtils.generatRefreshTokenFromUser(user), userId );
+    refreshTokenRepository.save(refreshToken);
 
     // Redis End
 

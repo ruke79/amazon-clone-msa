@@ -26,8 +26,7 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.validation.Valid;
-
-
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -158,6 +158,8 @@ public class AuthController {
 
     @GetMapping("/user/id")
     public ResponseEntity<?> findUserByEmail(@RequestParam String email) {
+
+        log.info("FeignClient: " + email);
 
         User user = userService.findByEmail(email);
 
