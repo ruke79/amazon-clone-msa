@@ -1,4 +1,4 @@
-package com.project.backend.advice;
+package com.project.user-service.advice;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import com.project.backend.exceptionHandling.TokenRefreshException;
+import com.project.user-service.exceptionHandling.TokenRefreshException;
 
 @RestControllerAdvice
 public class TokenControllerAdvice {

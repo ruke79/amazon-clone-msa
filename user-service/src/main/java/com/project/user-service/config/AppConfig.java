@@ -1,4 +1,4 @@
-package com.project.backend.config;
+package com.project.user-service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

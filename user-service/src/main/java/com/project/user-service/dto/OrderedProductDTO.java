@@ -1,6 +1,6 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
-import com.project.backend.model.ProductColorAttribute;
+import com.project.user-service.model.ProductColorAttribute;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;

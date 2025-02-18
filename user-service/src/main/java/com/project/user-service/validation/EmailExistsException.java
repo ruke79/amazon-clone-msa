@@ -1,4 +1,4 @@
-package com.project.backend.validation;
+package com.project.user-service.validation;
 
 @SuppressWarnings("serial")
 public class EmailExistsException extends Throwable {

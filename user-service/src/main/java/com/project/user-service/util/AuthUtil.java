@@ -1,13 +1,13 @@
-package com.project.backend.util;
+package com.project.user-service.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.model.User;
-import com.project.backend.repository.UserRepository;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.model.User;
+import com.project.user-service.repository.UserRepository;
 
 @Component
 public class AuthUtil {

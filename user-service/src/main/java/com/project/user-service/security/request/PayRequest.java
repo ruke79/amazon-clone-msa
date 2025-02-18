@@ -1,12 +1,12 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 import java.time.LocalDateTime;
 
 import org.springframework.cglib.core.Local;
 
-import com.project.backend.constants.OrderStatusEnum;
+import com.project.user-service.constants.OrderStatusEnum;
 
-import com.project.backend.constants.PaymentResultStatus;
+import com.project.user-service.constants.PaymentResultStatus;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.project.backend.security.jwt;
+package com.project.user-service.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

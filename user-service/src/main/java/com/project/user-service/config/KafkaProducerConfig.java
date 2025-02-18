@@ -1,8 +1,8 @@
-package com.project.backend.config;
+package com.project.user-service.config;
 
 
 import com.google.common.collect.ImmutableMap;
-import com.project.backend.dto.AlarmEventDto;
+import com.project.user-service.dto.AlarmEventDto;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

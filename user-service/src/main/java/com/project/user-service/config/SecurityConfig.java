@@ -1,4 +1,4 @@
-package com.project.backend.config;
+package com.project.user-service.config;
 
 import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Bean;
@@ -30,23 +30,23 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
-import com.project.backend.constants.AppRole;
-import com.project.backend.handler.OAuth2SuccessHandler;
-import com.project.backend.model.Role;
-import com.project.backend.model.User;
-import com.project.backend.repository.RoleRepository;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.security.AuthLoginFilter;
-import com.project.backend.security.AuthLogoutFilter;
-import com.project.backend.security.CustomAuthenticationProvider;
-import com.project.backend.security.RefreshToken;
-import com.project.backend.security.jwt.JwtAuthEntryPoint;
-import com.project.backend.security.jwt.JwtAuthFilter;
-import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.security.service.UserDetailsServiceImpl;
-import com.project.backend.service.CustomOAuth2UserService;
-import com.project.backend.service.RefreshTokenService;
-import com.project.backend.service.UserService;
+import com.project.user-service.constants.AppRole;
+import com.project.user-service.handler.OAuth2SuccessHandler;
+import com.project.user-service.model.Role;
+import com.project.user-service.model.User;
+import com.project.user-service.repository.RoleRepository;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.security.AuthLoginFilter;
+import com.project.user-service.security.AuthLogoutFilter;
+import com.project.user-service.security.CustomAuthenticationProvider;
+import com.project.user-service.security.RefreshToken;
+import com.project.user-service.security.jwt.JwtAuthEntryPoint;
+import com.project.user-service.security.jwt.JwtAuthFilter;
+import com.project.user-service.security.jwt.JwtUtils;
+import com.project.user-service.security.service.UserDetailsServiceImpl;
+import com.project.user-service.service.CustomOAuth2UserService;
+import com.project.user-service.service.RefreshTokenService;
+import com.project.user-service.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

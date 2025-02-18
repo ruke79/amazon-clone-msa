@@ -1,10 +1,10 @@
-package com.project.backend.model;
+package com.project.user-service.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.project.backend.constants.OrderStatusEnum;
+import com.project.user-service.constants.OrderStatusEnum;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;

@@ -1,7 +1,7 @@
-package com.project.backend.repository;
+package com.project.user-service.repository;
 
-import com.project.backend.model.VerificationToken;
-import com.project.backend.model.User;
+import com.project.user-service.model.VerificationToken;
+import com.project.user-service.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

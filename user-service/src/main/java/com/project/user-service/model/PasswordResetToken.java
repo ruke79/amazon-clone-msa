@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.user-service.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

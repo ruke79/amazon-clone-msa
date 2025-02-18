@@ -1,4 +1,4 @@
-package com.project.backend.security.jwt;
+package com.project.user-service.security.jwt;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -20,8 +20,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
-import com.project.backend.model.User;
-import com.project.backend.security.service.UserDetailsImpl;
+import com.project.user-service.model.User;
+import com.project.user-service.security.service.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

@@ -1,6 +1,6 @@
-package com.project.backend.service.impl;
+package com.project.user-service.service.impl;
 
-import com.project.backend.service.TotpService;
+import com.project.user-service.service.TotpService;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;

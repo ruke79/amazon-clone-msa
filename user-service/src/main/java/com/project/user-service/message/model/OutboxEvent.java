@@ -1,4 +1,4 @@
-package com.project.backend.message.model;
+package com.project.user-service.message.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;

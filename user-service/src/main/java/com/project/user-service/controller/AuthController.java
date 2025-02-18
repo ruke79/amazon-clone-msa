@@ -1,24 +1,24 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.ServiceUserDTO;
-import com.project.backend.dto.UserProfileDTO;
-import com.project.backend.model.User;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.ServiceUserDTO;
+import com.project.user-service.dto.UserProfileDTO;
+import com.project.user-service.model.User;
 
-import com.project.backend.repository.RoleRepository;
-import com.project.backend.repository.UserRepository;
+import com.project.user-service.repository.RoleRepository;
+import com.project.user-service.repository.UserRepository;
 
-import com.project.backend.security.jwt.JwtUtils;
+import com.project.user-service.security.jwt.JwtUtils;
 
-import com.project.backend.security.request.SignupRequest;
-import com.project.backend.security.response.GenericResponse;
+import com.project.user-service.security.request.SignupRequest;
+import com.project.user-service.security.response.GenericResponse;
 
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.security.response.UserAccountResponse;
-import com.project.backend.service.TotpService;
-import com.project.backend.service.UserService;
-import com.project.backend.util.AuthUtil;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.security.response.UserAccountResponse;
+import com.project.user-service.service.TotpService;
+import com.project.user-service.service.UserService;
+import com.project.user-service.util.AuthUtil;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 
@@ -110,7 +110,7 @@ public class AuthController {
             final User registered = userService.registerNewUserAccount(accountDto);
             // userService.addUserLocation(registered, getClientIP(request));
 
-            eventPublisher.publishEvent(new com.project.backend.registration.OnRegistrationCompleteEvent(registered,
+            eventPublisher.publishEvent(new com.project.user-service.registration.OnRegistrationCompleteEvent(registered,
                     request.getLocale(), getAppUrl(request)));
             return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS), HttpStatus.OK);
                 }

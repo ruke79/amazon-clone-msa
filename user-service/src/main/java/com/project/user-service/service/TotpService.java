@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 

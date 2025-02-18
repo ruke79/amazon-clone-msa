@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,16 +10,16 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.constants.AppRole;
-import com.project.backend.dto.CustomOAuth2User;
-import com.project.backend.dto.UserProfileDTO;
-import com.project.backend.model.User;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.security.request.SignupRequest;
-import com.project.backend.security.response.GoogleResponse;
-import com.project.backend.security.response.NaverResponse;
-import com.project.backend.security.response.OAuth2Response;
-import com.project.backend.service.impl.UserServiceImpl;
+import com.project.user-service.constants.AppRole;
+import com.project.user-service.dto.CustomOAuth2User;
+import com.project.user-service.dto.UserProfileDTO;
+import com.project.user-service.model.User;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.security.request.SignupRequest;
+import com.project.user-service.security.response.GoogleResponse;
+import com.project.user-service.security.response.NaverResponse;
+import com.project.user-service.security.response.OAuth2Response;
+import com.project.user-service.service.impl.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.Setter;
 
 import java.util.List;
 
-import com.project.backend.model.ProductColorAttribute;
-import com.project.backend.model.ProductDetails;
-import com.project.backend.model.ProductQA;
-import com.project.backend.model.ProductSizeAttribute;
+import com.project.user-service.model.ProductColorAttribute;
+import com.project.user-service.model.ProductDetails;
+import com.project.user-service.model.ProductQA;
+import com.project.user-service.model.ProductSizeAttribute;
 
 
 @Setter

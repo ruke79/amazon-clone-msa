@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.util.List;
 
@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.SearchResultDTO;
-import com.project.backend.model.Product;
-import com.project.backend.model.ProductCategory;
-import com.project.backend.model.Review;
-import com.project.backend.repository.CategoryRepository;
-import com.project.backend.repository.ProductRepository;
-import com.project.backend.repository.ProductSkuRepository;
-import com.project.backend.security.request.SearchParamsRequest;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.service.ProductService;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.SearchResultDTO;
+import com.project.user-service.model.Product;
+import com.project.user-service.model.ProductCategory;
+import com.project.user-service.model.Review;
+import com.project.user-service.repository.CategoryRepository;
+import com.project.user-service.repository.ProductRepository;
+import com.project.user-service.repository.ProductSkuRepository;
+import com.project.user-service.security.request.SearchParamsRequest;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.service.ProductService;
 
 @RestController
 @RequestMapping("api/")

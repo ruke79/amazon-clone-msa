@@ -1,4 +1,4 @@
-package com.project.backend.security;
+package com.project.user-service.security;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -21,12 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.backend.constants.TokenType;
-import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.security.request.LoginRequest;
-import com.project.backend.security.response.LoginResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.service.RefreshTokenService;
+import com.project.user-service.constants.TokenType;
+import com.project.user-service.security.jwt.JwtUtils;
+import com.project.user-service.security.request.LoginRequest;
+import com.project.user-service.security.response.LoginResponse;
+import com.project.user-service.security.service.UserDetailsImpl;
+import com.project.user-service.service.RefreshTokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

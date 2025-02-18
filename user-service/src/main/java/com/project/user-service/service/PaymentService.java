@@ -1,16 +1,16 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.dto.PaymentResultDTO;
-import com.project.backend.model.Order;
-import com.project.backend.model.PaymentResult;
-import com.project.backend.repository.OrderRepository;
-import com.project.backend.repository.PaymentRepository;
-import com.project.backend.security.request.PayRequest;
+import com.project.user-service.dto.PaymentResultDTO;
+import com.project.user-service.model.Order;
+import com.project.user-service.model.PaymentResult;
+import com.project.user-service.repository.OrderRepository;
+import com.project.user-service.repository.PaymentRepository;
+import com.project.user-service.security.request.PayRequest;
 
 @Service
 public class PaymentService {

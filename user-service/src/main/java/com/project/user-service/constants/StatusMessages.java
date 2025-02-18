@@ -1,4 +1,4 @@
-package com.project.backend.constants;
+package com.project.user-service.constants;
 
 
 public final class StatusMessages {

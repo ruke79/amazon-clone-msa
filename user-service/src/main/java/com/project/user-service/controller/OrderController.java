@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.OrderDTO;
-import com.project.backend.dto.PaymentResultDTO;
-import com.project.backend.model.Order;
-import com.project.backend.model.PaymentResult;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.OrderDTO;
+import com.project.user-service.dto.PaymentResultDTO;
+import com.project.user-service.model.Order;
+import com.project.user-service.model.PaymentResult;
 
-import com.project.backend.security.request.OrderRequest;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.service.OrderService;
+import com.project.user-service.security.request.OrderRequest;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.service.OrderService;
 
 import lombok.extern.slf4j.Slf4j;
 

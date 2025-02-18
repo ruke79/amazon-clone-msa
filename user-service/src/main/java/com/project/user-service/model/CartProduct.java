@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.user-service.model;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;

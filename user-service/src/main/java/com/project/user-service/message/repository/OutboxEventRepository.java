@@ -1,8 +1,8 @@
-package com.project.backend.message.repository;
+package com.project.user-service.message.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.project.backend.message.model.OutboxEvent;
+import com.project.user-service.message.model.OutboxEvent;
 
 public interface OutboxEventRepository extends CrudRepository<OutboxEvent, String> {
 }

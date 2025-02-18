@@ -1,29 +1,29 @@
-package com.project.backend.service.impl;
+package com.project.user-service.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.backend.constants.AppRole;
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.UserProfileDTO;
-import com.project.backend.model.PasswordResetToken;
-import com.project.backend.model.Role;
-import com.project.backend.model.ShippingAddress;
-import com.project.backend.model.User;
-import com.project.backend.model.VerificationToken;
-import com.project.backend.repository.PasswordResetTokenRepository;
-import com.project.backend.repository.RoleRepository;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.repository.VerificationTokenRepository;
-import com.project.backend.security.request.SignupRequest;
-import com.project.backend.service.AddressService;
-import com.project.backend.service.EmailService;
-import com.project.backend.service.TotpService;
-import com.project.backend.service.UserService;
-import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.security.response.LoginResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.security.service.UserDetailsServiceImpl;
+import com.project.user-service.constants.AppRole;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.AddressDTO;
+import com.project.user-service.dto.UserProfileDTO;
+import com.project.user-service.model.PasswordResetToken;
+import com.project.user-service.model.Role;
+import com.project.user-service.model.ShippingAddress;
+import com.project.user-service.model.User;
+import com.project.user-service.model.VerificationToken;
+import com.project.user-service.repository.PasswordResetTokenRepository;
+import com.project.user-service.repository.RoleRepository;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.repository.VerificationTokenRepository;
+import com.project.user-service.security.request.SignupRequest;
+import com.project.user-service.service.AddressService;
+import com.project.user-service.service.EmailService;
+import com.project.user-service.service.TotpService;
+import com.project.user-service.service.UserService;
+import com.project.user-service.security.jwt.JwtUtils;
+import com.project.user-service.security.response.LoginResponse;
+import com.project.user-service.security.service.UserDetailsImpl;
+import com.project.user-service.security.service.UserDetailsServiceImpl;
 
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
@@ -42,9 +42,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.message.repository.OutboxEventRepository;
-import com.project.backend.message.dto.UserCreatedDTO;
-import com.project.backend.message.model.OutboxEvent;
+import com.project.user-service.message.repository.OutboxEventRepository;
+import com.project.user-service.message.dto.UserCreatedDTO;
+import com.project.user-service.message.model.OutboxEvent;
 
 import java.time.Instant;
 import java.time.LocalDate;

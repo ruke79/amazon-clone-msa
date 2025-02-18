@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,17 +7,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.dto.ReviewDTO;
-import com.project.backend.dto.ReviewStyleDTO;
-import com.project.backend.dto.ReviewerDTO;
-import com.project.backend.model.Product;
-import com.project.backend.model.Review;
-import com.project.backend.model.ReviewStyle;
-import com.project.backend.model.User;
-import com.project.backend.repository.ProductRepository;
-import com.project.backend.repository.ReviewRepository;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.security.request.ReviewRequest;
+import com.project.user-service.dto.ReviewDTO;
+import com.project.user-service.dto.ReviewStyleDTO;
+import com.project.user-service.dto.ReviewerDTO;
+import com.project.user-service.model.Product;
+import com.project.user-service.model.Review;
+import com.project.user-service.model.ReviewStyle;
+import com.project.user-service.model.User;
+import com.project.user-service.repository.ProductRepository;
+import com.project.user-service.repository.ReviewRepository;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.security.request.ReviewRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
