@@ -1,4 +1,4 @@
-package com.project.backend.exceptionHandling;
+package com.project.user-service.exceptionHandling;
 
 import java.util.ArrayList;
 import java.util.List;

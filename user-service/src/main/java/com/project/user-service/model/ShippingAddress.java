@@ -1,5 +1,5 @@
 
-package com.project.backend.model;
+package com.project.user-service.model;
 
 import java.util.List;
 

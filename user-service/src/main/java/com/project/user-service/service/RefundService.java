@@ -1,10 +1,10 @@
-//package com.project.backend.service;
+//package com.project.user-service.service;
 //
 //import org.springframework.stereotype.Service;
 //
 //import com.google.gson.Gson;
 //import com.google.gson.JsonObject;
-//import com.project.backend.constants.IamportURL;
+//import com.project.user-service.constants.IamportURL;
 //
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;

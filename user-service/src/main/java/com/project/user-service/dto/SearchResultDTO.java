@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 import java.util.List;
 import java.util.Set;

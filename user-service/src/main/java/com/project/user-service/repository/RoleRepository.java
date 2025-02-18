@@ -1,9 +1,9 @@
-package com.project.backend.repository;
+package com.project.user-service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.project.backend.constants.AppRole;
-import com.project.backend.model.Role;
+import com.project.user-service.constants.AppRole;
+import com.project.user-service.model.Role;
 
 import java.util.Optional;
 

@@ -1,12 +1,12 @@
 
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.project.backend.constants.PaymentResultStatus;
+import com.project.user-service.constants.PaymentResultStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;

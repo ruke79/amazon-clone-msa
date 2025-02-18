@@ -1,11 +1,11 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 
 import java.util.List;
 
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.CouponDTO;
-import com.project.backend.dto.CartProductDTO;
+import com.project.user-service.dto.AddressDTO;
+import com.project.user-service.dto.CouponDTO;
+import com.project.user-service.dto.CartProductDTO;
 
 import lombok.Getter;
 import lombok.Setter;

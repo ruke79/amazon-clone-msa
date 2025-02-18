@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.OperationStatus;
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.model.WishList;
+import com.project.user-service.constants.OperationStatus;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.model.WishList;
 
-import com.project.backend.security.request.WishListRequest;
-import com.project.backend.security.response.GenericResponse;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.service.CartService;
+import com.project.user-service.security.request.WishListRequest;
+import com.project.user-service.security.response.GenericResponse;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.service.CartService;
 
 @RestController
 @RequestMapping("api/user")

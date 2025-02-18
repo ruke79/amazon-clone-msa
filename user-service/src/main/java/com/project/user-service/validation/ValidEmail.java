@@ -1,4 +1,4 @@
-package com.project.backend.validation;
+package com.project.user-service.validation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;

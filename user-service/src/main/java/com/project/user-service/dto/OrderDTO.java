@@ -1,12 +1,12 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.project.backend.constants.OrderStatusEnum;
-import com.project.backend.model.OrderedProduct;
-import com.project.backend.model.PaymentResult;
-import com.project.backend.model.ShippingAddress;
+import com.project.user-service.constants.OrderStatusEnum;
+import com.project.user-service.model.OrderedProduct;
+import com.project.user-service.model.PaymentResult;
+import com.project.user-service.model.ShippingAddress;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

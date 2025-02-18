@@ -1,4 +1,4 @@
-package com.project.backend.security.jwt;
+package com.project.user-service.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,10 +17,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.project.backend.constants.TokenType;
-import com.project.backend.dto.CustomOAuth2User;
-import com.project.backend.dto.UserProfileDTO;
-import com.project.backend.security.service.UserDetailsServiceImpl;
+import com.project.user-service.constants.TokenType;
+import com.project.user-service.dto.CustomOAuth2User;
+import com.project.user-service.dto.UserProfileDTO;
+import com.project.user-service.security.service.UserDetailsServiceImpl;
 
 import io.jsonwebtoken.ExpiredJwtException;
 

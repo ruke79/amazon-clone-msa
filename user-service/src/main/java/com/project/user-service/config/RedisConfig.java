@@ -1,5 +1,5 @@
 
-package com.project.backend.config;
+package com.project.user-service.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

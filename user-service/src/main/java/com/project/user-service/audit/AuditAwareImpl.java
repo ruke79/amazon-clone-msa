@@ -1,4 +1,4 @@
-package com.project.backend.audit;
+package com.project.user-service.audit;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

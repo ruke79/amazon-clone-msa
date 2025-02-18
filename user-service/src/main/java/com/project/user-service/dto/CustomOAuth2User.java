@@ -1,6 +1,6 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
-import com.project.backend.dto.UserProfileDTO;
+import com.project.user-service.dto.UserProfileDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;

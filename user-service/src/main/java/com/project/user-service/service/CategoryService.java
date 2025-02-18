@@ -1,17 +1,17 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.dto.CategoryDTO;
-import com.project.backend.dto.SubCategoryDTO;
-import com.project.backend.model.ProductCategory;
-import com.project.backend.model.SubCategory;
-import com.project.backend.repository.CategoryRepository;
-import com.project.backend.repository.SubCategoryRepository;
-import com.project.backend.security.request.SubCategoryRequest;
+import com.project.user-service.dto.CategoryDTO;
+import com.project.user-service.dto.SubCategoryDTO;
+import com.project.user-service.model.ProductCategory;
+import com.project.user-service.model.SubCategory;
+import com.project.user-service.repository.CategoryRepository;
+import com.project.user-service.repository.SubCategoryRepository;
+import com.project.user-service.security.request.SubCategoryRequest;
 
 @Service
 public class CategoryService {

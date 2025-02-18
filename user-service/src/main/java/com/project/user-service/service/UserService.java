@@ -1,11 +1,11 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.project.backend.dto.UserProfileDTO;
-import com.project.backend.model.Role;
-import com.project.backend.model.User;
-import com.project.backend.model.VerificationToken;
-import com.project.backend.security.request.SignupRequest;
+import com.project.user-service.dto.UserProfileDTO;
+import com.project.user-service.model.Role;
+import com.project.user-service.model.User;
+import com.project.user-service.model.VerificationToken;
+import com.project.user-service.security.request.SignupRequest;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import java.util.List;

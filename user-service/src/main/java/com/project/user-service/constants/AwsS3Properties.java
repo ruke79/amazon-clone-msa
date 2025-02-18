@@ -1,4 +1,4 @@
-package com.project.backend.constants;
+package com.project.user-service.constants;
 
 import lombok.Getter;
 import lombok.Setter;
