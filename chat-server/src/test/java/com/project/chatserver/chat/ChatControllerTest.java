@@ -3,7 +3,7 @@ package com.project.chatserver.chat;
 import com.project.chatserver.client.ShoppingServiceClient;
 import com.project.chatserver.constants.MessageType;
 import com.project.chatserver.controller.ChatController;
-import com.project.chatserver.dto.MessageDTO;
+import com.project.chatserver.dto.MessageDto;
 // import com.project.chatserver.controller.ChatController;
 import com.project.chatserver.dto.request.ChatRoomRequest;
 import com.project.chatserver.service.ChatService;

@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
 import com.project.chatserver.common.util.KafkaUtil;
-import com.project.chatserver.dto.MessageDTO;
+import com.project.chatserver.dto.MessageDto;
 
 @Slf4j
 @Component
@@ -21,7 +21,7 @@ public class MessageConsumer {
     
 
     @KafkaListener(topics = KafkaUtil.KAFKA_TOPIC, containerFactory = "kafkaListenerContainerFactory")
-    public void receiveMessage(MessageDTO message) {
+    public void receiveMessage(MessageDto message) {
         log.info("전송 위치 = /sub/chat/room/"+ message.getRoomId());
         log.info("채팅 방으로 메시지 전송 = {}", message);
 

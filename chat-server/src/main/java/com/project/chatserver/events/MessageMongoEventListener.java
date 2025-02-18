@@ -5,10 +5,10 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
 
-import com.project.chatserver.dto.MessageDTO;
+import com.project.chatserver.dto.MessageDto;
 import com.project.chatserver.service.SequenceGeneratorService;
 
-public class MessageMongoEventListener extends AbstractMongoEventListener<MessageDTO> {
+public class MessageMongoEventListener extends AbstractMongoEventListener<MessageDto> {
 
      private SequenceGeneratorService sequenceGenerator;
 
@@ -18,9 +18,9 @@ public class MessageMongoEventListener extends AbstractMongoEventListener<Messag
     }
 
     @Override
-    public void onBeforeConvert(BeforeConvertEvent<MessageDTO> event) {
+    public void onBeforeConvert(BeforeConvertEvent<MessageDto> event) {
         if (Integer.parseInt(event.getSource().getId()) < 1) {
-            event.getSource().setId(String.valueOf(sequenceGenerator.generateSequence(MessageDTO.SEQUENCE_NAME)));
+            event.getSource().setId(String.valueOf(sequenceGenerator.generateSequence(MessageDto.SEQUENCE_NAME)));
         }
     }
 

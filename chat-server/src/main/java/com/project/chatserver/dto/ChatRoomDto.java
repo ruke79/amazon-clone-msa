@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @Builder
-public class ChatRoomDTO implements Serializable {
+public class ChatRoomDto implements Serializable {
     private String roomId;
     private String name;    
 }
