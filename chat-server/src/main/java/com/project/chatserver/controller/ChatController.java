@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.project.chatserver.common.util.TokenHandler;
 import com.project.chatserver.constants.MessageType;
-import com.project.chatserver.dto.ChatRoomDTO;
-import com.project.chatserver.dto.MessageDTO;
+import com.project.chatserver.dto.ChatRoomDto;
+import com.project.chatserver.dto.MessageDto;
 import com.project.chatserver.dto.request.ChatRoomRequest;
 import com.project.chatserver.dto.response.RoomMessagesResponse;
 import com.project.chatserver.model.ChatRoom;
@@ -70,21 +70,21 @@ public class ChatController {
 
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoomDTO CreateChatRoom(@RequestBody ChatRoomRequest chatroomReqest, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ChatRoomDto CreateChatRoom(@RequestBody ChatRoomRequest chatroomReqest, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        ChatRoomDTO dto = chatService.createChatRoom(chatroomReqest.getRoomName(), getUserId(request));
+        ChatRoomDto dto = chatService.createChatRoom(chatroomReqest.getRoomName(), getUserId(request));
 
         return dto;
     }
     
     @GetMapping("/rooms")
     @ResponseBody
-    public List<ChatRoomDTO> room(){
+    public List<ChatRoomDto> room(){
         List<ChatRoom> allRoom = chatService.fildAllRooms();
         log.info(allRoom.size());
-        List<ChatRoomDTO> all = new ArrayList<>();
+        List<ChatRoomDto> all = new ArrayList<>();
         for (ChatRoom chatRoom : allRoom) {
-            ChatRoomDTO chatRoomDto = ChatRoomDTO.builder()
+            ChatRoomDto chatRoomDto = ChatRoomDto.builder()
                     .name(chatRoom.getRoomName())
                     .roomId(chatRoom.getRoomUid())                    
                     .build();
@@ -96,24 +96,24 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/message")
-    public void sendMessage(@Valid MessageDTO request) {
+    public void sendMessage(@Valid MessageDto request) {
             chatService.sendMessage(request);
     }
 
     @MessageMapping("/chat/enter")
-	public void enterChatRoom( @RequestBody MessageDTO msg, SimpMessageHeaderAccessor headerAccessor) {
+	public void enterChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         chatService.sendEnterMessage(msg, headerAccessor);
     }
 
     @MessageMapping("/chat/leave")
-	public void leaveChatRoom( @RequestBody MessageDTO msg, SimpMessageHeaderAccessor headerAccessor) {
+	public void leaveChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         chatService.sendLeaveMessage(msg, headerAccessor);
     }
 
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<List<MessageDTO>> getRoomMessages(@PathVariable("roomId") String roomId,
+    public ResponseEntity<List<MessageDto>> getRoomMessages(@PathVariable("roomId") String roomId,
                 @RequestParam(name = "cursor") String cursor) {
                     log.info("cursor:", cursor);
         

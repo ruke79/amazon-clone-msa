@@ -23,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.chatserver.client.ShoppingServiceClient;
 import com.project.chatserver.common.util.KafkaUtil;
 import com.project.chatserver.common.util.TokenHandler;
-import com.project.chatserver.dto.ChatRoomDTO;
-import com.project.chatserver.dto.MessageDTO;
-import com.project.chatserver.dto.ServiceUserDTO;
+import com.project.chatserver.dto.ChatRoomDto;
+import com.project.chatserver.dto.MessageDto;
+import com.project.chatserver.dto.ServiceUserDto;
 
 import com.project.chatserver.dto.response.RoomMessagesResponse;
 import com.project.chatserver.message.producer.MessageProducer;
@@ -78,17 +78,17 @@ public class ChatService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDTO> getRoomMessages(String roomId) {
+    public List<MessageDto> getRoomMessages(String roomId) {
         List<ChatMessage> chatList = chatMessageRepository.findByRoomId(roomId).orElse(Collections.emptyList());
 
         return chatList.stream()
-			.map(MessageDTO::from)
-			.sorted(Comparator.comparing(MessageDTO::getCreatedAt))
+			.map(MessageDto::from)
+			.sorted(Comparator.comparing(MessageDto::getCreatedAt))
 			.collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDTO> getRoomMessagesByCurser(String roomId, String cursorId) {
+    public List<MessageDto> getRoomMessagesByCurser(String roomId, String cursorId) {
         //Slice<ChatMessage> chatList = chatMessageRepository.find
          PageRequest pageable = PageRequest.of(0, 20 + 1);
         Slice<ChatMessage> chatList;
@@ -102,19 +102,19 @@ public class ChatService {
         }
 
         return chatList.stream()
-			.map(MessageDTO::from)
+			.map(MessageDto::from)
 			//.sorted(Comparator.comparing(MessageDTO::getCreatedAt))
 			.collect(Collectors.toList());        
     }
 
-    public String saveMessage(MessageDTO message) {
+    public String saveMessage(MessageDto message) {
 
-        ChatMessage msg = chatMessageRepository.save(MessageDTO.toChatMessage(message));
+        ChatMessage msg = chatMessageRepository.save(MessageDto.toChatMessage(message));
         return msg.getContent();
     }
 
 
-    public void sendMessage(MessageDTO message) {
+    public void sendMessage(MessageDto message) {
 
         String email = message.getEmail();        
         
@@ -122,7 +122,7 @@ public class ChatService {
         if (null != member) {
 
             
-            message.setId(sequenceGenerator.generateSequence(MessageDTO.SEQUENCE_NAME));
+            message.setId(sequenceGenerator.generateSequence(MessageDto.SEQUENCE_NAME));
 
             log.info("Message Id  : " + message.getId() );
 
@@ -137,12 +137,12 @@ public class ChatService {
         return chatRoomRepository.findAllRoom();
     }
 
-    public ChatRoomDTO  createChatRoom(String roomName, String email) throws Exception {
+    public ChatRoomDto  createChatRoom(String roomName, String email) throws Exception {
 
         ChatRoom chatRoom = ChatRoom.create(roomName);
         saveChatRoom(chatRoom);
-        ChatRoomDTO chatRoomDto = chatRoomRepository.saveChatRoom(chatRoom);
-        saveParticipantRoom(chatRoomDto.getRoomId(), email);
+        ChatRoomDto ChatRoomDto = chatRoomRepository.saveChatRoom(chatRoom);
+        saveParticipantRoom(ChatRoomDto.getRoomId(), email);
 
         // ResponseEntity<?> response = shoppingServiceClient.findUserByEmail(email);
 
@@ -152,14 +152,14 @@ public class ChatService {
         // else 
         //     log.info("Error");
 
-        return ChatRoomDTO.builder()
-                .name(chatRoomDto.getName())
-                .roomId(chatRoomDto.getRoomId())                
+        return ChatRoomDto.builder()
+                .name(ChatRoomDto.getName())
+                .roomId(ChatRoomDto.getRoomId())                
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public void  sendEnterMessage(MessageDTO msg, SimpMessageHeaderAccessor headerAccessor) {
+    public void  sendEnterMessage(MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         try {
             Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("email", msg.getEmail());
@@ -176,7 +176,7 @@ public class ChatService {
     }
 
     @Transactional(readOnly = true)
-    public void  sendLeaveMessage(MessageDTO msg, SimpMessageHeaderAccessor headerAccessor) {
+    public void  sendLeaveMessage(MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         try {
             Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("email", msg.getEmail());

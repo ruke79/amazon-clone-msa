@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceUserDTO {
+public class ServiceUserDto {
 
     private String userId;
     private String username; // 실명

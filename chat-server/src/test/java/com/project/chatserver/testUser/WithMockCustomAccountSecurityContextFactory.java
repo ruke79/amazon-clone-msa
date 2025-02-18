@@ -1,6 +1,6 @@
 package com.project.chatserver.testUser;
 
-import com.project.chatserver.dto.ServiceUserDTO;
+import com.project.chatserver.dto.ServiceUserDto;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,7 @@ public class WithMockCustomAccountSecurityContextFactory implements WithSecurity
         attributes.put("email", customOAuth2Account.email());
 
 
-        final ServiceUserDTO principal = ServiceUserDTO.builder()
+        final ServiceUserDto principal = ServiceUserDto.builder()
                 .userId("1")
                 .nickname(customOAuth2Account.name())
                 .username(customOAuth2Account.username())

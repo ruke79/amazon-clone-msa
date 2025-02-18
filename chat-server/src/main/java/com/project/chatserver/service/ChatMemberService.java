@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.chatserver.common.util.TokenHandler;
 import com.project.chatserver.constants.MemberRole;
-import com.project.chatserver.dto.UserCreatedDTO;
+import com.project.chatserver.dto.UserCreatedDto;
 import com.project.chatserver.model.ChatMember;
 import com.project.chatserver.repository.ChatMemberRepository;
 
@@ -28,7 +28,7 @@ public class ChatMemberService {
     private final ChatMemberRepository chatMemberRepository;    
     private final TokenHandler tokenHandler;
 
-    public void registerChatMember(final UserCreatedDTO dto) {
+    public void registerChatMember(final UserCreatedDto dto) {
         chatMemberRepository.save(ChatMember.builder()
         .id(dto.getUserId())
         .nickname(dto.getNickname())

@@ -1,7 +1,7 @@
 package com.project.chatserver.common.config.kafka;
 
 import com.google.common.collect.ImmutableMap;
-import com.project.chatserver.dto.MessageDTO;
+import com.project.chatserver.dto.MessageDto;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -23,7 +23,7 @@ public class ProducerConfiguration {
     private String kafkaServerUrl;
     //Kafka ProduceFactory를 생성하는 Bean 메서드
     @Bean
-    public ProducerFactory<String, MessageDTO> producerFactory() {
+    public ProducerFactory<String, MessageDto> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
     // Kafka Producer 구성을 위한 설정값들을 포함한 맵을 반환하는 메서드
@@ -38,7 +38,7 @@ public class ProducerConfiguration {
 
     // KafkaTemplate을 생성하는 Bean 메서드
     @Bean
-    public KafkaTemplate<String, MessageDTO > kafkaTemplate() {
+    public KafkaTemplate<String, MessageDto > kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 

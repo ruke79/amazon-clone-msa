@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDTO implements Serializable {
+public class MessageDto implements Serializable {
 
     @Transient
     public static final String SEQUENCE_NAME = "message_sequence";
@@ -50,11 +50,11 @@ public class MessageDTO implements Serializable {
     
     private Long createdAt;
 
-    public static MessageDTO from(ChatMessage chat) {
+    public static MessageDto from(ChatMessage chat) {
 
         
 
-        return new MessageDTO(
+        return new MessageDto(
             chat.getId(),
 			chat.getType(),
 			chat.getRoomId(),
@@ -68,7 +68,7 @@ public class MessageDTO implements Serializable {
 
     }
 
-    public static ChatMessage toChatMessage(MessageDTO chat) {
+    public static ChatMessage toChatMessage(MessageDto chat) {
 
         return ChatMessage.get(
             chat.getType(),
