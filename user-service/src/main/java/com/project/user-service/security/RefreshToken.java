@@ -1,4 +1,4 @@
-package com.project.backend.security;
+package com.project.user-service.security;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import com.project.backend.model.User;
+import com.project.user-service.model.User;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

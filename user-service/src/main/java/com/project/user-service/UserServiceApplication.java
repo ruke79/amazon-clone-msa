@@ -1,4 +1,4 @@
-package com.project.backend;
+package com.project.user-service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -20,14 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 @ConfigurationPropertiesScan 
-public class ShoppingApplication {
+public class UserServiceApplication {
 
 	public static void main(String[] args) {
 
 		
 
 		
-		SpringApplication.run(ShoppingApplication.class, args);
+		SpringApplication.run(UserServiceApplication.class, args);
 
 
 

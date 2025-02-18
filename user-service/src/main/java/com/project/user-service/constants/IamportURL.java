@@ -1,4 +1,4 @@
-package com.project.backend.constants;
+package com.project.user-service.constants;
 
 public enum IamportURL {
     GET_TOKEN_URL("https://api.iamport.kr/users/getToken"),

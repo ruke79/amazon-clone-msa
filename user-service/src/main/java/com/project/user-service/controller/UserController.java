@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.util.List;
 
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.OrderDTO;
-import com.project.backend.dto.UserProfileDTO;
-import com.project.backend.model.User;
-import com.project.backend.security.request.PasswordRequest;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.service.OrderService;
-import com.project.backend.service.impl.UserServiceImpl;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.OrderDTO;
+import com.project.user-service.dto.UserProfileDTO;
+import com.project.user-service.model.User;
+import com.project.user-service.security.request.PasswordRequest;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.security.service.UserDetailsImpl;
+import com.project.user-service.service.OrderService;
+import com.project.user-service.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/user/profile")

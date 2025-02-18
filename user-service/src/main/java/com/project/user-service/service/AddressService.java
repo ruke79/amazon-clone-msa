@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.model.Address;
-import com.project.backend.model.ShippingAddress;
-import com.project.backend.model.User;
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.repository.ShippingAddressRepository;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.security.request.AddressRequest;
+import com.project.user-service.model.Address;
+import com.project.user-service.model.ShippingAddress;
+import com.project.user-service.model.User;
+import com.project.user-service.dto.AddressDTO;
+import com.project.user-service.repository.ShippingAddressRepository;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.security.request.AddressRequest;
 
 import lombok.extern.slf4j.Slf4j;
 

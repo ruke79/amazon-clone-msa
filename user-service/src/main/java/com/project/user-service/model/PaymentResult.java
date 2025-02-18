@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.user-service.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.project.backend.constants.PaymentResultStatus;
+import com.project.user-service.constants.PaymentResultStatus;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;

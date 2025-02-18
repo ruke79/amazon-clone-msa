@@ -1,4 +1,4 @@
-package com.project.backend.security;
+package com.project.user-service.security;
 
 import java.util.Optional;
 
@@ -13,9 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.project.backend.repository.UserRepository;
-import com.project.backend.security.service.UserDetailsServiceImpl;
-import com.project.backend.model.User;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.security.service.UserDetailsServiceImpl;
+import com.project.user-service.model.User;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {

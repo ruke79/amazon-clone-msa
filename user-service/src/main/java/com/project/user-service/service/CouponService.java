@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.lang.StackWalker.Option;
 import java.util.ArrayList;
@@ -7,10 +7,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.project.backend.dto.CouponDTO;
-import com.project.backend.model.Coupon;
-import com.project.backend.repository.CouponRepository;
-import com.project.backend.security.request.CouponRequest;
+import com.project.user-service.dto.CouponDTO;
+import com.project.user-service.model.Coupon;
+import com.project.user-service.repository.CouponRepository;
+import com.project.user-service.security.request.CouponRequest;
 
 import lombok.extern.slf4j.Slf4j;
 

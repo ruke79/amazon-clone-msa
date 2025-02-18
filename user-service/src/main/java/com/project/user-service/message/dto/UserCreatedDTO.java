@@ -1,4 +1,4 @@
-package com.project.backend.message.dto;
+package com.project.user-service.message.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

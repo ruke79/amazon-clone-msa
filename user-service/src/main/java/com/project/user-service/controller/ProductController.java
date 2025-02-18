@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.io.ObjectInputFilter.Status;
 import java.util.List;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.ProductDTO;
-import com.project.backend.dto.ProductInfoDTO;
-import com.project.backend.model.Product;
-import com.project.backend.repository.ProductRepository;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.service.ProductService;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.ProductDTO;
+import com.project.user-service.dto.ProductInfoDTO;
+import com.project.user-service.model.Product;
+import com.project.user-service.repository.ProductRepository;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

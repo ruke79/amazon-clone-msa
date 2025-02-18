@@ -1,4 +1,4 @@
-package com.project.backend.repository;
+package com.project.user-service.repository;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -12,8 +12,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.model.User;
-import com.project.backend.security.RefreshToken;
+import com.project.user-service.model.User;
+import com.project.user-service.security.RefreshToken;
 
 import jakarta.transaction.Transactional;
 

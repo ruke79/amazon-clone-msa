@@ -1,4 +1,4 @@
-package com.project.backend.handler;
+package com.project.user-service.handler;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -10,9 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.project.backend.constants.TokenType;
-import com.project.backend.dto.CustomOAuth2User;
-import com.project.backend.security.jwt.JwtUtils;
+import com.project.user-service.constants.TokenType;
+import com.project.user-service.dto.CustomOAuth2User;
+import com.project.user-service.security.jwt.JwtUtils;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

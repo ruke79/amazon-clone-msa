@@ -1,4 +1,4 @@
-package com.project.backend.constants;
+package com.project.user-service.constants;
 
 import java.util.Map;
 import java.util.HashMap;

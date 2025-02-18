@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.user-service.service;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -12,14 +12,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.constants.AppRole;
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.exceptionHandling.TokenRefreshException;
-import com.project.backend.model.User;
-import com.project.backend.repository.RefreshTokenRepository;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.security.RefreshToken;
-import com.project.backend.security.jwt.JwtUtils;
+import com.project.user-service.constants.AppRole;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.exceptionHandling.TokenRefreshException;
+import com.project.user-service.model.User;
+import com.project.user-service.repository.RefreshTokenRepository;
+import com.project.user-service.repository.UserRepository;
+import com.project.user-service.security.RefreshToken;
+import com.project.user-service.security.jwt.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.user-service.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,4 +1,4 @@
-package com.project.backend.repository;
+package com.project.user-service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,9 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.model.Address;
-import com.project.backend.model.ShippingAddress;
-import com.project.backend.model.User;
+import com.project.user-service.model.Address;
+import com.project.user-service.model.ShippingAddress;
+import com.project.user-service.model.User;
 
 import java.util.List;
 import java.util.Optional;
