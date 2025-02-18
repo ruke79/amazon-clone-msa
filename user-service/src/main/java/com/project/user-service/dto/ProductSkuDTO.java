@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 import java.util.List;
 import java.util.Set;
@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.project.backend.dto.SizeAttributeDTO;
-import com.project.backend.dto.ColorAttributeDTO;
+import com.project.user-service.dto.SizeAttributeDTO;
+import com.project.user-service.dto.ColorAttributeDTO;
 
 @Data
 @Builder

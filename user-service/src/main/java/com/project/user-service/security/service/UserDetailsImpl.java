@@ -1,4 +1,4 @@
-package com.project.backend.security.service;
+package com.project.user-service.security.service;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.backend.model.User;
+import com.project.user-service.model.User;
 
 @NoArgsConstructor
 @Data

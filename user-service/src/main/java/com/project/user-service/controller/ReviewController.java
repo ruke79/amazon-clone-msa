@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.util.List;
 
@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.ReviewDTO;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.ReviewDTO;
 
-import com.project.backend.security.request.ReviewRequest;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.service.ReviewService;
+import com.project.user-service.security.request.ReviewRequest;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.service.ReviewService;
 
 @RestController
 @RequestMapping("api/product/")

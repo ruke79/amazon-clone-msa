@@ -1,4 +1,4 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 import lombok.Getter;
 import lombok.Setter;

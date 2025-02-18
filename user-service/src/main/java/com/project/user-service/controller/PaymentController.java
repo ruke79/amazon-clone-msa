@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.io.IOException;
 
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.dto.PaymentResultDTO;
+import com.project.user-service.dto.PaymentResultDTO;
 
-import com.project.backend.security.request.PayRequest;
-import com.project.backend.service.OrderService;
-import com.project.backend.service.PaymentService;
-//import com.project.backend.service.RefundService;
+import com.project.user-service.security.request.PayRequest;
+import com.project.user-service.service.OrderService;
+import com.project.user-service.service.PaymentService;
+//import com.project.user-service.service.RefundService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

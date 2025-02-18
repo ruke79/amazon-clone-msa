@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.io.IOException;
 import java.net.URI;
@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.constants.TokenType;
-import com.project.backend.exceptionHandling.TokenRefreshException;
-import com.project.backend.model.User;
-import com.project.backend.security.RefreshToken;
-import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.service.RefreshTokenService;
-import com.project.backend.service.impl.UserServiceImpl;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.constants.TokenType;
+import com.project.user-service.exceptionHandling.TokenRefreshException;
+import com.project.user-service.model.User;
+import com.project.user-service.security.RefreshToken;
+import com.project.user-service.security.jwt.JwtUtils;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.service.RefreshTokenService;
+import com.project.user-service.service.impl.UserServiceImpl;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;

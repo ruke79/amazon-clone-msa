@@ -1,4 +1,4 @@
-package com.project.backend.security;
+package com.project.user-service.security;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.project.backend.constants.TokenType;
-import com.project.backend.model.User;
-import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.service.RefreshTokenService;
-import com.project.backend.service.UserService;
+import com.project.user-service.constants.TokenType;
+import com.project.user-service.model.User;
+import com.project.user-service.security.jwt.JwtUtils;
+import com.project.user-service.service.RefreshTokenService;
+import com.project.user-service.service.UserService;
 
 import ch.qos.logback.core.subst.Token;
 import io.jsonwebtoken.ExpiredJwtException;

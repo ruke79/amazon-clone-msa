@@ -1,7 +1,7 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 
-import com.project.backend.constants.AlarmEnum;
+import com.project.user-service.constants.AlarmEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

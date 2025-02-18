@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.project.backend.model.Role;
+import com.project.user-service.model.Role;
 
 @Builder
 @Data

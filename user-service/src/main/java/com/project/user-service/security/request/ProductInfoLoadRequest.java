@@ -1,14 +1,14 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 
 import java.util.List;
 
-import com.project.backend.dto.CategoryDTO;
-import com.project.backend.dto.SubCategoryDTO;
-import com.project.backend.model.ProductColorAttribute;
-import com.project.backend.model.ProductDetails;
-import com.project.backend.model.ProductQA;
-import com.project.backend.model.ProductSizeAttribute;
+import com.project.user-service.dto.CategoryDTO;
+import com.project.user-service.dto.SubCategoryDTO;
+import com.project.user-service.model.ProductColorAttribute;
+import com.project.user-service.model.ProductDetails;
+import com.project.user-service.model.ProductQA;
+import com.project.user-service.model.ProductSizeAttribute;
 
 import lombok.Getter;
 import lombok.Setter;

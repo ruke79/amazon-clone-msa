@@ -1,8 +1,8 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 import java.util.List;
 
-import com.project.backend.dto.ReviewStyleDTO;
+import com.project.user-service.dto.ReviewStyleDTO;
 
 import lombok.Getter;
 import lombok.Setter;

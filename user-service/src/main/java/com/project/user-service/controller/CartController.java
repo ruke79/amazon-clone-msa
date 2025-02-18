@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.util.List;
 
@@ -19,24 +19,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.CartDTO;
-import com.project.backend.dto.ProductInfoDTO;
-import com.project.backend.model.Cart;
-import com.project.backend.model.ShippingAddress;
+import com.project.user-service.constants.StatusMessages;
+import com.project.user-service.dto.AddressDTO;
+import com.project.user-service.dto.CartDTO;
+import com.project.user-service.dto.ProductInfoDTO;
+import com.project.user-service.model.Cart;
+import com.project.user-service.model.ShippingAddress;
 
-import com.project.backend.security.request.AddressRequest;
-import com.project.backend.security.request.CartRequest;
-import com.project.backend.security.request.CouponRequest;
-import com.project.backend.security.request.ProductInfoRequest;
-import com.project.backend.security.response.CartResponse;
-import com.project.backend.security.response.CouponResponse;
-import com.project.backend.security.response.GenericResponse;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.service.AddressService;
-import com.project.backend.service.CartService;
+import com.project.user-service.security.request.AddressRequest;
+import com.project.user-service.security.request.CartRequest;
+import com.project.user-service.security.request.CouponRequest;
+import com.project.user-service.security.request.ProductInfoRequest;
+import com.project.user-service.security.response.CartResponse;
+import com.project.user-service.security.response.CouponResponse;
+import com.project.user-service.security.response.GenericResponse;
+import com.project.user-service.security.response.MessageResponse;
+import com.project.user-service.security.service.UserDetailsImpl;
+import com.project.user-service.service.AddressService;
+import com.project.user-service.service.CartService;
 
 @RestController
 @RequestMapping("api/user/cart/")

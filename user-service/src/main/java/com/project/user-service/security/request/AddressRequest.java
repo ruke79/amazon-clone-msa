@@ -1,7 +1,7 @@
-package com.project.backend.security.request;
+package com.project.user-service.security.request;
 
 
-import com.project.backend.dto.AddressDTO;
+import com.project.user-service.dto.AddressDTO;
 
 import lombok.Getter;
 import lombok.Setter;

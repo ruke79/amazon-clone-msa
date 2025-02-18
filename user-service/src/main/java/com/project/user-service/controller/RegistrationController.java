@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.user-service.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -25,16 +25,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.project.backend.model.User;
-import com.project.backend.repository.RoleRepository;
-import com.project.backend.repository.UserRepository;
+import com.project.user-service.model.User;
+import com.project.user-service.repository.RoleRepository;
+import com.project.user-service.repository.UserRepository;
 
 
-import com.project.backend.security.jwt.JwtUtils;
-import com.project.backend.security.response.LoginResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.security.service.UserDetailsServiceImpl;
-import com.project.backend.service.UserService;
+import com.project.user-service.security.jwt.JwtUtils;
+import com.project.user-service.security.response.LoginResponse;
+import com.project.user-service.security.service.UserDetailsImpl;
+import com.project.user-service.security.service.UserDetailsServiceImpl;
+import com.project.user-service.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

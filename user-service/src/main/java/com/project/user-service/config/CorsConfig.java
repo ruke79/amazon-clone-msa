@@ -1,9 +1,9 @@
-package com.project.backend.config;
+package com.project.user-service.config;
 
 import org.springframework.http.HttpHeaders;
 import java.util.List;
 
-import com.project.backend.constants.TokenType;
+import com.project.user-service.constants.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

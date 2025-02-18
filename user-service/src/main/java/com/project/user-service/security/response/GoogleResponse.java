@@ -1,4 +1,4 @@
-package com.project.backend.security.response;
+package com.project.user-service.security.response;
 
 import java.util.Map;
 

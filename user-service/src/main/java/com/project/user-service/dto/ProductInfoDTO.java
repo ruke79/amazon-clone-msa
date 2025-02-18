@@ -1,9 +1,9 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 import java.util.List;
 
-import com.project.backend.model.ProductQA;
-import com.project.backend.model.Review;
+import com.project.user-service.model.ProductQA;
+import com.project.user-service.model.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

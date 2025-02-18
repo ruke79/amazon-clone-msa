@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.user-service.dto;
 
 
 import java.io.Serializable;
@@ -7,12 +7,12 @@ import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 
-import com.project.backend.model.ProductCategory;
-import com.project.backend.model.ProductSku;
-import com.project.backend.model.ProductQA;
-import com.project.backend.model.Review;
-import com.project.backend.model.ProductDetails;
-import com.project.backend.model.SubCategory;
+import com.project.user-service.model.ProductCategory;
+import com.project.user-service.model.ProductSku;
+import com.project.user-service.model.ProductQA;
+import com.project.user-service.model.Review;
+import com.project.user-service.model.ProductDetails;
+import com.project.user-service.model.SubCategory;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;

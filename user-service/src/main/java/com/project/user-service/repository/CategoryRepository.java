@@ -1,12 +1,12 @@
-package com.project.backend.repository;
+package com.project.user-service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.project.backend.model.ProductCategory;
-import com.project.backend.model.SubCategory;
+import com.project.user-service.model.ProductCategory;
+import com.project.user-service.model.SubCategory;
 
 
 import java.util.List;

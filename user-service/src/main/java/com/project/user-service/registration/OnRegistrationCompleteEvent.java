@@ -1,8 +1,8 @@
-package com.project.backend.registration;
+package com.project.user-service.registration;
 
 import java.util.Locale;
 
-import com.project.backend.model.User;
+import com.project.user-service.model.User;
 import org.springframework.context.ApplicationEvent;
 
 @SuppressWarnings("serial")

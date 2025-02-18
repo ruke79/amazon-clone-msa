@@ -1,13 +1,13 @@
-package com.project.backend.registration;
+package com.project.user-service.registration;
 
 import java.util.UUID;
 
-import com.project.backend.service.UserService;
+import com.project.user-service.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.project.backend.model.User;
-import com.project.backend.registration.OnRegistrationCompleteEvent;
+import com.project.user-service.model.User;
+import com.project.user-service.registration.OnRegistrationCompleteEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
