@@ -1,9 +1,0 @@
-{
-    "java.configuration.updateBuildConfiguration": "disabled",
-    "java.compile.nullAnalysis.mode": "disabled",
-    "java.project.sourcePaths": [
-        "frontend/src/redux"
-    ],
-    "java.debug.settings.onBuildFailureProceed": true,
-    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4096m -Xms2048m -Xlog:disable"
-}
