@@ -27,11 +27,11 @@ export const queryClient = new QueryClient(
 
 
 
-console.log("API URL:", process.env.REACT_APP_API_URL);
+//console.log("API URL:", process.env.REACT_APP_API_URL);
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/shopping-service/api`,
+  baseURL: `${process.env.REACT_APP_API_URL}`,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -93,7 +93,7 @@ api.interceptors.response.use(
 
 
 
-              const rs = await getRequest("/token/refresh");
+              const rs = await getRequest("user-service/api/token/refresh");
 
               if (rs.status == 200) {
                 console.log(rs);
@@ -229,7 +229,7 @@ const axiosRetry = (url, retries, delay) => {
 export const saveCart = async (cart) => {
   try {
 
-    const { data } = await putRequest("/user/cart/savecart", {
+    const { data } = await putRequest("/cart-service/api/cart/savecart", {
       products: cart
     });
     return data;
@@ -242,7 +242,7 @@ export const saveShippingAddress = async (address) => {
 
   try {
 
-    const { data } = await postRequest("/user/cart/save_shipping_address", {
+    const { data } = await postRequest("/user-service/api/user/save_shipping_address", {
       address: address
     });
     return data;
@@ -255,7 +255,7 @@ export const selectShippingAddress = async (addressId) => {
 
   try {
 
-    const { data } = await getRequest(`/user/cart/selectaddress/${addressId}`
+    const { data } = await getRequest(`/user-service/api/user/selectaddress/${addressId}`
 
     );
     return data;
@@ -268,7 +268,7 @@ export const deleteAddress = async (addressId) => {
 
   try {
 
-    const { data } = await deleteRequest(`/user/cart/deleteaddress/${addressId}`
+    const { data } = await deleteRequest(`/user-service/api/user/deleteaddress/${addressId}`
 
     );
     return data;
@@ -283,7 +283,7 @@ export const applyCoupon = async (coupon) => {
 
   try {
 
-    const { data } = await postRequest("/user/cart/coupon", {
+    const { data } = await postRequest("/coupon-service/api/coupon", {
       coupon: coupon
     });
     return data;
@@ -291,6 +291,29 @@ export const applyCoupon = async (coupon) => {
     console.log("erorr >>>", error.response.data.message);
   }
 }
+
+export const createChatRoom = ({ roomName }) => {
+  const url = `/chat-service/api/chat/room`;
+  return api.post(url, { roomName : roomName }).then((res) => {
+    return res.data;
+  });
+};
+
+export const  getChatRoomList = () => {
+  const url = `/chat-service/api/chat/rooms`;
+  return api.get(url).then((res) => {            
+    return res.data;
+  }).catch((error)=> { console.log(error.response.data)});
+};
+
+export const getRoomMessages = (room, cursor) => {
+  const url = `/chat-service/api/chat/room/${room?.roomId}`;
+  console.log(cursor);
+  return api.get(url,  { params : {cursor : cursor} }).then((res) => {
+    return res.data;
+  });
+};
+
 
 export default api;
 

@@ -83,7 +83,7 @@ export const loader = (authContext) => {
         
         try {
 
-            const { data } = await getRequest("/user/cart/checkout");
+            const { data } = await getRequest("/cart-service/api/cart/checkout");
 
 
             return data;

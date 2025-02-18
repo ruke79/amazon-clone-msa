@@ -508,7 +508,7 @@ export async function loader({ request, params }) {
     
     try {
 
-        let  response = await getRequest("/search",
+        let  response = await getRequest("catalog-service/api/search",
             {
                 params: {
                     search, category, brand, style,

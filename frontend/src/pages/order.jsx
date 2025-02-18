@@ -56,7 +56,7 @@ export const loader = (authContext) => {
         const orderId = params.id;
      
         try {
-            const { data } = await getRequest(`/user/order/${orderId}`);                       
+            const { data } = await getRequest(`/order-service/api/order/${orderId}`);                       
 
                 
             return data;    

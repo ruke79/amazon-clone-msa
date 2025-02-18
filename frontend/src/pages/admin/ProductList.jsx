@@ -20,7 +20,7 @@ export default Products;
 export async function loader(AuthContext) {
 
     try {
-        const response = await getRequest("/admin/product/products");
+        const response = await getRequest("/catalog-service/api/product/products");
 
         return response;
     } catch (err) {        

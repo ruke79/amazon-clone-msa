@@ -32,7 +32,7 @@ export const loader = (authContext) => {
              
         
         try {
-            const { data } = await getRequest(`/auth/user`);
+            const { data } = await getRequest(`/user-service/api/auth/user`);
                
             return {
                    user : data,

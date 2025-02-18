@@ -16,7 +16,7 @@ const Payment = () => {
 
     const handlePM = async () => {
         try {
-            const { data } = await putRequest("/user/cart/changepm", null, {
+            const { data } = await putRequest("/pay-service/api/pay/changepm", null, {
                 params : { paymentMethod: paymentMethod }
             });
             setErorr("");
@@ -75,7 +75,7 @@ export const loader = (authContext) => {
         
         try {
 
-            const { data } = await getRequest("/user/profile/payment"); 
+            const { data } = await getRequest("/pay-service/api/pay/payment"); 
                         
         
             return {
