@@ -515,3 +515,4 @@ backend/src/main/resources/application.yml
 .idea/misc.xml
 .idea/vcs.xml
 chat-server/build/reports/problems/problems-report.html
+/.idea/
