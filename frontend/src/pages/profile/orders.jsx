@@ -103,7 +103,7 @@ export const loader = (authContext) => {
 
         try {
 
-         const { data } = await getRequest("/user/profile/orders", 
+         const { data } = await getRequest("/order-service/api/order/orders", 
                       { params : { filter : filter }                                  
                        } 
             );                             

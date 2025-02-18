@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 export const loadCategories = async(setCategories) => {
     try {
-        const response = await getRequest("/admin/categories");
+        const response = await getRequest("/catalog-service/api/product/categories");
       
             
       setCategories(response.data);            
@@ -23,7 +23,7 @@ export const loadCategories = async(setCategories) => {
 
 export const loadSubCategories = async(setSubCategories) => {
     try {
-        const response = await getRequest("/admin/product/allsubcategories");      
+        const response = await getRequest("/catalog-service/api/product/subcategories");      
       
       
       setSubCategories(response.data);            
@@ -86,7 +86,7 @@ const CreateCategory = () => {
             const reqData = {
                name, slug
             };            
-            const { response } = await postRequest("/admin/category", reqData);
+            const { response } = await postRequest("/catalog-service/api/product/category", reqData);
 
             //  let categoryNames = [] ;     
 
@@ -117,7 +117,7 @@ const CreateCategory = () => {
         try {
             
             const slug = slugify(subcategoryName);
-            const { response } = await postRequest("/admin/subcategory", {
+            const { response } = await postRequest("/catalog-service/api/product/subcategory", {
                 subcategoryName,
                 parent,
                 slug

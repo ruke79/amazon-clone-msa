@@ -161,7 +161,7 @@ export const loader = (authContext) => {
         const tab = Number(searchParams.get('tab')) || 0;
 
         try {
-            const { data } = await getRequest(`/auth/user`);
+            const { data } = await getRequest(`/user-service/api/auth/user`);
                   
             return {                  
                 user : data,  

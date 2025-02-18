@@ -8,7 +8,6 @@ import {
 import { Link, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateCart } from "../../redux/CartSlice";
-import { deleteRequest, getRequest } from "util/api";
 
 
 const Product = ({ product, selected, setSelected, setLoadedData, cart }) => {

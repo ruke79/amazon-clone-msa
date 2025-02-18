@@ -12,7 +12,7 @@ import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchCart = async (cart) => {    
-     const { data} = await putRequest(`/user/cart/updatecart`,
+     const { data} = await putRequest(`/cart-service/api/cart/updatecart`,
      {products: cart.cartItems});    
     return data;
 }

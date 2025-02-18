@@ -43,7 +43,7 @@ async function loaderProduct(slug, style, size) {
    
     try {
 
-    const  response = await getRequest(`/product/${slug}`);
+    const  response = await getRequest(`/catalog-service/api/product/${slug}`);
 
                 
         const product = response.data;

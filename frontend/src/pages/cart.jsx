@@ -49,7 +49,7 @@ export const loader = (authContext) => {
 
         try {
 
-            const { data } = await getRequest("/user/cart/loadcart");
+            const { data } = await getRequest("/cart-service/api/cart/loadcart");
 
             return data;
         }

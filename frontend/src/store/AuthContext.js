@@ -33,7 +33,7 @@ export const ContextProvider = ({ children }) => {
     if (user.email) {
 
       try {
-        const { data } = await getRequest(`/auth/user`);
+        const { data } = await getRequest(`/user-service/api/auth/user`);
 
         const roles = data.roles;
 

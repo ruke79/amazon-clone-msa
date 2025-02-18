@@ -42,7 +42,7 @@ export default HomePage;
 export async function loader() {
     
     try {
-        const response  = await getRequest("/admin/product/products");
+        const response  = await getRequest("/catalog-service/api/product/products");
         
 
         return response

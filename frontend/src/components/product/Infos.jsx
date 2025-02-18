@@ -20,8 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 
 
 const saveCart = async({productId, style, size}) => {
-    const { data }  = await getRequest(
-        `/product/cart/${productId}?style=${style}&size=${size}`
+    const { data }  = await getRequest(`/cart-service/api/cart/${productId}?style=${style}&size=${size}`
     );      
     return data;
 }

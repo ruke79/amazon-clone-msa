@@ -41,7 +41,7 @@ export const loader = (authContext) => {
         
         try {
 
-            const { data } = await getRequest("/user/profile/address"); 
+            const { data } = await getRequest("/user-service/api/user/profile/address"); 
                                                  
             
         
