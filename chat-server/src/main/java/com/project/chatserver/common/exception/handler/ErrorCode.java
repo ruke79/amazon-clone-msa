@@ -25,7 +25,7 @@ public enum ErrorCode {
         throw new CustomException(NOTIFICATION_NOT_FOUND);
     }
 
-    public static CustomException throwMemberNotFound() {
+    public static CustomException throwUserrNotFound() {
         throw new CustomException(USER_NOT_FOUND);
     }
     public static CustomException unauthorizedTokenException() {

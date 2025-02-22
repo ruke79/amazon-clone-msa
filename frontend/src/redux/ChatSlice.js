@@ -2,34 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import React, { useReducer, useContext, createContext, Dispatch } from "react";
 import dayjs from 'dayjs'
 
-import {
-    SEND_NEW_CHAT_MESSAGE,
-    SEND_NEW_MEDIA_MESSAGE,
-    SET_CHAT_USERS,
-    SET_CONTACT_USERS,
-    SET_ROOMS_USER,
-    SET_SELECTED_USER_ROOM,
-    SET_CONVERSATION_DATA,
-    SET_ROOM_CONVERSATION_DATA,
-    RECEIVE_NEW_ROOM_MEDIA_MESSAGE,
-    RECEIVE_NEW_MEDIA_MESSAGE,
-    SEND_NEW_MEDIA_MESSAGE_ROOM,
-    SEND_NEW_CHAT_MESSAGE_ROOM,
-    RECEIVE_NEW_CHAT_MESSAGE_ROOM,
-    RECEIVE_NEW_CHAT_MESSAGE,
-    SET_CURRENT_USER,
+import {    
+    SET_CHAT_USERS,    
+    SET_SELECTED_USER_ROOM,    
     SET_SEARCH_DATA,
-    SET_SELECTED_USER,
-    UPDATE_AUTH_USER,
-    ADD_ROOM_TO_LIST,
-    UPDATE_LOAD_USER,
-    LEAVE_ROOM,
-    BAN_USER_FROM_ROOM,
-    DELETE_CONTACT,
-    FETCH_ERROR,
-    FETCH_START,
-    FETCH_SUCCESS,
-    UPDATE_THEME,
+    SET_SELECTED_USER,    
+    ADD_ROOM_TO_LIST,   
     ADD_CHAT_MESSAGE
 
 } from "../constants/ChatActionType";

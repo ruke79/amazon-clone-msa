@@ -1,9 +1,8 @@
-package com.project.backend.dto;
+package com.project.cart_service.dto;
 
 import java.util.List;
 
-import com.project.backend.model.ProductQA;
-import com.project.backend.model.Review;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,7 +53,7 @@ public class ProductInfoDto {
         
     private List<ProductQADto> questions;
 
-    //private List<ReviewDTO> reviews;
+    //private List<ReviewDto> reviews;
     
     private int discount;     
     

@@ -7,13 +7,13 @@ import { getRequest } from "util/api";
 import { useFetcher, useLoaderData } from "react-router-dom";
 import { addToCart, updateCart } from "../redux/CartSlice";
 import { useEffect, useState } from "react";
+import tokenUtil from "util/tokenUtil";
 
 const Cart = () => {
     let cart = useSelector((state) => { return state.cart; });
     const dispatch = useDispatch();
 
     const data = useLoaderData();
-
     
     useEffect(() => {
 
@@ -42,20 +42,20 @@ const Cart = () => {
 
 export default Cart;
 
-export const loader = (authContext) => {
-
-    return async ({ params, request }) => {
-
-
+export const loader = async () => {
+           
+            
         try {
 
-            const { data } = await getRequest("/cart-service/api/cart/loadcart");
+            const { data } = await getRequest("/cart-service/api/cart/loadcart", 
+                 { params : { userId : tokenUtil.getUser().email } }
+            );
 
             return data;
         }
         catch (err) {
             console.log(err);
         }
-    };
+    
 }
 

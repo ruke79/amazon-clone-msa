@@ -16,16 +16,17 @@ import { showDialog } from "../../redux/DialogSlice";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { useAuthContext } from "../../store/AuthContext";
 import { useSearchParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 
-const saveCart = async({productId, style, size}) => {
-    const { data }  = await getRequest(`/cart-service/api/cart/${productId}?style=${style}&size=${size}`
-    );      
+const getCartData = async({productId, style, size}) => {
+    const { data }  = await getRequest(`/catalog-service/api/cart/${productId}?style=${style}&size=${size}`);    
     return data;
 }
 
-const Infos = ({ product, setActiveImg }) => {
+
+
+const Infos = ({ product, num_reviews, setActiveImg }) => {
     const { token } = useAuthContext();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -42,12 +43,11 @@ const Infos = ({ product, setActiveImg }) => {
     const [size, setSize] = useState(sizeParam);
     const [qty, setQty] = useState(1);
     const [error, setError] = useState("");
-    
 
-    const { mutate : saveCartOp } = useMutation({
-        mutationFn : saveCart, 
+    const { mutate : saveCartOp } = useMutation({    
+        mutationFn : getCartData, 
         onSuccess: (data) => {
-
+    
             if (qty > data.quantity) {
                 setError(
                     "the Quantity you have choosed is more than in stock. Try lower the Qty"
@@ -76,7 +76,7 @@ const Infos = ({ product, setActiveImg }) => {
                 } else {       
                     
                     dispatch(addToCart({ ...data, qty, size: data.size, _uid }));
-
+    
                     setError("");
                     setLoading(false);
                 }
@@ -86,7 +86,6 @@ const Infos = ({ product, setActiveImg }) => {
         
     });
 
-        
     
     useEffect(() => {
         setSize("");
@@ -161,8 +160,10 @@ const Infos = ({ product, setActiveImg }) => {
                     style={{ color: "#FACF19" }}
                 />
                 <span className="text-slate-500">
-                    ({product.num_reviews}{" "}
-                    {product.num_reviews >= 1 ? "reviews" : "review"})
+                    {/* ({product.num_reviews}{" "}
+                    {product.num_reviews >= 1 ? "reviews" : "review"}) */}
+                    ({num_reviews}{" "}
+                        {num_reviews >= 1 ? "reviews" : "review"})
                 </span>
             </div>
             <div className="flex w-full bg-slate-200 h-[1px]" />

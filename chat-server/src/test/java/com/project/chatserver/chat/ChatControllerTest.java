@@ -1,6 +1,6 @@
 package com.project.chatserver.chat;
 
-import com.project.chatserver.client.ShoppingServiceClient;
+import com.project.chatserver.client.UserServiceClient;
 import com.project.chatserver.constants.MessageType;
 import com.project.chatserver.controller.ChatController;
 import com.project.chatserver.dto.MessageDto;
@@ -49,7 +49,7 @@ public class ChatControllerTest extends MvcTestBasic {
     ChatService chatService;
 
     @MockBean
-    ShoppingServiceClient shoppingServiceClient;
+    UserServiceClient shoppingServiceClient;
     
 
     @Test
@@ -75,19 +75,19 @@ public class ChatControllerTest extends MvcTestBasic {
 
         
         String roomId = "sdfdsfdfdfdfdf";
-        // MessageDTO chat1 = new MessageDTO(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요", "", 0, 
+        // MessageDto chat1 = new MessageDto(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요", "", 0, 
         // LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
         // );
         
-        // MessageDTO chat2 = new MessageDTO(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요2", "", 0, 
+        // MessageDto chat2 = new MessageDto(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요2", "", 0, 
         // LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
         // );
 
-        // MessageDTO chat3 = new MessageDTO(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요3", "", 0, 
+        // MessageDto chat3 = new MessageDto(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요3", "", 0, 
         // LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
         // );
 
-        // MessageDTO chat4 = new MessageDTO(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요4", "", 0, 
+        // MessageDto chat4 = new MessageDto(MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요4", "", 0, 
         // LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
         // );
 
@@ -97,7 +97,7 @@ public class ChatControllerTest extends MvcTestBasic {
         // given(chatService.saveMessage(chat4)).willReturn("안녕하세요4");        
 
         
-        // List<MessageDTO> chatList = List.of(chat1, chat2, chat3, chat4);
+        // List<MessageDto> chatList = List.of(chat1, chat2, chat3, chat4);
 
         // given(chatService.getRoomMessagesByCurser(any(), any())).willReturn(chatList);
 

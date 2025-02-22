@@ -2,9 +2,9 @@ import axios from "axios";
 import slugify from "slugify";
 import { prominent } from "color.js";
 import { faker } from "@faker-js/faker";
-import { uploadImages } from "./uploadImages";
+import { convertURLtoFile, fetchImageFromURL, uploadImages } from "./imageUtil";
 import dataURItoBlob from "./dataURItoBlob";
-import { postRequest } from "./api";
+import api, { postRequest } from "./api";
 
 
 
@@ -54,13 +54,12 @@ let product = {
     ],
     shippingFee: "",
 
+    createdAt: " "
+
 };
 
-let uploaded_images = [];
 
 let products = [];
-
-
 
 
 const fetchColor = async (image) => {
@@ -80,6 +79,8 @@ function getRandom(min, max) {
 const loadFakeData = async () => {
 
     if (products.length == 0) {
+
+        let formData = new FormData();
 
         await axios.get('https://fakestoreapi.com/products')
             .then(function (response) {
@@ -169,55 +170,6 @@ const loadFakeData = async () => {
                             }
                         };
 
-                        // let imageUploader;
-
-
-                        //     if (p.image) {
-                        //         let images = [p.image];
-
-                        //         // let files = images.map((img) => {
-                        //         //     return dataURItoBlob(img);
-                        //         // });
-
-                        //         console.log(images);
-                        //         const path = "product images";
-
-                        //         imageUploader = images.map(async (file) => {
-                        //             let formData = new FormData();
-                        //             formData.append("folder", path);
-                        //             formData.append("file", file);
-                        //             formData.append("upload_preset","");
-                        //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);                
-
-                        //             const image = await uploadImages(formData, config);
-                        //             uploaded_images.push(image.url);            
-                        //         });
-                        //     }
-
-
-                        //         let temp = p.image;        
-                        //         const colorLoader = async(temp) => {
-
-                        //             console.log(temp);
-
-                        //             let path = "product style images";
-                        //             let formData = new FormData();
-                        //             formData.append("folder", path);
-                        //             formData.append("file", temp);
-                        //             formData.append("upload_preset", "");
-                        //             formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
-                        //             let cloudinary_style_img = await uploadImages(formData, config);
-                        //             const style_img = cloudinary_style_img.url;
-                        //             //console.log("uploaded style image: ", style_img);
-                        //         };
-
-                        //         colorLoader(temp);
-                        //         axios.all(imageUploader, colorLoader).then(async () => {
-
-
-                        //         }
-                        //     );
-
                         product.color.colorImage = p.image;
 
                         products.push(structuredClone(product));
@@ -229,39 +181,96 @@ const loadFakeData = async () => {
 
             });
 
-        Promise.all([fetchColor(products[0].color.colorImage),
-        fetchColor(products[1].color.colorImage),
-        fetchColor(products[2].color.colorImage),
-        fetchColor(products[3].color.colorImage),
-        fetchColor(products[4].color.colorImage),
-        fetchColor(products[5].color.colorImage),
-        fetchColor(products[6].color.colorImage),
-        fetchColor(products[7].color.colorImage),
-        fetchColor(products[8].color.colorImage),
-        fetchColor(products[9].color.colorImage),
-        fetchColor(products[10].color.colorImage),
-        fetchColor(products[11].color.colorImage),
-        fetchColor(products[12].color.colorImage),
-        fetchColor(products[13].color.colorImage),
-        fetchColor(products[14].color.colorImage),
-        fetchColor(products[15].color.colorImage),
-        fetchColor(products[16].color.colorImage),
-        fetchColor(products[17].color.colorImage),
-        fetchColor(products[18].color.colorImage),
-        fetchColor(products[19].color.colorImage),
-        ])
+
+        const fectchImageArray = [fetchImageFromURL(products[0].color.colorImage),
+        fetchImageFromURL(products[1].color.colorImage),
+        fetchImageFromURL(products[2].color.colorImage),
+        fetchImageFromURL(products[3].color.colorImage),
+        fetchImageFromURL(products[4].color.colorImage),
+        fetchImageFromURL(products[5].color.colorImage),
+        fetchImageFromURL(products[6].color.colorImage),
+        fetchImageFromURL(products[7].color.colorImage),
+        fetchImageFromURL(products[8].color.colorImage),
+        fetchImageFromURL(products[9].color.colorImage),
+        fetchImageFromURL(products[10].color.colorImage),
+        fetchImageFromURL(products[11].color.colorImage),
+        fetchImageFromURL(products[12].color.colorImage),
+        fetchImageFromURL(products[13].color.colorImage),
+        fetchImageFromURL(products[14].color.colorImage),
+        fetchImageFromURL(products[15].color.colorImage),
+        fetchImageFromURL(products[16].color.colorImage),
+        fetchImageFromURL(products[17].color.colorImage),
+        fetchImageFromURL(products[18].color.colorImage),
+        fetchImageFromURL(products[19].color.colorImage),
+        ]
+
+        Promise.all(fectchImageArray)
             .then((results) => {
                 console.log(results);
                 for (let i = 0; i < results.length; i++) {
-                    products[i].color.color = results[i];
+                    formData.append("image", results[i]);
+                    formData.append("colorImage", results[i]);
                 }
-                try {
-                    const { response } = postRequest('admin/products', { products });
-                }
-                catch (err) {
 
-                }
+
+                const fectchColorArray =  [fetchColor(products[0].color.colorImage),
+                fetchColor(products[1].color.colorImage),
+                fetchColor(products[2].color.colorImage),
+                fetchColor(products[3].color.colorImage),
+                fetchColor(products[4].color.colorImage),
+                fetchColor(products[5].color.colorImage),
+                fetchColor(products[6].color.colorImage),
+                fetchColor(products[7].color.colorImage),
+                fetchColor(products[8].color.colorImage),
+                fetchColor(products[9].color.colorImage),
+                fetchColor(products[10].color.colorImage),
+                fetchColor(products[11].color.colorImage),
+                fetchColor(products[12].color.colorImage),
+                fetchColor(products[13].color.colorImage),
+                fetchColor(products[14].color.colorImage),
+                fetchColor(products[15].color.colorImage),
+                fetchColor(products[16].color.colorImage),
+                fetchColor(products[17].color.colorImage),
+                fetchColor(products[18].color.colorImage),
+                fetchColor(products[19].color.colorImage),
+                ]
+        
+                Promise.all(fectchColorArray)
+                    .then((results) => {
+                        console.log(results);
+                        for (let i = 0; i < results.length; i++) {                    
+                            products[i].color.color = results[i];                    
+                        }
+                        try {
+                            //const { response } = postRequest('catalog-service/api/products', { products });
+                                                
+                            formData.append("products", new Blob([JSON.stringify(products)], {
+                                type: 'application/json'
+                            }));
+                            
+                            const { response } = postRequest('catalog-service/api/products', formData,  
+                                {
+                                    headers: {
+                                        "Content-Type": "multipart/form-data",
+            
+                                    },
+                                    transformRequest: [
+                                        function () {
+                                            return formData;
+                                        },
+                                    ],
+                                }
+                            );
+                        }
+                        catch (err) {
+        
+                        }
+                    });
+
+
             });
+
+
     }
 
 }

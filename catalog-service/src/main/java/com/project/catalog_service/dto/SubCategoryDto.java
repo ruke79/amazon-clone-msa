@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubCategoryDTO {
+public class SubCategoryDto {
     private String id;
     private CategoryDto parent;
     private String name;

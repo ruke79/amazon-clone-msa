@@ -26,7 +26,7 @@ const PaymentCheckout = ({ paymentMethod, setPaymentMethod, profile }) => {
                                 checked={paymentMethod == payment.id}
                             />
                         </label>
-                        <div className="flex items-center ">
+                        <div className="flex items-center disabled ">
                             <img
                                 src={`/../public/assets/images/${payment.id}.png`}
                                 alt={payment.name}

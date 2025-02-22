@@ -11,23 +11,22 @@ import com.project.catalog_service.model.ProductCategory;
 import com.project.catalog_service.model.SubCategory;
 import com.project.catalog_service.repository.CategoryRepository;
 import com.project.catalog_service.repository.SubCategoryRepository;
-import com.project.catalog_service.dto.request.SubCategoryRequest;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 @Slf4j
 @Service
-@Requiredargsconstructor
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     private final SubCategoryRepository subCategoryRepository;
 
-    @Autowired
-    public CategoryService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository) {
-        this.categoryRepository = categoryRepository;
-        this.subCategoryRepository = subCategoryRepository;
-    }
-
+    
     public boolean findSubCategory(String subCategoryName, String categoryId) {
 
         return null != subCategoryRepository.findBySubcategoryNameAndCategory_CategoryId(subCategoryName,

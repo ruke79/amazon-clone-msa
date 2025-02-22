@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.cart_service.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartProductDTO {
+public class CartProductDto {
 
     private String id;
     private String name;

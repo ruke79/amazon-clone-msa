@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.order_service.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="ordered_product")
 public class OrderedProduct extends BaseEntity {

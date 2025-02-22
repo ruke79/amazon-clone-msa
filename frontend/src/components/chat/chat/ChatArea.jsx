@@ -19,7 +19,7 @@ import { useFetchRoomMessages, fetchMessages, usePrevState } from "hook/chatHook
 import { SettingsPhoneSharp } from "@mui/icons-material";
 import { selectRoom, setRoomConversation, fetchRoomConversation } from "../../../redux/ChatSlice";
 import tokenUtil from "util/tokenUtil";
-import { getRoomMessages } from "../../../util/apichat";
+import { getRoomMessages } from "../../../util/api";
 
 
 // import "./ChatArea.css"

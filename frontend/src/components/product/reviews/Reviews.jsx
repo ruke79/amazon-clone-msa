@@ -5,12 +5,12 @@ import AddReview from "./Review";
 import Table from "./Table";
 import { useNavigate } from "react-router-dom";
 
-const Reviews = ({ product }) => {
+const Reviews = ({ product, num_reviews, userReviews }) => {
     const navigate = useNavigate();
 
     const { token } = useAuthContext();
 
-    const [reviews, setReviews] = useState(product.reviews)
+    const [reviews, setReviews] = useState(userReviews);
     
      
     
@@ -18,7 +18,7 @@ const Reviews = ({ product }) => {
     return (
         <div className="mt-4 bg-slate-100 mx-auto w-full md:w-4/5 p-4 border rounded-md">
             <h3 className="mb-2 font-bold text-2xl">
-                Customer Reviews ({product.reviews.length })
+                Customer Reviews ({num_reviews})
             </h3>
             <div className="grid md:grid-cols-2">
                 <div className="flex max-md:items-center md:flex-col md:justify-center">
@@ -66,7 +66,8 @@ const Reviews = ({ product }) => {
                 </div>
             </div>
             {token ? (
-                <AddReview product={product} setReviews={setReviews} />
+                // <AddReview product={product} setReviews={setReviews} />
+                  <AddReview product={product} setReviews={setReviews} />
             ) : (
                 <button
                     onClick={() => navigate('/signin')}

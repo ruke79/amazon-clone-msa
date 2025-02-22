@@ -3,7 +3,8 @@ import { useState } from "react";
 import * as Yup from "yup";
 import ShippingInput from "./ShippingInput";
 import { useNavigate } from "react-router-dom";
-import api, { applyCoupon } from "util/api";
+import api, { applyCoupon, postRequest } from "util/api";
+import tokenUtil from "util/tokenUtil";
 
 
 function generateOrderNumber() {
@@ -65,7 +66,7 @@ const Summary = ({
 
             console.log(paymentMethod);
                         
-            const {data}  = await api.post("/user/order/create", {             
+            const {data}  = await postRequest("/order-service/api/order/create", {             
                 orderNumber : generateOrderNumber(),
                 products: cart.products,
                 shippingAddress: selectedAddress,
@@ -76,6 +77,7 @@ const Summary = ({
                         : cart.cartTotal,
                 totalBeforeDiscount: cart.cartTotal,
                 couponApplied: coupon,
+                userId : tokenUtil.getUser().email
             });
 
                         

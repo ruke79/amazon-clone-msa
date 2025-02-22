@@ -1,4 +1,4 @@
-package com.project.backend.repository;
+package com.project.order_service.repository;
 
 import java.util.Optional;
 
@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.backend.constants.PaymentResultStatus;
-import com.project.backend.model.Order;
+import com.project.order_service.constants.PaymentResultStatus;
+import com.project.order_service.model.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {

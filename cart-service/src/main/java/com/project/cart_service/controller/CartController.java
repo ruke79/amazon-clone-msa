@@ -1,4 +1,4 @@
-package com.project.backend.controller;
+package com.project.cart_service.controller;
 
 import java.util.List;
 
@@ -6,9 +6,7 @@ import org.hibernate.validator.cfg.defs.pl.REGONDef;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,86 +17,73 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.backend.constants.StatusMessages;
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.CartDto;
-import com.project.backend.dto.ProductInfoDto;
-import com.project.backend.model.Cart;
-import com.project.backend.model.ShippingAddress;
+import com.project.cart_service.constants.StatusMessages;
 
-import com.project.backend.security.request.AddressRequest;
-import com.project.backend.security.request.CartRequest;
-import com.project.backend.security.request.CouponRequest;
-import com.project.backend.security.request.ProductInfoRequest;
-import com.project.backend.security.response.CartResponse;
-import com.project.backend.security.response.CouponResponse;
-import com.project.backend.security.response.GenericResponse;
-import com.project.backend.security.response.MessageResponse;
-import com.project.backend.security.service.UserDetailsImpl;
-import com.project.backend.service.AddressService;
-import com.project.backend.service.CartService;
+import com.project.cart_service.dto.CartDto;
+import com.project.cart_service.dto.ProductInfoDto;
+import com.project.cart_service.dto.request.CartRequest;
+import com.project.cart_service.dto.request.ProductInfoRequest;
+import com.project.cart_service.dto.response.CartResponse;
+import com.project.cart_service.dto.response.MessageResponse;
+import com.project.cart_service.model.Cart;
+
+
+
+
+import com.project.cart_service.service.CartService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/user/cart/")
+@RequestMapping("api/cart/")
+@RequiredArgsConstructor
 public class CartController {
 
     private final CartService cartService;
 
     
+    
 
-    @PutMapping("/savecart")
-    ResponseEntity<?> saveCart(@RequestBody CartRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
 
-        if (null != userDetails) {
-            String username = userDetails.getUsername();
+    @PostMapping("/savecart")
+    ResponseEntity<?> saveCart(@Valid @RequestBody CartRequest request) {
 
+        
             try {
-                Cart cart = cartService.saveCart(request, username);
+                 Cart cart = cartService.saveCart(request);
 
-                CartResponse response = new CartResponse(cart.getCartTotal());
+                 CartResponse response = new CartResponse(cart.getCartTotal());
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse(e.getMessage()));
-            }
-        } else {
-        }
-        return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
+            }        
 
     }
-    @DeleteMapping("/deleteItem/{productId}")
-    ResponseEntity<?> deleteCartItem(@PathVariable(required = true) String productId,
-    @AuthenticationPrincipal UserDetails userDetails) {
+    // @DeleteMapping("/deleteItem/{productId}")
+    // ResponseEntity<?> deleteCartItem(@PathVariable(required = true) String productId,  @RequestParam("userId") String email  ) {
 
-        if (null != userDetails) {
-
-            try {
-                cartService.deleteCartItem(productId, userDetails.getUsername());
-
-                return new ResponseEntity<>("Cart item deleted successfuly.", HttpStatus.OK);
-            } 
-            catch(RuntimeException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new MessageResponse(e.getMessage()));
-            }
-
-            
-        } else {
-            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
-        }
         
+    //         try {
+    //             cartService.deleteCartItem(productId, email);
 
-    }
+    //             return new ResponseEntity<>("Cart item deleted successfuly.", HttpStatus.OK);
+    //         } 
+    //         catch(RuntimeException e) {
+    //             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //             .body(new MessageResponse(e.getMessage()));
+    //         }           
+       
+    // }
 
     @GetMapping("/loadcart") 
-    ResponseEntity<?> loadCart(@AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<?> loadCart(@RequestParam String userId) {
 
-        if (null != userDetails) {
-
+        
             try {
-                List<ProductInfoDto> response = cartService.loadCart(userDetails.getUsername());
+                List<ProductInfoDto> response = cartService.loadCart(userId);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } 
@@ -106,20 +91,12 @@ public class CartController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new MessageResponse(e.getMessage()));
             }
-            
-        } else {
-            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
-        }
         
     }
 
     @PutMapping("/updatecart")
     ResponseEntity<?> updateCart(@RequestBody ProductInfoRequest products) {
-
-        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principle.toString() == "anonymousUser") {
-            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
-        }
+        
 
         try {
             List<ProductInfoDto> result = cartService.updateCart(products);
@@ -133,23 +110,31 @@ public class CartController {
     }
 
     @GetMapping("/checkout")
-    ResponseEntity<?> getCart(@AuthenticationPrincipal UserDetails userDetails) {
-
-        if (null != userDetails) {
-            String username = userDetails.getUsername();
+    ResponseEntity<?> getCart(@RequestParam("userId") String email) {
 
             try {
-                CartDto response = cartService.getCart(username);
+                CartDto response = cartService.getCart(email);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse(e.getMessage()));
             }
-        } else {
-            return new ResponseEntity<>(StatusMessages.USER_NOT_FOUND, HttpStatus.UNAUTHORIZED);
-        }
 
+    }
+
+    @GetMapping("/{cartProductId}") 
+    ResponseEntity<?> getProductId(@PathVariable String cartProdcutId) {
+
+        try {
+            Long productId = cartService.getProductId(cartProdcutId);
+
+            return new ResponseEntity<>(Long.toString(productId), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+        }
+        
     }
 
 }

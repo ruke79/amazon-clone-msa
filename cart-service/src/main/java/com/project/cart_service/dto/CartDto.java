@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.cart_service.dto;
 
 import java.util.List;
 
@@ -19,10 +19,9 @@ public class CartDto {
 
     private String userId;
     private String userImage;
-    // private List<AddressDTO> address;
+    
 
-
-    private List<CartProductDTO> products;
+    private List<CartProductDto> products;
 
     private int cartTotal;
     private int totalAfterDiscount;

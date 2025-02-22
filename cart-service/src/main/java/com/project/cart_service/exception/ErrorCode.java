@@ -1,4 +1,4 @@
-package com.project.catalog_service.exception.handler;
+package com.project.cart_service.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public enum ErrorCode {
     private final String errorCode;
 
     
-    public static CustomException throwMemberNotFound() {
+    public static CustomException throwUserrNotFound() {
         throw new CustomException(USER_NOT_FOUND);
     }
     public static CustomException unauthorizedTokenException() {

@@ -13,7 +13,7 @@ import Sizes from "./ProductSizes";
 import Questions from "./ProductQuestions";
 import Details from "./ProductDetails";
 import dataURItoBlob from "../../util/dataURItoBlob";
-import { uploadImages, instance, } from "../../util/uploadImages";
+import { uploadImages, instance, } from "../../util/imageUtil";
 import { useState } from "react";
 import validateCreateProduct from '../../util/validation';
 import {postRequest } from "../../util/api";

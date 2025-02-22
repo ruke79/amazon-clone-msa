@@ -9,20 +9,22 @@ import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useFetcher, useLoaderData } from "react-router-dom";
 import api, { getRequest } from "util/api";
+import tokenUtil from "util/tokenUtil";
+import { useFetchAddresses } from "hook/hooks";
 
 const Checkout = () => {
 
 
     const cart = useLoaderData();
-    const user = { userId: cart.userId, address: cart.address };
+
+    const { data, isLoading } = useFetchAddresses(cart.userId);
+    const user = { userId: cart.userId, address: data };
  
     const [addresses, setAddresses] = useState(user?.address || []);
     const [paymentMethod, setPaymentMethod] = useState("paypal");
     const [totalAfterDiscount, setTotalAfterDiscount] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("");
     const [loading, setLoading] = useState(false);
-
-
 
     useEffect(() => {
 
@@ -35,6 +37,14 @@ const Checkout = () => {
         }
 
     }, [addresses]);
+
+
+    if (isLoading) return <div><p>Loading...</p></div>;
+
+
+
+
+
 
 
 
@@ -77,13 +87,15 @@ export default Checkout;
 
 
 export const loader = (authContext) => {
-
+    
     return async ({ params, request }) => {
 
         
         try {
 
-            const { data } = await getRequest("/cart-service/api/cart/checkout");
+            const { data } = await getRequest("/cart-service/api/cart/checkout", 
+                { params : {userId : tokenUtil.getUser().email } }
+            );
 
 
             return data;

@@ -1,10 +1,10 @@
-package com.project.backend.model;
+package com.project.order_service.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.project.backend.constants.OrderStatusEnum;
+import com.project.order_service.constants.OrderStatusEnum;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
@@ -26,12 +26,14 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
-@Table(name="orders")
-        
+@Table(name="orders")        
 public class Order extends BaseEntity {
    
    @Id @Tsid    
@@ -49,20 +51,20 @@ public class Order extends BaseEntity {
     
     @OneToMany(mappedBy="order", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class)
-    private List<OrderedProduct> orderedProducts = new ArrayList<>();
+    private List<OrderedProduct> orderedProducts;
 
     
-    // @ManyToOne(fetch=FetchType.EAGER)
-    // @JoinColumn(name="shipping_address_id", referencedColumnName = "shipping_address_id")
-    // private ShippingAddress shippingAddress;
-    private Long shippingAddressId;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="order_address_id", referencedColumnName = "order_address_id")
+    private OrderAddress shippingAddress;
+    
 
     private String paymentMethod;
         
     // @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class)
     // @JoinColumn(name="payment_id", referencedColumnName = "payment_id", nullable = false)
     // private PaymentResult paymentResult;
-    private Long paymentId;
+    //private Long paymentId;
     
     private int total;
 

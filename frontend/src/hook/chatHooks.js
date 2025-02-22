@@ -1,10 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuthContext } from "store/AuthContext";
 import { useRef, useEffect  } from "react";
 import { useDispatch } from "react-redux";
-import { addRoomToList, setRooms, setRoomConversation } from "../redux/ChatSlice";
+import { addRoomToList } from "../redux/ChatSlice";
 
-import { createChatRoom, getChatRoomList, getRoomMessages } from "util/apichat";
+import { createChatRoom, getChatRoomList, getRoomMessages } from "util/api";
 
 
 export const useCreateChatRoom = (props) => {
@@ -85,16 +84,16 @@ export const useCreateChatRoom = (props) => {
     };
   };
   
-  export const fetchMessages = (room, cursor) => {
+  // export const fetchMessages = (room, cursor) => {
     
-    let promise = new Promise(async function (resolve, reject) {        
-        const res = await getRoomMessages(room , cursor);              
-        resolve(res);                         
-      }
-    );
+  //   let promise = new Promise(async function (resolve, reject) {        
+  //       const res = await getRoomMessages(room , cursor);              
+  //       resolve(res);                         
+  //     }
+  //   );
 
-    return promise;         
-  }
+  //   return promise;         
+  // }
 
 
   export const useSendMessage = ({

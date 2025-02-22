@@ -5,20 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.catalog_service.constants.StatusMessages;
-import com.project.catalog_service.dto.CategoryDTO;
 import com.project.catalog_service.dto.CategoryDto;
 import com.project.catalog_service.dto.ColorAttributeDto;
-import com.project.catalog_service.dto.CouponDTO;
 import com.project.catalog_service.dto.ProductDto;
-import com.project.catalog_service.dto.SubCategoryDTO;
+
 import com.project.catalog_service.dto.SubCategoryDto;
-import com.project.catalog_service.dto.UserDTO;
-import com.project.catalog_service.model.Role;
+
 import com.project.catalog_service.model.SubCategory;
 import com.project.catalog_service.model.ProductCategory;
 import com.project.catalog_service.model.ProductColorAttribute;
@@ -26,15 +22,13 @@ import com.project.catalog_service.model.ProductDetails;
 import com.project.catalog_service.model.ProductQA;
 import com.project.catalog_service.model.ProductSizeAttribute;
 import com.project.catalog_service.model.ProductSku;
-import com.project.catalog_service.model.User;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.repository.CategoryRepository;
 import com.project.catalog_service.repository.ProductRepository;
 import com.project.catalog_service.repository.ProductSkuRepository;
 import com.project.catalog_service.repository.SubCategoryRepository;
 import com.project.catalog_service.dto.request.CategoryRequest;
-import com.project.catalog_service.dto.request.CouponRequest;
-import com.project.catalog_service.dto.request.ImageRequest;
+
 import com.project.catalog_service.dto.request.ProductInfosLoadRequest;
 import com.project.catalog_service.dto.request.ProductRequest;
 
@@ -44,11 +38,12 @@ import com.project.catalog_service.dto.response.GenericResponse;
 import com.project.catalog_service.dto.response.MessageResponse;
 import com.project.catalog_service.dto.response.SubCategoryResponse;
 import com.project.catalog_service.service.CategoryService;
-import com.project.catalog_service.service.CouponService;
-import com.project.catalog_service.service.ProductService;
-import com.project.catalog_service.service.UserService;
 
-import jakarta.mail.Multipart;
+import com.project.catalog_service.service.ProductService;
+
+
+//import jakarta.mail.Multipart;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,12 +57,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/category")
 // @PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequiredArgsConstructor
 public class CategoryController {
 
     
     private final CategoryRepository categoryRepository;
 
     private final SubCategoryRepository subCategoryRepository;
+
+    private final CategoryService categoryService;
 
      @PostMapping("/category")
     ResponseEntity<?> addCategory(@RequestBody CategoryRequest request) {
@@ -84,7 +82,7 @@ public class CategoryController {
 
                 // categoryRepository.save(category);
 
-                CategoryDTO dto = categoryService.createCategory(request.getName(), request.getSlug());
+                CategoryDto dto = categoryService.createCategory(request.getName(), request.getSlug());
 
                 CategoryResponse response = new CategoryResponse(
                         dto.getId(),
@@ -111,7 +109,7 @@ public class CategoryController {
 
             if (!exist) {
 
-                SubCategoryDTO subcategory = categoryService.createSubCategory(request.getSubcategoryName(),
+                SubCategoryDto subcategory = categoryService.createSubCategory(request.getSubcategoryName(),
                         request.getParent(), request.getSlug());
 
                 SubCategoryResponse response = new SubCategoryResponse(

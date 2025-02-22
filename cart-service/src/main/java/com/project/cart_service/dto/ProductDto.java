@@ -1,4 +1,4 @@
-package com.project.cart-service.dto;
+package com.project.cart_service.dto;
 
 
 import java.io.Serializable;
@@ -33,13 +33,13 @@ public class ProductDto  {
 
     private String slug;
 
-    private CategoryDTO category;
+    private CategoryDto category;
 
-    private List<SubCategoryDTO> subCategories;
+    private List<SubCategoryDto> subCategories;
 
     private List<ProductDetailDto> details;
     
-    //private List<ReviewDTO> reviews;
+    //private List<ReviewDto> reviews;
     
     private List<ProductQADto> questions;
     

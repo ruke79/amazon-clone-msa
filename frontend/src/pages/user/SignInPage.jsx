@@ -24,7 +24,7 @@ const initialUser = {
 
 const login = async (user) => {
     try {
-        const data  = await api.post("/auth/public/signin", user);
+        const data  = await api.post("/user-service/api/auth/public/signin", user);
         return data;
     } catch(err) {
         console.log(err);

@@ -4,13 +4,12 @@ import MenuSideBar from "./header/MenuSidebar";
 import ProductPage from "../components/product/ProductPage";
 import { useLoaderData, defer } from "react-router-dom";
 import api, { getRequest } from "util/api";
+import { useEffect } from "react";
 
 const SingleProduct = () => {
     
     const product = useLoaderData();
-    
-    
-
+        
     return (
         <>
             <Header title={product.name} />
@@ -48,9 +47,7 @@ async function loaderProduct(slug, style, size) {
                 
         const product = response.data;
 
-        
-
-        
+                
         let subProduct = product.sku_products[style];
     
         let prices = subProduct.sizes        
@@ -85,21 +82,21 @@ async function loaderProduct(slug, style, size) {
             priceBefore: subProduct.sizes[size].price,
             quantity: subProduct.sizes[size].quantity,
             ratings: [
-                {
-                    percentage: calculatePercentage("5"),
-                },
-                {
-                    percentage: calculatePercentage("4"),
-                },
-                {
-                    percentage: calculatePercentage("3"),
-                },
-                {
-                    percentage: calculatePercentage("2"),
-                },
-                {
-                    percentage: calculatePercentage("1"),
-                },
+                // {
+                //     percentage: calculatePercentage("5"),
+                // },
+                // {
+                //     percentage: calculatePercentage("4"),
+                // },
+                // {
+                //     percentage: calculatePercentage("3"),
+                // },
+                // {
+                //     percentage: calculatePercentage("2"),
+                // },
+                // {
+                //     percentage: calculatePercentage("1"),
+                // },
             ],
             allSizes: product.sku_products
                 .map((p) => p.sizes)
@@ -112,19 +109,19 @@ async function loaderProduct(slug, style, size) {
                 ),
         };
         
-        function calculatePercentage(num) {
-            return ( 
-                product.reviews.length > 0 ? (product.reviews.reduce((total, review) => {
-                    return (
-                        total +
-                        (review.rating === Number(num) ||
-                            review.rating === Number(num) + 0.5)
-                    );
-                }, 0) *
-                    100) /
-                product.reviews.length : 0
-            ).toFixed(1);
-        }
+        // function calculatePercentage(num) {
+        //     return ( 
+        //         product.reviews.length > 0 ? (product.reviews.reduce((total, review) => {
+        //             return (
+        //                 total +
+        //                 (review.rating === Number(num) ||
+        //                     review.rating === Number(num) + 0.5)
+        //             );
+        //         }, 0) *
+        //             100) /
+        //         product.reviews.length : 0
+        //     ).toFixed(1);
+        // }
         
         return JSON.parse(JSON.stringify(newProduct));            
 

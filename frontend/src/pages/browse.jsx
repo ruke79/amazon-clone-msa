@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { getRequest } from "util/api";
 import DotLoaderSpinner from "components/loader/Loading";
 
+
 const Browse = ({ }) => {
 
     const productsDB = useLoaderData();
@@ -96,6 +97,7 @@ const Browse = ({ }) => {
         toggleParam('price', price);
 
         console.log("rating : " + rating);
+        
 
 
 
@@ -508,7 +510,7 @@ export async function loader({ request, params }) {
     
     try {
 
-        let  response = await getRequest("catalog-service/api/search",
+        let res = await getRequest("catalog-service/api/search",
             {
                 params: {
                     search, category, brand, style,
@@ -518,80 +520,80 @@ export async function loader({ request, params }) {
             }
         )
         
+        if (res.status === 200 ) {
+                    
+            let productsDB = res.data;
+            console.log(productsDB);
         
-        let productsDB = JSON.parse(JSON.stringify(response)).data;
+            if (sortQuery === "popular") {
 
+                productsDB.product.content.sort(
+                    (a, b) => Number(b.rating) - Number(a.rating)
+                );
 
-        
+                productsDB.product.content.map(product => {
+                    product.sku_products.sort(
+                        (a, b) => Number(b.sold) - Number(a.sold)
+                    )
+                });
+            }
+            else if (sortQuery === "newest") {
+                productsDB.product.content.sort(
+                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                );
+            }
+            else if (sortQuery === "topSelling") {
 
-        if (sortQuery === "popular") {
+                productsDB.product.content.map(product => {
+                    product.sku_products.sort(
+                        (a, b) => Number(b.sold) - Number(a.sold)
+                    )
+                });
+            }
+            else if (sortQuery == "topReviewed") {
+                productsDB.product.content.sort(
+                    (a, b) => Number(b.rating) - Number(a.rating)
+                );
 
-            productsDB.product.content.sort(
-                (a, b) => Number(b.rating) - Number(a.rating)
-            );
+            }
+            else if (sortQuery == "priceHighToLow") {
+                const productsWithPrice = productsDB.product.content.map (product => {
+                    const productWithPrice = product.sku_products
+                        .map(sku => {
+                            sku.sizes.sort(
+                                (a, b) => Number(b.price) - Number(a.price)
+                            )
+                            return {product : product, price : sku.sizes[0]["price"]};
+                        })                    
+                        return productWithPrice[0];
+                });            
+                const sortedProducts = productsWithPrice.sort((a, b) => b.price-a.price);            
+                productsDB.product.content = Array.from(sortedProducts, (p)=>p['product']);     
+            }            
+            else if (sortQuery == "priceLowToHight") {
+                const productsWithPrice = productsDB.product.content.map (product => {
+                    const productWithPrice = product.sku_products
+                        .map(sku => {
+                            sku.sizes.sort(
+                                (a, b) => Number(a.price) - Number(b.price)
+                            )
+                            return {product : product, price : sku.sizes[0]["price"]};
+                        })                    
+                        return productWithPrice[0];
+                });            
+                const sortedProducts = productsWithPrice.sort((a, b) => a.price-b.price);            
+                productsDB.product.content = Array.from(sortedProducts, (p)=>p['product']);     
 
-            productsDB.product.content.map(product => {
-                product.sku_products.sort(
-                    (a, b) => Number(b.sold) - Number(a.sold)
-                )
-            });
+            }
+            
+            return productsDB;
         }
-        else if (sortQuery === "newest") {
-            productsDB.product.content.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-            );
-        }
-        else if (sortQuery === "topSelling") {
-
-            productsDB.product.content.map(product => {
-                product.sku_products.sort(
-                    (a, b) => Number(b.sold) - Number(a.sold)
-                )
-            });
-        }
-        else if (sortQuery == "topReviewed") {
-            productsDB.product.content.sort(
-                (a, b) => Number(b.rating) - Number(a.rating)
-            );
-
-        }
-        else if (sortQuery == "priceHighToLow") {
-            const productsWithPrice = productsDB.product.content.map (product => {
-                const productWithPrice = product.sku_products
-                    .map(sku => {
-                        sku.sizes.sort(
-                            (a, b) => Number(b.price) - Number(a.price)
-                        )
-                        return {product : product, price : sku.sizes[0]["price"]};
-                    })                    
-                    return productWithPrice[0];
-            });            
-            const sortedProducts = productsWithPrice.sort((a, b) => b.price-a.price);            
-            productsDB.product.content = Array.from(sortedProducts, (p)=>p['product']);     
-        }            
-        else if (sortQuery == "priceLowToHight") {
-            const productsWithPrice = productsDB.product.content.map (product => {
-                const productWithPrice = product.sku_products
-                    .map(sku => {
-                        sku.sizes.sort(
-                            (a, b) => Number(a.price) - Number(b.price)
-                        )
-                        return {product : product, price : sku.sizes[0]["price"]};
-                    })                    
-                    return productWithPrice[0];
-            });            
-            const sortedProducts = productsWithPrice.sort((a, b) => a.price-b.price);            
-            productsDB.product.content = Array.from(sortedProducts, (p)=>p['product']);     
-
-        }
-         
-        return productsDB;
 
     }
     catch(err) {
         console.log(err);
-
         
     }
-        
+
+    return null;        
 }

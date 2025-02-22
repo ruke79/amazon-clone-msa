@@ -1,4 +1,4 @@
-package com.project.cart_service.client;
+package com.project.order_service.client;
 
 
 import feign.Response;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.project.catalog_service.exception.handler.ErrorCode;
+import com.project.order_service.exception.ErrorCode;
 
 @Component
 public class FeignErrorDecoder implements ErrorDecoder {
@@ -24,7 +24,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
                 break;
             case 404:
                 if (methodKey.contains("find")) {
-                    throw ErrorCode.throwMemberNotFound();
+                    throw ErrorCode.throwUserrNotFound();
                 }                
                 break;
             default:

@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 import com.project.catalog_service.model.ProductCategory;
 import com.project.catalog_service.model.ProductSku;
 import com.project.catalog_service.model.ProductQA;
-import com.project.catalog_service.model.Review;
+//import com.project.catalog_service.model.Review;
 import com.project.catalog_service.model.ProductDetails;
 import com.project.catalog_service.model.SubCategory;
 
@@ -42,21 +42,21 @@ public class ProductDto  {
 
     private CategoryDto category;
 
-    private List<SubCategoryDTO> subCategories;
+    private List<SubCategoryDto> subCategories;
 
     private List<ProductDetailDto> details;
     
-    private List<ReviewDTO> reviews;
+    //private List<ReviewDto> reviews;
     
-    private List<ProductQADTO> questions;
+    private List<ProductQADto> questions;
     
-    private List<ProductSkuDTO> sku_products;
+    private List<ProductSkuDto> sku_products;
 
     private String refund_policy;
 
     private float rating;
 
-    private int num_reviews;
+    //private int num_reviews;
 
     private int shipping;    
 
