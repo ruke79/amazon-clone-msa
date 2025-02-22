@@ -1,4 +1,4 @@
-package com.project.backend.service;
+package com.project.cart_service.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,39 +8,31 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.project.backend.constants.OperationStatus;
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.CartDto;
-import com.project.backend.dto.CartProductDTO;
-import com.project.backend.dto.ColorAttributeDto;
-import com.project.backend.dto.ProductInfoDto;
-import com.project.backend.model.Cart;
-import com.project.backend.model.CartProduct;
-import com.project.backend.model.Coupon;
-import com.project.backend.model.Product;
-import com.project.backend.model.ProductColorAttribute;
-import com.project.backend.model.ProductSizeAttribute;
-import com.project.backend.model.ProductSku;
-import com.project.backend.model.ShippingAddress;
-import com.project.backend.model.User;
-import com.project.backend.model.WishList;
-import com.project.backend.repository.CartProductRepository;
-import com.project.backend.repository.CartRepository;
-import com.project.backend.repository.CouponRepository;
-import com.project.backend.repository.ProductRepository;
-import com.project.backend.repository.ProductSkuRepository;
-import com.project.backend.repository.ShippingAddressRepository;
-import com.project.backend.repository.UserRepository;
-import com.project.backend.repository.WishiListRepository;
-import com.project.backend.security.request.CartRequest;
-import com.project.backend.security.request.CouponRequest;
-import com.project.backend.security.request.ProductInfoRequest;
-import com.project.backend.security.request.WishListRequest;
-import com.project.backend.security.response.CartResponse;
-import com.project.backend.security.response.CouponResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.cart_service.client.CatalogServiceClient;
+import com.project.cart_service.client.UserServiceClient;
+import com.project.cart_service.dto.CartDto;
+import com.project.cart_service.dto.CartProductDto;
+import com.project.cart_service.dto.ColorAttributeDto;
+import com.project.cart_service.dto.ProductDto;
+import com.project.cart_service.dto.ProductInfoDto;
+import com.project.cart_service.dto.ProductSkuDto;
+import com.project.cart_service.dto.ServiceUserDto;
+import com.project.cart_service.dto.request.CartRequest;
+import com.project.cart_service.dto.request.ProductInfoRequest;
+import com.project.cart_service.model.Cart;
+import com.project.cart_service.model.CartProduct;
 
+import com.project.cart_service.repository.CartProductRepository;
+import com.project.cart_service.repository.CartRepository;
+
+
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -51,75 +43,79 @@ public class CartService {
     private final CartRepository cartRepository;
 
     private final CartProductRepository cartProductRepository;
+  
+    private final UserServiceClient userServiceClient;
+    private final CatalogServiceClient catalogServiceClient;
 
-    private final UserRepository userRepository;
+    public Long getProductId(String cartProductId) {
 
-    private final ProductRepository productRepository;
+        CartProduct product = cartProductRepository.findById(Long.parseLong(cartProductId)).orElse(null);
 
-    private final ProductSkuRepository productSkuRepository;
+        return product.getProductId();
+    }
 
-    private final ShippingAddressRepository shippingAddressRepository;
+    public CartDto getCart(String email) {
 
-    private final WishiListRepository wishiListRepository;
+        
+        ObjectMapper mapper = new ObjectMapper();
+            ServiceUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(email).getBody(), 
+            ServiceUserDto.class);
 
-    private final CouponRepository couponRepository;
-
-    private final ProductService productService;
-
-   
-   
-    public CartDto getCart(String username) {
-
-        Optional<User> user = userRepository.findByUserName(username);
-
-        if (!user.isPresent())
-            return null;
-
-        Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+               
+        Optional<Cart> cart = cartRepository.findByUserId(Long.parseLong(response.getUserId()));
 
         if (!cart.isPresent())
             return null;
 
         CartDto result = new CartDto();
-        result.setUserImage(user.get().getImage());
+        result.setUserId(response.getUserId());
+        result.setUserImage(response.getImage());
 
-        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
+        // List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
 
-        {
-            List<AddressDTO> addressDTOs = new ArrayList<>();
-            for (ShippingAddress address : addresses) {
-                if (address != null) {
-                    AddressDTO dto = new AddressDTO();
-                    dto.setId(Long.toString(address.getShippingAddressId()));
+        // {
+        //     List<AddressDto> addressDtos = new ArrayList<>();
+        //     for (ShippingAddress address : addresses) {
+        //         if (address != null) {
+        //             AddressDto dto = new AddressDto();
+        //             dto.setId(Long.toString(address.getShippingAddressId()));
 
-                    dto.setAddress1(address.getAddress1());
-                    dto.setAddress2(address.getAddress2());
-                    dto.setCity(address.getCity());
-                    dto.setState(address.getState());
-                    dto.setCountry(address.getCountry());
-                    dto.setFirstname(address.getFirstname());
-                    dto.setLastname(address.getLastname());
-                    dto.setPhoneNumber(address.getPhoneNumber());
-                    dto.setZipCode(address.getZipCode());
-                    dto.setActive(false);
+        //             dto.setAddress1(address.getAddress1());
+        //             dto.setAddress2(address.getAddress2());
+        //             dto.setCity(address.getCity());
+        //             dto.setState(address.getState());
+        //             dto.setCountry(address.getCountry());
+        //             dto.setFirstname(address.getFirstname());
+        //             dto.setLastname(address.getLastname());
+        //             dto.setPhoneNumber(address.getPhoneNumber());
+        //             dto.setZipCode(address.getZipCode());
+        //             dto.setActive(false);
 
-                    addressDTOs.add(dto);
-                }
-            }
-            result.setAddress(addressDTOs);
-        }
+        //             addressDtos.add(dto);
+        //         }
+        //     }
+        //     result.setAddress(addressDtos);
         // }
+        // // }
 
-        List<CartProductDTO> products = new ArrayList<>();
+        List<CartProductDto> products = new ArrayList<>();
 
         for (CartProduct item : cart.get().getCartProducts()) {
 
-            CartProductDTO dto = new CartProductDTO();
+
+
+            CartProductDto dto = new CartProductDto();
             dto.setId(Long.toString(item.getCartproductId()));
+            
+            ColorAttributeDto color = mapper.convertValue(catalogServiceClient.getColorInfo(Long.toString(item.getColorId())).getBody(), 
+            ColorAttributeDto.class);
+
+             
+
             dto.setColor(ColorAttributeDto.builder()
-                    .id(Long.toString(item.getColor().getColorId()))
-                    .color(item.getColor().getColor())
-                    .colorImage(item.getColor().getColorImage()).build());
+                    .id(color.getId())
+                    .color(color.getColor())
+                    .colorImage(color.getColorImage()).build());
             dto.setImage(item.getImage());
             dto.setName(item.getName());
             dto.setPrice(item.getPrice());
@@ -135,7 +131,7 @@ public class CartService {
         return result;
     }
 
-    public int deleteCartItem(String uid, String username) {
+    public int deleteCartItem(String uid, Long userId) {
 
         
 
@@ -144,7 +140,7 @@ public class CartService {
 
         if (null != item) {
 
-            Cart cart = cartRepository.findByUser_UserName(username)
+            Cart cart = cartRepository.findByUserId(userId)
                     .orElseThrow(() -> new RuntimeException("Cart not found"));
             cart.setCartTotal(cart.getCartTotal() - (item.getPrice() + item.getShipping()));
 
@@ -162,40 +158,50 @@ public class CartService {
 
     public List<ProductInfoDto> updateCart(ProductInfoRequest request) {
 
-        List<ProductInfoDto> result = new ArrayList<>();
+        if (null != request.getProducts()) {
 
-        for (ProductInfoDto cartItem : request.getProducts()) {
+            List<ProductInfoDto> result = new ArrayList<>();
 
-            Product product = productRepository.findById(Long.parseLong(cartItem.getId())).get();
+            for (ProductInfoDto cartItem : request.getProducts()) {
 
-            int originalPrice = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
-                    .filter(i -> i.getSize().equals(cartItem.getSize())).findFirst().get().getPrice();
-            int quantity = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
-                    .filter(i -> i.getSize().equals(i.getSize())).findFirst().get().getQuantity();
-            int discount = product.getSku_products().get(cartItem.getStyle()).getDiscount();
+                //Product product = productRepository.findById(cartItem.getId()).get();
+                ProductDto product = catalogServiceClient.getProductInfo(cartItem.getId()).getBody();
 
-            ProductInfoDto dto = new ProductInfoDto();
-            dto = cartItem;
-            dto.setPriceBefore(originalPrice);
-            dto.setQty(cartItem.getQty());
+                int originalPrice = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
+                        .filter(i -> i.getSize().equals(cartItem.getSize())).findFirst().get().getPrice();
+                // int quantity = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
+                //         .filter(i -> i.getSize().equals(i.getSize())).findFirst().get().getQuantity();
+                int discount = product.getSku_products().get(cartItem.getStyle()).getDiscount();
 
-            if (discount > 0) {
-                int price = originalPrice - (originalPrice / discount);
-                dto.setPrice(price);
-            } else {
-                dto.setPrice(originalPrice);
+                ProductInfoDto dto = new ProductInfoDto();
+                dto = cartItem;
+                dto.setPriceBefore(originalPrice);
+                dto.setQty(cartItem.getQty());
+
+                if (discount > 0) {
+                    int price = originalPrice - (originalPrice / discount);
+                    dto.setPrice(price);
+                } else {
+                    dto.setPrice(originalPrice);
+                }
+                dto.setShipping(product.getShipping());
+
+                result.add(dto);
             }
-            dto.setShipping(product.getShipping());
 
-            result.add(dto);
+            return result;
         }
-
-        return result;
+        return null;
     }
 
-    public List<ProductInfoDto> loadCart(String username) {
+    public List<ProductInfoDto> loadCart(String userId) {
 
-        Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+
+        ObjectMapper mapper = new ObjectMapper();
+            ServiceUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(userId).getBody(), 
+            ServiceUserDto.class);
+
+        Optional<Cart> cart = cartRepository.findByUserId(Long.parseLong(response.getUserId()));
         // .orElseThrow(()->new RuntimeException("Cart not found"));
 
         if (cart.isPresent()) {
@@ -204,10 +210,9 @@ public class CartService {
 
             List<ProductInfoDto> result = new ArrayList<>();
             for (CartProduct p : products) {
-
-                Product product = productRepository.findById(p.getProduct().getProductId())
-                        .orElseThrow(() -> new RuntimeException("Product not found"));
-
+                
+                ProductDto product = catalogServiceClient.getProductInfo(Long.toString(p.getProductId())).getBody();
+                
                 AtomicInteger counter = new AtomicInteger(-1);
 
                 int index = product.getSku_products().get(p.getStyle()).getSizes().stream()
@@ -219,8 +224,10 @@ public class CartService {
                         .findFirst()
                         .orElse(-1);
 
-                ProductInfoDto dto = productService.getCartProductInfo(p.getProduct().getProductId(),
-                        p.getStyle(), index);
+                // ProductInfoDto dto = productService.getCartProductInfo(p.getProduct().getProductId(),
+                //         p.getStyle(), index);
+                ProductInfoDto dto = mapper.convertValue(catalogServiceClient.getCartProductInfo(Long.toString(p.getProductId()),
+                         p.getStyle(), index).getBody(), ProductInfoDto.class);
 
                 int originalPrice = product.getSku_products().get(p.getStyle()).getSizes().stream()
                         .filter(i -> i.getSize().equals(p.getSize())).findFirst().get().getPrice();
@@ -248,54 +255,52 @@ public class CartService {
 
     }
 
-    public Cart saveCart(CartRequest request, String username) {
+    public Cart saveCart(CartRequest request) {
 
+        
         if (request.getProducts().size() > 0) {
 
-            Optional<User> user = userRepository.findByUserName(username);
-
-            if (user.isPresent()) {
-                Optional<Cart> existed = cartRepository.findByUser_UserName(username);
+            ObjectMapper mapper = new ObjectMapper();
+            ServiceUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(request.getEmail()).getBody(), 
+            ServiceUserDto.class);
+            
+                Optional<Cart> existed = cartRepository.findByUserId(Long.parseLong(response.getUserId()));
                 if (existed.isPresent()) {
 
                     cartRepository.delete(existed.get());
                 }
-            }
+            
 
             Cart cart = new Cart();
-            cart.setUser(user.get());
+            cart.setUserId(Long.parseLong(response.getUserId()));
 
             List<CartProduct> products = new ArrayList<CartProduct>();
 
             for (ProductInfoDto cartItem : request.getProducts()) {
 
                 
-                Optional<Product> product = productRepository.findById(Long.parseLong(cartItem.getId()));
+                ProductDto product = catalogServiceClient.getProductInfo(cartItem.getId()).getBody();
 
-                if (product.isPresent()) {
-                    ProductSku sku = product.get().getSku_products().get(cartItem.getStyle());
+                if (null != product) {
+                    ProductSkuDto sku = product.getSku_products().get(cartItem.getStyle());
 
                     int price = sku.getSizes().stream().filter(p -> p.getSize().equals(cartItem.getSize()))
                             .findFirst().get().getPrice();
                     if (sku.getDiscount() > 0)
                         price = (price - price / sku.getDiscount());
-
-                    ProductColorAttribute color = ProductColorAttribute.builder()
-                            .colorId(Long.parseLong(cartItem.getColor().getId()))
-                            .color(cartItem.getColor().getColor())
-                            .colorImage(cartItem.getColor().getColorImage()).build();
+                    
 
                     CartProduct cartProduct = CartProduct.builder()
-                            .name(product.get().getName())
-                            .color(color)
+                            .name(product.getName())
+                            .colorId(Long.parseLong(cartItem.getColor().getId()))
                             .style(cartItem.getStyle())
-                            .product(product.get())
+                            .productId(Long.parseLong(product.getId()))
                             .image(sku.getImages().get(0))
                             .qty(cartItem.getQty())
                             .price(price)
                             .size(cartItem.getSize())
                             ._uid(cartItem.get_uid())
-                            .shipping(product.get().getShipping())
+                            .shipping(product.getShipping())
                             .build();
 
                     products.add(cartProduct);
@@ -319,4 +324,33 @@ public class CartService {
     }
 
     
+
+    // public CouponResponse applyCoupon(CouponRequest request, String username) {
+
+    //     Optional<User> user = userRepository.findByUserName(username);
+
+    //     if (user.isPresent()) {
+
+    //         Optional<Coupon> coupon = couponRepository.findById(Long.parseLong(request.getCoupon().getId()));
+
+    //         if (!coupon.isPresent()) {
+    //             return null;
+    //         }
+
+    //         Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+
+    //         int totalAfterDiscount = (cart.get().getCartTotal() * coupon.get().getDiscount()) / 100;
+
+    //         cart.get().setTotalAfterDiscount(totalAfterDiscount);
+
+    //         cartRepository.save(cart.get());
+
+    //         CouponResponse result = new CouponResponse(totalAfterDiscount, coupon.get().getDiscount());
+
+    //         return result;
+    //     }
+    //     return null;
+
+    // }
+
 }

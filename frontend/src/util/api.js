@@ -226,12 +226,11 @@ const axiosRetry = (url, retries, delay) => {
   });
 }
 
-export const saveCart = async (cart) => {
+export const saveCart = async (products, email) => {
   try {
+    
 
-    const { data } = await putRequest("/cart-service/api/cart/savecart", {
-      products: cart
-    });
+    const { data } = await postRequest("/cart-service/api/cart/savecart", { products : products, email : email });
     return data;
   } catch (error) {
     console.log("erorr >>>", error.response.data.message);
@@ -242,7 +241,7 @@ export const saveShippingAddress = async (address) => {
 
   try {
 
-    const { data } = await postRequest("/user-service/api/user/save_shipping_address", {
+    const { data } = await postRequest("/user-service/api/user/profile/save_address", {
       address: address
     });
     return data;
@@ -255,7 +254,7 @@ export const selectShippingAddress = async (addressId) => {
 
   try {
 
-    const { data } = await getRequest(`/user-service/api/user/selectaddress/${addressId}`
+    const { data } = await getRequest(`/user-service/api/user/profile/select/${addressId}`
 
     );
     return data;
@@ -268,7 +267,7 @@ export const deleteAddress = async (addressId) => {
 
   try {
 
-    const { data } = await deleteRequest(`/user-service/api/user/deleteaddress/${addressId}`
+    const { data } = await deleteRequest(`/user-service/api/user/profile/delete/${addressId}`
 
     );
     return data;
@@ -292,6 +291,28 @@ export const applyCoupon = async (coupon) => {
   }
 }
 
+export const getReviews = async (productId) => {
+  try {
+    
+    const {data} = await getRequest(`/user-service/api/review/reviews/${productId}`);
+
+    return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+}
+
+export const getAddresses = async() => {
+
+  try {
+    
+    const {data} =   await getRequest("/user-service/api/user/profile/address");     
+    return data.addresses;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+}
+
 export const createChatRoom = ({ roomName }) => {
   const url = `/chat-service/api/chat/room`;
   return api.post(url, { roomName : roomName }).then((res) => {
@@ -309,7 +330,7 @@ export const  getChatRoomList = () => {
 export const getRoomMessages = (room, cursor) => {
   const url = `/chat-service/api/chat/room/${room?.roomId}`;
   console.log(cursor);
-  return api.get(url,  { params : {cursor : cursor} }).then((res) => {
+  return api.get(url,  {cursor : cursor}).then((res) => {
     return res.data;
   });
 };

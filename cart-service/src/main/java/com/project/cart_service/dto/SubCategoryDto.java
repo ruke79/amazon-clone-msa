@@ -1,4 +1,4 @@
-package com.project.cart-service.dto;
+package com.project.cart_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubCategoryDTO {
+public class SubCategoryDto {
     private String id;
     private CategoryDto parent;
     private String name;

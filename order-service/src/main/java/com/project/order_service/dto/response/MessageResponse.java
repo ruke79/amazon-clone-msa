@@ -1,4 +1,4 @@
-package com.project.backend.security.response;
+package com.project.order_service.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

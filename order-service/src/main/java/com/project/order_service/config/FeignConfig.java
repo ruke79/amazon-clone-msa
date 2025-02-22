@@ -1,4 +1,4 @@
-package com.project.cart-service.config;
+package com.project.order_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

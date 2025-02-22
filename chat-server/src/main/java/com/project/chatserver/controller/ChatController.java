@@ -44,19 +44,19 @@ public class ChatController {
     // private void sampleData () {
 
     //     String roomId = "sdfdsfdfdfdfdf";
-    //     MessageDTO chat1 = new MessageDTO("", MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요", "", 0, 
+    //     MessageDto chat1 = new MessageDto("", MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요", "", 0, 
     //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
     //     );
         
-    //     MessageDTO chat2 = new MessageDTO("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요2", "", 0, 
+    //     MessageDto chat2 = new MessageDto("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요2", "", 0, 
     //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
     //     );
 
-    //     MessageDTO chat3 = new MessageDTO("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요3", "", 0, 
+    //     MessageDto chat3 = new MessageDto("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요3", "", 0, 
     //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
     //     );
 
-    //     MessageDTO chat4 = new MessageDTO("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요4", "", 0, 
+    //     MessageDto chat4 = new MessageDto("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요4", "", 0, 
     //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
     //     );
 

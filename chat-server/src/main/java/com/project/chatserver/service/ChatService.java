@@ -20,7 +20,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.chatserver.client.ShoppingServiceClient;
+import com.project.chatserver.client.UserServiceClient;
 import com.project.chatserver.common.util.KafkaUtil;
 import com.project.chatserver.common.util.TokenHandler;
 import com.project.chatserver.dto.ChatRoomDto;
@@ -54,7 +54,7 @@ public class ChatService {
     private final MessageProducer messageProducer;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberService chatMemberService;
-    private final ShoppingServiceClient shoppingServiceClient;
+    private final UserServiceClient shoppingServiceClient;
     private final SequenceGeneratorService sequenceGenerator;
 
     public void connect(String roomId, String email ) {
@@ -103,7 +103,7 @@ public class ChatService {
 
         return chatList.stream()
 			.map(MessageDto::from)
-			//.sorted(Comparator.comparing(MessageDTO::getCreatedAt))
+			//.sorted(Comparator.comparing(MessageDto::getCreatedAt))
 			.collect(Collectors.toList());        
     }
 

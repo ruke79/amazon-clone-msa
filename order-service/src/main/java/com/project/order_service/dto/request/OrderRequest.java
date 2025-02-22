@@ -1,11 +1,11 @@
-package com.project.backend.security.request;
+package com.project.order_service.dto.request;
 
 
 import java.util.List;
 
-import com.project.backend.dto.AddressDTO;
-import com.project.backend.dto.CouponDTO;
-import com.project.backend.dto.CartProductDTO;
+import com.project.order_service.dto.OrderAddressDto;
+//import com.project.cart_service.dto.CouponDto;
+import com.project.order_service.dto.CartProductDto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,10 +15,11 @@ import lombok.Setter;
 public class OrderRequest {
     
     private String orderNumber;
-    private List<CartProductDTO> products;
-    private AddressDTO shippingAddress;    
+    private List<CartProductDto> products;
+    private OrderAddressDto shippingAddress;        
     private String paymentMethod;
     private int total;
     private int totalBeforeDiscount;
     private String couponApplied;
+    private String userId;
 }

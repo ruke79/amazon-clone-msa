@@ -65,7 +65,7 @@ const AdminProduct = () => {
 
     useEffect(() => {    
         async function getParentData() {            
-            const { data } = await getRequest(`/catalog-service/api/product/${product.parent || ""}`);
+            const { data } = await getRequest(`/catalog-service/api/product/edit/${product.parent || ""}`);
             if(data) {  
                                                         
                 setProduct({

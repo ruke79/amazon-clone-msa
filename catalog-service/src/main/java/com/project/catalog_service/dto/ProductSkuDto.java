@@ -14,7 +14,7 @@ import com.project.catalog_service.dto.ColorAttributeDto;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSkuDTO {
+public class ProductSkuDto {
 
     private String id;
 

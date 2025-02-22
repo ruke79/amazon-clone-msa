@@ -3,7 +3,7 @@ package com.project.catalog_service.dto;
 import java.util.List;
 
 import com.project.catalog_service.model.ProductQA;
-import com.project.catalog_service.model.Review;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,9 +52,9 @@ public class ProductInfoDto {
 
     private List<ProductDetailDto> details; 
         
-    private List<ProductQADTO> questions;
+    private List<ProductQADto> questions;
 
-    private List<ReviewDTO> reviews;
+    //private List<ReviewDTO> reviews;
     
     private int discount;     
     

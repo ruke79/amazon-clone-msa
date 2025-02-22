@@ -1,4 +1,4 @@
-package com.project.backend.constants;
+package com.project.order_service.constants;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

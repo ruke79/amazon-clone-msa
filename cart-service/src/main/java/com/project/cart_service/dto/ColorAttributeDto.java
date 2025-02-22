@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.cart_service.dto;
 
 
 import jakarta.persistence.Column;

@@ -19,7 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,7 +37,7 @@ public class ProductSku extends BaseEntity {
     private String sku;
 
     
-    @Column(length = 1000)
+    @Column(length = 256)
     private List<String> images;
     
     //@Column(length = 20000)

@@ -1,4 +1,4 @@
-package com.project.cart-service.dto;
+package com.project.cart_service.dto;
 
 
 import lombok.AllArgsConstructor;

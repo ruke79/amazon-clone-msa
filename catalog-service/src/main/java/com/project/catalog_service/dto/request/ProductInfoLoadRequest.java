@@ -4,7 +4,7 @@ package com.project.catalog_service.dto.request;
 import java.util.List;
 
 import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.SubCategoryDTO;
+import com.project.catalog_service.dto.SubCategoryDto;
 import com.project.catalog_service.model.ProductColorAttribute;
 import com.project.catalog_service.model.ProductDetails;
 import com.project.catalog_service.model.ProductQA;
@@ -37,7 +37,7 @@ public class ProductInfoLoadRequest {
 
     private CategoryDto category;
 
-   private List<SubCategoryDTO> subCategories;
+   private List<SubCategoryDto> subCategories;
 
   
    private ProductColorAttribute color;

@@ -29,17 +29,22 @@ ext {
 }
 
 dependencies {
+	implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-63', version: '3.8.2'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'	
 	implementation 'org.springframework.cloud:spring-cloud-starter'
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.kafka:spring-kafka'
+
+	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
@@ -55,3 +60,4 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

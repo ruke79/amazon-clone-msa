@@ -1,4 +1,4 @@
-package com.project.catalog_service.exception.handler;
+package com.project.cart_service.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

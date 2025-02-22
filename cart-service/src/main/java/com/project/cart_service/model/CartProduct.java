@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.cart_service.model;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
@@ -15,12 +15,15 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="cart_product")
 public class CartProduct extends BaseEntity {

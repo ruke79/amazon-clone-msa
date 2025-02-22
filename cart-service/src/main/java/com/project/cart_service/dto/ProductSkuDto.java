@@ -1,4 +1,4 @@
-package com.project.backend.dto;
+package com.project.cart_service.dto;
 
 import java.util.List;
 import java.util.Set;
@@ -7,14 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.project.backend.dto.SizeAttributeDto;
-import com.project.backend.dto.ColorAttributeDto;
+import com.project.cart_service.dto.SizeAttributeDto;
+import com.project.cart_service.dto.ColorAttributeDto;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSkuDTO {
+public class ProductSkuDto {
 
     private String id;
 

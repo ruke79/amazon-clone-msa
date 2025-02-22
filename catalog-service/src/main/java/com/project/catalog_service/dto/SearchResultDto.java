@@ -19,12 +19,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SearchResultDto {
 
-    //private Set<ProductDTO> products;
+    //private Set<ProductDto> products;
     private Page<ProductDto> product;
 
     private List<CategoryDto> categories;
 
-    private List<SubCategoryDTO> subCategories;
+    private List<SubCategoryDto> subCategories;
 
     private List<String> colors;
 

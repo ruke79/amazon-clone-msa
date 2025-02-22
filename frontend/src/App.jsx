@@ -37,6 +37,7 @@ import toast, {Toaster} from 'react-hot-toast';
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import loadFakeData from "util/loadFake";
 import { postRequest, getRequest } from "util/api";
+import { useOnMounted } from "hook/useOnMounted";
 
 
 
@@ -75,11 +76,10 @@ const ErrorBoundaryLayout = () => (
   
 //<Suspense fallback={<div>Loading...</div>}>
   <ErrorBoundary FallbackComponent = {ErrorFallback} >            
-  <ContextProvider>                               
+  <ContextProvider>
   <ApiNavigationHandler/>    
-    <Outlet />              
-    </ContextProvider>              
-    
+    <Outlet />         
+    </ContextProvider>                           
   </ErrorBoundary>
 //  </Suspense>
 );
@@ -92,7 +92,7 @@ const AppRouter = () => {
     () => createBrowserRouter([
     {
       element: <ErrorBoundaryLayout />,
-      //errorElement : <ErrorPage/>,
+      errorElement : <ErrorPage/>,
          
       children: [
         {
@@ -159,7 +159,7 @@ const AppRouter = () => {
         {
           path: '/cart',
           element: <ProtectedRoute><Cart /></ProtectedRoute>,
-          loader : loaderCart(authContext),
+          loader : loaderCart,
         },
         {
           path: '/checkout',
@@ -196,21 +196,14 @@ const AppRouter = () => {
 
 function App() {
 
+
+  // const loadData = async () => {
+
+  //   await loadFakeData();            
+  // }
+
+  //useOnMounted(loadData);
   
-  const [loaded, setLoaded ] = useState(false);
-
-  useEffect(()=>{
-    
-    const loadData = async () => {
-
-        //await loadFakeData();            
-    }
-
-    if(loaded === false)
-      loadData();
-    setLoaded(true);
-
-  },[])
 
   
   return (
@@ -221,8 +214,8 @@ function App() {
       <QueryClientProvider client={queryClient}>      
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-          <PayPalScriptProvider options={initialOptions} >
-            <AppRouter/>                                                                       
+          <PayPalScriptProvider options={initialOptions} >          
+            <AppRouter/>                                                                                 
              </PayPalScriptProvider>
           </PersistGate>
         </Provider>

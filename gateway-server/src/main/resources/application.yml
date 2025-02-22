@@ -54,23 +54,39 @@ spring:
           lowerCaseServiceId: true
 
       routes:
-        - id:  shopping-service
-          uri: lb://shopping-service
+        - id:  user-service
+          uri: lb://user-service
           predicates:
-            - Path=/shopping-service/api/auth/public/login, /shopping-service/registrationConfirm, /shopping-service/api/token/**, /shopping-service/api/admin/**, /shopping-service/api/search/**, /shopping-service/api/product/**
+            - Path=/user-service/api/auth/public/login, /user-service/registrationConfirm, /user-service/api/token/**, /user-service/api/admin/**, /user-service/api/search/**, /user-service/api/product/**
             - Method=POST, GET
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/shopping-service/(?<segment>. *) , /$\{segment}
-        - id: shopping-service
-          uri: lb://shopping-service
+            - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
+        - id: user-service
+          uri: lb://user-service
           predicates:
-            - Path=/shopping-service/api/token/**, /shopping-service/api/user/**, /shopping-service/api/auth/user
+            - Path=/user-service/api/token/**, /user-service/api/user/**, /user-service/api/auth/user
             - Method=GET,POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/shopping-service/(?<segment>. *) , /$\{segment}
+            - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
             - AuthorizationHeaderFilter
+        - id: catalog-service
+          uri: lb://catalog-service
+          predicates:
+              - Path=/catalog-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
+
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+              - Path=/cart-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
+              - AuthorizationHeaderFilter              
 
         - id: chat-service
           uri: lb:ws://chat-service
@@ -100,5 +116,5 @@ logging:
   level:
     org:
       springframework:
-        security: TRACE
+              web: DEBUG
 

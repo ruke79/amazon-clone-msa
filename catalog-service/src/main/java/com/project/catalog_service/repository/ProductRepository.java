@@ -26,26 +26,25 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("Update Product p Set p.rating = :rating WHERE p.productId = :productId")
     int updateRating(@Param("productId") Long id, @Param("rating") float rating);
 
-    @Query(value = "select a.product_id from product a inner join category b  where (:categoryRegexp is null or b.category_name REGEXP :categoryRegexp)", nativeQuery = true)
+    @Query(value = "select b.product_id from category a inner join product b   where a.category_id = b.category_id and (:categoryRegexp is null or match(a.category_name) against (:categoryRegexp))", nativeQuery = true)
     public List<Long> findProductIDsByCategoryName(@Param("categoryRegexp") String categoryRegexp);
 
-    @Query(value = "select a.product_id from product a inner join category b  where (:categoryId is null or b.category_id = :categoryId)", nativeQuery = true)
+    @Query(value = "select b.product_id from category a inner join product b  where a.category_id = b.category_id and (:categoryId is null or a.category_id = :categoryId)", nativeQuery = true)
     public List<Long> findProductIDsByCategoryId(@Param("categoryId") Long categoryId);
 
-    @Query(value = "select distinct a.brand from product a inner join category b  where (:categoryId is null or b.category_id = :categoryId)", nativeQuery = true)
+    @Query(value = "select b.brand from  category a inner join product b  where a.category_id = b.category_id and (:categoryId is null or a.category_id = :categoryId)", nativeQuery = true)
     public List<String> findBrandsByCategoryId(@Param("categoryId") Long categoryId);
 
-    @Query(value = "select distinct a.brand from product a inner join category b  where (:categoryRegexp is null or b.category_name REGEXP :categoryRegexp)", nativeQuery = true)
+    @Query(value = "select b.brand from  category a  inner join product b  where a.category_id = b.category_id and (:categoryRegexp is null or match(a.category_name) against (:categoryRegexp))", nativeQuery = true)
     public List<String> findBrandsByCategoryName(@Param("categoryRegexp") String categoryRegexp);
 
     @Query(value = "select distinct a.* from product a " +
             "left join product_details b on a.product_id = b.product_id " +
-            "where (:name is null or a.name REGEXP :name) " +
+            "where (:name is null or match(a.name) against (:name)) " +
             "AND a.product_id in :productIds " +
             "AND (:categoryId is null or a.category_id = :categoryId) " +
-            "AND (:brand is null or a.brand REGEXP :brand) " +
-            "AND ((:style is null AND :material is null AND :gender is null) or ( REGEXP_LIKE(b.value, :material) or REGEXP_LIKE(b.value, :style) or REGEXP_LIKE(b.value, :gender)) )"
-            +
+            "AND (:brand is null or match(a.brand) against (:brand)) " +
+            "AND ((:style is null AND :material is null AND :gender is null) or ( b.value = :material or b.value = :style or b.value = :gender) )" +
             "AND (:rating is null or a.rating >= :rating)", nativeQuery = true)
     List<Product> findProductBySearchParams(@Param("name") String name, @Param("categoryId") Long categoryId,
             @Param("style") String style, @Param("brand") String brand, @Param("material") String material,

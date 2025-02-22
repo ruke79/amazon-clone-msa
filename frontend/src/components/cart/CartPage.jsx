@@ -3,59 +3,63 @@ import CartHeader from "./CartHeader";
 import Checkout from "./Checkout";
 import PaymentMethods from "./PaymentMethods";
 import Product from "./Product";
-import api, {saveCart, putRequest, getRequest } from "util/api";
+import api, { saveCart, putRequest, getRequest } from "util/api";
 import { useLoaderData, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { emptyCart, updateCart } from "../../redux/CartSlice";
 import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
+import tokenUtil from "util/tokenUtil";
 
-const fetchCart = async (cart) => {    
-     const { data} = await putRequest(`/cart-service/api/cart/updatecart`,
-     {products: cart.cartItems});    
+const fetchCart = async (cart) => {
+    
+    const { data } = await putRequest(`/cart-service/api/cart/updatecart`,
+        { products: cart.cartItems });
     return data;
 }
 
-const useCart = ( cart, enable) => {
+const useCart = (cart, enable) => {
 
-    const cartQuery = useQuery({
-        queryKey: [ cart],
-        queryFn : () => fetchCart(cart),
-        throwOnError : true,
-        enable : enable        
+    const { data, isLoading, isSuccess } = useQuery({
+        queryKey: [cart],
+        queryFn: () => { return fetchCart(cart) },
+        throwOnError: true,
+        enable: enable
     });
 
-    return cartQuery;
+    return {
+        data,
+        isLoading,
+        isSuccess,
+    };
 }
 
 
 const CartPage = ({ cart, setLoadedData }) => {
-    const { token } = useAuthContext();
+    const { token, user } = useAuthContext();
     const dispatch = useDispatch();
-    
+
     const [selected, setSelected] = useState([]);
     const [shippingFee, setShippingFee] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [enable, setEnable] = useState(cart.cartItems.length > 0);
+    const [state, setState] = useState();
 
     const navigate = useNavigate();
-   
-    useCart(cart, enable);
-       
-    
+
+    const { isLoading } = useCart(cart, enable);
+
+
     useEffect(() => {
-        if (token) {
-            if(cart.cartItems.length === 0)
-                setEnable(false);
-            else 
-                setEnable(true);
-                      
-         } else {            
-            navigate("/signin");
-        }
+
+        if (cart.cartItems.length === 0)
+            setEnable(false);
+        else
+            setEnable(true);
+
     }, []);
 
     useEffect(() => {
@@ -87,25 +91,29 @@ const CartPage = ({ cart, setLoadedData }) => {
                     (total, product) =>
                         total + Number(product.shipping),
                     0
-                ) 
+                )
             ).toFixed(2)
         );
-        
+
     }, [selected]);
 
-    const [state, setState] = useState();
+    if (isLoading) return <div><p>Loading...</p></div>;
+
+
+
+
+
+
     const saveCartToDbHandler = async (e) => {
         e.preventDefault();
         setState(e);
-        
+
         if (token) {
             setLoading(true);
 
-            console.log(selected);
-            
-            const res = await saveCart(selected);
+            const res = await saveCart(selected, tokenUtil.getUser().email);
 
-           
+
             navigate("/checkout");
             setLoading(false);
         } else {

@@ -1,6 +1,5 @@
-package com.project.backend.dto;
+package com.project.order_service.dto;
 
-import com.project.backend.model.ProductColorAttribute;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderedProductDTO {
+public class OrderedProductDto {
 
     private String id;
 
@@ -27,7 +26,7 @@ public class OrderedProductDTO {
 
      private int qty;
         
-     private ColorAttributeDTO color;
+     private ColorAttributeDto color;
 
     private int price;      
 

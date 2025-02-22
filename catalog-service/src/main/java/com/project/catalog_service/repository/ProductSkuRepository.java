@@ -16,7 +16,7 @@ import com.project.catalog_service.model.ProductSku;
 public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
 
     
-    @Query(value = "select product_id from product_sku a " +
+    @Query(value = "select distinct product_id from product_sku a " +
     "left join product_size b on a.skuproduct_id = b.skuproduct_id " +
     "left join product_color c on a.color_id = c.color_id " +
     "where ((:low_price is null or :high_price is null ) or b.price between :low_price and :high_price) and (:size is null or b.size REGEXP :size)" +

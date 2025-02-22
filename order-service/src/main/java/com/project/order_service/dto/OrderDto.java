@@ -1,15 +1,10 @@
-package com.project.backend.dto;
+package com.project.order_service.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.project.backend.constants.OrderStatusEnum;
-import com.project.backend.model.OrderedProduct;
-import com.project.backend.model.PaymentResult;
-import com.project.backend.model.ShippingAddress;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -23,11 +18,11 @@ public class OrderDto {
 
     private String orderNumber;
 
-    private UserProfileDTO user;
+    private ServiceUserDto user;
 
-    private List<OrderedProductDTO> products;
+    private List<OrderedProductDto> products;
 
-    private AddressDTO shippingAddress;
+    private OrderAddressDto shippingAddress;
 
     private String paymentMethod;
 

@@ -16,7 +16,7 @@ const Payment = () => {
 
     const handlePM = async () => {
         try {
-            const { data } = await putRequest("/pay-service/api/pay/changepm", null, {
+            const { data } = await putRequest("/user-service/api/user/profile/changepm", null, {
                 params : { paymentMethod: paymentMethod }
             });
             setErorr("");

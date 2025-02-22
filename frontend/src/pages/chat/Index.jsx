@@ -12,7 +12,6 @@ import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from "react-redux";
 import { addRoomToList, setRooms } from "../../redux/ChatSlice";
 import { useFetchChatRooms } from "../../hook/chatHooks";
-import { getChatRoomList } from "util/apichat";
 import { useAuthContext } from "store/AuthContext";
 
 

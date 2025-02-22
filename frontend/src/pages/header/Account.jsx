@@ -23,7 +23,7 @@ const Account = () => {
     const handleLogout = async() => {
                 
         try {
-            await postRequest('/auth/logout', null);
+            await postRequest('/user-service/api/auth/logout', null);
 
             tokenUtil.remove();
             setToken(null);            

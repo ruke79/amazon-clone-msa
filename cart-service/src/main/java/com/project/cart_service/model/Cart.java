@@ -1,4 +1,4 @@
-package com.project.backend.model;
+package com.project.cart_service.model;
 
 import java.util.List;
 import java.util.Set;
@@ -17,10 +17,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name="cart")
