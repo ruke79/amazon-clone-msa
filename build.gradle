@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.2'
+}
+
+group = 'com.project'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+bootJar {
+   enabled = false
+}
+
+jar {
+   enabled = true
+}
