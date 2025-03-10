@@ -68,24 +68,21 @@ public class CouponController {
 
     @GetMapping("/coupons") 
     ResponseEntity<?> getNotUsedCoupons(@RequestParam(name="email") String userId) {
+        
 
-        log.info("email : {}", userId);
-
-        try {
+        
             List<CouponDto> coupons = couponService.getCouponsNotUsed(userId);
 
-            List<String> result = coupons.stream().map(coupon -> {
-                return coupon.getName();
-            }).collect(Collectors.toList());
+            if ( coupons != null) {
 
-            return new ResponseEntity<>(result, HttpStatus.OK);            
+                List<String> result = coupons.stream().map(coupon -> {
+                    return coupon.getName();
+                }).collect(Collectors.toList());
 
-        } catch (RuntimeException e) {
-             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                     .body(new MessageResponse("Faield to get not used coupons."));
-            
-        }
-        
+                return new ResponseEntity<>(result, HttpStatus.OK);            
+            }
+
+            return new ResponseEntity<>(null, HttpStatus.OK);                            
     }
 
     @DeleteMapping("/delete")

@@ -46,25 +46,31 @@ public class ProductController {
 
     private final ProductService productService;
 
-    private final ProductRepository productRepository;
-
     
     @GetMapping(value = "/product/products")
     ResponseEntity<?> getProducts() {
 
         try {
-            List<Product> products = productRepository.findAll();
+            List<ProductDto> response = productService.getProducts();
 
-            List<ProductDto> response = new ArrayList<ProductDto>();
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
-            for (Product product : products) {
-                List<ProductDto> sameNameeProducts = productService.getProductsByName(product.getName());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+        }
 
-                for (ProductDto p : sameNameeProducts) {
-                    response.add(p);
-                }
-            }
+    }
 
+    
+
+    @GetMapping(value = "/product/products/page")
+    ResponseEntity<?> getProducts(@RequestParam String category, @RequestParam String cursorId, @RequestParam int pageSize) {
+
+        try {
+           
+            List<ProductDto> response = productService.getProductsByCategory(category, Long.parseLong(cursorId), pageSize);
+           
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (RuntimeException e) {
@@ -175,18 +181,10 @@ public class ProductController {
 
 
     @PutMapping("/product/rating")
-    public ResponseEntity<ProductDto> updateRating(@RequestParam Long id, @RequestParam float rating) {
+    public void updateRating(@RequestParam Long id, @RequestParam float rating) {
 
-        productRepository.updateRating(id, rating);
-
-        ProductDto dto = productService.getProductById(id);
+        productService.updateRating(id, rating);
         
-
-        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-    // public void updateRating(@RequestParam Long id, @RequestParam float rating) {
-
-    //     productRepository.updateRating(id, rating);
-        
-    // }
+    
 }

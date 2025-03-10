@@ -8,16 +8,18 @@ import {
     SET_SEARCH_DATA,
     SET_SELECTED_USER,    
     ADD_ROOM_TO_LIST,   
-    ADD_CHAT_MESSAGE
+    ADD_CHAT_MESSAGE,
+    SHOW_ROOM
 
 } from "../constants/ChatActionType";
-import { selectedRoom } from "./ChatSelectors";
+
 
 const initialState  = {
     users: [],
     contacts: [],    
     roomConversation: [],
     rooms: [],    
+    showRoom : false,
     selectedUser: null,
     selectedRoom: null,        
     loadUser: false,
@@ -51,12 +53,14 @@ const initialState  = {
       },
       setImage : (state, action) => {
         state.image = action.payload;
+      },
+      showRoom : (state, action) => {
+        state.showRoom = action.payload;
       }
-      
     }
   });
 
-  export const { addRoomToList, setRooms, setRoomConversation, fetchRoomConversation, selectRoom, setImage } = chatSlice.actions;
+  export const { addRoomToList, setRooms, setRoomConversation, fetchRoomConversation, selectRoom, setImage, showRoom } = chatSlice.actions;
 
   export default chatSlice.reducer;
 
@@ -88,6 +92,12 @@ const initialState  = {
         return {
           ...state,
           search: action.payload,
+        };
+      }
+      case SHOW_ROOM: {
+        return {
+          ...state,
+          showRoom: action.payload,
         };
       }
       default:

@@ -10,34 +10,18 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import tokenUtil from "util/tokenUtil";
 import { postRequest  } from "util/api";
+import { useLogout } from "hook/hooks";
 
 const Account = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const cart = useSelector((state) => state.cart.cartItems);
 
-    const { token, setToken } =  useAuthContext();
+    const { token } =  useAuthContext();
     const { user } = useAuthContext();
     
+    const logout = useLogout();
     
-    const handleLogout = async() => {
-                
-        try {
-            await postRequest('/user-service/api/auth/logout', null);
-
-            tokenUtil.remove();
-            setToken(null);            
-            navigate('/signin');
-
-            toast.success("Signout successed. ");
-        }
-        catch(err) {
-            console.log('logout failed');
-            toast.error("Login failed. ");
-
-        }
-
-      };
 
     return (
         <div className="flex items-center max-md:ml-auto md:space-x-6 space-x-2">
@@ -77,7 +61,7 @@ const Account = () => {
                             </div>
                             </Link>
                             <button
-                                onClick={() => handleLogout()}
+                                onClick={() => logout()}
                                 className="button-orange px-2 py-[0.3rem] text-sm text-gray-900"
                             >
                                 Sign Out

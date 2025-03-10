@@ -46,14 +46,12 @@ public class CartController {
 
     @PostMapping("/savecart")
     ResponseEntity<?> saveCart(@Valid @RequestBody CartRequest request) {
-
-        
-            
+    
                  Cart cart = cartService.saveCart(request);
 
                  if (null != cart ) {
 
-                    CartResponse response = new CartResponse(cart.getCartTotal());
+                    CartResponse response = new CartResponse(Long.toString(cart.getCartId()), cart.getCartTotal());
 
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 }

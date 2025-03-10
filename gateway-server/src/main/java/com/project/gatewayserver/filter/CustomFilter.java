@@ -1,6 +1,8 @@
 package com.project.gatewayserver.filter;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Config> {
     public CustomFilter() {
@@ -20,6 +23,8 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
         return (exchange, chain) -> {
             ServerHttpResponse response = exchange.getResponse();
 
+            log.info("CustomFilter applied");
+          
             // Response 헤더 설정을 커밋하기 전에 조작
             response.beforeCommit(() -> {
                 // 기존 Connection 헤더 제거

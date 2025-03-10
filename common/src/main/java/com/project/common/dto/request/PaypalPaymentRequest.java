@@ -25,6 +25,8 @@ public class PaypalPaymentRequest {
 
     private String orderStatus;
 
+    private String couponName;
+
     private BigDecimal amounts;
 
     private String paymentStatus;

@@ -115,7 +115,7 @@ const Infos = ({ product, num_reviews, setActiveImg }) => {
                 return navigate('/signin');
             }
             
-            const { data } = await putRequest("/user/wishlist", {
+            const { data } = await putRequest("/user-service/api/user/wishlist", {
                 id: product.id,
                 style: product.style,
             });
@@ -136,7 +136,7 @@ const Infos = ({ product, num_reviews, setActiveImg }) => {
                     header: "whislist Error",
                     msgs: [
                         {
-                            msg: error.response.data.message,
+                            msg: error.response?.data.message,
                             type: "error",
                         },
                     ],

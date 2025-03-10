@@ -13,5 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CartResponse {
 
+    private String cartId;
     private BigDecimal cartTotal;
 }

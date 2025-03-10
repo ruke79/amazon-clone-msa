@@ -28,15 +28,15 @@ public class OrderOutboxScheduler implements OutboxScheduler {
 
     @Override
     @Transactional
-    @Scheduled(fixedDelayString = "${order-service.outbox-scheduler-fixed-rate}",
-                initialDelayString = "${order-service.outbox-scheduler-initial-delay}")
+    @Scheduled(fixedDelayString = "10", //"${pay-service.outbox-scheduler-fixed-rate}",
+                initialDelayString = "3" )//"${pay-service.outbox-scheduler-initial-delay}")
     public void processOutboxMessage() {
 
         Optional<List<OrderOutboxEvent>> outboxEvents = 
         orderOutboxHelper.getOrderOutboxEventByOutboxStatus(OutboxStatus.STARTED);
 
 
-        if (outboxEvents.isPresent() && outboxEvents.get().size() >= 0) {
+        if (outboxEvents.isPresent() && outboxEvents.get().size() > 0) {
             List<OrderOutboxEvent> outboxList = outboxEvents.get();
 
             log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",

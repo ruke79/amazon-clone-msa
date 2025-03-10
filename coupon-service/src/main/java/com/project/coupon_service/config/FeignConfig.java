@@ -23,8 +23,7 @@ public class FeignConfig {
 
                 HttpServletRequest request = attributes.getRequest();
 
-                String accessToken = request.getHeader("Authorization");
-                log.info("Feign token: " + accessToken);          
+                String accessToken = request.getHeader("Authorization");                
                 if (accessToken != null) {
                     requestTemplate.header("Authorization", accessToken);
                 }               

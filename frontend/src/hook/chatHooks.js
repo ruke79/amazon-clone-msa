@@ -38,10 +38,10 @@ export const useCreateChatRoom = (props) => {
     const { data, isPending, refetch, isSuccess, error, isError } = useQuery({
       queryKey : ["rooms"],
       queryFn : async () => {
-        const res = await getChatRoomList();          
-        console.log(res)  
+        const res = await getChatRoomList();                  
         return res;
-      },            
+        
+      },      
       throwOnError : true,      
   });
     
@@ -57,21 +57,18 @@ export const useCreateChatRoom = (props) => {
 
   export const useFetchRoomMessages = (room, cursor) => {
     
-    //const dispatch = useDispatch();
-    const queryClient = useQueryClient();
-
+    
     
     const { data, isPending, refetch, isSuccess } = useQuery({
       queryKey : [`room_messages/${room?.roomId}`, cursor ],
       queryFn : async () => {
 
         const res = await getRoomMessages(room, cursor);        
-        //console.log(res);
-        const messages = res.reverse();
-        //dispatch(setRoomConversation(messages));
+        const messages = res?.reverse();
+    
         return messages;
       },
-      //onSuccess: (data) => queryClient.invalidateQueries([`room_messages/${room?.roomId}`, cursor ]),
+    
       throwOnError : true,      
       staleTime : 1000
   });

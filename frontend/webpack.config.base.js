@@ -2,13 +2,14 @@ const webpack = require("webpack");
 const path = require("path");
 const dotenv = require('dotenv');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 
 dotenv.config({path: './.env.development'})
 
 module.exports = {
+  infrastructureLogging: {
+    level: 'verbose',
+ },
   mode: "development",
   entry: "./src/index.jsx",
   output: {
@@ -20,11 +21,11 @@ module.exports = {
   resolve: {
     alias: {
         "components": path.resolve(__dirname, './src/components'),
-        "pages": path.resolve(__dirname, './src/pages'),
-        "pages": path.resolve(__dirname, './src/pages'),
+        "pages": path.resolve(__dirname, './src/pages'),        
         "util": path.resolve(__dirname, './src/util'),
         "store": path.resolve(__dirname, './src/store'),
-        "hook": path.resolve(__dirname, './src/hook'),
+        "hook": path.resolve(__dirname, './src/hook'),        
+        "constants": path.resolve(__dirname, './src/constants'),
         "public": path.resolve(__dirname, './public'),
         "error" : path.resolve(__dirname, './src/error'),
     },
@@ -73,14 +74,11 @@ module.exports = {
 	new HtmlWebPackPlugin({
 	  template: './public/index.html'
 	}), 
-  //new MiniCssExtractPlugin({ filename: 'app.css' }),
-  //new MiniCssExtractPlugin(),    
+  
   new webpack.DefinePlugin({
     'process.env': JSON.stringify(process.env),
   }),
   
   ],
-  optimization: {  
-    minimizer: [new CssMinimizerPlugin()],  
-  },
+  
 };

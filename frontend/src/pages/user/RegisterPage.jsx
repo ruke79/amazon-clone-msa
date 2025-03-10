@@ -24,10 +24,10 @@ const initialUser = {
 const signup = async (userData) => {
     try {        
         console.log(userData);
-        const data  = await postRequest("/auth/public/register", userData);
+        const data  = await postRequest("/user-service/api/auth/public/register", userData);
         return data;
     } catch(err) {
-        console.log(err);
+        console.log(err.response?.data.message);
     }
 }
 
@@ -80,9 +80,9 @@ const RegisterPage = () => {
             
             setLoading(false);            
             setUser({
-                ...user, success: "", error: error
+                ...user, success: "", error: error.response?.data.message
             })
-             toast.error(error);
+             toast.error("Failed to register user. Please retry.");
         }
     });
 
@@ -102,32 +102,10 @@ const RegisterPage = () => {
             email,
             password,
             role: [role],
-          };
-         
+          };         
           
-          mutate(sendData);
-          
-        // try{
-        //     setLoading(true);
-            
-        //     const response = await postRequest("/auth/public/register", sendData);
-            
-        //     if (response.data) {
-        //         setUser({
-        //             ...user, error: "", success: response.message
-        //         })
-        //         toast.success("Vertification email sended. Please chek your email.");
-        //         navigate("/signin");
-        //       }
-
-        // } catch(error) {
-        //     setLoading(false);
-        //     console.log(error.message);
-        //     setUser({
-        //         ...user, success: "", error: error.message
-        //     })
-        //      toast.error(error.message);
-        // }
+          mutate(sendData);          
+       
     }
 
 

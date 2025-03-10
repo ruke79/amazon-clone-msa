@@ -100,20 +100,8 @@ export const loader =  async ({params, request}) => {
         
 
         const filter = searchParams.get('q').split("__")[1];
-
-        
-        // try {
-
-        //  const { data } = await getRequest("/order-service/api/order/orders", 
-        //               { params : { filter : filter, email:tokenUtil.getUser().email }                                  
-        //                } 
-        //     );                             
-        
-        //   return { orders : data, tab : tab };    
-        
-        // } catch (error) {
-        //     toast.error("Failed to load orders");            
-        // }
+       
+       
 
         return { flter : filter, tab : tab };    
     };

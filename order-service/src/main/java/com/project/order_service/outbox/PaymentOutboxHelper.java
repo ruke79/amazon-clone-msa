@@ -51,6 +51,7 @@ public class PaymentOutboxHelper {
 
         PaymentOutboxEvent outboxEvent = new PaymentOutboxEvent(Long.toString(request.getOrderId()), "Order", "payment-request", payload, status);
 
+        
         this.save(outboxEvent);
     }
 

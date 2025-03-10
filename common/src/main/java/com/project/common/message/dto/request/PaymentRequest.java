@@ -26,6 +26,8 @@ public class PaymentRequest implements Serializable {
 
     private String paypalOrderId;
 
+    private String couponName;
+
     private BigDecimal amounts;
 
     private OrderStatus orderStatus;

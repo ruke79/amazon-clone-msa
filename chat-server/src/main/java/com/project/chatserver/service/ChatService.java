@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
@@ -52,14 +53,15 @@ public class ChatService {
     private final MessageProducer messageProducer;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberService chatMemberService;
-    private final UserServiceClient shoppingServiceClient;
+    
     private final SequenceGeneratorService sequenceGenerator;
 
-    public void connect(String roomId, String email ) {
+    public void connect(String roomId, String email, String userSessionId ) {
 
-        chatRoomRepository.setUserEnterInfo(email, roomId);
-
+                
         ChatMember member = saveParticipantRoom(roomId, email);
+
+        chatRoomRepository.setUserEnterInfo(userSessionId, roomId);
 
         // send 입장 메시지
         
@@ -87,10 +89,10 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public List<MessageDto> getRoomMessagesByCurser(String roomId, String cursorId) {
-        //Slice<ChatMessage> chatList = chatMessageRepository.find
+        
          PageRequest pageable = PageRequest.of(0, 20 + 1);
         Slice<ChatMessage> chatList;
-        //if ( null == cursorId ) {
+        
         if ( cursorId.equals("-1") ) {
             chatList = chatMessageRepository.findAllByRoomIdOrderByIdDesc(roomId, pageable);        
             log.info("chatlist: " + chatList.getNumberOfElements());
@@ -198,24 +200,22 @@ public class ChatService {
 
     private ChatMember saveParticipantRoom(String roomId, String userEmail) {
         
-        log.info("userEmail :" + userEmail);
+        
         ChatMember member = chatMemberService.findByEmail(userEmail);                        
         
-        log.info("Member Name : " + userEmail + " " + member.getNickname());
-
-        ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);
-                                                
-        log.info("ChatRoom name : " + chatRoom.getRoomName());
-        log.info("ChatRoom Id : " + chatRoom.getRoomUid());
-
+        ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);                                                
+        
         ParticipantChatRoom chatRoomInfo = new ParticipantChatRoom();
         chatRoomInfo.setMember(member);
         chatRoomInfo.setRoom(chatRoom);
         em.persist(chatRoomInfo);
 
         member.getRoomList().add(chatRoomInfo);
-        chatRoom.getRoomList().add(chatRoomInfo);
+        chatRoom.getRoomList().add(chatRoomInfo);           
+        
 
+      
+        
         return member;
     }
 }

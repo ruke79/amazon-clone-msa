@@ -28,7 +28,7 @@ public class CouponUseMessageListener {
         Cart cart = cartService.couponUsed(request);
          
         if (cart == null) {
-            log.error("Cart could not be created in order database with id: {}", request.getUserId());
+            log.error("Coupon could not be created in order database with id: {}", request.getUserId());
             //throw new OrderDomainException("Customer could not be created in order database with id " +
             //createdUser.getUserId());
         }

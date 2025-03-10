@@ -103,19 +103,33 @@ public class AuthController {
     public ResponseEntity<?> registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
             final HttpServletRequest request) {
 
-                try {
+            try {
 
-            final User registered = userService.registerNewUserAccount(accountDto);
-            // userService.addUserLocation(registered, getClientIP(request));
+                User user = userService.findByEmail(accountDto.getEmail());
 
-            eventPublisher.publishEvent(new com.project.userservice.registration.OnRegistrationCompleteEvent(registered,
-                    request.getLocale(), getAppUrl(request)));
-            return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS), HttpStatus.OK);
+                if (user != null ) {
+
+                    return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_ID_EXISTS), HttpStatus.OK);
+                }
+
+                user = userService.findByUsername(accountDto.getUsername());
+
+                if (user != null ) {
+
+                    return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_FULLNAME_EXISTS), HttpStatus.OK);
+                }
+
+                user = userService.registerNewUserAccount(accountDto);
+                // userService.addUserLocation(registered, getClientIP(request));
+
+                eventPublisher.publishEvent(new com.project.userservice.registration.OnRegistrationCompleteEvent(user,
+                        request.getLocale(), getAppUrl(request)));
+                return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS), HttpStatus.OK);
                 }
                 catch(RuntimeException e) {
 
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("User Resigtration failed");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
                 }
     }
     
@@ -247,7 +261,7 @@ public class AuthController {
         Long userId = authUtil.loggedInUserId();
         GoogleAuthenticatorKey secret = userService.generate2FASecret(userId);
         String qrCodeUrl = totpService.getQrCodeUrl(secret,
-                userService.getUserById(userId).getUsername());
+                userService.getUserProfileById(userId).getUsername());
         return ResponseEntity.ok(qrCodeUrl);
     }
 

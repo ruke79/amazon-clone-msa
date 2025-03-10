@@ -15,6 +15,7 @@ import com.project.common.constants.CouponStatus;
 import com.project.common.dto.SharedUserDto;
 import com.project.common.message.dto.request.CouponRollbackRequest;
 import com.project.common.message.dto.request.CouponUseRequest;
+import com.project.common.message.dto.response.PaymentResponse;
 import com.project.common.util.EmailValidator;
 import com.project.coupon_service.client.UserServiceClient;
 import com.project.coupon_service.dto.CouponDto;
@@ -38,6 +39,8 @@ public class CouponService {
     private final CouponUseProducer couponUseProducer;
     
 
+    
+    @Transactional
     public CouponResponse applyCoupon(CouponApplyRequest request) {
 
         
@@ -58,11 +61,13 @@ public class CouponService {
                     BigDecimal totalAfterDiscount = request.getTotalPrice().multiply(afterDiscount).divide(hundred,2, 
                     RoundingMode.HALF_UP);
 
+                   
                     couponUseProducer.publish(CouponUseRequest.builder()
                     .userId(response.getUserId())
                     .totalAfterDiscount(totalAfterDiscount)
                     .discount(coupon.getDiscount())
                     .build());
+                   
                 
                     CouponResponse result = new CouponResponse(totalAfterDiscount, coupon.getDiscount(), "");
 
@@ -75,6 +80,24 @@ public class CouponService {
 
         return result;
 
+    }
+
+    @Transactional
+    public Coupon updateCouponStatus(PaymentResponse response) {
+
+        if (null !=  response.getCouponName()) {
+
+            
+
+            Coupon coupon= getCouponByNameAndUserIdAndCouponStatus(response.getCouponName(), response.getCustomerId(), CouponStatus.NOT_USED);
+
+            if ( null != coupon) {
+                coupon.setCouponStatus(CouponStatus.USED);
+                coupon = couponRepository.save(coupon);
+                return coupon;
+            }
+        }
+        return null;
     }
 
     public boolean delete(String id) {
@@ -179,11 +202,7 @@ public class CouponService {
 
         Coupon coupon = getCouponByNameAndUserIdAndCouponStatus(couponName, userId, CouponStatus.NOT_USED);
 
-        log.info("Coupon : {} {}", couponName, userId);
-
-        if ( null != coupon) {
-            log.info("Coupon : {}", coupon.getName());
-        }
+        //log.info("Coupon : {} {}", couponName, userId);        
 
         return coupon;
         
@@ -202,8 +221,7 @@ public class CouponService {
             
             if (!coupons.isEmpty()) {
 
-                log.info("Coupon");
-                List<CouponDto> result = new ArrayList<CouponDto>();
+                 List<CouponDto> result = new ArrayList<CouponDto>();
                 for (Coupon coupon : coupons) {
         
                     result.add(CouponDto.convertToDto(coupon));
@@ -214,7 +232,7 @@ public class CouponService {
             
         }
 
-        log.info("Coupon is not found");
+        //log.info("Coupon is not found");
                
         return null;
     }

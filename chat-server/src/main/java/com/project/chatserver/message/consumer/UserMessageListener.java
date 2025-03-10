@@ -3,6 +3,7 @@ package com.project.chatserver.message.consumer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.project.chatserver.common.exception.UserDomainException;
 import com.project.chatserver.model.ChatMember;
 import com.project.chatserver.repository.ChatMemberRepository;
 import com.project.common.message.dto.request.UserCreatedRequest;
@@ -31,9 +32,9 @@ public class UserMessageListener {
                                 build());
         
         if (customer == null) {
-            log.error("Customer could not be created in order database with id: {}", createdUser.getUserId());
-            //throw new OrderDomainException("Customer could not be created in order database with id " +
-            //createdUser.getUserId());
+            log.error("Member could not be created in chat database with id: {}", createdUser.getUserId());
+            throw new UserDomainException("Member could not be created in order database with id " +
+            createdUser.getUserId());
         }
         log.info("Customer is created in order database with id: {}", customer.getId());
 

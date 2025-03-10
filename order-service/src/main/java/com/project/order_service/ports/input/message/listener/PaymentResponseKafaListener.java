@@ -28,7 +28,7 @@ public class PaymentResponseKafaListener {
                 if (PaymentStatus.COMPLETED == paymentResponse.getPaymentStatus()) {
                     log.info("Processing successful payment for order id: {}", paymentResponse.getOrderId());
                     paymentResponseMessageListener.paymentCompleted(paymentResponse);
-                } else if (PaymentStatus.CANCELLED == paymentResponse.getPaymentStatus() ||
+                } else if (PaymentStatus.CANCELED == paymentResponse.getPaymentStatus() ||
                         PaymentStatus.FAILED == paymentResponse.getPaymentStatus()) {
                     log.info("Processing unsuccessful payment for order id: {}", paymentResponse.getOrderId());
                     paymentResponseMessageListener.paymentCancelled(paymentResponse);

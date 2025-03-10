@@ -94,7 +94,7 @@ public class OrderController {
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(StatusMessages.PAYMENT_TRANSACTION_FAILED));
+                    .body(new MessageResponse(StatusMessages.PAYMENT_TRANSACTION_FAILED + ": " + e.getMessage()));
 
         }
 

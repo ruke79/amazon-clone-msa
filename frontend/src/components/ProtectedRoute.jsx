@@ -1,13 +1,17 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuthContext } from "../store/AuthContext";
+import { useAuthContext, STATUS } from "../store/AuthContext";
+import DotLoaderSpinner from "./loader/Loading";
 
 const ProtectedRoute = ({ children }) => {
   // Access the token and isAdmin state by using the useMyContext hook from the ContextProvider
-  const { token, } = useAuthContext();
+  const { status, isAuthenticated } = useAuthContext();
+  
+  
+  if (status === STATUS.PENDING) return ; //<DotLoaderSpinner loading={status === STATUS.PENDING}/>;
 
   //navigate to login page to an unauthenticated
-   if (!token) {
+   if (!isAuthenticated) {    
      return <Navigate to="/signin" />;
    }
 

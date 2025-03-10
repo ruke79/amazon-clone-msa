@@ -1,11 +1,18 @@
 package com.project.catalog_service.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
+import java.math.BigDecimal;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
 @Getter
 @Setter
-public class SearchParamsRequest {
+public class SearchParamsRequest implements Serializable{
 
     private String search;
 
@@ -23,13 +30,13 @@ public class SearchParamsRequest {
 
     private String gender;
 
-    private Integer lowPrice;
+    private BigDecimal lowPrice;
 
-    private Integer highPrice;
+    private BigDecimal highPrice;
 
-    private Integer shipping = 0;
+    private BigDecimal shipping;
 
-    private Integer rating;
+    private float rating;
 
     private int page;
 

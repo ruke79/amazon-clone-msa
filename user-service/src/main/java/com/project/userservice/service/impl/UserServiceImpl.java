@@ -3,6 +3,7 @@ package com.project.userservice.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.common.constants.StatusMessages;
+import com.project.common.message.dto.request.UserCreatedRequest;
 import com.project.userservice.constants.AppRole;
 import com.project.userservice.dto.AddressDto;
 import com.project.userservice.dto.UserProfileDto;
@@ -43,8 +44,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.userservice.message.repository.OutboxEventRepository;
-import com.project.userservice.message.dto.UserCreatedRequest;
 import com.project.userservice.message.model.OutboxEvent;
+import com.project.userservice.message.producer.UserCreatedProducer;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
     private final JwtUtils jwtUtils;
 
     private final AuthenticationManager authenticationManager;
-
+    
     private final UserDetailsServiceImpl userDetailsService;
 
     private final PasswordEncoder passwordEncoder;
@@ -88,6 +89,8 @@ public class UserServiceImpl implements UserService {
 
     private final OutboxEventRepository outboxEventRepository;
     private final ObjectMapper objectMapper;
+
+    private final UserCreatedProducer userCreatedProducer;
 
     
     public static final String TOKEN_INVALID = "invalidToken";
@@ -111,7 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileDto getUserById(Long id) {
+    public UserProfileDto getUserProfileById(Long id) {
         
         User user = userRepository.findById(id).orElseThrow();
 
@@ -124,12 +127,26 @@ public class UserServiceImpl implements UserService {
         return UserProfileDto.convertToDto(user, roles);
     }
 
+    @Override
+    public LoginResponse getLoginInfoByEmail(String email) {
+        
+        User user = userRepository.findByEmail(email).orElseThrow();
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+
+        List<String> roles = userDetails.getAuthorities().stream()
+        .map(item -> item.getAuthority())
+        .collect(Collectors.toList());
+
+        return new LoginResponse(user.getEmail(), roles);
+    }
+    
     
 
     @Override
     public User findByUsername(String username) {
         Optional<User> user = userRepository.findByUserName(username);
-        return user.orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+        return user.orElse(null);
     }
 
     @Override
@@ -235,7 +252,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).
-        orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findById(Long userId) {
+        return userRepository.findById(userId).
+        orElse(null);
     }
 
     @Override
@@ -476,15 +500,18 @@ public class UserServiceImpl implements UserService {
                 userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserCreatedRequest in = UserCreatedRequest.builder().userId(user.getUserId())
-                .username(user.getUserName())
-                .nickname(user.getName())
-                .email(user.getEmail())
-                .build();
+        
+        UserCreatedRequest dto = UserCreatedRequest.builder()
+        .userId(user.getUserId())
+        .image(user.getImage())
+        .email(user.getEmail())
+        .nickname(user.getName())
+        .build();
 
-        OutboxEvent event = createOutboxEvent(in);
-
-        outboxEventRepository.save(event);
+        //OutboxEvent event = createOutboxEvent(in);
+        //outboxEventRepository.save(event);
+        
+        userCreatedProducer.publish(dto);
 
     }
 

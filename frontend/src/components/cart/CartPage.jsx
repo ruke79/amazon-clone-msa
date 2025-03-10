@@ -6,7 +6,7 @@ import Product from "./Product";
 import api, { saveCart, putRequest, getRequest } from "util/api";
 import { useLoaderData, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { emptyCart, updateCart } from "../../redux/CartSlice";
+import { commitCart, emptyCart, updateCart } from "../../redux/CartSlice";
 import DotLoaderSpinner from "components/loader/Loading";
 import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
@@ -23,11 +23,11 @@ const CartPage = ({ cart }) => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [enable, setEnable] = useState(cart.cartItems.length > 0);
-    const [state, setState] = useState();
+    //const [state, setState] = useState();
 
     const navigate = useNavigate();
 
-    
+
 
     useEffect(() => {
 
@@ -73,23 +73,18 @@ const CartPage = ({ cart }) => {
 
     }, [selected]);
 
-    
+
 
     const saveCartToDbHandler = async (e) => {
         e.preventDefault();
-        setState(e);
 
-        if (token) {
-            setLoading(true);
+        const res = await saveCart(selected, user.email);
 
-            const res = await saveCart(selected, user.email);
+        dispatch(commitCart(res.cartId));
+
+        navigate("/checkout");
 
 
-            navigate("/checkout");
-            setLoading(false);
-        } else {
-            navigate("/signin");
-        }
     };
 
     return (
@@ -112,7 +107,7 @@ const CartPage = ({ cart }) => {
                                 product={product}
                                 key={i}
                                 selected={selected}
-                                setSelected={setSelected}                                
+                                setSelected={setSelected}
                                 cart={cart}
                             />
                         ))}

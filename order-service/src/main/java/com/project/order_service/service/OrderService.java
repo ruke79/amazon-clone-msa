@@ -49,8 +49,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     
-    private final UserServiceClient userServiceClient;
-
     private final PaymentOutboxHelper paymentOutboxHelper;
 
     private final CatalogServiceClient catalogServiceClient;
@@ -63,10 +61,12 @@ public class OrderService {
     public Long getCustomerIdByEmail(String email) {
 
         Optional<Customer> customer = customerRepository.findByEmail(email);
-
+        
         if (customer.isPresent()) {
+            
             return customer.get().getId();
         }
+        
         return null;
     }
 
@@ -78,6 +78,16 @@ public class OrderService {
         return orders;
 
     }
+
+    @Transactional(readOnly = true) 
+    public Order getOrderByTrackingId(String trackingId) {
+
+        Order order = orderRepository.findByTrackingId(trackingId).orElse(null);
+
+        return order;
+
+    }
+
 
     
     
@@ -98,75 +108,35 @@ public class OrderService {
             order.setTotalBeforeDiscount(request.getTotalBeforeDiscount());
             order.setOrderStatus(OrderStatus.NOT_PROCESSED);
 
-            //user.getOrderLists().add(order.get);
-            
+                        
             order.setCustomerId(customerId);
 
-            
-            // AddressDto shippingAddress = 
-            // ShippingAddress existedAddress = shippingAddressRepository.findById(Long.parseLong(shippingAddress.getId()))
-            // .orElseThrow(()->new RuntimeException("Shipping address not found"));
-            // ;
-
-            // existedAddress.getOrders().add(order);
-
-            
-            
-            //order.setShippingAddressId(Long.parseLong(request.getShippingAddressId()));
-            
-            // PaymentResult pr = PaymentResult.builder()
-            // .payPrice(request.getTotal())
-            // .payStatus(PaymentResultStatus.NOT_PROCESSED).build();           
-           // order.setPaymentResult(pr);
-            //paymentRepository.save(pr);
-
+      
             List<OrderProduct> ordered = new ArrayList<>();
                         
             for (CartProductDto p : request.getProducts()) {
 
                 OrderProduct op = new OrderProduct();
-
-                // ProductColorAttribute color = ProductColorAttribute.builder()
-                // .colorId(Long.parseLong(p.getColor().getId()))
-                // .color(p.getColor().getColor())
-                // .colorImage(p.getColor().getColorImage()).build();
-
-                //color.getOrderedProducts().add(op);
-                
+    
                 op.setName(p.getName());
                 op.setColorId(Long.parseLong(p.getColor().getId()));
                 op.setImage(p.getImage());
                 op.setPrice(p.getPrice());
                 op.setQty(p.getQty());
                 op.setSize(p.getSize());
-
-                
-
-                // CartProduct cartPrdouct = cartProductRepository.findById(Long.parseLong(p.getId()))
-                // .orElseThrow(()->new RuntimeException("Product not found in cart."));
-                
-                // Product data= productRepository.findById(cartPrdouct.getProduct().getProductId())
-                // .orElseThrow(()->new RuntimeException("Product not found"));
-                                
-                // op.setProduct(data);            
                 
                 String productId = cartServiceClient.getProductId(p.getId());
                 
-
                 op.setProductId(Long.parseLong(productId));
 
-                //data.getOrderedProducts().add(op);
-                    
+                               
                 ordered.add(op);
-                op.setOrder(order);
-                // orderedProductRepository.save(op);                
+                op.setOrder(order);                         
                 
             }
 
             order.setOrderedProducts(ordered);
-
-            //order.setPaymentResult(pr);
-            
+                        
             Order result = orderRepository.save(order);  
             
             OrderAddress address = new OrderAddress();
@@ -226,10 +196,7 @@ public class OrderService {
 
             OrderAddressDto.deepCopyShippingAddressDto(address, data.getShippingAddress());
                         
-
-            // SharedUserDto userInfo = mapper.convertValue(userServiceClient.findUserByEmail(email).getBody(), 
-            // SharedUserDto.class);
-
+           
             OrderDto result = OrderDto.builder()
             .trackingId(data.getTrackingId())
             //.isPaid(data.isPaid())
@@ -239,13 +206,7 @@ public class OrderService {
             .paymentMethod(data.getPaymentMethod())            
             .paymentStatus(PaymentStatus.COMPLETED.getStatus())
             .products(dtos)
-            .shippingAddress(address)
-            // .user(UserProfileDto.builder()
-            //         .userId(Long.toString(data.getUser().getUserId()))
-            //         .username(data.getUser().getUserName())
-            //         .image(data.getUser().getImage()).build()
-            //  )
-            //.user(userInfo)
+            .shippingAddress(address)        
              .totalBeforeDiscount(data.getTotalBeforeDiscount())
              .total(data.getTotal())
             .build();
@@ -258,9 +219,7 @@ public class OrderService {
 
     public List<OrderDto> getOrders(String email, String filter) {
 
-        // User user = userRepository.findByUserName(username)
-        // .orElseThrow(()->new RuntimeException(StatusMessages.USER_NOT_FOUND));
-
+      
         Long customerId = getCustomerIdByEmail(email);
 
         List<Order> orders = getOrdersByCustomerId(customerId);
@@ -288,18 +247,24 @@ public class OrderService {
     @Transactional
     public void persisitPaypalPayment(PaypalPaymentRequest request) {
 
-
-        PaymentRequest payload = new PaymentRequest();
-        payload.setOrderId(Long.parseLong(request.getOrderId()));             
-        payload.setCustomerId(getCustomerIdByEmail(request.getUserEmail()));
-        payload.setTrackingId(request.getTrackingId());
-        payload.setAmounts(request.getAmounts());
-        payload.setPaypalOrderId(request.getPaypalOrderId());
-        payload.setOrderStatus(OrderStatus.valueOf(request.getOrderStatus()));
-        payload.setPaymentType(PaymentType.PAYPAL);
-        payload.setPaymentStatus(PaymentStatus.valueOf(request.getPaymentStatus()));
         
-        paymentOutboxHelper.savePaymentOutbox(payload, OutboxStatus.STARTED);
+        PaymentRequest payload = new PaymentRequest();
+        Order order = getOrderByTrackingId(request.getTrackingId());
+        if ( null != order ) {
+            payload.setOrderId(order.getOrderId());                         
+            payload.setCustomerId(getCustomerIdByEmail(request.getUserEmail()));
+            
+            payload.setTrackingId(request.getTrackingId());
+            payload.setAmounts(request.getAmounts());
+            payload.setPaypalOrderId(request.getPaypalOrderId());
+            payload.setCouponName(request.getCouponName());
+            payload.setOrderStatus(OrderStatus.valueOf(request.getOrderStatus()));
+            payload.setPaymentType(PaymentType.PAYPAL);
+            payload.setPaymentStatus(PaymentStatus.valueOf(request.getPaymentStatus()));
+
+            
+            paymentOutboxHelper.savePaymentOutbox(payload, OutboxStatus.STARTED);
+        }
 
     }
 

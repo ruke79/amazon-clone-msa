@@ -2,10 +2,16 @@ package com.project.pay_service.ports.output.message.publisher;
 
 
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
+import org.apache.kafka.clients.producer.RecordMetadata;
+import org.checkerframework.checker.units.qual.K;
+import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,9 +36,19 @@ public class PaymentResponseKafkaPublisher {
         PaymentResponse payload = this.getOrderEventPayload(outboxEvent.getPayload(), PaymentResponse.class);
 
         try {
-            kafkaTemplate.send("payment", payload);
+            CompletableFuture<SendResult<String, PaymentResponse>> kafkaResultFuture = kafkaTemplate.send("payment", payload);
+            kafkaResultFuture.whenComplete((result, ex) -> {
+                if (ex == null) {                   
 
-        } catch(Exception e) {
+                    outboxCallback.accept(outboxEvent, OutboxStatus.COMPLETED);
+                }
+                else {
+                    outboxCallback.accept(outboxEvent, OutboxStatus.FAILED);
+                }
+            });           
+       
+    
+        } catch(KafkaException e) {
 
             log.error("Error while sending OrderPaymentEventPayload" +
             " to kafka with order id: {} , error: {}",

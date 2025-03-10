@@ -45,28 +45,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegistrationController {
 
-    
- 
+     
       
     private final UserService userService;
-    private final UserCreatedProducer userCreatedProducer;
-     
+         
 
     @Value("${frontend.url}")
     private String frontendUrl;
 
 
-    // @Autowired
-    //  public RegistrationController(JwtUtils jwtUtils, AuthenticationManager authenticationManager,
-    //         UserService userService, UserDetailsServiceImpl userDetailsService) {
-    //     this.jwtUtils = jwtUtils;
-    //     this.authenticationManager = authenticationManager;
-    //     this.userService = userService;
-    //     this.userDetailsService = userDetailsService;
-    // }
-
-
-
+    
     @GetMapping("/registrationConfirm")
     public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token)  throws JsonProcessingException {
 
@@ -84,15 +72,7 @@ public class RegistrationController {
 
             userService.registerConfirmed(user);
 
-            UserCreatedRequest dto = UserCreatedRequest.builder()
-            .userId(user.getUserId())
-            .image(user.getImage())
-            .email(user.getEmail())
-            .nickname(user.getName())
-            .build();
-
-            userCreatedProducer.publish(dto);
-
+            
                         
             model.addAttribute("messageKey", "message.accountVerified");
             return new ModelAndView("redirect:"+frontendUrl+"/signin", model);            

@@ -35,7 +35,7 @@ const CreateSubCategory = (categories) => {
             setName("");
             setParent("");
         } catch (error) {
-            console.log(error.response.data.message);
+            console.log(error.response?.data.message);
         }
     };
 

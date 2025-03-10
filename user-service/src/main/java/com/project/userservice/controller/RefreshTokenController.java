@@ -19,14 +19,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.common.constants.StatusMessages;
+import com.project.common.constants.TokenStatus;
 import com.project.userservice.constants.TokenType;
 import com.project.userservice.exceptionHandling.TokenRefreshException;
 import com.project.userservice.model.User;
 import com.project.userservice.security.RefreshToken;
 import com.project.userservice.security.jwt.JwtUtils;
-
-
+import com.project.userservice.security.response.LoginResponse;
 import com.project.userservice.service.RefreshTokenService;
 import com.project.userservice.service.impl.UserServiceImpl;
 
@@ -58,6 +60,10 @@ public class RefreshTokenController {
     @GetMapping("/token/refresh")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
+
+        if (request.getCookies() == null) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
         
         
         String refresh = null;
@@ -95,7 +101,7 @@ public class RefreshTokenController {
 
 
         
-        if(!jwtUtils.validateJwtToken(refresh)) {
+        if(jwtUtils.validateJwtToken(refresh) != TokenStatus.VAILD ) {
 
             
             log.info("invalid refresh token");
@@ -113,23 +119,38 @@ public class RefreshTokenController {
         }
 
         
-
-        
+      
         
         
         User user = userService.findByEmail(email);                    
+
+               ObjectMapper om = new ObjectMapper();
+
+        LoginResponse loginInfo = userService.getLoginInfoByEmail(email);
+
+
+        String data;
+        try {
+            data = om.writeValueAsString(loginInfo);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
         
 
-        String newAccess = jwtUtils.generateTokenFromUser(user);
+            String newAccess = jwtUtils.generateTokenFromUser(user);
 
-        // delete and create         
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
+            // delete and create         
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
-        log.info("토큰 재발급 성공");
+            log.info("토큰 재발급 성공");
 
-        response.setHeader(TokenType.ACCESS.getType(), newAccess);
-        response.addCookie(jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), jwtUtils.getJwtRefreshExpirationMs()));
-        //response.setHeader(HttpHeaders.SET_COOKIE, jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
+            response.setHeader(TokenType.ACCESS.getType(), newAccess);
+            response.addCookie(jwtUtils.createCookie(TokenType.REFRESH.getType(), refreshToken.getToken(), jwtUtils.getJwtRefreshExpirationMs()));
+            //response.setHeader(HttpHeaders.SET_COOKIE, jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
+
+         } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            response.setStatus(401);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);        
     }

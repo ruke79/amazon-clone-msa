@@ -232,7 +232,7 @@ export const saveCart = async (products, email) => {
     const { data } = await postRequest("/cart-service/api/cart/savecart", { products : products, email : email });
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 };
 
@@ -245,7 +245,7 @@ export const saveShippingAddress = async (address) => {
     });
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -258,7 +258,7 @@ export const selectShippingAddress = async (addressId) => {
     );
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -271,7 +271,7 @@ export const deleteAddress = async (addressId) => {
     );
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -285,7 +285,7 @@ export const applyCoupon = async (cartTotal, coupon, email) => {
       totalPrice : cartTotal, couponName: coupon, userEmail : email });
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -300,7 +300,7 @@ export const getOrders = async (filter,userEmail) => {
     
       return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -315,7 +315,7 @@ export const getOrder = async (orderId, userEmail) => {
       
         return data;
     } catch (error) {
-      console.log("erorr >>>", error.response.data.message);
+      console.log("erorr >>>", error.response?.data.message);
     }
   };                       
 
@@ -330,7 +330,7 @@ export const loadCart = async (userEmail) => {
     
       return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -345,7 +345,7 @@ export const loadCheckOut = async (userEmail) => {
     console.log(data);
       return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -364,7 +364,7 @@ export const getCoupons = async (userEmail) => {
     
       return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -375,7 +375,7 @@ export const getReviews = async (productId) => {
 
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -386,7 +386,7 @@ export const getAddresses = async() => {
     const {data} =   await getRequest("/user-service/api/user/profile/address");     
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 }
 
@@ -397,7 +397,7 @@ export const processPayment = async (request) => {
     const {data} =   await getRequest("/order-service/api/order/payment/process", request);     
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 
 }
@@ -418,7 +418,7 @@ export const  getChatRoomList = async () => {
     const {data} =   await getRequest(url);     
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 };
 
@@ -430,9 +430,10 @@ export const getRoomMessages = async (room, cursor) => {
     const {data} =   await getRequest(url, { params : {cursor : cursor}});     
     return data;
   } catch (error) {
-    console.log("erorr >>>", error.response.data.message);
+    console.log("erorr >>>", error.response?.data.message);
   }
 };
+
 
 
 export default api;

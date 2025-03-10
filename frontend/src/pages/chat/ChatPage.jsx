@@ -1,21 +1,17 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import ChatArea from "components/chat/chat/ChatArea";
-//import { MessageSearch } from "./MessageSearch";
 
-import { Outlet, Route,  Routes } from "react-router-dom";
+import { Outlet,  } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
-import { useDispatch, useSelector } from "react-redux";
-import { rooms, selectedRoom } from "../../redux/ChatSelectors";
-import { StompProvider, useStomp } from "../../util/stompProvider";
-import tokenUtil from "util/tokenUtil";
+import { StompProvider } from "../../util/stompProvider";
 import List from "components/chat/list/List";
-import Chat from "components/chat/chat/Chat";
-import Detail from "components/chat/detail/Detail";
 
-import { Stomp, Client } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
-import { connect } from "formik";
+import ChatArea from "components/chat/chatting/ChatArea";
+
 import styled from "styled-components";
+import ChatDetail from "components/chat/detail/ChatSidebar";
+import ChatUserinfo from "components/chat/list/ChatUserinfo";
+import { useSelector } from "react-redux";
+import { selectedRoom } from "../../redux/ChatSelectors";
 
 
 const Wrapper = styled.div`
@@ -24,39 +20,43 @@ const Wrapper = styled.div`
   max-width: 100vw;
   max-height: 100vh;     
 
-   background-color: rgba(17, 25, 40, 0.75);
-    backdrop-filter: blur(19px) saturate(180%);
-    //border-radius: 12px;
-    border: 1px solid #ffffff20;
-    display: flex; 
-    overflow : hidden;
+  background-color: #F5F6FA;
+  backdrop-filter: blur(19px) saturate(180%);    
+  border: 1px solid #ffffff20;
+  display: flex; 
+  overflow : hidden;
+`;
+
+const ListWrapper = styled.div`
+
+flex: 1;
+display: flex;
+flex-direction: column;    
 `;
 
  export const ChatPage =() =>  {
-  
-   const currentRoom = useSelector(selectedRoom);
-
-   
-
-  const token = tokenUtil.getToken();
-
-       
+    // no dispatch because of websoket
+         
+    const { token } = useAuthContext();
     const brokerURL = process.env.REACT_APP_API_URL + '/chat-service/chat';
     const connectHeaders = { Authorization: token }
-
-   
+    
+           
     return (
-
-      <StompProvider brokerURL={brokerURL} connectHeaders={connectHeaders} >
       
+      
+      <StompProvider brokerURL={brokerURL} connectHeaders={connectHeaders}>            
       <Wrapper>
-      <List/>               
-        { currentRoom ? <ChatArea room={currentRoom}/>
-        : <div></div> }
-         <Detail /> 
+        <ListWrapper>
+          <ChatUserinfo/>
+          <Outlet/>
+        </ListWrapper>     
+    
+        <ChatArea />         
+         <ChatDetail /> 
         </Wrapper>
       </StompProvider>
-    
+      
     );
 
 };

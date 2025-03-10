@@ -123,7 +123,7 @@ const HeadingFilter = ({
                         type="checkbox"
                         name="shipping"
                         id="shipping"
-                        checked={shippingParam ==="0"}
+                        defaultChecked={shippingParam ==="0"}
                     />
                     Free Shipping
                 </label>
@@ -140,7 +140,7 @@ const HeadingFilter = ({
                         type="checkbox"
                         name="rating"
                         id="rating"
-                        checked={ratingParam === "4"}
+                        defaultChecked={ratingParam === "4"}
                     />
                     <StarIcon className="h-5 w-5 fill-[#FACF19]" />
                     <StarIcon className="h-5 w-5 fill-[#FACF19]" />

@@ -54,7 +54,7 @@ const ForgotPage = ({ providers }) => {
         } catch (error) {
             setLoading(false)
             setUser({
-                ...user, success: "", error: error.response.data.message
+                ...user, success: "", error: error.response?.data.message
             })
         }
     }

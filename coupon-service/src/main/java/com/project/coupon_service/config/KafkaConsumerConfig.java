@@ -4,6 +4,7 @@ package com.project.coupon_service.config;
 import com.google.common.collect.ImmutableMap;
 import com.project.common.message.dto.request.CouponRollbackRequest;
 import com.project.common.message.dto.request.UserCreatedRequest;
+import com.project.common.message.dto.response.PaymentResponse;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -68,6 +69,34 @@ public class KafkaConsumerConfig {
                         .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
                         .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
                         .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+                        .put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
+                        .put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed") 
+                        .build();
+
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
+    }
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory<String, PaymentResponse> paymentResponseContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PaymentResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(paymentResponseConsumerFactory());
+        factory.setBatchListener(true);
+        return factory;
+    }
+    @Bean
+    public ConsumerFactory<String, PaymentResponse> paymentResponseConsumerFactory() {
+        JsonDeserializer<PaymentResponse> deserializer = new JsonDeserializer<>();
+        deserializer.addTrustedPackages("*");
+        
+        Map<String, Object> consumerConfigurations =
+                ImmutableMap.<String, Object>builder()
+                        .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                        .put(ConsumerConfig.GROUP_ID_CONFIG, "coupon-used")
+                        .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
+                        .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
+                        .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+                        .put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
+                        .put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed") 
                         .build();
 
         return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);

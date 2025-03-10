@@ -43,9 +43,7 @@ public class Order extends BaseEntity {
     
     private String trackingId;
 
-    // @ManyToOne(fetch=FetchType.EAGER)
-    // @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
-    // private User user;    
+    
     private Long customerId;
             
     
@@ -60,11 +58,6 @@ public class Order extends BaseEntity {
     
 
     private String paymentMethod;
-        
-    // @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=PaymentResult.class)
-    // @JoinColumn(name="payment_id", referencedColumnName = "payment_id", nullable = false)
-    // private PaymentResult paymentResult;
-    //private Long paymentId;
     
     private int total;
 

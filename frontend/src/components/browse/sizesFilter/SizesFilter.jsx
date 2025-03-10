@@ -34,7 +34,7 @@ const SizesFilter = ({ sizes, sizeHandler, replaceQuery }) => {
                                     type="checkbox"
                                     name="size"
                                     id={size}
-                                    checked={check.active}
+                                    defaultChecked={check.active}
                                 />
                                 {size}
                             </label>

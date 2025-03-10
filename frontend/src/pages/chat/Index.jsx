@@ -1,26 +1,19 @@
 
-import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";  
+import React from "react";
 
-import "./chat.css"
 import { ChatPage } from "./ChatPage";
-import { Outlet } from "react-router-dom";
-
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-
-import { useDispatch, useSelector } from "react-redux";
-import { addRoomToList, setRooms } from "../../redux/ChatSlice";
 
 
 
-function Chat() {
- 
+
+ const Chat =() => {
+
+    
   return (
      
       <React.Fragment>                
-            <ChatPage />              
-        </React.Fragment>  
+            <ChatPage />                    
+      </React.Fragment>            
      
   );
 }

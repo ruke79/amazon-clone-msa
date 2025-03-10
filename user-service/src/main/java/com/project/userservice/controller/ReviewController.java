@@ -58,7 +58,7 @@ public class ReviewController {
 
 
 
-    @PutMapping("/{productId}/add")
+    @PostMapping("/{productId}/add")
     ResponseEntity<?> addReview(@PathVariable("productId") Long id, @RequestPart("review") ReviewRequest request, 
     @RequestPart(value="image", required=false) List<MultipartFile> images,    @AuthenticationPrincipal UserDetails userDetails) throws IOException  {
            

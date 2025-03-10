@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from '../Modal';
 //import FoundFriendProfile from './FoundFriendProfile';
-import { useCreateChatRoom } from 'hook/chatHooks';
+import { useCreateChatRoom, useFetchChatRooms } from 'hook/chatHooks';
 
 const Wrapper = styled.div`
   width: 360px;
@@ -115,6 +115,7 @@ const CreateRoomModal = props => {
   const MAX_LEN = 20;
   const [roomName, setRoomName] = useState('');
   const { handleCreateChatRoom} = useCreateChatRoom({roomName : roomName});
+  const { updateChatRoomList } = useFetchChatRooms();
   
   const onIdInputChange = (event) => {
     event.preventDefault();
@@ -136,6 +137,9 @@ const CreateRoomModal = props => {
 
   const onConfirmed = () => {    
     handleCreateChatRoom(roomName);
+
+    updateChatRoomList();
+
     onClose();
   }
 

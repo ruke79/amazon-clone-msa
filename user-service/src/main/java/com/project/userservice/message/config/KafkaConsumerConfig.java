@@ -21,28 +21,7 @@ import java.util.Map;
 public class KafkaConsumerConfig {
     @Value("${kafka.url}")
     private String kafkaServerUrl;
-    //@Bean
-    // ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaListenerContainerFactory() {
-    //     ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
-    //     factory.setConsumerFactory(consumerFactory());
-    //     return factory;
-    // }
-    // @Bean
-    // public ConsumerFactory<String, ChatMessage> consumerFactory() {
-    //     JsonDeserializer<ChatMessage> deserializer = new JsonDeserializer<>();
-    //     deserializer.addTrustedPackages("*");
-    //     Map<String, Object> consumerConfigurations =
-    //             ImmutableMap.<String, Object>builder()
-    //                     .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
-    //                     .put(ConsumerConfig.GROUP_ID_CONFIG, "pyament")
-    //                     .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
-    //                     .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
-    //                     .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
-    //                     .build();
-
-    //     return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
-    // }
-    
+   
 
     @Bean
     ConcurrentKafkaListenerContainerFactory<String, AlarmEventDto> kafkaNotificationContainerFactory() {
@@ -60,7 +39,9 @@ public class KafkaConsumerConfig {
                         .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
                         .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
                         .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
+                        .put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed")
                         .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+                        .put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
                         .build();
 
         return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);

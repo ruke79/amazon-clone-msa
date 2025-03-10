@@ -1,5 +1,6 @@
 package com.project.order_service.saga;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,8 @@ import org.bouncycastle.internal.asn1.misc.CAST5CBCParameters;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.common.constants.OrderStatus;
 import com.project.common.constants.PaymentStatus;
 import com.project.common.message.dto.request.CartEmptyRequest;
@@ -61,6 +64,7 @@ public class OrderSaga {
         return null;
     }
     
+    @Transactional
     public void process(PaymentResponse paymentResponse) {
 
         Order order = getOrderByOrderStatus(paymentResponse.getOrderId(), OrderStatus.NOT_PROCESSED);
@@ -71,31 +75,38 @@ public class OrderSaga {
             //product sku sold 
             // product size update
             // cart empty 
-            // 
-            updateOrderStatus(order, OrderStatus.PAID);            
-
+            //                       
+            updateOrderStatus(order, OrderStatus.PAID);                                    
+            
             publishProductStateUpdate(order.getOrderId());
 
             publicCartEmptyState(order.getCustomerId());
         }
     }
-
+    
+    @Transactional
     private void publishProductStateUpdate(Long orderId) {
 
         List<OrderProduct> orderProducts = getOrderProductsByOrder(orderId);
 
         ProductUpdateRequest request = new ProductUpdateRequest();
+        List<OrderProductRequest> dtos = new ArrayList<OrderProductRequest>();
 
         for(OrderProduct orderProduct:orderProducts)  {
 
             OrderProductRequest item = mappingOrderProductToOrderProductRequest(orderProduct);
-
-            request.getOrderProducts().add(item);
+            
+            if (null != request.getOrderProducts()) {
+                boolean ok = request.getOrderProducts().add(item);
+            }
+            dtos.add(item);
         }
-
+        
         productUpdateKafkaPublisher.publish(request);
+        
     }
 
+    @Transactional
     private void publicCartEmptyState(Long customerId) {
         CartEmptyRequest request = new CartEmptyRequest();
         request.setUserId(customerId);
@@ -122,6 +133,20 @@ public class OrderSaga {
         return order;
     }
 
+    @Transactional
+    private void rollbackOrderQty(Long orderId) {
+
+        Optional<List<OrderProduct>> products = orderProductRepository.findByOrder_OrderId(orderId);
+
+        if (products.isPresent()) {
+
+            products.get().forEach(p->{                
+                 p.setQty(1);
+                 orderProductRepository.save(p);
+            });          
+        }        
+    }
+
      
     private void publishCouponStateRollback(Long customerId, String couponName) {
 
@@ -140,6 +165,7 @@ public class OrderSaga {
     }
 
     // 결재 취소 -> 주문상태 
+    @Transactional
     public void rollback(PaymentResponse paymentResponse) {
                 
         Order order = getOrderByOrderStatus(paymentResponse.getOrderId(), OrderStatus.NOT_PROCESSED );
@@ -151,6 +177,8 @@ public class OrderSaga {
                 // coupon revert            
 
             updateOrderStatus(order, OrderStatus.CANCELED);
+
+            rollbackOrderQty(order.getOrderId());
 
             publicCartStateRollback(order.getCustomerId());
 

@@ -2,6 +2,7 @@ package com.project.pay_service.outbox;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import com.project.common.outbox.OutboxStatus;
 import com.project.pay_service.exception.PaymentDomainException;
 import com.project.pay_service.outbox.model.OrderOutboxEvent;
 import com.project.pay_service.outbox.repository.OrderOutboxRepository;
+import com.project.pay_service.ports.output.message.publisher.PaymentResponseKafkaPublisher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,7 @@ public class OrderOutboxHelper {
 
     private final OrderOutboxRepository orderOutboxRepository;
     private final ObjectMapper objectMapper;
-
+    //private final PaymentResponseKafkaPublisher paymentResponseMessagePublisher;
 
     @Transactional
     public void save(OrderOutboxEvent outboxEvent) {
@@ -55,10 +57,12 @@ public class OrderOutboxHelper {
 
         String payload = this.createPayload(response);
 
-        OrderOutboxEvent outboxEvent = new OrderOutboxEvent(response.getOrderId().toString(), 
-        "Order", "payment-request", payload, outboxStatus);
+        OrderOutboxEvent outboxEvent = new OrderOutboxEvent(response.getPaymentId().toString(), 
+        "Payment", "payment-response", payload, outboxStatus);
 
         this.save(outboxEvent);
+
+        //paymentResponseMessagePublisher.publish(outboxEvent, this::updateOutboxStatus);
     }
 
 
@@ -79,9 +83,6 @@ public class OrderOutboxHelper {
         log.info("OrderOutboxEvent is updated with outbox status: {}", outboxStatus.name());
     }
 
-
-
-    
     
     
 

@@ -36,8 +36,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name="payment", uniqueConstraints = {
-                @UniqueConstraint(name="UniqueOrderIdAndTrackingId", columnNames = {"orderId", "trackingId"})
-                ,@UniqueConstraint(columnNames = "customerId")
+                @UniqueConstraint(name="UniqueOrderIdAndTrackingId", columnNames = {"orderId", "trackingId"})                
      })
 public class Payment extends BaseEntity{
 

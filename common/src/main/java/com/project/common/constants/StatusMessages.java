@@ -9,6 +9,9 @@ public final class StatusMessages {
     public static final String ACCOUNT_ENABLE_STATUS_UPDATED = "Account enabled status updated";
     public static final String CREDENTIALS_EXPIRY_STATUS_UPDATED = "Credentials expiry status updated";
 
+    public static final String USER_FULLNAME_EXISTS = "The same fullname exists";
+    public static final String USER_ID_EXISTS = "The same user Id exists";
+
     public static final String USER_REGISTRATION_SUCCESS = "User registered successfully!";
 
     public static final String USERNAME_IN_USE = "Error: Username is already taken!";

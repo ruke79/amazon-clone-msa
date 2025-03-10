@@ -1,6 +1,7 @@
 package com.project.catalog_service.repository;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
     "left join product_color c on a.color_id = c.color_id " +
     "where ((:low_price is null or :high_price is null ) or b.price between :low_price and :high_price) and (:size is null or b.size REGEXP :size)" +
     "and (:color is null or c.color REGEXP :color)", nativeQuery = true)
-    List<Long> findProductIDBySizeAndPriceAndColor(@Param("low_price") Integer lowPrice, @Param("high_price") Integer highPrice,
+    List<Long> findProductIDBySizeAndPriceAndColor(@Param("low_price") BigDecimal lowPrice, @Param("high_price") BigDecimal highPrice,
     @Param("size") String size, @Param("color") String color);
 
     List<ProductSku> findBySizesPriceBetweenAndSizesSizeAndColorColor(@Param("low_price") Integer lowPrice, @Param("high_price") Integer highPrice,
