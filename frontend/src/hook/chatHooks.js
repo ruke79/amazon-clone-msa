@@ -13,7 +13,7 @@ export const useCreateChatRoom = (props) => {
     const {
       mutate : createChatRoomOp,
       data,
-      isLoading,
+      isPending,
       isSuccess,
     } = useMutation({mutationFn : createChatRoom,
       onSuccess: (data) => {        
@@ -29,13 +29,13 @@ export const useCreateChatRoom = (props) => {
     const handleCreateChatRoom = () => {
         createChatRoomOp(props);
     };
-    return { handleCreateChatRoom, data, isLoading, isSuccess };
+    return { handleCreateChatRoom, data, isPending, isSuccess };
   };
 
   export const useFetchChatRooms = () => {
    
     
-    const { data, isLoading, refetch, isSuccess, error, isError } = useQuery({
+    const { data, isPending, refetch, isSuccess, error, isError } = useQuery({
       queryKey : ["rooms"],
       queryFn : async () => {
         const res = await getChatRoomList();          
@@ -48,7 +48,7 @@ export const useCreateChatRoom = (props) => {
     
     return {
       roomList: data,
-      isLoading: isLoading,
+      isPending: isPending,
       isFetch: isSuccess,
       error : error, isError : isError,
       updateChatRoomList: refetch,
@@ -61,7 +61,7 @@ export const useCreateChatRoom = (props) => {
     const queryClient = useQueryClient();
 
     
-    const { data, isLoading, refetch, isSuccess } = useQuery({
+    const { data, isPending, refetch, isSuccess } = useQuery({
       queryKey : [`room_messages/${room?.roomId}`, cursor ],
       queryFn : async () => {
 
@@ -78,7 +78,7 @@ export const useCreateChatRoom = (props) => {
     
     return {
       roomMessages : data,
-      isLoading: isLoading,
+      isPending: isPending,
       isFetch: isSuccess,
       updateRoomMessages: refetch,
     };

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -19,24 +20,19 @@ import com.project.userservice.security.request.SignupRequest;
 import com.project.userservice.security.response.GoogleResponse;
 import com.project.userservice.security.response.NaverResponse;
 import com.project.userservice.security.response.OAuth2Response;
-import com.project.userservice.service.impl.UserServiceImpl;
+import com.project.userservice.security.service.UserDetailsServiceImpl;
+
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
-     private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-     //private final UserServiceImpl  userServiceImpl;
-
-    //  @Autowired
-    //  public CustomOAuth2UserService(UserRepository userRepository, UserServiceImpl userServiceImpl) {
-    //     this.userRepository = userRepository;
-    //     this.userServiceImpl = userServiceImpl;
-    // }
+     
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -63,21 +59,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         .orElseThrow(() -> new RuntimeException("User not found with name: " + name));;
 
         if (existData == null) {  
-            SignupRequest request = new SignupRequest();
-            request.setEmail(oAuth2Response.getEmail());
-            request.setUsername(oAuth2Response.getName());            
-            request.setName(name);
-            Set<String> roles = new HashSet<>();
-            roles.add(AppRole.ROLE_USER.getRole());
-            request.setRole(roles);
+            // SignupRequest request = new SignupRequest();
+            // request.setEmail(oAuth2Response.getEmail());
+            // request.setUsername(oAuth2Response.getName());            
+            // request.setName(name);
+            // Set<String> roles = new HashSet<>();
+            // roles.add(AppRole.ROLE_USER.getRole());
+            // request.setRole(roles);
 
+            
             //userServiceImpl.registerNewUserAccount(request);
 
             UserProfileDto userDto = UserProfileDto.builder()
             .username(oAuth2Response.getName())
             .name(name)
-            .role(AppRole.ROLE_USER.getRole())
+            .email(oAuth2Response.getEmail())            
             .build();
+            userDto.getRoles().add(AppRole.ROLE_USER.getRole());
 
             return new CustomOAuth2User(userDto);
         }
@@ -90,7 +88,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserProfileDto userDto = new UserProfileDto();
             userDto.setUsername(oAuth2Response.getName());
             userDto.setName(existData.getName());
-            userDto.setRole(existData.getRole().getRoleName().getRole());
+            userDto.getRoles().add(existData.getRole().getRoleName().getRole());
 
             return new CustomOAuth2User(userDto);
         }

@@ -32,7 +32,7 @@ import { queryClient } from 'util/api';
 import Maintenance from 'components/error/Maintenance';
 import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import ApiNavigationHandler from "error/ApiNavigationHandler";
+import TokenRefresher from "error/TokenRefresher";
 import toast, {Toaster} from 'react-hot-toast';
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import loadFakeData from "util/loadFake";
@@ -77,7 +77,7 @@ const ErrorBoundaryLayout = () => (
 //<Suspense fallback={<div>Loading...</div>}>
   <ErrorBoundary FallbackComponent = {ErrorFallback} >            
   <ContextProvider>
-  <ApiNavigationHandler/>    
+  <TokenRefresher/>    
     <Outlet />         
     </ContextProvider>                           
   </ErrorBoundary>
@@ -88,8 +88,7 @@ const AppRouter = () => {
 
   const authContext = useAuthContext();
 
-  const router = useMemo(
-    () => createBrowserRouter([
+  const router = createBrowserRouter([
     {
       element: <ErrorBoundaryLayout />,
       errorElement : <ErrorPage/>,
@@ -122,28 +121,28 @@ const AppRouter = () => {
         {
           path: '/profile',
           element: <ProtectedRoute><Profile /></ProtectedRoute>,
-          loader: loaderProfile(authContext),   
+          loader: loaderProfile,   
           
         },     
         {
           path: 'profile/address',
           element: <ProtectedRoute><Address /></ProtectedRoute>,
-          loader: loaderAddress(authContext),
+          loader: loaderAddress,
         },
         {
           path: 'profile/orders',
           element: <ProtectedRoute><Orders /></ProtectedRoute>,
-          loader : loaderOrders(authContext)
+          loader : loaderOrders
         },
         {
           path: 'profile/payment',
           element: <ProtectedRoute><Payment /></ProtectedRoute>,
-          loader: loaderPayment(authContext),
+          loader: loaderPayment
         },
         {
           path: 'profile/security',
           element: <ProtectedRoute><Security /></ProtectedRoute>,
-          loader : loaderSecurity(authContext)
+          loader : loaderSecurity
         },
         {
           path: '/product/:slug',          
@@ -159,17 +158,17 @@ const AppRouter = () => {
         {
           path: '/cart',
           element: <ProtectedRoute><Cart /></ProtectedRoute>,
-          loader : loaderCart,
+          //loader : loaderCart,
         },
         {
           path: '/checkout',
           element: <ProtectedRoute><Checkout /></ProtectedRoute>,
-          loader: loaderCheckout(authContext),
+          //loader: loaderCheckout,
         },
         {
           path: '/order/:id',
           element: <ProtectedRoute><OrderPage /></ProtectedRoute>,
-          loader: loaderOrder(authContext),
+          loader: loaderOrder,
         },
         // {
         //   path: '/admin',
@@ -185,8 +184,8 @@ const AppRouter = () => {
         //   ]
         // }
       ]
-    }
-  ]), []);
+    }]);
+  
 
   return <RouterProvider router={router}/>     
 
@@ -204,7 +203,6 @@ function App() {
 
   //useOnMounted(loadData);
   
-
   
   return (
     <>   

@@ -2,12 +2,11 @@ package com.project.cart_service.controller;
 
 import java.util.List;
 
-import org.hibernate.validator.cfg.defs.pl.REGONDef;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.cart_service.constants.StatusMessages;
 
+import com.project.common.dto.ProductInfoDto;
 import com.project.cart_service.dto.CartDto;
-import com.project.cart_service.dto.ProductInfoDto;
 import com.project.cart_service.dto.request.CartRequest;
 import com.project.cart_service.dto.request.ProductInfoRequest;
 import com.project.cart_service.dto.response.CartResponse;
@@ -50,17 +48,20 @@ public class CartController {
     ResponseEntity<?> saveCart(@Valid @RequestBody CartRequest request) {
 
         
-            try {
+            
                  Cart cart = cartService.saveCart(request);
 
-                 CartResponse response = new CartResponse(cart.getCartTotal());
+                 if (null != cart ) {
 
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            } catch (RuntimeException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new MessageResponse(e.getMessage()));
-            }        
+                    CartResponse response = new CartResponse(cart.getCartTotal());
 
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                }
+                else {
+                    return new ResponseEntity<>(null, HttpStatus.OK);
+                }
+
+            
     }
     // @DeleteMapping("/deleteItem/{productId}")
     // ResponseEntity<?> deleteCartItem(@PathVariable(required = true) String productId,  @RequestParam("userId") String email  ) {
@@ -88,8 +89,9 @@ public class CartController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } 
             catch(RuntimeException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new MessageResponse(e.getMessage()));
+                // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                // .body(new MessageResponse(e.getMessage()));
+                return new ResponseEntity<>(null, HttpStatus.OK);
             }
         
     }
@@ -122,19 +124,12 @@ public class CartController {
             }
 
     }
-
-    @GetMapping("/{cartProductId}") 
-    ResponseEntity<?> getProductId(@PathVariable String cartProdcutId) {
-
-        try {
-            Long productId = cartService.getProductId(cartProdcutId);
-
-            return new ResponseEntity<>(Long.toString(productId), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(e.getMessage()));
-        }
         
+    @GetMapping("/{cartProductId}") 
+    String  getProductId(@PathVariable("cartProductId") String cartProdcutId) {
+
+          Long productId = cartService.getProductId(cartProdcutId);
+          return Long.toString(productId);
     }
 
 }

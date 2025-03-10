@@ -31,14 +31,15 @@ public class CustomOAuth2User implements OAuth2User {
 
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
-        collection.add(new GrantedAuthority() {
+        userDto.getRoles().forEach(role-> collection.add(new GrantedAuthority() {
 
             @Override
             public String getAuthority() {
 
-                return userDto.getRole();
+                return role;
             }
-        });
+        })
+        );
 
         return collection;
     }

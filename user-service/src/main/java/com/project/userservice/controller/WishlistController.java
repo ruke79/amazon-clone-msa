@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.userservice.constants.OperationStatus;
-import com.project.userservice.constants.StatusMessages;
+import com.project.common.constants.OperationStatus;
+import com.project.common.constants.StatusMessages;
+import com.project.common.response.GenericResponse;
+import com.project.common.response.MessageResponse;
 import com.project.userservice.model.WishList;
 
 import com.project.userservice.security.request.WishListRequest;
-import com.project.userservice.security.response.GenericResponse;
-import com.project.userservice.security.response.MessageResponse;
-import com.project.userservice.service.CartService;
 import com.project.userservice.service.WishListService;
 
 import lombok.RequiredArgsConstructor;

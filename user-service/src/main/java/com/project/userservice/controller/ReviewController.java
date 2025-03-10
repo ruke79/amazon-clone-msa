@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.userservice.constants.StatusMessages;
+import com.project.common.constants.StatusMessages;
+import com.project.common.response.MessageResponse;
 import com.project.userservice.dto.ReviewDto;
 
 import com.project.userservice.security.request.ReviewRequest;
-import com.project.userservice.security.response.MessageResponse;
 import com.project.userservice.security.response.ReviewsResponse;
 import com.project.userservice.service.ReviewService;
 

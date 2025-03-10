@@ -1,5 +1,7 @@
 package com.project.cart_service.model;
 
+import java.math.BigDecimal;
+
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -59,8 +61,8 @@ public class CartProduct extends BaseEntity {
     @JoinColumn(name = "cart_id", nullable = true)
     private Cart cart;
 
-    private int price;    
+    private BigDecimal price;    
 
-    private int shipping;    
+    private BigDecimal shipping;    
     
 }

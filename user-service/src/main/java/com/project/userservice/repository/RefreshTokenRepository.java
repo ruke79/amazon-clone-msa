@@ -17,47 +17,40 @@ import com.project.userservice.security.RefreshToken;
 
 import jakarta.transaction.Transactional;
 
-@Transactional    
+
 @Repository
-//public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
-public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long> {   
-    Optional<RefreshToken> findByUserId(Long userId);
-    Optional<RefreshToken> findByToken(String token);
-    
-    //int deleteByUser(User user);    
-    int deleteByToken(String stoken);
+public class RefreshTokenRepository {
 
+  @Value("${spring.app.jwtRefreshExpirationMs}")
+  private int jwtRefreshExpirationMs;
+
+    private final RedisTemplate redisTemplate;
+
+    public RefreshTokenRepository(final RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+     public void save(final RefreshToken refreshToken) {
+        redisTemplate.opsForValue().set(refreshToken.getUserId(), refreshToken.getToken());
+        redisTemplate.expire(refreshToken.getToken(), System.currentTimeMillis() + jwtRefreshExpirationMs, TimeUnit.MILLISECONDS);
+    }
+
+    public void registerBlacklist(String accessToken, Long expiration) {
+        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+    }
+
+    public Optional<RefreshToken> findByUserId(final String userId) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String refreshToken = valueOperations.get(userId);
+
+        if (Objects.isNull(refreshToken)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new RefreshToken(userId, refreshToken));
+    }
+
+    public void delete(final String refreshToken) {
+        redisTemplate.delete(refreshToken);
+    }
 }
-// public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
-// }
-// public class RefreshTokenRepository {
-
-//   @Value("${spring.app.jwtRefreshExpirationMs}")
-//   private int jwtRefreshExpirationMs;
-
-//     private final RedisTemplate redisTemplate;
-
-//     public RefreshTokenRepository(final RedisTemplate redisTemplate) {
-//         this.redisTemplate = redisTemplate;
-//     }
-
-//      public void save(final RefreshToken refreshToken) {
-//         redisTemplate.opsForValue().set(refreshToken.getToken(), refreshToken.getUserId());
-//         redisTemplate.expire(refreshToken.getToken(), jwtRefreshExpirationMs, TimeUnit.MILLISECONDS);
-//     }
-
-//     public Optional<RefreshToken> findByToken(final String refreshToken) {
-//         ValueOperations<String, Long> valueOperations = redisTemplate.opsForValue();
-//         Long userId = valueOperations.get(refreshToken);
-
-//         if (Objects.isNull(userId)) {
-//             return Optional.empty();
-//         }
-
-//         return Optional.of(new RefreshToken(refreshToken, userId));
-//     }
-
-//     public void delete(final RefreshToken refreshToken) {
-//         redisTemplate.delete(refreshToken.getToken());
-//     }
-//}

@@ -20,18 +20,18 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.catalog_service.constants.StatusMessages;
-import com.project.catalog_service.dto.ColorAttributeDto;
-import com.project.catalog_service.dto.ProductDto;
-import com.project.catalog_service.dto.ProductInfoDto;
+import com.project.common.constants.StatusMessages;
+import com.project.common.dto.ProductColorDto;
+import com.project.common.dto.ProductDto;
+import com.project.common.dto.ProductInfoDto;
+import com.project.common.response.MessageResponse;
 import com.project.catalog_service.dto.request.ProductInfoLoadRequest;
 import com.project.catalog_service.dto.request.ProductInfosLoadRequest;
 import com.project.catalog_service.dto.request.ProductRequest;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.model.ProductSku;
 import com.project.catalog_service.repository.ProductRepository;
-import com.project.catalog_service.dto.response.GenericResponse;
-import com.project.catalog_service.dto.response.MessageResponse;
+
 import com.project.catalog_service.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -124,7 +124,7 @@ public class ProductController {
         log.info("Feign :" + colorId);
 
         try {
-            ColorAttributeDto dto = productService.getColorAttributeInfo(Long.parseLong(colorId));
+            ProductColorDto dto = productService.getColorAttributeInfo(Long.parseLong(colorId));
 
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (RuntimeException e) {

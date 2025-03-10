@@ -1,5 +1,6 @@
 package com.project.cart_service.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -39,8 +40,8 @@ public class Cart extends BaseEntity {
     private List<CartProduct> cartProducts;
 
 
-    private int cartTotal;
-    private int totalAfterDiscount;
+    private BigDecimal cartTotal;
+    private BigDecimal totalAfterDiscount;
 
     // @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=User.class)
     // @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)

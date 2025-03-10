@@ -29,7 +29,7 @@ const Product = ({ product }) => {
                 </div>
                 <div className="flex md:flex-row">
                     <span className="font-semibold ">
-                        {product.price.toFixed(2)}$
+                        {Number(product.price).toFixed(2)}$
                     </span>
                     <span className="mx-2">x</span>
                     <span className="font-semibold ">
@@ -38,7 +38,7 @@ const Product = ({ product }) => {
                 </div>
                 <div className="flex justify-end md:flex-row">
                     <span className="font-bold ">
-                        {(product.price * product.qty).toFixed(2)} $
+                        {(Number(product.price) * product.qty).toFixed(2)} $
                     </span>
                 </div>
             </div>

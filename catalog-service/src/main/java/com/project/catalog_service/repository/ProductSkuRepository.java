@@ -15,6 +15,8 @@ import com.project.catalog_service.model.ProductSku;
 @Repository
 public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
 
+    Optional<ProductSku> findByProductProductIdAndSizesSizeAndColorColorId(Long productId, String size, Long colorId);
+
     
     @Query(value = "select distinct product_id from product_sku a " +
     "left join product_size b on a.skuproduct_id = b.skuproduct_id " +

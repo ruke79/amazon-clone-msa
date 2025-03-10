@@ -17,7 +17,7 @@ const Account = () => {
     const cart = useSelector((state) => state.cart.cartItems);
 
     const { token, setToken } =  useAuthContext();
-    const  user  = tokenUtil.getUser();
+    const { user } = useAuthContext();
     
     
     const handleLogout = async() => {

@@ -1,6 +1,6 @@
 package com.project.chatserver.testUser;
 
-import com.project.chatserver.dto.ServiceUserDto;
+
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,6 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
+
+import com.project.common.dto.SharedUserDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +28,8 @@ public class WithMockCustomAccountSecurityContextFactory implements WithSecurity
         attributes.put("email", customOAuth2Account.email());
 
 
-        final ServiceUserDto principal = ServiceUserDto.builder()
-                .userId("1")
+        final SharedUserDto principal = SharedUserDto.builder()
+                .userId(1L)
                 .nickname(customOAuth2Account.name())
                 .username(customOAuth2Account.username())
                 .email(customOAuth2Account.email())

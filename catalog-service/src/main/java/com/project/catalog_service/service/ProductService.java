@@ -1,6 +1,8 @@
 package com.project.catalog_service.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,40 +19,40 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.ColorAttributeDto;
-import com.project.catalog_service.dto.ProductDto;
-import com.project.catalog_service.dto.ProductDetailDto;
-import com.project.catalog_service.dto.ProductInfoDto;
-import com.project.catalog_service.dto.ProductQADto;
-import com.project.catalog_service.dto.ProductSkuDto;
 
-import com.project.catalog_service.dto.SearchResultDto;
-import com.project.catalog_service.dto.SizeAttributeDto;
-import com.project.catalog_service.dto.SubCategoryDto;
+import com.project.common.dto.ProductColorDto;
+import com.project.common.dto.ProductDto;
+import com.project.common.dto.ProductDetailDto;
+import com.project.common.dto.ProductInfoDto;
+import com.project.common.dto.ProductQADto;
 
+
+
+import com.project.common.dto.SubCategoryDto;
+import com.project.common.message.dto.request.OrderProductRequest;
+import com.project.common.message.dto.request.ProductUpdateRequest;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.model.ProductCategory;
-import com.project.catalog_service.model.ProductColorAttribute;
-import com.project.catalog_service.model.ProductDetails;
-import com.project.catalog_service.model.ProductQA;
+import com.project.catalog_service.model.ProductColor;
+import com.project.catalog_service.model.ProductSize;
 import com.project.catalog_service.model.ProductSku;
 import com.project.catalog_service.model.SubCategory;
 
 import com.project.catalog_service.repository.CategoryRepository;
 import com.project.catalog_service.repository.ProductColorRepository;
-import com.project.catalog_service.repository.ProductDetailsRepository;
+
 import com.project.catalog_service.repository.ProductQARepository;
 import com.project.catalog_service.repository.ProductRepository;
+import com.project.catalog_service.repository.ProductSizeRepository;
 import com.project.catalog_service.repository.ProductSkuRepository;
 
 import com.project.catalog_service.repository.SubCategoryRepository;
-import com.project.catalog_service.util.FileUtils;
+import com.project.common.util.FileUtil;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import com.project.catalog_service.dto.request.ProductInfoLoadRequest;
-import com.project.catalog_service.dto.request.ProductInfosLoadRequest;
 import com.project.catalog_service.dto.request.ProductRequest;
-import com.project.catalog_service.dto.request.ProductInfoLoadRequest;
-import com.project.catalog_service.dto.request.SearchParamsRequest;
 
 
 //import jakarta.mail.Multipart;
@@ -68,11 +70,9 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    //private final CategoryService categoryService;
+    private final ProductSizeRepository productSizeRepository;
 
     private final ProductSkuRepository productskuRepository;
-
-    //private final ProductDetailsRepository productDetailsRepository;
 
     private final ProductColorRepository productColorRepository;
 
@@ -130,104 +130,7 @@ public class ProductService {
         }
         return null;
     }
-
-    // public ProductDto convertToDto(Product product) {
-
-    //     CategoryDto parent = CategoryDto.builder()
-    //             .id(product.getCategory().getCategoryId())
-    //             .name(product.getCategory().getCategoryName())
-    //             .slug(product.getCategory().getSlug()).build();
-
-    //     List<SubCategoryDto> subCategories = product.getSubCategories().stream()
-    //             .map(subcategory -> new SubCategoryDto(subcategory.getSubcategoryId(), parent,
-    //                     subcategory.getSubcategoryName(), subcategory.getSlug()))
-    //             .collect(Collectors.toList());
-
-    //     List<ProductDetailDto> details = product.getDetails().stream().map(detail -> {
-    //         return ProductDetailDto.builder()
-    //                 .name(detail.getName())
-    //                 .value(detail.getValue()).build();
-    //     }).collect(Collectors.toList());
-
-    //     // List<ReviewDto> reviews = product.getReviews().stream().map(review -> {
-    //     //     return ReviewDto.builder()
-    //     //             .images(review.getImages())
-    //     //             .rating(review.getRating())
-    //     //             .fit(review.getFit())
-    //     //             .review(review.getReview())
-    //     //             .reviewedBy(ReviewerDto.builder()
-    //     //                     .name(review.getReviewedBy().getUserName())
-    //     //                     .image(review.getReviewedBy().getImage())
-    //     //                     .build())
-    //     //             .likes(review.getLikes())
-    //     //             .size(review.getSize())
-    //     //             .style(ReviewStyleDto.builder()
-    //     //                     .color(review.getStyle().getColor())
-    //     //                     .image(review.getStyle().getImage())
-    //     //                     .build())
-    //     //             .build();
-
-    //     // }).collect(Collectors.toList());
-
-    //     List<ProductQADto> questions = product.getQuestions().stream().map(q -> {
-    //         return ProductQADto.builder()
-    //                 .question(q.getQuestion())
-    //                 .answer(q.getAnswer())
-    //                 .build();
-    //     }).collect(Collectors.toList());
-
-    //     List<ProductSkuDto> skus = product.getSku_products().stream().map(sku -> {
-
-    //         List<String> base64Image = new ArrayList<String>();
-    //         for (String image : sku.getImages()) {
-    //             log.info("image: " + image);
-    //             base64Image.add(image);
-    //         }
-
-    //         Set<SizeAttributeDto> sizes = sku.getSizes().stream().map(item -> {
-    //             SizeAttributeDto size = new SizeAttributeDto(item.getSizeId(),
-    //                     item.getSize(), item.getQuantity(), item.getPrice());
-    //             return size;
-    //         }).collect(Collectors.toSet());
-
-    //         ColorAttributeDto color = new ColorAttributeDto(sku.getColor().getColorId(),
-    //                 sku.getColor().getColor(), sku.getColor().getColorImage());
-
-    //         ProductSkuDto dto = ProductSkuDto.builder()
-    //                 .id(sku.getSkuproductId())
-    //                 .sku(sku.getSku())
-    //                 .images(base64Image)
-    //                 .discount(sku.getDiscount())
-    //                 .sold(sku.getSold())
-    //                 .sizes(sizes)
-    //                 .color(color)
-    //                 .build();
-
-    //         return dto;
-    //     }).collect(Collectors.toList());
-
-    //     return ProductDto.builder()
-    //             .id(product.getProductId())
-    //             .name(product.getName())
-    //             .description(product.getDescription())
-    //             .brand(product.getBrand())
-    //             .slug(product.getSlug())
-    //             .category(parent)
-    //             .subCategories(subCategories)
-    //             .details(details)
-    //             //.reviews(reviews)
-    //             .questions(questions)
-    //             .sku_products(skus)
-    //             .refund_policy(product.getRefund_policy())
-    //             .rating(product.getRating())
-    //             //.num_reviews(product.getNum_reviews())
-    //             .shipping(product.getShipping())
-    //             .createdAt(product.getCreatedAt().toString())
-    //             .build();
-
-                
-    // }
-    
+        
 
     public List<ProductSku> load(List<ProductInfoLoadRequest> products, List<MultipartFile> images, 
     List<MultipartFile> colorImages) throws IOException {
@@ -258,7 +161,7 @@ public class ProductService {
             if (existed.isPresent()) {
 
                 ProductSku newSku = loadSku(request, existed.get(), images, colorImage);
-                existed.get().getSku_products().add(newSku);
+                existed.get().getSkus().add(newSku);
 
                 productRepository.save(existed.get());
 
@@ -274,7 +177,7 @@ public class ProductService {
             product.setSlug(request.getSlug());
 
             if (request.getShippingFee() != null)
-                product.setShipping(Integer.parseInt(request.getShippingFee()));
+                product.setShipping(new BigDecimal(request.getShippingFee()));
 
             ProductCategory category = categoryRepository.findByCategoryName(request.getCategory().getName());
 
@@ -348,7 +251,7 @@ public class ProductService {
             if (existed.isPresent()) {
 
                 ProductSku newSku = createSku(request, existed.get(), images, colorImage);
-                existed.get().getSku_products().add(newSku);
+                existed.get().getSkus().add(newSku);
 
                 productRepository.save(existed.get());
 
@@ -364,7 +267,7 @@ public class ProductService {
             product.setSlug(request.getSlug());
 
             if (request.getShippingFee() != null)
-                product.setShipping(Integer.parseInt(request.getShippingFee()));
+                product.setShipping(new BigDecimal(request.getShippingFee()));
 
             Optional<ProductCategory> category = categoryRepository.findById(Long.parseLong(request.getCategory()));
 
@@ -417,23 +320,23 @@ public class ProductService {
         List<String> imageUrls = new ArrayList<String>();
 
         
-        String filename = FileUtils.getRandomFilename();
+        String filename = FileUtil.getRandomFilename();
         String filepath = imageService.upload(image, filename);
         imageUrls.add(filepath);                  
         
         skuProject.setImages(imageUrls);
         
-        filename = "color_" + FileUtils.getRandomFilename();
+        filename = "color_" + FileUtil.getRandomFilename();
         String colorImageUrl = imageService.upload(colorImage, filename);
 
         
-        skuProject.setColor(ProductColorAttribute.builder().colorImage(colorImageUrl)
+        skuProject.setColor(ProductColor.builder().colorImage(colorImageUrl)
                 .color(request.getColor().getColor()).build());
 
         
         productColorRepository.save(skuProject.getColor());
 
-        request.getSizes().forEach(size -> size.setSku_product(skuProject));
+        request.getSizes().forEach(size -> size.setSku(skuProject));
 
         skuProject.setSizes(request.getSizes());
 
@@ -472,7 +375,7 @@ public class ProductService {
         List<String> imageUrls = new ArrayList<String>();
 
         for(MultipartFile image : images) {
-            String filename = FileUtils.getRandomFilename();
+            String filename = FileUtil.getRandomFilename();
             String filepath = imageService.upload(image, filename);
             imageUrls.add(filepath);
         }
@@ -488,12 +391,12 @@ public class ProductService {
 
         skuProject.setImages(imageUrls);
 
-        String filename = "color_" + FileUtils.getRandomFilename();
+        String filename = "color_" + FileUtil.getRandomFilename();
         String colorImageUrl = imageService.upload(colorImage, filename);
 
         skuProject.getColor().setColorImage(colorImageUrl);
 
-        request.getSizes().forEach(size -> size.setSku_product(skuProject));
+        request.getSizes().forEach(size -> size.setSku(skuProject));
 
         skuProject.setSizes(request.getSizes());
 
@@ -533,14 +436,14 @@ public class ProductService {
         return Base64.decodeBase64(encodedString);
     }
 
-    public ColorAttributeDto getColorAttributeInfo(Long colorId) {
+    public ProductColorDto getColorAttributeInfo(Long colorId) {
 
-        ProductColorAttribute color = productColorRepository.findById(colorId).orElse(null);
+        ProductColor color = productColorRepository.findById(colorId).orElse(null);
 
         
         if (null != color) {
 
-            ColorAttributeDto dto = ColorAttributeDto.builder()
+            ProductColorDto dto = ProductColorDto.builder()
                     .id(Long.toString(color.getColorId()))
                     .color(color.getColor())
                     .colorImage(color.getColorImage())
@@ -563,14 +466,18 @@ public class ProductService {
 
             Product product = data.get();
 
-            int discount = product.getSku_products().get(style).getDiscount();
-            int priceBefore = product.getSku_products().get(style).getSizes().get(size).getPrice();
-            int price = discount > 0 ? priceBefore - priceBefore / discount : priceBefore;
+            BigDecimal discount = new BigDecimal(product.getSkus().get(style).getDiscount());
+            BigDecimal priceBefore = product.getSkus().get(style).getSizes().get(size).getPrice();
+            
+            
+            BigDecimal price =  discount.compareTo(new BigDecimal(0)) > 0 ? 
+              priceBefore.subtract(priceBefore.divide(discount, 2,RoundingMode.HALF_UP)) 
+             : priceBefore;
 
-            ColorAttributeDto color = ColorAttributeDto.builder()
-                    .id(Long.toString(product.getSku_products().get(style).getColor().getColorId()))
-                    .color(product.getSku_products().get(style).getColor().getColor())
-                    .colorImage(product.getSku_products().get(style).getColor().getColorImage())
+            ProductColorDto color = ProductColorDto.builder()
+                    .id(Long.toString(product.getSkus().get(style).getColor().getColorId()))
+                    .color(product.getSkus().get(style).getColor().getColor())
+                    .colorImage(product.getSkus().get(style).getColor().getColorImage())
                     .build();
 
             List<String> subcategoryIds = product.getSubCategories().stream().map(subcategory -> {
@@ -591,47 +498,27 @@ public class ProductService {
                         .build();
             }).collect(Collectors.toList());
 
-            // List<ReviewDto> reviews = product.getReviews().stream().map(review -> {
-            //     return ReviewDto.builder()
-            //             .images(review.getImages())
-            //             .rating(review.getRating())
-            //             .fit(review.getFit())
-            //             .review(review.getReview())
-            //             .reviewedBy(ReviewerDto.builder()
-            //                     .name(review.getReviewedBy().getUserName())
-            //                     .image(review.getReviewedBy().getImage())
-            //                     .build())
-            //             .size(review.getSize())
-            //             .style(ReviewStyleDto.builder()
-            //                     .color(review.getStyle().getColor())
-            //                     .image(review.getStyle().getImage())
-            //                     .build())
-            //             .build();
-
-            // }).collect(Collectors.toList());
-
             ProductInfoDto dto = ProductInfoDto.builder()
                     .id(Long.toString(product.getProductId()))
                     .style(style)
                     .name(product.getName())
                     .description(product.getDescription())
                     .slug(product.getSlug())
-                    .sku(product.getSku_products().get(style).getSku())
+                    .sku(product.getSkus().get(style).getSku())
                     .brand(product.getBrand())
-                    .shipping(product.getShipping())
-                    .images(product.getSku_products().get(style).getImages())
+                    .shipping(product.getShipping().toPlainString())
+                    .images(product.getSkus().get(style).getImages())
                     .color(color)
-                    .size(product.getSku_products().get(style).getSizes().get(size).getSize())
-                    .price(price)
-                    .priceBefore(priceBefore)
+                    .size(product.getSkus().get(style).getSizes().get(size).getSize())
+                    .price(price.toPlainString())
+                    .priceBefore(priceBefore.toPlainString())
                     .qty(1)
-                    .quantity(product.getSku_products().get(style).getSizes().get(size).getQuantity())
+                    .quantity(product.getSkus().get(style).getSizes().get(size).getQuantity())
                     .category(Long.toString(product.getCategory().getCategoryId()))
                     .subCategories(subcategoryIds)
                     .questions(questions)
-                    .details(details)
-                    //.reviews(reviews)
-                    .discount(discount)
+                    .details(details)                    
+                    .discount(product.getSkus().get(style).getDiscount())
                     .build();
 
             return dto;
@@ -640,4 +527,97 @@ public class ProductService {
         return null;
     }
 
+    @Transactional(readOnly =true)
+    private Product getProductModel(Long productId) 
+    {
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+            return product.get();
+        }
+        return null;
+    }
+
+    @Transactional(readOnly =true)
+    private ProductSku getProductSkuModel(Long productId, String size, Long colorId) 
+    {
+        Optional<ProductSku> sku = productskuRepository.
+        findByProductProductIdAndSizesSizeAndColorColorId(productId, size, colorId);
+        if (sku.isPresent()) {
+            return sku.get();
+        }
+        return null;
+    }
+
+    @Transactional(readOnly =true)
+    private ProductSize getProductSizeModel(Long skuId, String size) 
+    {
+        Optional<ProductSize> productSize = productSizeRepository.findBySkuSkuproductIdAndSize(skuId, size);
+        if (productSize.isPresent()) {
+            return productSize.get();
+        }
+        return null;
+    }
+
+    @Transactional 
+    private ProductSku updateSoldValue(Long productId, String size, Long colorId, int qty) {
+
+        ProductSku sku = getProductSkuModel(productId, size, colorId);
+        if( sku != null) {
+            sku.setSold(qty);
+
+            sku = productskuRepository.save(sku);
+            return sku;                        
+        }
+        return null;
+    }
+
+    @Transactional
+    private ProductSize updateProductSize_Qty(Long skuId, String size, int qty) {
+        ProductSize productSize = getProductSizeModel(skuId, size);
+
+        if ( productSize != null) {
+
+            if ( productSize.getQuantity() >= qty) {
+                productSize.setQuantity(productSize.getQuantity() - qty);
+                productSize = productSizeRepository.save(productSize);
+                return productSize;
+            }            
+        }
+
+        return null;
+    }
+
+
+    
+
+    @Transactional
+    public ProductSize productUpdated(ProductUpdateRequest request) {
+
+        if (request != null) {
+        
+            List<OrderProductRequest> orderProducts = request.getOrderProducts();
+
+            if (!orderProducts.isEmpty()) {
+
+                for(OrderProductRequest item: orderProducts) {
+
+                    Product product = getProductModel(item.getProductId());
+
+                    if (product != null) {
+
+                        ProductSku sku = updateSoldValue(product.getProductId(), item.getSize(), item.getColorId(), item.getQty());
+
+                        if (sku != null) {
+
+                            ProductSize productSize = updateProductSize_Qty(sku.getSkuproductId(), item.getSize(), item.getQty());                    
+                            return productSize;
+                        }
+                    }
+                }
+
+            }
+
+        }
+        return null;
+    }
 }

@@ -1,15 +1,14 @@
 import { Form, Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import * as Yup from "yup";
 import ShippingInput from "./ShippingInput";
 import { useNavigate } from "react-router-dom";
 import api, { applyCoupon, postRequest } from "util/api";
 import tokenUtil from "util/tokenUtil";
+import { useFetchCoupons } from "hook/hooks";
+import { useAuthContext } from "store/AuthContext";
 
 
-function generateOrderNumber() {
-    return Math.floor(Math.random() * Date.now())
-    }
 
 const Summary = ({
     selectedAddress,
@@ -24,50 +23,60 @@ const Summary = ({
     const [discount, setDiscount] = useState("");
     const [error, setError] = useState("");
     const [order_error, setOrder_Error] = useState("");
-
+    const count = useRef(0);
+    
     const navigate = useNavigate();
 
     const validate = Yup.object({
         coupon: Yup.string()
             .required("Please enter a coupon first!")
-            .min(3, "Coupon code must Between 3 and 10 character")
-            .max(10, "Coupon code must Between 3 and 10 character"),
+            .min(3, "Coupon code must Between 3 and 20 character")
+            .max(20, "Coupon code must Between 3 and 20 character"),
     });
 
-    const applyCouponHandler = async () => {
-        setLoading(true);
-          const result = await applyCoupon(coupon);
+    
+    const { coupons, isSuccess, isPending } = useFetchCoupons(user.email);
+
+      
+   if (isPending) return <div><p>Loading...</p></div>  
+
+   
+    const applyCouponHandler = async (applycoupon="") => {
+        //setLoading(true);
+        console.log(coupon);
+          const result = await applyCoupon(cart.cartTotal, applycoupon ? applycoupon : coupon, user.email);
+
+          console.log(result);
 
         if (result.message) {
             setError(result.message);
             setDiscount("");
             setTotalAfterDiscount("");
-            setLoading(false);
+            //setLoading(false);
         } else {
             setTotalAfterDiscount(result.totalAfterDiscount);
             setDiscount(result.discount);
             setError("");
-            setLoading(false);
+            //setLoading(false);
         }
     };
 
     const placeOrderHandler = async () => {
         try {
-            setLoading(true);
+            //setLoading(true);
             if (paymentMethod == "") {
                 setOrder_Error("please choose a payment method.");
-                setLoading(false);
+                //setLoading(false);
                 return;
             } else if (!selectedAddress) {
                 setOrder_Error("please choose a shipping address.");
-                setLoading(false);
+                //setLoading(false);
                 return;
             }
 
             console.log(paymentMethod);
                         
-            const {data}  = await postRequest("/order-service/api/order/create", {             
-                orderNumber : generateOrderNumber(),
+            const {data}  = await postRequest("/order-service/api/order/create", {                             
                 products: cart.products,
                 shippingAddress: selectedAddress,
                 paymentMethod,
@@ -77,18 +86,25 @@ const Summary = ({
                         : cart.cartTotal,
                 totalBeforeDiscount: cart.cartTotal,
                 couponApplied: coupon,
-                userId : tokenUtil.getUser().email
+                email : user.email
             });
 
                         
             navigate(`/order/${data.orderId}`);
-            setLoading(false);
+            //setLoading(false);
         } catch (error) {
-            setLoading(false);
+            //setLoading(false);
             setOrder_Error(error.response.data.message);
         }
     };
 
+    if(coupon ==="" && isSuccess) {
+        setCoupon(coupons[0]);            
+        applyCouponHandler(coupons[0]);      
+    }
+
+
+   
     return (
         <div className="mt-3">
             <h3 className=" pb-2 mb-4 border-b border-b-2  text-xl font-semibold">
@@ -107,7 +123,7 @@ const Summary = ({
                         <Form>
                             <ShippingInput
                                 name="coupon"
-                                placeholder="*Coupon"
+                                // placeholder="*Coupon"
                                 onChange={(e) => setCoupon(e.target.value)}
                             />
                             {error && (

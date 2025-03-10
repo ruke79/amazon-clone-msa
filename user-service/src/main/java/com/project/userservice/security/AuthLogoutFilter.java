@@ -68,7 +68,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
         }
         
         //get refresh token
-        String refresh = null;
+        String refresh = null;        
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
@@ -111,10 +111,12 @@ public class AuthLogoutFilter extends GenericFilterBean{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+
+        String email = jwtUtils.getIdFromJwtToken(refresh);        
         
 
         //DB에 저장되어 있는지 확인
-        if(!refreshTokenService.findByToken(refresh).isPresent())  {
+        if(!refreshTokenService.findByUserId(email).isPresent())  {
 
             PrintWriter writer = response.getWriter();
                 writer.print("refresh token not found");
@@ -125,9 +127,17 @@ public class AuthLogoutFilter extends GenericFilterBean{
         }
 
         //로그아웃 진행
-        //Refresh 토큰 DB에서 제거
-        String email = jwtUtils.getIdFromJwtToken(refresh);        
-        //refreshTokenService.deleteByUserId(user.getUserId());
+        //Refresh 토큰 DB에서 제거        
+        if (refreshTokenService.findByUserId(email).isPresent()) {
+            refreshTokenService.deleteByToken(refresh);
+        }
+
+        // Register accessToken in blacklist
+        String accessToken = jwtUtils.getJwtFromHeader(request);
+        if ( accessToken != null ) {
+            log.info("registerBlacklist");
+            refreshTokenService.resigterBlacklist(accessToken, jwtUtils.getValidExpiration(accessToken));
+        }
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie(TokenType.REFRESH.getType(), null);

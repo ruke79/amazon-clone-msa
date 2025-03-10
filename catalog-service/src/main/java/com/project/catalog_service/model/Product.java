@@ -1,5 +1,6 @@
 package com.project.catalog_service.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,14 +8,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.ColorAttributeDto;
-import com.project.catalog_service.dto.ProductDetailDto;
-import com.project.catalog_service.dto.ProductDto;
-import com.project.catalog_service.dto.ProductQADto;
-import com.project.catalog_service.dto.ProductSkuDto;
-import com.project.catalog_service.dto.SizeAttributeDto;
-import com.project.catalog_service.dto.SubCategoryDto;
+import com.project.common.dto.CategoryDto;
+import com.project.common.dto.ProductColorDto;
+import com.project.common.dto.ProductDetailDto;
+import com.project.common.dto.ProductDto;
+import com.project.common.dto.ProductQADto;
+import com.project.common.dto.ProductSkuDto;
+import com.project.common.dto.ProductSizeDto;
+import com.project.common.dto.SubCategoryDto;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
@@ -86,7 +87,7 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSku.class, orphanRemoval = true)
-    private List<ProductSku> sku_products;
+    private List<ProductSku> skus;
 
 //     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
 //             cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class, orphanRemoval = true)
@@ -96,13 +97,13 @@ public class Product extends BaseEntity {
 //             cascade = CascadeType.PERSIST,targetEntity = CartProduct.class, orphanRemoval = true)
 //  private List<CartProduct> cartProducts;
 
-    private String refund_policy = "30 days";
+    private String refundPolicy = "30 days";
 
     private float rating = 0F;
 
     //private int num_reviews = 0;
 
-    private int shipping = 0;
+    private BigDecimal shipping;
 
 
 
@@ -124,26 +125,7 @@ public class Product extends BaseEntity {
                     .value(detail.getValue()).build();
         }).collect(Collectors.toList());
 
-        // List<ReviewDto> reviews = product.getReviews().stream().map(review -> {
-        //     return ReviewDto.builder()
-        //             .images(review.getImages())
-        //             .rating(review.getRating())
-        //             .fit(review.getFit())
-        //             .review(review.getReview())
-        //             .reviewedBy(ReviewerDto.builder()
-        //                     .name(review.getReviewedBy().getUserName())
-        //                     .image(review.getReviewedBy().getImage())
-        //                     .build())
-        //             .likes(review.getLikes())
-        //             .size(review.getSize())
-        //             .style(ReviewStyleDto.builder()
-        //                     .color(review.getStyle().getColor())
-        //                     .image(review.getStyle().getImage())
-        //                     .build())
-        //             .build();
-
-        // }).collect(Collectors.toList());
-
+        
         List<ProductQADto> questions = product.getQuestions().stream().map(q -> {
             return ProductQADto.builder()
                     .question(q.getQuestion())
@@ -151,20 +133,20 @@ public class Product extends BaseEntity {
                     .build();
         }).collect(Collectors.toList());
 
-        List<ProductSkuDto> skus = product.getSku_products().stream().map(sku -> {
+        List<ProductSkuDto> skus = product.getSkus().stream().map(sku -> {
 
             List<String> base64Image = new ArrayList<String>();
             for (String image : sku.getImages()) {                
                 base64Image.add(image);
             }
 
-            Set<SizeAttributeDto> sizes = sku.getSizes().stream().map(item -> {
-                SizeAttributeDto size = new SizeAttributeDto(Long.toString(item.getSizeId()),
+            Set<ProductSizeDto> sizes = sku.getSizes().stream().map(item -> {
+                ProductSizeDto size = new ProductSizeDto(Long.toString(item.getSizeId()),
                         item.getSize(), item.getQuantity(), item.getPrice());
                 return size;
             }).collect(Collectors.toSet());
 
-            ColorAttributeDto color = new ColorAttributeDto(Long.toString(sku.getColor().getColorId()),
+            ProductColorDto color = new ProductColorDto(Long.toString(sku.getColor().getColorId()),
                     sku.getColor().getColor(), sku.getColor().getColorImage());
 
             ProductSkuDto dto = ProductSkuDto.builder()
@@ -191,11 +173,11 @@ public class Product extends BaseEntity {
                 .details(details)
                 //.reviews(reviews)
                 .questions(questions)
-                .sku_products(skus)
-                .refund_policy(product.getRefund_policy())
+                .skus(skus)
+                .refundPolicy(product.getRefundPolicy())
                 .rating(product.getRating())
                 //.num_reviews(product.getNum_reviews())
-                .shipping(product.getShipping())
+                .shipping(product.getShipping().toPlainString())
                 .createdAt(product.getCreatedAt().toString())
                 .build();                
     }

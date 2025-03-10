@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.SubCategoryDto;
+import com.project.common.dto.CategoryDto;
+import com.project.common.dto.SubCategoryDto;
 import com.project.catalog_service.model.ProductCategory;
 import com.project.catalog_service.model.SubCategory;
 import com.project.catalog_service.repository.CategoryRepository;

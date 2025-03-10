@@ -20,7 +20,8 @@ const initialPassword = {
 
 const Security = () => {
 
-    const { user, tab } = useLoaderData();
+    const { tab } = useLoaderData();
+    const { user } = useAuthContext();
 
     
    
@@ -148,53 +149,27 @@ const Security = () => {
     );
 };
 
-export const loader = (authContext) => {
-
-    return async ({params, request}) => {
-
-        
-
+export const loader = async ({params, request}) => {
+       
         const searchParams = new URL(request.url).searchParams;
-
-        console.log(request.url);
-        
         const tab = Number(searchParams.get('tab')) || 0;
 
-        try {
-            const { data } = await getRequest(`/user-service/api/auth/user`);
-                  
-            return {                  
-                user : data,  
-                tab : tab                   
-            }
-        } catch(err) {
+        return { tab : tab };
 
-        }
+        // try {
+        //     const { data } = await getRequest(`/user-service/api/auth/user`);
+                  
+        //     return {                  
+        //         user : data,  
+        //         tab : tab                   
+        //     }
+        // } catch(err) {
+
+        // }
         
-    };
-}
+};
+
 
 
 export default Security;
 
-// export async function getServerSideProps(context) {
-//     db.connectDb();
-//     const { query } = context;
-//     const session = await getSession(context);
-//     const tab = query.tab || 0;
-
-//     if (!session) {
-//         return {
-//             redirect: {
-//                 destination: "/",
-//             },
-//         };
-//     }
-//     db.disconnectDb();
-//     return {
-//         props: {
-//             user: session?.user,
-//             tab,
-//         },
-//     };
-// }

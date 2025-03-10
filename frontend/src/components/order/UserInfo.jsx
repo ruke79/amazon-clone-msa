@@ -1,4 +1,4 @@
-const UserInfo = ({ order }) => {
+const UserInfo = ({ order, user }) => {
     return (
         <div className=" mb-2">
             <h3 className="text-2xl font-bold border-b pb-3 mb-3">
@@ -7,15 +7,15 @@ const UserInfo = ({ order }) => {
 
             <div className="flex items-center space-x-3">
                 <img
-                    src={order.user.image}
-                    alt={order.user.name}
+                    src={user.image}
+                    alt={user.name}
                     width={65}
                     height={65}
                     className="rounded-full"
                 />
                 <div className="flex flex-col text-slate-800">
-                    <span className="font-semibold">{order.user.name}</span>
-                    <span>{order.user.email}</span>
+                    <span className="font-semibold">{user.name}</span>
+                    <span>{user.email}</span>
                 </div>
             </div>
             <div className="mt-2 flex flex-col text-slate-800">

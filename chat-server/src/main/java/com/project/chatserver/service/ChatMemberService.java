@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.chatserver.common.util.TokenHandler;
 import com.project.chatserver.constants.MemberRole;
-import com.project.chatserver.dto.UserCreatedDto;
 import com.project.chatserver.model.ChatMember;
 import com.project.chatserver.repository.ChatMemberRepository;
+import com.project.common.message.dto.request.UserCreatedRequest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -28,14 +28,14 @@ public class ChatMemberService {
     private final ChatMemberRepository chatMemberRepository;    
     private final TokenHandler tokenHandler;
 
-    public void registerChatMember(final UserCreatedDto dto) {
-        chatMemberRepository.save(ChatMember.builder()
-        .id(dto.getUserId())
-        .nickname(dto.getNickname())
-        .email(dto.getEmail())
-        .role(MemberRole.USER)
-        .build()); 
-    }
+    // public void registerChatMember(final UserCreatedRequest dto) {
+    //     chatMemberRepository.save(ChatMember.builder()
+    //     .id(dto.getUserId())
+    //     .nickname(dto.getNickname())
+    //     .email(dto.getEmail())
+    //     .role(MemberRole.USER)
+    //     .build()); 
+    // }
 
     public ChatMember findByEmail(String email){
 

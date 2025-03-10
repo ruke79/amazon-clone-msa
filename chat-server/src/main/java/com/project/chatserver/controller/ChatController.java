@@ -40,33 +40,7 @@ public class ChatController {
     private final TokenHandler tokenHandler;
     private final ChatService chatService;
 
-    // @PostConstruct
-    // private void sampleData () {
-
-    //     String roomId = "sdfdsfdfdfdfdf";
-    //     MessageDto chat1 = new MessageDto("", MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요", "", 0, 
-    //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
-    //     );
-        
-    //     MessageDto chat2 = new MessageDto("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요2", "", 0, 
-    //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
-    //     );
-
-    //     MessageDto chat3 = new MessageDto("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요3", "", 0, 
-    //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
-    //     );
-
-    //     MessageDto chat4 = new MessageDto("",MessageType.TEXT_TALK, roomId, "user2@example.com", "yun", "안녕하세요4", "", 0, 
-    //     LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant()
-    //     );
-
-    //     chatService.saveMessage(chat1);
-    //     chatService.saveMessage(chat2);
-    //     chatService.saveMessage(chat3);
-    //     chatService.saveMessage(chat4);        
-
-    // }
-
+   
 
     @PostMapping("/room")
     @ResponseBody
@@ -95,18 +69,18 @@ public class ChatController {
         return all;
     }
 
-    @MessageMapping("/chat/message")
+    @MessageMapping("/message")
     public void sendMessage(@Valid MessageDto request) {
             chatService.sendMessage(request);
     }
 
-    @MessageMapping("/chat/enter")
+    @MessageMapping("/enter")
 	public void enterChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         chatService.sendEnterMessage(msg, headerAccessor);
     }
 
-    @MessageMapping("/chat/leave")
+    @MessageMapping("/leave")
 	public void leaveChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         chatService.sendLeaveMessage(msg, headerAccessor);

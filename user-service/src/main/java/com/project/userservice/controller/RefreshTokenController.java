@@ -19,13 +19,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.userservice.constants.StatusMessages;
+import com.project.common.constants.StatusMessages;
 import com.project.userservice.constants.TokenType;
 import com.project.userservice.exceptionHandling.TokenRefreshException;
 import com.project.userservice.model.User;
 import com.project.userservice.security.RefreshToken;
 import com.project.userservice.security.jwt.JwtUtils;
-import com.project.userservice.security.response.MessageResponse;
+
+
 import com.project.userservice.service.RefreshTokenService;
 import com.project.userservice.service.impl.UserServiceImpl;
 
@@ -56,6 +57,8 @@ public class RefreshTokenController {
 
     @GetMapping("/token/refresh")
     public ResponseEntity<?> refreshtoken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        
+        
         
         String refresh = null;
         Cookie[] cookies = request.getCookies();
@@ -89,6 +92,8 @@ public class RefreshTokenController {
             return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
         }
 
+
+
         
         if(!jwtUtils.validateJwtToken(refresh)) {
 
@@ -98,20 +103,22 @@ public class RefreshTokenController {
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
-        if(!refreshTokenService.findByToken(refresh).isPresent())  {
+        String email = jwtUtils.getIdFromJwtToken(refresh);
+
+        if(!refreshTokenService.findByUserId(email).isPresent())  {
                 //response body
             
              throw new TokenRefreshException(refresh,
                                "Refresh token is not in database!");
         }
 
+        
 
         
-        String email = jwtUtils.getIdFromJwtToken(refresh);
-
-        log.info("userService.findByEmail(email) start");
+        
+        
         User user = userService.findByEmail(email);                    
-        log.info("userService.findByEmail(email) End");
+        
 
         String newAccess = jwtUtils.generateTokenFromUser(user);
 

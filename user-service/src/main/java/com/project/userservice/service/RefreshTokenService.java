@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.common.constants.StatusMessages;
 import com.project.userservice.constants.AppRole;
-import com.project.userservice.constants.StatusMessages;
 import com.project.userservice.exceptionHandling.TokenRefreshException;
 import com.project.userservice.model.User;
 import com.project.userservice.repository.RefreshTokenRepository;
@@ -29,10 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-  @Value("${spring.app.jwtRefreshExpirationMs}")
-  private Long refreshTokenDurationMs;
-
-    
+      
   private final RefreshTokenRepository refreshTokenRepository;
   
   
@@ -41,16 +38,18 @@ public class RefreshTokenService {
   private final JwtUtils jwtUtils;
 
     
-  public Optional<RefreshToken> findByUserId(Long userId) {
+  public Optional<RefreshToken> findByUserId(String userId) {
     return refreshTokenRepository.findByUserId(userId);
   }
 
-  public Optional<RefreshToken> findByToken(String token) {
-    return refreshTokenRepository.findByToken(token);
+  
+
+  public void  deleteByToken(String token) {
+    refreshTokenRepository.delete(token);
   }
 
-  public int  deleteByToken(String token) {
-    return refreshTokenRepository.deleteByToken(token);
+  public void resigterBlacklist(String accessToken, Long expiration) {
+    refreshTokenRepository.registerBlacklist(accessToken, expiration);
   }
 
   public RefreshToken createRefreshToken(Long userId) {
@@ -83,7 +82,7 @@ public class RefreshTokenService {
 
     // Redis start 
     
-    RefreshToken refreshToken = new RefreshToken(jwtUtils.generatRefreshTokenFromUser(user), userId );
+    RefreshToken refreshToken = new RefreshToken(user.getEmail(), jwtUtils.generatRefreshTokenFromUser(user));
     refreshTokenRepository.save(refreshToken);
 
     // Redis End

@@ -1,7 +1,7 @@
 package com.project.userservice.message.config;
 
 import com.google.common.collect.ImmutableMap;
-
+import com.project.common.dto.notification.AlarmEventDto;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -21,27 +21,27 @@ import java.util.Map;
 public class KafkaConsumerConfig {
     @Value("${kafka.url}")
     private String kafkaServerUrl;
-    @Bean
-    ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
-        return factory;
-    }
-    @Bean
-    public ConsumerFactory<String, ChatMessage> consumerFactory() {
-        JsonDeserializer<ChatMessage> deserializer = new JsonDeserializer<>();
-        deserializer.addTrustedPackages("*");
-        Map<String, Object> consumerConfigurations =
-                ImmutableMap.<String, Object>builder()
-                        .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
-                        .put(ConsumerConfig.GROUP_ID_CONFIG, "chat")
-                        .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
-                        .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
-                        .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
-                        .build();
+    //@Bean
+    // ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaListenerContainerFactory() {
+    //     ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    //     factory.setConsumerFactory(consumerFactory());
+    //     return factory;
+    // }
+    // @Bean
+    // public ConsumerFactory<String, ChatMessage> consumerFactory() {
+    //     JsonDeserializer<ChatMessage> deserializer = new JsonDeserializer<>();
+    //     deserializer.addTrustedPackages("*");
+    //     Map<String, Object> consumerConfigurations =
+    //             ImmutableMap.<String, Object>builder()
+    //                     .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+    //                     .put(ConsumerConfig.GROUP_ID_CONFIG, "pyament")
+    //                     .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
+    //                     .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
+    //                     .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+    //                     .build();
 
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
-    }
+    //     return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
+    // }
     
 
     @Bean

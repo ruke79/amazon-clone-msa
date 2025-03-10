@@ -8,19 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.catalog_service.constants.StatusMessages;
-import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.ColorAttributeDto;
-import com.project.catalog_service.dto.ProductDto;
+import com.project.common.constants.StatusMessages;
+import com.project.common.dto.CategoryDto;
+import com.project.common.dto.ProductColorDto;
+import com.project.common.dto.ProductDto;
 
-import com.project.catalog_service.dto.SubCategoryDto;
-
+import com.project.common.dto.SubCategoryDto;
+import com.project.common.response.MessageResponse;
 import com.project.catalog_service.model.SubCategory;
 import com.project.catalog_service.model.ProductCategory;
-import com.project.catalog_service.model.ProductColorAttribute;
+import com.project.catalog_service.model.ProductColor;
 import com.project.catalog_service.model.ProductDetails;
 import com.project.catalog_service.model.ProductQA;
-import com.project.catalog_service.model.ProductSizeAttribute;
+import com.project.catalog_service.model.ProductSize;
 import com.project.catalog_service.model.ProductSku;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.repository.CategoryRepository;
@@ -34,8 +34,7 @@ import com.project.catalog_service.dto.request.ProductRequest;
 
 import com.project.catalog_service.dto.request.SubCategoryRequest;
 import com.project.catalog_service.dto.response.CategoryResponse;
-import com.project.catalog_service.dto.response.GenericResponse;
-import com.project.catalog_service.dto.response.MessageResponse;
+
 import com.project.catalog_service.dto.response.SubCategoryResponse;
 import com.project.catalog_service.service.CategoryService;
 

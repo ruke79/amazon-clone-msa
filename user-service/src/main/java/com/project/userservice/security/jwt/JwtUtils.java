@@ -157,6 +157,16 @@ public class JwtUtils {
         .build().parseSignedClaims(token)
         .getPayload().getExpiration().before(new Date());
   }
+
+  public Long getValidExpiration(String token) {
+
+    Date now = new Date();
+
+     return Jwts.parser()
+        .verifyWith(key())
+        .build().parseSignedClaims(token)
+        .getPayload().getExpiration().getTime() - now.getTime();   
+  }
  
 
   public boolean validateJwtToken(String authToken) {

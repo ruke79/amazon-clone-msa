@@ -19,6 +19,8 @@ spring:
     import: optional:configserver:http://localhost:8888
 
 
+  app:    
+     jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
 
   main:
     web-application-type: reactive
@@ -32,9 +34,7 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              - 'http://localhost:3000' 
-              - 'http://localhost:8000'
-              - 'http://localhost:8080'
+              - 'http://localhost:3000'                  
               - 'http://localhost:3001'
             allow-credentials: true 
             allowedHeaders: '*'
@@ -71,6 +71,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
             - AuthorizationHeaderFilter
+            
         - id: catalog-service
           uri: lb://catalog-service
           predicates:
@@ -86,12 +87,39 @@ spring:
           filters:
               - RemoveRequestHeader=Cookie
               - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
-              - AuthorizationHeaderFilter              
+              - AuthorizationHeaderFilter    
+
+        - id: coupon-service
+          uri: lb://coupon-service
+          predicates:
+              - Path=/coupon-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/coupon-service/(?<segment>.*), /$\{segment}
+              - AuthorizationHeaderFilter                
+        
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+              - Path=/order-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+              - AuthorizationHeaderFilter                
+
+        - id: pay-service
+          uri: lb://pay-service
+          predicates:
+              - Path=/pay-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
+              - AuthorizationHeaderFilter                
 
         - id: chat-service
           uri: lb:ws://chat-service
           predicates:
-              - Path=/chat-service/chat/**
+              - Path=/chat-service/**
           filters:
               - RemoveRequestHeader=Cookie
               - RewritePath=/chat-service/(?<segment>.*), /$\{segment}

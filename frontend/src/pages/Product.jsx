@@ -48,7 +48,7 @@ async function loaderProduct(slug, style, size) {
         const product = response.data;
 
                 
-        let subProduct = product.sku_products[style];
+        let subProduct = product.skus[style];
     
         let prices = subProduct.sizes        
         .map((s) => s.price)
@@ -62,7 +62,7 @@ async function loaderProduct(slug, style, size) {
             sizes: subProduct.sizes,
             discount: subProduct.discount,
             sku: subProduct.sku,
-            colors: product.sku_products.map((p) => p.color),
+            colors: product.skus.map((p) => p.color),
             priceRange:
                 prices.discount > 1
                     ? `From ${(prices[0] - prices[0] / subProduct.discount).toFixed(
@@ -98,7 +98,7 @@ async function loaderProduct(slug, style, size) {
                 //     percentage: calculatePercentage("1"),
                 // },
             ],
-            allSizes: product.sku_products
+            allSizes: product.skus
                 .map((p) => p.sizes)
                 .flat()
                 .sort((a, b) => a.size - b.size)

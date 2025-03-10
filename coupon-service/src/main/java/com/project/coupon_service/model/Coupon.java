@@ -1,20 +1,22 @@
 package com.project.coupon_service.model;
 
+import java.time.LocalDateTime;
+
+import com.project.common.constants.CouponStatus;
+
 import io.hypersistence.utils.hibernate.id.Tsid;
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,14 +34,20 @@ public class Coupon extends BaseEntity{
     @Column(name="coupon_id")    
     private Long couponId;
 
+    private Long userId;
+
     private String name;
 
     @Column(name="start_date")
-    private String startDate;
+    private LocalDateTime startDate;
 
     @Column(name="end_date")
-    private String endDate;
+    private LocalDateTime endDate;
 
     private int discount;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status")
+    private CouponStatus couponStatus;
 
 }

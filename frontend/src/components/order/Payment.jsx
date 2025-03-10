@@ -1,10 +1,11 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useState } from "react";
 import { emptyCart } from "../../redux/CartSlice";
-import { putRequest } from "util/api";
+import { postRequest } from "util/api";
 
 import { paymentMethods } from "../checkout/paymentMethods";
 import { useDispatch } from "react-redux";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useAuthContext } from "store/AuthContext";
 
 function reducer(state, action) {
     switch (action.type) {
@@ -22,6 +23,9 @@ function reducer(state, action) {
 const Payment = ({ order, setLoading, setOrder }) => {
     const reduxDispatch = useDispatch();
 
+    const { user } = useAuthContext();
+    const [ payment, setPayment ] = useState(null);
+
     const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   // if state not dispacth is not a function error
     const [state, dispatch] = useReducer(reducer, {
@@ -30,10 +34,10 @@ const Payment = ({ order, setLoading, setOrder }) => {
     success: "",
   });
 
-      
+         
   useEffect(() => {
     
-    if (!order.orderNumber) {
+    if (!order.trackingId) {
       dispatch({
         type: "PAY_RESET",
       });
@@ -67,34 +71,109 @@ const Payment = ({ order, setLoading, setOrder }) => {
             ],
           })
           .then((order_id) => {
-            return order_id;
-          });
+             return order_id;
+           }          
+        );
       }
-      function onApproveHandler(data, actions) {
-        // const details = {
-        //     id : order.id,          
-        //     status : order.orderStatus,  
-        //     email : order.user.email
-        // }
-        return actions.order.capture().then(async function (details) {
-          try {
-            dispatch({ type: "PAY_REQUEST" });
-            const { data } = await putRequest(
-              `/pay/process`,
-              details
-            );
-             let paidOrder = {...order, paymentResult : data }
-             setOrder(paidOrder);
-             reduxDispatch(emptyCart(paidOrder)); 
 
-            dispatch({ type: "PAY_SUCCESS", payload: data });
-          } catch (error) {
-            dispatch({ type: "PAY_ERROR", payload: error });
-          }
+      // const onApprove = async (data) => {
+
+        
+        
+    
+
+      // }
+
+      function onApproveHandler(data, actions) {
+
+        const payment = {
+          orderId : order.id,          
+          trackingId : order.trackingId, 
+          //paypalOrderId : details.id,
+          //amounts : details.purchase_units.amount.value,
+          paypalOrderId : "",
+          amounts : null,
+          orderStatus : order.orderStatus,  
+          paymentStatus : order.paymentStatus,
+          email : user.email,
+          createdTime : null
+          //createdTime : details.create_time
+        };
+        
+        const captureFunc =   actions.order.capture().then(
+          (details) => {
+            console.log(details);     
+            
+            payment.paypalOrderId = details.id;
+            payment.amounts = details.purchase_units.amount.value;
+            payment.createdTime = details.create_time;     
         });
+
+        try {
+
+          console.log('detail : ' + details);
+
+          dispatch({ type: "PAY_REQUEST" });
+          
+          // const payment = {
+          //   orderId : order.id,          
+          //   trackingId : order.trackingId, 
+          //   paypalOrderId : details.id,
+          //   amounts : details.purchase_units.amount.value,
+          //   orderStatus : order.orderStatus,  
+          //   paymentStatus : order.paymentStatus,
+          //   email : user.email,
+          //   createdTime : details.create_time
+          // };
+          const requrePayment = async(payment) => {
+           const { data } = await postRequest(
+             '/order-service/api/order/payment/paypal',
+             payment
+           );
+           return data;
+          }
+          requrePayment(payment).then (res=> {
+              order.orderStatus = "PAID";
+              setOrder(order);
+              reduxDispatch(emptyCart()); 
+
+              console.log(res);
+
+            dispatch({ type: "PAY_SUCCESS", payload: res });
+        });
+        } catch (error) {
+          dispatch({ type: "PAY_ERROR", payload: error });
+
+        }
+
+        return captureFunc;      
       }
+
+      function onCancelHandler(id) {
+
+        const payment = {
+          orderId : order.id,          
+          trackingId : order.trackingId, 
+          paypalOrderId : id,
+          amounts : order.total,
+          orderStatus : order.orderStatus,  
+          paymentStatus : order.paymentStatus,
+          email : user.email,
+          createdTime : new Data()      
+        };
+
+          const { data } = postRequest(
+            `/order-service/api/order/payment/paypal`,
+            payment
+          );
+          order.orderStatus = 'CANCELED';
+          order.paymentStatus = 'CANCELED';
+
+      }
+
       function onErroHandler(error) {
         console.log(error);
+        
       }
 
     return (
@@ -125,7 +204,7 @@ const Payment = ({ order, setLoading, setOrder }) => {
                                 </label>
                                 <div className="flex items-center ">
                                     <img
-                                        src={`/../public/assets/images/${payment.id}.png`}
+                                        src={`${process.env.PUBLIC_URL}/assets/images/${payment.id}.png`}
                                         alt={payment.name}
                                         width={40}
                                         height={40}
@@ -147,8 +226,8 @@ const Payment = ({ order, setLoading, setOrder }) => {
 
                 {/* <div className=" mt-2 w-full rounded-xl bg-amazon-blue_light text-white p-4 font-semibold text-2xl hover:bg-amazon-blue_dark hover:scale-95 transition"> */}
 
-                    {/* {order.paymentMethod === "paypal" &&} */}
-                     {(
+                    {/* {order.paymentMethod === "paypal" &&
+                     ( */}
 
                         <div>
                             {isPending ? (
@@ -157,16 +236,16 @@ const Payment = ({ order, setLoading, setOrder }) => {
                              (
                                 <PayPalButtons
                                     createOrder={createOrderHanlder}
-                                    onApprove={onApproveHandler}
+                                    onApprove={onApprove}
+                                    onCancel={onCancelHandler}
                                     onError={onErroHandler}
                                 >   </PayPalButtons>
                             )}
                         </div>
-                          )}
-                         {/* {orderData.paymentMethod == "credit_card" && (
-                        
-                         )} */}                
-                {/* </div> */}
+                          {/* )                        
+                          } */}
+                      {/* { order.paymentMethod === "credit_card" && }      */}
+                 {/* </div> */}
             </div>
         </>
     );

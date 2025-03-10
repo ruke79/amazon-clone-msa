@@ -1,5 +1,6 @@
 package com.project.cart_service.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class CartDto {
 
     private List<CartProductDto> products;
 
-    private int cartTotal;
-    private int totalAfterDiscount;
+    private BigDecimal cartTotal;
+    private BigDecimal totalAfterDiscount;
 
 }

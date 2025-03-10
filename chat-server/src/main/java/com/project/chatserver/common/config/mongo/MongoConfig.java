@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories(basePackages = "com.project.chatserver.repository")
 public class MongoConfig {
     private final MongoProperties mongoProperties;
-    private final MongoMappingContext mongoMappingContext;
+    
 
     @Bean
     public MongoClient mongoClient() {
@@ -30,16 +30,6 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate() {
         return new MongoTemplate(mongoClient(), mongoProperties.getName());
     }
-
-     @Bean
-    public MappingMongoConverter mappingMongoConverter(
-            MongoDatabaseFactory mongoDatabaseFactory,
-            MongoMappingContext mongoMappingContext
-    ) {
-        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDatabaseFactory);
-        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
-        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        return converter;
-    }
+   
 
 }

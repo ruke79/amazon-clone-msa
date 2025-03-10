@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.project.common.message.dto.request.UserCreatedRequest;
+import com.project.userservice.message.producer.UserCreatedProducer;
 import com.project.userservice.model.User;
 import com.project.userservice.repository.RoleRepository;
 import com.project.userservice.repository.UserRepository;
@@ -47,7 +49,7 @@ public class RegistrationController {
  
       
     private final UserService userService;
-    
+    private final UserCreatedProducer userCreatedProducer;
      
 
     @Value("${frontend.url}")
@@ -81,6 +83,16 @@ public class RegistrationController {
             // }
 
             userService.registerConfirmed(user);
+
+            UserCreatedRequest dto = UserCreatedRequest.builder()
+            .userId(user.getUserId())
+            .image(user.getImage())
+            .email(user.getEmail())
+            .nickname(user.getName())
+            .build();
+
+            userCreatedProducer.publish(dto);
+
                         
             model.addAttribute("messageKey", "message.accountVerified");
             return new ModelAndView("redirect:"+frontendUrl+"/signin", model);            

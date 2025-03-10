@@ -10,25 +10,35 @@ import { useAuthContext } from "store/AuthContext";
 import { useFetcher, useLoaderData } from "react-router-dom";
 import api, { getRequest } from "util/api";
 import tokenUtil from "util/tokenUtil";
-import { useFetchAddresses } from "hook/hooks";
+import { useFetchAddresses, useFetchCheckOut, useFetchCart } from "hook/hooks";
+import { isPending } from "@reduxjs/toolkit";
 
 const Checkout = () => {
 
+    const { user } = useAuthContext();
 
-    const cart = useLoaderData();
+    
+    //const cart = useLoaderData();
+    const { checkoutData, isPendingCheckOut, isSuccessCheckOut, status, isError } = useFetchCheckOut(user.userId, user.email);
+    
+           
 
-    const { data, isLoading } = useFetchAddresses(cart.userId);
-    const user = { userId: cart.userId, address: data };
- 
-    const [addresses, setAddresses] = useState(user?.address || []);
-    const [paymentMethod, setPaymentMethod] = useState("paypal");
+    const { addressesData, isPendingAddress, isSuccessAddress } = useFetchAddresses(user.userId);
+        
+    const [addresses, setAddresses] = useState([]);        
+    const [paymentMethod, setPaymentMethod] = useState(user.defaultPaymentMethod);
     const [totalAfterDiscount, setTotalAfterDiscount] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("");
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+    
+  
 
-        let check = addresses?.find((address) => address.active == true);
+     useEffect(() => {
+
+          console.log(addresses)  ;
+        let check = addresses.find((address) => address.active === true);
+        console.log(check);
         if (check) {
             setSelectedAddress(check);
          
@@ -37,15 +47,23 @@ const Checkout = () => {
         }
 
     }, [addresses]);
+    
+   
+    if (isPendingCheckOut || isPendingAddress)  {        
+        return <DotLoaderSpinner loading={isPendingCheckOut || isPendingAddress} />
+    }
+
+    if ( addresses.length === 0 && isSuccessCheckOut && isSuccessAddress) 
+    {        
+        setAddresses(addressesData);
+     //   setData(checkoutData);
+    }
+
+    
 
 
-    if (isLoading) return <div><p>Loading...</p></div>;
-
-
-
-
-
-
+    if (isPendingCheckOut ) return <div><p>Loading...</p></div>;
+    // if (isPendingAddress) return <div><p>Loading...</p></div>;
 
 
     return (
@@ -60,7 +78,7 @@ const Checkout = () => {
                         setAddresses={setAddresses}
                         setSelectedAddress={setSelectedAddress}
                     />
-                    {<Product cart={cart} />}
+                    {<Product cart={checkoutData} />}
                 </section>
 
                 <section className="col-span-1">
@@ -71,7 +89,7 @@ const Checkout = () => {
                     <Summary
                         selectedAddress={selectedAddress}
                         user={user}
-                        cart={cart}
+                        cart={checkoutData}
                         paymentMethod={paymentMethod}
                         totalAfterDiscount={totalAfterDiscount}
                         setTotalAfterDiscount={setTotalAfterDiscount}
@@ -86,22 +104,21 @@ const Checkout = () => {
 export default Checkout;
 
 
-export const loader = (authContext) => {
+export const loader = async ({ params, request }) => {  
     
-    return async ({ params, request }) => {
 
         
-        try {
+    //     try {
 
-            const { data } = await getRequest("/cart-service/api/cart/checkout", 
-                { params : {userId : tokenUtil.getUser().email } }
-            );
+    //         const { data } = await getRequest("/cart-service/api/cart/checkout", 
+    //             { params : {userId : tokenUtil.getUser().email } }
+    //         );
 
 
-            return data;
-        }
-        catch(err) {
+    //         return data;
+    //     }
+    //     catch(err) {
             
-        }
-    };
+    //     }
+    // };
 }

@@ -12,31 +12,8 @@ import { useAuthContext } from "store/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import tokenUtil from "util/tokenUtil";
 
-const fetchCart = async (cart) => {
-    
-    const { data } = await putRequest(`/cart-service/api/cart/updatecart`,
-        { products: cart.cartItems });
-    return data;
-}
 
-const useCart = (cart, enable) => {
-
-    const { data, isLoading, isSuccess } = useQuery({
-        queryKey: [cart],
-        queryFn: () => { return fetchCart(cart) },
-        throwOnError: true,
-        enable: enable
-    });
-
-    return {
-        data,
-        isLoading,
-        isSuccess,
-    };
-}
-
-
-const CartPage = ({ cart, setLoadedData }) => {
+const CartPage = ({ cart }) => {
     const { token, user } = useAuthContext();
     const dispatch = useDispatch();
 
@@ -50,8 +27,7 @@ const CartPage = ({ cart, setLoadedData }) => {
 
     const navigate = useNavigate();
 
-    const { isLoading } = useCart(cart, enable);
-
+    
 
     useEffect(() => {
 
@@ -76,7 +52,7 @@ const CartPage = ({ cart, setLoadedData }) => {
             selected
                 .reduce(
                     (total, product) =>
-                        total + product.price * product.qty,
+                        total + Number(product.price) * product.qty,
                     0
                 )
                 .toFixed(2)
@@ -85,7 +61,7 @@ const CartPage = ({ cart, setLoadedData }) => {
             (
                 selected.reduce(
                     (total, product) =>
-                        total + product.price * product.qty,
+                        total + Number(product.price) * product.qty,
                     0
                 ) + selected.reduce(
                     (total, product) =>
@@ -97,12 +73,7 @@ const CartPage = ({ cart, setLoadedData }) => {
 
     }, [selected]);
 
-    if (isLoading) return <div><p>Loading...</p></div>;
-
-
-
-
-
+    
 
     const saveCartToDbHandler = async (e) => {
         e.preventDefault();
@@ -111,7 +82,7 @@ const CartPage = ({ cart, setLoadedData }) => {
         if (token) {
             setLoading(true);
 
-            const res = await saveCart(selected, tokenUtil.getUser().email);
+            const res = await saveCart(selected, user.email);
 
 
             navigate("/checkout");
@@ -141,8 +112,7 @@ const CartPage = ({ cart, setLoadedData }) => {
                                 product={product}
                                 key={i}
                                 selected={selected}
-                                setSelected={setSelected}
-                                setLoadedData={setLoadedData}
+                                setSelected={setSelected}                                
                                 cart={cart}
                             />
                         ))}

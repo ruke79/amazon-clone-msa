@@ -26,6 +26,7 @@ import { getRoomMessages } from "../../../util/api";
 import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
 import ChatContent from "./ChatContent";
+import { useAuthContext } from "store/AuthContext";
 
 
 const Chat = styled.div`
@@ -85,7 +86,7 @@ export function ChatArea({ room }) {
 
 
 
-  const user = tokenUtil.getUser();
+  const {user} = useAuthContext();
   const { isConnected, subscribe, sendMessage } = useStomp();
 
 

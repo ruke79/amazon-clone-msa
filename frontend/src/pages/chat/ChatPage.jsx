@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import ChatArea from "components/chat/chat/ChatArea";
-import { useFetchChatRooms } from "hook/chatHooks";
 //import { MessageSearch } from "./MessageSearch";
 
 import { Outlet, Route,  Routes } from "react-router-dom";
@@ -52,7 +51,8 @@ const Wrapper = styled.div`
       
       <Wrapper>
       <List/>               
-        <ChatArea room={currentRoom}/>
+        { currentRoom ? <ChatArea room={currentRoom}/>
+        : <div></div> }
          <Detail /> 
         </Wrapper>
       </StompProvider>

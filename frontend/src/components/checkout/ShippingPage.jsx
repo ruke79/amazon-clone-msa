@@ -22,9 +22,9 @@ const ShippingPage = ({
     profile,
 }) => {
 
-
+    
     const [shipping, setShipping] = useState(initialValue);
-    const [visible, setVisible] = useState(user?.addresses?.length ? false : true);
+    const [visible, setVisible] = useState(addresses?.length ? false : true);
 
         
     return (

@@ -239,7 +239,7 @@ const Infos = ({ product, num_reviews, setActiveImg }) => {
                                 }`}
                                 onMouseOver={() =>
                                     setActiveImg(
-                                        product.sku_products[i].images[0]
+                                        product.skus[i].images[0]
                                     )
                                 }
                                 onMouseLeave={() => setActiveImg("")}

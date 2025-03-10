@@ -532,7 +532,7 @@ export async function loader({ request, params }) {
                 );
 
                 productsDB.product.content.map(product => {
-                    product.sku_products.sort(
+                    product.skus.sort(
                         (a, b) => Number(b.sold) - Number(a.sold)
                     )
                 });
@@ -545,7 +545,7 @@ export async function loader({ request, params }) {
             else if (sortQuery === "topSelling") {
 
                 productsDB.product.content.map(product => {
-                    product.sku_products.sort(
+                    product.skus.sort(
                         (a, b) => Number(b.sold) - Number(a.sold)
                     )
                 });
@@ -558,7 +558,7 @@ export async function loader({ request, params }) {
             }
             else if (sortQuery == "priceHighToLow") {
                 const productsWithPrice = productsDB.product.content.map (product => {
-                    const productWithPrice = product.sku_products
+                    const productWithPrice = product.skus
                         .map(sku => {
                             sku.sizes.sort(
                                 (a, b) => Number(b.price) - Number(a.price)
@@ -572,7 +572,7 @@ export async function loader({ request, params }) {
             }            
             else if (sortQuery == "priceLowToHight") {
                 const productsWithPrice = productsDB.product.content.map (product => {
-                    const productWithPrice = product.sku_products
+                    const productWithPrice = product.skus
                         .map(sku => {
                             sku.sizes.sort(
                                 (a, b) => Number(a.price) - Number(b.price)

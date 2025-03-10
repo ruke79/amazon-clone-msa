@@ -83,5 +83,5 @@ public class OrderAddress extends BaseEntity {
         address.setZipCode(src.getZipCode());
     }
 
-           
+               
 }

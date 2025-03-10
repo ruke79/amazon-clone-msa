@@ -1,20 +1,26 @@
 import Layout from "components/profile/Layout";
-import { redirect, useLoaderData } from "react-router-dom";
+import { redirect, useLoaderData, useSearchParams } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
-import api, {getRequest} from "util/api";
+import api, { getRequest } from "util/api";
 import tokenUtil from "util/tokenUtil";
 
 const Profile = () => {
-    const { tab, user } = useLoaderData();
-    const {  } = useAuthContext();
+
+    const searchParams = useSearchParams();
+
     
+    const { user } = useAuthContext();
+    console.log(user);
+    //const { tab } = useLoaderData();
+    //const tab = Number(searchParams.get('tab')) ;
     
+
     return (
         <>
-            <Layout user={user} tab={tab} title={`${user.email}'s Profile`}>
-            <div className="text-center">
+            <Layout user={user} tab={0} title={`${user.email}'s Profile`}>
+                <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Profile</h2>
-            </div>
+                </div>
             </Layout>
         </>
     );
@@ -23,28 +29,35 @@ const Profile = () => {
 
 export default Profile;
 
-export const loader = (authContext) => {
+export const loader = async ({ params, request }) => {
 
-    return async ({params, request}) => {
+    const searchParams = new URL(request.url).searchParams;
+    const tab = Number(searchParams.get('tab')) || 0;
 
-        const searchParams = new URL(request.url).searchParams;
-            const tab = Number(searchParams.get('tab')) || 0;
-             
-        
-        try {
-            const { data } = await getRequest(`/user-service/api/auth/user`);
-               
-            return {
-                   user : data,
-                   tab : tab,                          
-            }
-        }
-        catch(err) {
-            
-        }
-        
+    return {
+        tab: tab,
+    }
 
-    };
+    // return async ({params, request}) => {
+
+    //     const searchParams = new URL(request.url).searchParams;
+    //         const tab = Number(searchParams.get('tab')) || 0;
+
+
+    //     try {
+    //         const { data } = await getRequest(`/user-service/api/auth/user`);
+
+    //         return {
+    //                user : data,
+    //                tab : tab,                          
+    //         }
+    //     }
+    //     catch(err) {
+
+    //     }
+
+
+    // };
 }
 
 

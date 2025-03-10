@@ -7,6 +7,8 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.env.Environment;
@@ -32,6 +34,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     Environment env;
     public static class Config{
     }
+
+    @Value("${spring.app.jwtSecret}")
+    private String secretKey;
+
     public AuthorizationHeaderFilter(Environment env) {
         super(Config.class);
         this.env = env;
@@ -45,19 +51,18 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return OnError(exchange, "로그인이 필요한 서비스입니다.", HttpStatus.UNAUTHORIZED);
             }
 
-            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-            log.info(authorizationHeader);
+            String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);            
             String jwt = authorizationHeader.replace("Bearer ", "");
 
             if (!isJwtValid(jwt)) {
-                return OnError(exchange, "Jwt token is not valid", HttpStatus.UNAUTHORIZED);
+                return OnError(exchange, "access token expired", HttpStatus.UNAUTHORIZED);
             }
 
             // JWT에서 user id 추출
             String userId = extractUserIdFromJwt(jwt);
             
             ServerHttpRequest newRequest = request.mutate()
-                    .header("X-User-Id", userId)
+                    .header("User-Id", userId)
                     .build();
 
             // 수정된 요청으로 교환 객체 업데이트
@@ -67,13 +72,13 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     private String extractUserIdFromJwt(String jwt) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256("mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm".getBytes());
+            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = verifier.verify(jwt);
             
             return decodedJWT.getSubject();
         } catch (Exception e) {
-            log.error("Failed to extract memberNo from JWT", e);
+            log.error("Failed to extract id from JWT", e);
             return null;
         }
     }
@@ -84,7 +89,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
         try {
             //복호화
-            Algorithm algorithm = Algorithm.HMAC256("mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm".getBytes());
+            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
             JWTVerifier verifier = JWT.require(algorithm).build();
 
             DecodedJWT decodedJWT = verifier.verify(jwt);

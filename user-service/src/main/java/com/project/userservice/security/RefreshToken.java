@@ -56,12 +56,9 @@ public class RefreshToken {
 
     
     @Id    
-    private String token;           
-            
-    @Indexed
-    private Long userId;
+    private String userId;
     
-    
+    private String token;                     
     
     
 }

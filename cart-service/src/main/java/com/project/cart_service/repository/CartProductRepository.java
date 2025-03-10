@@ -12,4 +12,5 @@ public interface CartProductRepository extends JpaRepository<CartProduct, Long> 
         
     Optional<CartProduct> findByProductId(long productId);
     Optional<CartProduct> findBy_uid(String uid);
+    
 }
