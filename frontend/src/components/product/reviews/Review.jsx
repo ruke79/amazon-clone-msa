@@ -4,7 +4,7 @@ import { showDialog } from "../../../redux/DialogSlice";
 import { uploadImages } from "util/imageUtil";
 import dataURItoBlob from "util/dataURItoBlob";
 import { Rating } from "@mui/material";
-import api, { putRequest, deleteRequest } from 'util/api';
+import api, { postRequest, deleteRequest } from 'util/api';
 import { useState } from "react";
 import ImagesReview from "./Images";
 import Select from "./Select";
@@ -21,9 +21,9 @@ const deleteReview = async (productId) => {
     return data;
 }
 
-const addReview = async ({ productId, formData }) => {
+const addReview = async ({ productId, formData, updateReviews }) => {
     
-    const { data } = await putRequest(
+    const { data } = await postRequest(
         `user-service/api/review/${productId}/add`, formData,
         {
             headers: {
@@ -77,6 +77,7 @@ const AddReview = ({ product, setReviews }) => {
             setReview("");
             setLoading(false);
 
+            updateReviews();
 
         },
         onError: (error) => {

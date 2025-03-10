@@ -6,7 +6,7 @@ import amazonLogoDark from "../../public/assets/images/amazon-dark.png";
 import LoginInput from "./LoginInput";
 import * as Yup from "yup";
 import ButtonInput from "./ButtonInput";
-import { useAuthContext } from "../../store/AuthContext";
+import { useAuthContext, STATUS } from "../../store/AuthContext";
 import toast from "react-hot-toast";
 import api, { queryClient } from 'util/api'
 import { jwtDecode } from "jwt-decode";
@@ -22,7 +22,7 @@ const initialUser = {
     login_error: "",
 };
 
-const login = async (user) => {
+const signin = async (user) => {
     try {
         const data  = await api.post("/user-service/api/auth/public/signin", user);
         return data;
@@ -36,12 +36,12 @@ const LOGIN_QUERY_KEY = 'login';
 
 const SignInPage = () => {
     const [step, setStep] = useState(1);
-    const [loading, setLoading] = useState(false);    
+    
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
 
-    const { setToken } = useAuthContext();    
+    const { login,  updateToken, setAuthenticationStatus } = useAuthContext();    
 
     const navigate = useNavigate();
 
@@ -57,7 +57,7 @@ const SignInPage = () => {
     };
 
     const { mutate } = useMutation({
-        mutationFn : login, 
+        mutationFn : signin, 
         throwOnError : true,
         onSuccess: (response) => {
 
@@ -71,15 +71,13 @@ const SignInPage = () => {
                 } else {                
                     handleSuccessfulLogin(response, decodedToken);
                 }
-                queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
-                navigate('/');
+                queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });                                
             } catch(error) {
-                console.log("error: " + JSON.stringify(localStorage));
+                 toast.error("Login Failed. Please retry.");
             }
         },
         onError: (error) => {                       
-            
-            toast.error("Login Failed. Please retry.");
+            console.log(error);            
         }
     });
 
@@ -94,22 +92,29 @@ const SignInPage = () => {
         const accessToken = response.headers['access'];
 
         const user = {
-        //    email: decodedToken.sub,
-        //    roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
+            email: decodedToken.sub,
+            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
         };
-        localStorage.setItem("access_token", accessToken);
+        //localStorage.setItem("access_token", accessToken);
         //localStorage.setItem("USER", JSON.stringify(user));
 
-        //store the token on the context state  so that it can be shared any where in our application by context provider
-        console.log(accessToken);
-        setToken(accessToken);
+        
+        //store the token on the context state  so that it can be shared any where in our application by context provider       
+                        
+         login(user, accessToken, decodedToken.exp);
+        //updateToken(accessToken);       
+        navigate('/');
         toast.success("Login successed.");
 
     };
 
     const signInHandler = async () => {
-       
+
+        setAuthenticationStatus(STATUS.PENDING);       
         mutate({ email, password });
+
+        
+        setAuthenticationStatus(STATUS.SUCCEEDED);
     };
 
 

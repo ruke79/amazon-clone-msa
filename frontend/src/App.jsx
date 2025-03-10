@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { useMemo, Suspense, useEffect, useState  } from "react";
+import { useMemo, Suspense, useEffect, useState, useCallback  } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootPage from "./pages/Root";
@@ -21,7 +21,7 @@ import Orders, { loader as loaderOrders } from "pages/profile/orders";
 import Security, {loader as loaderSecurity } from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
-import Chat from "pages/chat/Index";
+
 
 import ProtectedRoute from "components/ProtectedRoute";
 import { ErrorBoundary } from "react-error-boundary";
@@ -32,12 +32,16 @@ import { queryClient } from 'util/api';
 import Maintenance from 'components/error/Maintenance';
 import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import TokenRefresher from "error/TokenRefresher";
+import TokenRefresher from "util/TokenRefresher";
 import toast, {Toaster} from 'react-hot-toast';
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import loadFakeData from "util/loadFake";
 import { postRequest, getRequest } from "util/api";
 import { useOnMounted } from "hook/useOnMounted";
+import { jwtDecode } from "jwt-decode";
+import ChatRoomList from "components/chat/list/ChatRoomList";
+import { ChatPage } from "pages/chat/ChatPage";
+import Chat from "pages/chat/Index";
 
 
 
@@ -75,19 +79,20 @@ const initialOptions = {
 const ErrorBoundaryLayout = () => (
   
 //<Suspense fallback={<div>Loading...</div>}>
-  <ErrorBoundary FallbackComponent = {ErrorFallback} >            
+   <ErrorBoundary FallbackComponent = {ErrorFallback} >            
   <ContextProvider>
   <TokenRefresher/>    
-    <Outlet />         
-    </ContextProvider>                           
-  </ErrorBoundary>
+    <Outlet />     
+   </ContextProvider>
+   </ErrorBoundary>
 //  </Suspense>
 );
 
 const AppRouter = () => {
 
-  const authContext = useAuthContext();
+    
 
+  
   const router = createBrowserRouter([
     {
       element: <ErrorBoundaryLayout />,
@@ -112,9 +117,9 @@ const AppRouter = () => {
 
         {
           path: 'chat',
-          element: <ProtectedRoute><Chat /></ProtectedRoute>,
+          element: <ChatPage/>,
           children: [
-            // { path : 'chatrooms', element: <RoomList/> },
+             { path : 'chatrooms', element: <ChatRoomList/> },
           ]
         },
 
@@ -155,19 +160,17 @@ const AppRouter = () => {
           element: <Browse />,
           loader: browseLoader,
         },
-        {
+        {          
           path: '/cart',
-          element: <ProtectedRoute><Cart /></ProtectedRoute>,
-          //loader : loaderCart,
+          element: <ProtectedRoute><Cart /></ProtectedRoute>,          
         },
         {
           path: '/checkout',
-          element: <ProtectedRoute><Checkout /></ProtectedRoute>,
-          //loader: loaderCheckout,
+          element: <ProtectedRoute><Checkout /></ProtectedRoute>,          
         },
         {
           path: '/order/:id',
-          element: <ProtectedRoute><OrderPage /></ProtectedRoute>,
+          element: <OrderPage />,
           loader: loaderOrder,
         },
         // {
@@ -195,7 +198,9 @@ const AppRouter = () => {
 
 function App() {
 
-
+ 
+  
+  
   // const loadData = async () => {
 
   //   await loadFakeData();            
@@ -213,7 +218,10 @@ function App() {
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
           <PayPalScriptProvider options={initialOptions} >          
-            <AppRouter/>                                                                                 
+            {/* <ContextProvider>
+            <TokenRefresher/>     */}
+            <AppRouter/>     
+            {/* </ContextProvider> */}
              </PayPalScriptProvider>
           </PersistGate>
         </Provider>

@@ -118,10 +118,10 @@ public class SecurityConfig {
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .anyRequest().authenticated());
 
-                http.oauth2Login((oauth2) -> oauth2.userInfoEndpoint(
-                                (userInfoEndpointConfig) -> userInfoEndpointConfig
-                                                .userService(customOAuth2UserService))
-                                .successHandler(oAuth2SuccessHandler));
+                // http.oauth2Login((oauth2) -> oauth2.userInfoEndpoint(
+                //                 (userInfoEndpointConfig) -> userInfoEndpointConfig
+                //                                 .userService(customOAuth2UserService))
+                //                 .successHandler(oAuth2SuccessHandler));
 
                 http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
 

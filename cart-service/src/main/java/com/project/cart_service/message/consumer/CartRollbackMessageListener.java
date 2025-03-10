@@ -25,11 +25,11 @@ public class CartRollbackMessageListener {
         Cart cart = cartService.cartRollback(request);       
 
         if (cart == null) {
-            log.error("Cart could not be created in order database with id: {}", request.getUserId());
+            log.error("Cart could not be rollbacked in cart database with id: {}", request.getUserId());
             //throw new OrderDomainException("Customer could not be created in order database with id " +
             //createdUser.getUserId());
         }
-        log.info("Cart is created in cart database with id: {}", cart.getCartId());
+        log.info("Cart is rollbacked in cart database with id: {}", cart.getCartId());
         
     }
 

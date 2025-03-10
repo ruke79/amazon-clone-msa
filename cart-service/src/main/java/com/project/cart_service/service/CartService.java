@@ -257,7 +257,10 @@ public class CartService {
         Optional<Cart> existed = cartRepository.findByUserId(userId);
         if (existed.isPresent()) {
 
+            
             cartRepository.delete(existed.get());
+            log.info("Deleteing cart completed");
+            
 
         }
     }
@@ -390,6 +393,7 @@ public class CartService {
     @Transactional
     void updateQty(CartProduct product, int qty) {
 
+        log.info("cart product rollback id : {}  qty : {}" ,product.getCartproductId(), qty);
         product.setQty(qty);
         cartProductRepository.save(product);
     }
@@ -406,6 +410,7 @@ public class CartService {
             BigDecimal cartTotal = computeCartTotal(cart.getCartProducts());
 
             cart.setCartTotal(cartTotal);
+            cart.setTotalAfterDiscount(new BigDecimal(0));
 
             cart = cartRepository.save(cart);
 

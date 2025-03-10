@@ -1,5 +1,5 @@
 import { useReducer, useEffect, useState } from "react";
-import { emptyCart } from "../../redux/CartSlice";
+import { cancelCart, emptyCart } from "../../redux/CartSlice";
 import { postRequest } from "util/api";
 
 import { paymentMethods } from "../checkout/paymentMethods";
@@ -25,7 +25,7 @@ const Payment = ({ order, setLoading, setOrder }) => {
 
     const { user } = useAuthContext();
     const [ payment, setPayment ] = useState(null);
-
+    
     const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   // if state not dispacth is not a function error
     const [state, dispatch] = useReducer(reducer, {
@@ -33,7 +33,7 @@ const Payment = ({ order, setLoading, setOrder }) => {
     error: "",
     success: "",
   });
-
+  
          
   useEffect(() => {
     
@@ -93,86 +93,98 @@ const Payment = ({ order, setLoading, setOrder }) => {
           //amounts : details.purchase_units.amount.value,
           paypalOrderId : "",
           amounts : null,
+          couponName : order.couponApplied,
           orderStatus : order.orderStatus,  
           paymentStatus : order.paymentStatus,
-          email : user.email,
+          userEmail : user.email,
           createdTime : null
           //createdTime : details.create_time
         };
         
+        dispatch({ type: "PAY_REQUEST" });
         const captureFunc =   actions.order.capture().then(
           (details) => {
-            console.log(details);     
+            console.log('detail : ' + details.id);
             
             payment.paypalOrderId = details.id;
-            payment.amounts = details.purchase_units.amount.value;
+            payment.amounts = details.purchase_units[0].amount.value;
             payment.createdTime = details.create_time;     
-        });
+            payment.paymentStatus = "COMPLETED";
 
-        try {
-
-          console.log('detail : ' + details);
-
-          dispatch({ type: "PAY_REQUEST" });
+            const completePayment = (payment) => {
+              console.log(payment);
+    
+              let promise = new Promise(async function (resolve, reject) {        
+                const data = await postRequest(            
+                  '/order-service/api/order/payment/paypal',
+                  payment
+                );                
+                  resolve(data);                         
+                }
+              );             
           
-          // const payment = {
-          //   orderId : order.id,          
-          //   trackingId : order.trackingId, 
-          //   paypalOrderId : details.id,
-          //   amounts : details.purchase_units.amount.value,
-          //   orderStatus : order.orderStatus,  
-          //   paymentStatus : order.paymentStatus,
-          //   email : user.email,
-          //   createdTime : details.create_time
-          // };
-          const requrePayment = async(payment) => {
-           const { data } = await postRequest(
-             '/order-service/api/order/payment/paypal',
-             payment
-           );
-           return data;
-          }
-          requrePayment(payment).then (res=> {
+              return promise;         
+            }
+
+            completePayment(payment).then (res=> {
+              
               order.orderStatus = "PAID";
               setOrder(order);
               reduxDispatch(emptyCart()); 
 
-              console.log(res);
-
             dispatch({ type: "PAY_SUCCESS", payload: res });
         });
-        } catch (error) {
-          dispatch({ type: "PAY_ERROR", payload: error });
-
-        }
-
+      });
+       
         return captureFunc;      
       }
 
       function onCancelHandler(id) {
 
+        order.paymentStatus = 'CANCELED';
+        
         const payment = {
           orderId : order.id,          
           trackingId : order.trackingId, 
-          paypalOrderId : id,
+          paypalOrderId : id.orderID,
           amounts : order.total,
+          couponName : order.couponApplied,
           orderStatus : order.orderStatus,  
           paymentStatus : order.paymentStatus,
-          email : user.email,
-          createdTime : new Data()      
+          userEmail : user.email,
+          createdTime : null //new Date()      
         };
 
-          const { data } = postRequest(
-            `/order-service/api/order/payment/paypal`,
-            payment
-          );
+        const cancelPayment = (payment) => {
+          console.log(payment);
+
+          let promise = new Promise(async function (resolve, reject) {        
+            const data = await postRequest(            
+              '/order-service/api/order/payment/paypal',
+              payment
+            );                
+              resolve(data);                         
+            }
+          );             
+      
+          return promise;         
+        }
+
+        cancelPayment(payment).then (res=> {
+          
           order.orderStatus = 'CANCELED';
-          order.paymentStatus = 'CANCELED';
+          setOrder(order);
+          reduxDispatch(cancelCart()); 
+          
+        }
+        );
+          
 
       }
 
       function onErroHandler(error) {
         console.log(error);
+        
         
       }
 
@@ -236,7 +248,7 @@ const Payment = ({ order, setLoading, setOrder }) => {
                              (
                                 <PayPalButtons
                                     createOrder={createOrderHanlder}
-                                    onApprove={onApprove}
+                                    onApprove={onApproveHandler}
                                     onCancel={onCancelHandler}
                                     onError={onErroHandler}
                                 >   </PayPalButtons>

@@ -20,6 +20,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
+import com.project.common.constants.TokenStatus;
 import com.project.userservice.model.User;
 import com.project.userservice.security.service.UserDetailsImpl;
 
@@ -34,15 +35,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @Getter
 @Component
 public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-  
-  
   @Value("${spring.app.jwtSecret}")
   private String jwtSecret;
 
@@ -56,17 +54,12 @@ public class JwtUtils {
   private String jwtCookie;
 
   @Value("${spring.app.jwtRefreshCookieName}")
-  private  String jwtRefreshCookie;
+  private String jwtRefreshCookie;
 
-  
-
-  
   private SecretKey key() {
     return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8),
-    Jwts.SIG.HS256.key().build().getAlgorithm());
-}
-  
-
+        Jwts.SIG.HS256.key().build().getAlgorithm());
+  }
 
   public String getJwtFromHeader(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
@@ -77,9 +70,8 @@ public class JwtUtils {
     return null;
   }
 
-
   public String generateTokenFromUser(User user) {
-    
+
     String email = user.getEmail();
     String role = user.getRole().getRoleName().name();
     return Jwts.builder()
@@ -92,10 +84,8 @@ public class JwtUtils {
         .compact();
   }
 
-  
-
   public String generatRefreshTokenFromUser(User user) {
-    
+
     String email = user.getEmail();
     String role = user.getRole().getRoleName().name();
     return Jwts.builder()
@@ -109,7 +99,7 @@ public class JwtUtils {
   }
 
   public String generateToken(String id, String role, boolean isTwoFactorEnabled, long expirationMs) {
-    
+
     return Jwts.builder()
         .subject(id)
         .claim("role", role)
@@ -121,7 +111,7 @@ public class JwtUtils {
   }
 
   public String generateToken(String id, String role, boolean isTwoFactorEnabled) {
-    
+
     return Jwts.builder()
         .subject(id)
         .claim("role", role)
@@ -134,12 +124,12 @@ public class JwtUtils {
 
   public String getIdFromJwtToken(String token) {
     try {
-    return Jwts.parser()
-        .verifyWith(key())
-        .build().parseSignedClaims(token)
-        .getPayload().getSubject();
+      return Jwts.parser()
+          .verifyWith(key())
+          .build().parseSignedClaims(token)
+          .getPayload().getSubject();
     } catch (ExpiredJwtException e) {
-   
+
       return e.getClaims().getSubject();
     }
 
@@ -149,7 +139,6 @@ public class JwtUtils {
 
     return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload().get("role", String.class);
   }
-  
 
   public Boolean isJwtTokenExpired(String token) {
     return Jwts.parser()
@@ -162,59 +151,63 @@ public class JwtUtils {
 
     Date now = new Date();
 
-     return Jwts.parser()
+    return Jwts.parser()
         .verifyWith(key())
         .build().parseSignedClaims(token)
-        .getPayload().getExpiration().getTime() - now.getTime();   
+        .getPayload().getExpiration().getTime() - now.getTime();
   }
- 
 
-  public boolean validateJwtToken(String authToken) {
+  public TokenStatus validateJwtToken(String authToken) {
     try {
-      System.out.println("Validate");
       Jwts.parser().verifyWith(key())
           .build().parseSignedClaims(authToken);
-      return true;
+      return TokenStatus.VAILD;
     } catch (MalformedJwtException e) {
       logger.error("Invalid JWT token: {}", e.getMessage());
+      return TokenStatus.INVALID;
     } catch (ExpiredJwtException e) {
       logger.error("JWT token is expired: {}", e.getMessage());
+      return TokenStatus.EXPIRED;
     } catch (UnsupportedJwtException e) {
       logger.error("JWT token is unsupported: {}", e.getMessage());
+      return TokenStatus.UNSUPPORTED;
     } catch (IllegalArgumentException e) {
       logger.error("JWT claims string is empty: {}", e.getMessage());
+      return TokenStatus.ILLEGAL_ARGS;
     }
-    return false;
   }
 
   // Http only cookie + JWT
-  
+
   // public ResponseCookie generateJwtCookie(User user) {
-  //   String jwt = generateTokenFromUser(user);
-  //   return generateCookie(jwtCookie, jwt, "/api");
+  // String jwt = generateTokenFromUser(user);
+  // return generateCookie(jwtCookie, jwt, "/api");
   // }
 
   // public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-  //   return generateCookie(jwtRefreshCookie, refreshToken, "/");
-  // }\ 
+  // return generateCookie(jwtRefreshCookie, refreshToken, "/");
+  // }\
 
   // public ResponseCookie getCleanJwtCookie() {
-  //   ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
-  //   return cookie;
+  // ResponseCookie cookie = ResponseCookie.from(jwtCookie,
+  // null).path("/api").build();
+  // return cookie;
   // }
 
   // public ResponseCookie getCleanJwtRefreshCookie() {
-  //   ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie, null).path("/api").build();
-  //   return cookie;
+  // ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie,
+  // null).path("/api").build();
+  // return cookie;
   // }
 
-  // private ResponseCookie generateCookie(String name, String value, String path) {
-  //   ResponseCookie cookie = ResponseCookie.from(name, value)
-  //   .path(path).maxAge(24 * 60 * 60)
-  //   .sameSite("None")    
-  //   .secure(true)
-  //   .httpOnly(true).build();
-  //   return cookie;
+  // private ResponseCookie generateCookie(String name, String value, String path)
+  // {
+  // ResponseCookie cookie = ResponseCookie.from(name, value)
+  // .path(path).maxAge(24 * 60 * 60)
+  // .sameSite("None")
+  // .secure(true)
+  // .httpOnly(true).build();
+  // return cookie;
   // }
 
   public Cookie createCookie(String key, String value, int expiry) {
@@ -226,7 +219,7 @@ public class JwtUtils {
     cookie.setHttpOnly(true);
 
     return cookie;
-}
+  }
 
   private String getCookieValueByName(HttpServletRequest request, String name) {
     Cookie cookie = WebUtils.getCookie(request, name);
@@ -234,7 +227,7 @@ public class JwtUtils {
       return cookie.getValue();
     } else {
       return null;
-    }    
+    }
   }
 
   public String getJwtFromCookies(HttpServletRequest request) {

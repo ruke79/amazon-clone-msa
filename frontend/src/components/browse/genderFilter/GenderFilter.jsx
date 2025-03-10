@@ -35,7 +35,7 @@ const GenderFilter = ({ genderHandler, replaceQuery }) => {
                                     type="checkbox"
                                     name="gender"
                                     id={gender}
-                                    checked={check.active}
+                                    defaultChecked={check.active}
                                 />
                                 {gender}
                             </label>

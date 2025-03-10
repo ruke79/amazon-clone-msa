@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.project.common.constants.TokenStatus;
 import com.project.userservice.constants.TokenType;
 import com.project.userservice.dto.CustomOAuth2User;
 import com.project.userservice.dto.UserProfileDto;
@@ -36,13 +36,11 @@ import java.io.PrintWriter;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtils jwtUtils;    
+    private JwtUtils jwtUtils;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private RedisTemplate redisTemplate;
-
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -50,8 +48,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         log.info("AuthTokenFilter called for URI: {}", request.getRequestURI());
 
         String requestUri = request.getRequestURI();
-
-        
 
         if (requestUri.matches("/api/auth/public/signin(?:\\/.*)?$")) {
 
@@ -71,9 +67,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-
-       
-
         String oauth2 = null;
         Cookie[] cookies = request.getCookies();
 
@@ -89,9 +82,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String accessToken = parseJwt(request);
-
-        
-        
 
         // 1 OAUTH 2 JWT
         if (oauth2 != null && accessToken == null) {
@@ -114,8 +104,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             userDto.getRoles().add(role);
 
             CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDto);
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
-                customOAuth2User.getAuthorities());
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customOAuth2User,
+                    null,
+                    customOAuth2User.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
@@ -123,45 +114,43 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // 2. NORMAL JWT
         else if (oauth2 == null && accessToken != null) {
 
-            
-
-            // token refresh 
-            try {
-                jwtUtils.isJwtTokenExpired(accessToken);
-            } catch (ExpiredJwtException e) {
-                PrintWriter writer = response.getWriter();
-                writer.print("access token expired");
-                // response status code
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
+        
             try {
 
-                if (jwtUtils.validateJwtToken(accessToken) ) {
+                // TokenStatus tokenStatus = jwtUtils.validateJwtToken(accessToken);
 
-                    String blackLisTToken = (String)redisTemplate.opsForValue().get(accessToken);
+                // if (tokenStatus == TokenStatus.EXPIRED) {
+
+                //     PrintWriter writer = response.getWriter();
+                //     writer.print("access token expired");
+                //     // response status code
+                //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                //     return;
+                // }
+
+                //if (tokenStatus == TokenStatus.VAILD) {
+
+                    String blackLisTToken = (String) redisTemplate.opsForValue().get(accessToken);
 
                     log.info("blackLisTToken : {}", blackLisTToken);
 
-                    if(ObjectUtils.isEmpty(blackLisTToken)) {
+                    if (ObjectUtils.isEmpty(blackLisTToken)) {
 
                         String email = jwtUtils.getIdFromJwtToken(accessToken);
 
-                        
                         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
                                 userDetails.getAuthorities());
-                                log.info("Roles from JWT: {}", userDetails.getAuthorities());
+                        log.info("Roles from JWT: {}", userDetails.getAuthorities());
 
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
-                }
+                //}
             } catch (Exception e) {
                 // logger.error("Cannot set user authentication: {}", e);
                 // response body
@@ -176,8 +165,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } else // 토큰이 없다면 다음 필터로 넘김
         if (oauth2 == null && accessToken == null) {
 
-            
-
             filterChain.doFilter(request, response);
 
             return;
@@ -188,7 +175,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String parseJwt(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromHeader(request);
-        // String jwt = jwtUtils.getJwtFromCookies(request);        
+        // String jwt = jwtUtils.getJwtFromCookies(request);
         return jwt;
     }
 }

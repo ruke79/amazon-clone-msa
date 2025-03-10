@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.project.common.constants.TokenStatus;
 import com.project.userservice.constants.TokenType;
 import com.project.userservice.model.User;
 import com.project.userservice.security.jwt.JwtUtils;
@@ -102,7 +103,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
             return;
         }
 
-        if(!jwtUtils.validateJwtToken(refresh)) {
+        if(jwtUtils.validateJwtToken(refresh) != TokenStatus.VAILD) {
 
             PrintWriter writer = response.getWriter();
                 writer.print("refresh token invalid");

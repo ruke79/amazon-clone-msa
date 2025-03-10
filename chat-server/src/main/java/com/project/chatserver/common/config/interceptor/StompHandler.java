@@ -35,8 +35,11 @@ public class StompHandler implements ChannelInterceptor {
         // StompCommand에 따라서 로직을 분기해서 처리하는 메서드를 호출한다.        
         if (StompCommand.CONNECT == accessor.getCommand()) {
 
+            
             String accessToken = getAccessToken(accessor);
+            
             if (accessToken == null) {
+                log.error("accessToken is null : {}", accessToken);
                 throw ErrorCode.unauthorizedTokenException();
             }
             boolean isValidToken = tokenHandler.verifyToken(accessToken);
@@ -46,19 +49,30 @@ public class StompHandler implements ChannelInterceptor {
         } 
         if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
 
+            String userSessionId = (String) message.getHeaders().get("simpSessionId");
+
             String roomId = getRoomId(accessor);
             String userId = getUserId(accessor);
 
-            log.info(roomId + ", " + userId);
+            log.info("Subscribe : {}, {} , {}", roomId,  userId, userSessionId);
             
 
-            chatService.connect(roomId, userId);
+            chatService.connect(roomId, userId, userSessionId);
 
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             
             String userSessionId = (String) message.getHeaders().get("simpSessionId");
+            
+            log.info("Disconnect : {} ",  userSessionId);
 
             chatService.disconnect(userSessionId);
+        }
+        else if (StompCommand.UNSUBSCRIBE == accessor.getCommand()) {
+
+            String userId = getUserId(accessor);
+
+            log.info("Unscribe : {} ",  userId);
+
         }
 
         return message;

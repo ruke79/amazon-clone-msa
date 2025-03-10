@@ -19,6 +19,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.Map;
+import java.util.UUID;
 
 @EnableKafka
 @Configuration
@@ -61,6 +62,7 @@ public class KafkaProducerConfig {
                 .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
                 .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
                 .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
                 .build();
     }
    
@@ -70,21 +72,13 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(userCreatedProducerFactory());
     }
 
-     @Bean
-    public ProducerFactory<String, AlarmEventDto> notificationProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfig());
-    }
-    @Bean
-    public KafkaTemplate<String, AlarmEventDto> notificationKafkaTemplate() {
-        return new KafkaTemplate<>(notificationProducerFactory());
-    }
-    @Bean
-    public ProducerFactory<String, Long> deletePostProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfig());
-    }
-    @Bean
-    public KafkaTemplate<String, Long> deletePostKafkaTemplate() {
-        return new KafkaTemplate<>(deletePostProducerFactory());
-    }
-
+    //  @Bean
+    // public ProducerFactory<String, AlarmEventDto> notificationProducerFactory() {
+    //     return new DefaultKafkaProducerFactory<>(producerConfig());
+    // }
+    // @Bean
+    // public KafkaTemplate<String, AlarmEventDto> notificationKafkaTemplate() {
+    //     return new KafkaTemplate<>(notificationProducerFactory());
+    // }
+    
 }

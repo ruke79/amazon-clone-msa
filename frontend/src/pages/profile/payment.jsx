@@ -25,7 +25,7 @@ const Payment = () => {
             setDbPM(data);
             
         } catch (error) {
-            setErorr(error.response.data.message);
+            setErorr(error.response?.data.message);
             
         }
     };

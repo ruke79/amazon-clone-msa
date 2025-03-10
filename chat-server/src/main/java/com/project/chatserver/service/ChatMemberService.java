@@ -28,40 +28,11 @@ public class ChatMemberService {
     private final ChatMemberRepository chatMemberRepository;    
     private final TokenHandler tokenHandler;
 
-    // public void registerChatMember(final UserCreatedRequest dto) {
-    //     chatMemberRepository.save(ChatMember.builder()
-    //     .id(dto.getUserId())
-    //     .nickname(dto.getNickname())
-    //     .email(dto.getEmail())
-    //     .role(MemberRole.USER)
-    //     .build()); 
-    // }
-
+    
     public ChatMember findByEmail(String email){
 
         ChatMember member = chatMemberRepository.findByEmail(email).orElse(null);
-        if (null == member )        
-        {
-            if (email.equals("user2@example.com" )) {
-                member = chatMemberRepository.save(ChatMember.builder()
-                .id(0L)
-                .nickname("user2")
-                .email(email)
-                .role(MemberRole.USER)
-                .build()); 
-            }
-            else if (email.equals("user1@example.com")) {
-
-                member = chatMemberRepository.save(ChatMember.builder()
-                .id(0L)
-                .nickname("user1")
-                .email(email)
-                .role(MemberRole.USER)
-                .build()); 
-            }
-                
-        }
-
+      
         return member;
     }
 

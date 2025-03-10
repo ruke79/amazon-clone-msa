@@ -43,11 +43,10 @@ const Summary = ({
    
     const applyCouponHandler = async (applycoupon="") => {
         //setLoading(true);
-        console.log(coupon);
+        
           const result = await applyCoupon(cart.cartTotal, applycoupon ? applycoupon : coupon, user.email);
 
-          console.log(result);
-
+          
         if (result.message) {
             setError(result.message);
             setDiscount("");
@@ -74,8 +73,7 @@ const Summary = ({
                 return;
             }
 
-            console.log(paymentMethod);
-                        
+                                    
             const {data}  = await postRequest("/order-service/api/order/create", {                             
                 products: cart.products,
                 shippingAddress: selectedAddress,
@@ -94,13 +92,16 @@ const Summary = ({
             //setLoading(false);
         } catch (error) {
             //setLoading(false);
-            setOrder_Error(error.response.data.message);
+            setOrder_Error(error.response?.data.message);
         }
     };
 
     if(coupon ==="" && isSuccess) {
-        setCoupon(coupons[0]);            
-        applyCouponHandler(coupons[0]);      
+
+        if (coupons?.length > 0) {
+            setCoupon(coupons[0]);            
+            applyCouponHandler(coupons[0]);      
+        }
     }
 
 

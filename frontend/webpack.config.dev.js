@@ -13,8 +13,8 @@ module.exports = merge(baseConfig, {
     //   },
     // ],
     open: true,
-    historyApiFallback: true,    
+    historyApiFallback: true,
     hot: true,
-    liveReload: false, 
+    liveReload: false,     
   },
 });

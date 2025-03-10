@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableMap;
 import com.project.common.message.dto.request.CouponUseRequest;
 
 import java.util.Map;
+import java.util.UUID;
 @EnableKafka
 @Configuration
 public class KafkaProducerConfig {
@@ -28,9 +29,9 @@ public class KafkaProducerConfig {
         return ImmutableMap.<String, Object>builder()
                 .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
                 .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
-                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)
-                //멱등성 프로듀서 명시적 설정
+                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
                 .put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true)
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
                 .build();
 
     }

@@ -6,24 +6,24 @@ import { useAuthContext } from "store/AuthContext";
 import api, { getRequest } from "util/api";
 
 const Address = () => {
-    
+
     const { userAddresses, tab } = useLoaderData();
-    
+
     const { user } = useAuthContext();
     const [addresses, setAddresses] = useState(userAddresses);
     const [selectedAddress, setSelectedAddress] = useState(null);
-    
-        
+
+    console.log(addresses);
 
     return (
         <>
             <Layout user={user} tab={tab} title={`${user.userName}'s Address`}>
-            <div className="text-center">
+                <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Addresses</h2>
-            </div>
-                { <ShippingPage user={user} addresses={addresses} setAddresses={setAddresses}
-                setSelectedAddress = {setSelectedAddress} profile={true}/> }                
-            </Layout>            
+                </div>
+                {<ShippingPage user={user} addresses={addresses} setAddresses={setAddresses}
+                    setSelectedAddress={setSelectedAddress} profile={true} />}
+            </Layout>
         </>
     );
 };
@@ -31,26 +31,25 @@ const Address = () => {
 export default Address;
 
 
-export const loader = (authContext) => {
+export const loader = async ({ params, request }) => {
 
-    return async ({params, request}) => {    
-        
-        const searchParams = new URL(request.url).searchParams;
-        const tab = Number(searchParams.get('tab')) || 0;
-        
-        try {
+    const searchParams = new URL(request.url).searchParams;
+    const tab = Number(searchParams.get('tab')) || 0;
 
-            const { data } = await getRequest("/user-service/api/user/profile/address"); 
-            
-            return {
-                  userAddresses : data,
-                  tab : tab 
-            }
+    try {
+
+        const { res } = await getRequest("/user-service/api/user/profile/address");
+
         
-        } catch (error) {
-            console.log("erorr >>>", error.response.data.message);
+        return {
+            userAddresses: res,
+            tab: tab
         }
-    };
-}
+
+    } catch (error) {
+        console.log("erorr >>>", error.response?.data.message);
+    }
+};
+
 
 

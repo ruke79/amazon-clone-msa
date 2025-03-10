@@ -52,7 +52,7 @@ public class AdminController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<UserProfileDto> getUser(@PathVariable String id) {
-        return new ResponseEntity<>(userService.getUserById(Long.parseLong(id)),
+        return new ResponseEntity<>(userService.getUserProfileById(Long.parseLong(id)),
                 HttpStatus.OK);
     }
 

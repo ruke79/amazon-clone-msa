@@ -42,17 +42,11 @@ public class OrderProduct extends BaseEntity {
 
         private int qty;
 
-        // @ManyToOne(fetch=FetchType.LAZY)
-        // @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable=false)
-        // private ProductColorAttribute color;
+        
         private Long colorId;
 
         private int price;       
         
-                
-        // @ManyToOne(fetch=FetchType.LAZY)
-        // @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
-        // private Product product;
         private Long productId;
 
         @ManyToOne(fetch = FetchType.LAZY)

@@ -7,6 +7,7 @@ import com.project.userservice.model.Role;
 import com.project.userservice.model.User;
 import com.project.userservice.model.VerificationToken;
 import com.project.userservice.security.request.SignupRequest;
+import com.project.userservice.security.response.LoginResponse;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    UserProfileDto getUserById(Long id);
+    UserProfileDto getUserProfileById(Long id);
 
     User findByUsername(String username);
 
@@ -40,6 +41,10 @@ public interface UserService {
     void generatePasswordResetToken(String email);
 
     void resetPassword(String token, String newPassword);
+
+    LoginResponse getLoginInfoByEmail(String email);
+
+    User findById(Long userId);
 
     User findByEmail(String email);
 

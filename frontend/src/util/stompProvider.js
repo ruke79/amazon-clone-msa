@@ -2,6 +2,7 @@ import { Stomp, Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { createContext , useContext, useRef, useState, useEffect} from "react";
 import PropTypes from "prop-types";
+import { useAuthContext } from "store/AuthContext";
 
 
 // Context 생성
@@ -18,52 +19,62 @@ export function StompProvider({
   reconnectDelay = 5000,
 }) {
   const stompClientRef = useRef(null);
+  const subscription = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  
+  //  const { token, } = useAuthContext();
+   
+  //  const connectHeaders = { Authorization: token };
+  console.log(connectHeaders);
 
   useEffect(() => {
     // brokerURL에 소켓 엔드포인트를 적어줍니다. 예: http://localhost:8080/ws
     // 아래처럼 SockJS 인스턴스를 생성하도록 webSocketFactory에 전달
-    const client = new Client({
-      // brokerURL: "스프링의 withSockJS가 아닐때 사용 ws://",
-      webSocketFactory: () => new SockJS(brokerURL), // SockJS일때 사용
-      connectHeaders,
-      debug: (str) => {
-        console.log("[STOMP DEBUG]:", str);
-      },
-      reconnectDelay,
-      onConnect: () => {
-        setIsConnected(true);
-        console.log("setIsConnected(true);");
-        onConnectCallback && onConnectCallback();
-      },
-      onStompError: (frame) => {
-        console.error("Broker reported error: " + frame.headers["message"]);
-        console.error("Additional details: " + frame.body);
-        onErrorCallback && onErrorCallback(frame);
-      },
-      onDisconnect: () => {
-        setIsConnected(false);
-        onDisconnectCallback && onDisconnectCallback();
-      },
-      onWebSocketClose: () => {
-        setIsConnected(false);
-        onCloseCallback && onCloseCallback();
-      },
-    });
+    if (!isConnected) {
+      const client = new Client({
+        // brokerURL: "스프링의 withSockJS가 아닐때 사용 ws://",
+        webSocketFactory: () => new SockJS(brokerURL), // SockJS일때 사용
+        connectHeaders : connectHeaders,        
+        debug: (str) => {          
+          console.log("[STOMP DEBUG]:", str);
+        },
+        reconnectDelay : reconnectDelay,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+        onConnect: () => {
+          setIsConnected(true);
+          console.log("setIsConnected(true);");
+          onConnectCallback && onConnectCallback();
+        },
+        onStompError: (frame) => {
+          console.error("Broker reported error: " + frame.headers["message"]);
+          console.error("Additional details: " + frame.body);
+          onErrorCallback && onErrorCallback(frame);
+        },
+        onDisconnect: () => {
+          console.log('disconnected' );
+          setIsConnected(false);
+          onDisconnectCallback && onDisconnectCallback();
+        },
+        onWebSocketClose: () => {
+          setIsConnected(false);
+          onCloseCallback && onCloseCallback();
+        },
+      });
 
-    client.activate();
-    stompClientRef.current = client;
+      client.activate();
+      stompClientRef.current = client;
+    }
 
     return () => {
       if (stompClientRef.current) {
+        console.log("websocket deactivated");
         stompClientRef.current.deactivate();
       }
     };
   }, [
     brokerURL,
-    //connectHeaders,
+    connectHeaders,
     onConnectCallback,
     onDisconnectCallback,
     onCloseCallback,
@@ -73,14 +84,14 @@ export function StompProvider({
 
   const subscribe = (destination, callback, headers = {}) => {
     if (isConnected && stompClientRef.current) {
-      const subscription = stompClientRef.current.subscribe(
+      subscription.current = stompClientRef.current.subscribe(
         destination,
         callback,
         headers
       );
-      return () => subscription.unsubscribe();
+      return () => subscription.current.unsubscribe();
     } else {
-      console.warn("STOMP not connected, cannot subscribe yet.");
+      console.log("STOMP not connected, cannot subscribe yet.");
       return () => {};
     }
   };
@@ -98,7 +109,7 @@ export function StompProvider({
   };
 
   return (
-    <StompContext.Provider value={{ isConnected, subscribe, sendMessage }}>
+    <StompContext.Provider value={{ isConnected, subscribe, subscription, sendMessage }}>
       {children}
     </StompContext.Provider>
   );

@@ -22,7 +22,7 @@ public class PaymentRequestKafaListener {
 
     private final PaymentRequestMessageListener paymentRequestMessageListener;
 
-    @KafkaListener(id="payment-request", topics = "payment")
+    @KafkaListener(id="payment-request", topics = "order")
     public void receive(List<PaymentRequest> messages) {
 
 
@@ -31,7 +31,7 @@ public class PaymentRequestKafaListener {
                 if (PaymentStatus.COMPLETED == paymentRequest.getPaymentStatus()) {
                     log.info("Processing payment for order id: {}", paymentRequest.getOrderId());
                     paymentRequestMessageListener.completePayment(paymentRequest);
-                } else if(PaymentStatus.CANCELLED == paymentRequest.getPaymentStatus()) {
+                } else if(PaymentStatus.CANCELED == paymentRequest.getPaymentStatus()) {
                     log.info("Cancelling payment for order id: {}", paymentRequest.getOrderId());
                     paymentRequestMessageListener.cancelPayment(paymentRequest);
                 }

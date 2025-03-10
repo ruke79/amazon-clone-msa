@@ -24,15 +24,14 @@ public class FeignConfig {
                 HttpServletRequest request = attributes.getRequest();
 
                 String accessToken = request.getHeader("Authorization");
-
                 
-                log.info("Feign token: " + accessToken);          
+                
                 if (accessToken != null) {
                     requestTemplate.header("Authorization", accessToken);
                 }               
             }
             else {
-                log.info("Feign token: null");          
+                log.error("Feign token: null");          
             }
         };
     }

@@ -21,8 +21,6 @@ const Browse = ({ }) => {
 
     const productsDB = useLoaderData();
 
-
-
     let categories = productsDB.categories;
     let subCategories = productsDB.subCategories;
 
@@ -95,10 +93,6 @@ const Browse = ({ }) => {
         toggleParam('material', material);
         toggleParam('gender', gender);
         toggleParam('price', price);
-
-        console.log("rating : " + rating);
-        
-
 
 
         if (shipping && !searchParams.get('shipping')) {
@@ -205,7 +199,6 @@ const Browse = ({ }) => {
 
     const replaceQuery = (queryName, value) => {
 
-
         const existedQeury = searchParams.get(queryName);
         const valueCheck = existedQeury?.search(value);
         const _check = existedQeury?.search(`_${value}`);
@@ -244,22 +237,28 @@ const Browse = ({ }) => {
         };
     };
     // ----------------------------------------
-    const [scrollY, setScrollY] = useState(0);
-    const [height, setHeight] = useState(0);
+    const [scrollY, setScrollY] = useState(0);    
+    const [loaded, setLoaded] = useState(false);
+    const heightRef = useRef(0);
     const headerRef = useRef(null);
     const el = useRef(null);
+    
     useEffect(() => {
         const handleScroll = () => {
-            setScrollY(window.scrollY);
+          
+          setScrollY(window.scrollY);          
+            
         };
-        handleScroll();
+        handleScroll();        
         window.addEventListener("scroll", handleScroll);
-        setHeight(
-            headerRef.current?.offsetHeight + el.current?.offsetHeight + 50
-        );
+        
+        heightRef.current = headerRef.current?.offsetHeight + el.current?.offsetHeight + 150;
+        
+        setLoaded(true);
+                
 
         return () => {
-            {
+            {        
                 window.removeEventListener("scroll", handleScroll);
             }
         };
@@ -267,9 +266,9 @@ const Browse = ({ }) => {
 
     return (
         <>
-            {loading && <DotLoaderSpinner loading={loading} />}
+            {/* {loading && <DotLoaderSpinner loading={loading} />} */}
             <Header title={"Browse Products"} searchHandler={searchHandler} />
-            <div className="max-w-screen-2xl mx-auto bg-slate-100 p-1 md:p-6 gap-2">
+            <div  className="max-w-screen-2xl mx-auto bg-slate-100 p-1 md:p-6 gap-2">
                 <div ref={headerRef}>
                     <div className="flex items-center text-sm">
                         <span className="text-slate-700">Home</span>
@@ -306,9 +305,10 @@ const Browse = ({ }) => {
                     </div>
                 </div>
 
-                <div className="relative mt-4 grid grid-cols-5 gap-1 md:gap-5">
+                <div  className="relative mt-4 grid grid-cols-5 gap-1 md:gap-5">
                     <div
-                        className={`h-[680px] col-span-5 md:col-span-1 flex flex-col md:items-center  overflow-y-auto overflow-x-hidden ${scrollY >= height
+                        className={`h-[680px] col-span-5 md:col-span-1 flex flex-col md:items-center  overflow-y-auto overflow-x-hidden 
+                            ${scrollY >= heightRef.current 
                             ? "md:fixed md:w-[274px] md:top-2"
                             : ""
                             }`}
@@ -356,11 +356,10 @@ const Browse = ({ }) => {
                         />
                     </div>
 
-                    <div
-                        className={`${scrollY >= height ? "md:block" : "hidden"
+                    <div 
+                        className={`${scrollY >= heightRef.current  ? "md:block" : "hidden"
                             } max-md:hidden md:col-span-1`}
-                    ></div>
-
+                    />
                     <div className="col-span-5 md:col-span-4 flex flex-col content-start">
                         <HeadingFilter
                             priceHandler={priceHandler}
@@ -457,7 +456,7 @@ export async function loader({ request, params }) {
             ? categoryQuery
             : {};
     
-    // const brand = brandQuery && brandQuery !== "" ? { brand: brandQuery } : {};
+    
     const style =
         styleQuery && styleQuery !== ""
             ? styleSearchRegex : null;
@@ -523,8 +522,7 @@ export async function loader({ request, params }) {
         if (res.status === 200 ) {
                     
             let productsDB = res.data;
-            console.log(productsDB);
-        
+                    
             if (sortQuery === "popular") {
 
                 productsDB.product.content.sort(

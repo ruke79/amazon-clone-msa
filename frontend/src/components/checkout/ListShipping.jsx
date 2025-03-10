@@ -20,13 +20,7 @@ const ListShipping = ({
     profile
 }) => {
 
-    const [prevAddresses, setPrevAddresses] = useState(addresses);
-
-
-  if (addresses !== prevAddresses) {
-    setPrevAddresses(addresses);   
-  }  
-          
+              
     
     const changeActiveHandler = async (id) => {
     

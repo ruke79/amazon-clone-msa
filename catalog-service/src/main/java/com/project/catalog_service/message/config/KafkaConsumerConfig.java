@@ -50,6 +50,8 @@ public class KafkaConsumerConfig {
                         .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
                         .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
                         .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+                        .put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed") 
+                        .put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
                         .build();
 
         return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);

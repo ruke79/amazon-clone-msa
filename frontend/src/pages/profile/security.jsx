@@ -76,7 +76,7 @@ const Security = () => {
                 current_password: "",
                 conf_password: "",
                 success: "",
-                error: error.response.data.message,
+                error: error.response?.data.message,
             });
         }
     };

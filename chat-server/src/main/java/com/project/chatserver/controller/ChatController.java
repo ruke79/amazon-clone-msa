@@ -69,18 +69,18 @@ public class ChatController {
         return all;
     }
 
-    @MessageMapping("/message")
+    @MessageMapping("/chat/message")
     public void sendMessage(@Valid MessageDto request) {
             chatService.sendMessage(request);
     }
 
-    @MessageMapping("/enter")
+    @MessageMapping("/chat/enter")
 	public void enterChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         chatService.sendEnterMessage(msg, headerAccessor);
     }
 
-    @MessageMapping("/leave")
+    @MessageMapping("/chat/leave")
 	public void leaveChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
 
         chatService.sendLeaveMessage(msg, headerAccessor);

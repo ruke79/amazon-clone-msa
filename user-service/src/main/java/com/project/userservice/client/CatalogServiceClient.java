@@ -21,7 +21,7 @@ import com.project.common.dto.ProductDto;
 public interface CatalogServiceClient {
 
    @RequestMapping(method=RequestMethod.PUT, value="/api/product/rating")
-   public ResponseEntity<ProductDto> updateRating(@RequestParam Long id, @RequestParam float rating);
+   public void updateRating(@RequestParam Long id, @RequestParam float rating);
 
    @RequestMapping(method=RequestMethod.GET, value="/api/{productId}")
    public ResponseEntity<ProductDto> getProductInfo(@PathVariable("productId") String productId);

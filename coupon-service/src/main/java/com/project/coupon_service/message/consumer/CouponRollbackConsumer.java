@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CouponRollbackConsumer {
 
-    private CouponRollbackMessageListener couponRollbackMessageListener;
+    private final CouponRollbackMessageListener couponRollbackMessageListener;
 
     @KafkaListener(id="coupon", topics = "coupon-rollback", containerFactory = "couponRollbackContainerFactory")
     void receive(List<CouponRollbackRequest> messages) {

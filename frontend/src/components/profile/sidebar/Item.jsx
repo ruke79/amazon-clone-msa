@@ -7,7 +7,7 @@ import { useAuthContext } from "store/AuthContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 const Item = ({ item, visible, index }) => {
-    const { token, setToken } = useAuthContext();
+    const { token, logout } = useAuthContext();
 
     const [show, setShow] = useState(visible);
     const navigate = useNavigate();
@@ -16,10 +16,11 @@ const Item = ({ item, visible, index }) => {
     const qParam = searchParams.get('q');
 
     const handleLogout = () => {
-        localStorage.removeItem("access_token"); // Updated to remove token from localStorage
-        localStorage.removeItem("USER"); // Remove user details as well        
-        localStorage.removeItem("IS_ADMIN");
-        setToken(null);       
+        // localStorage.removeItem("access_token"); // Updated to remove token from localStorage
+        // localStorage.removeItem("USER"); // Remove user details as well        
+        // localStorage.removeItem("IS_ADMIN");
+        // setToken(null);       
+        logout();
         
         navigate("/signin");
       };

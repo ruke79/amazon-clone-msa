@@ -10,31 +10,34 @@ import { useEffect, useState } from "react";
 import tokenUtil from "util/tokenUtil";
 import { useFetchCart } from "hook/hooks";
 import { useAuthContext } from "store/AuthContext";
+import { useCallback } from "react";
+import { jwtDecode } from "jwt-decode";
+import { loadCart } from "util/api";
+import DotLoaderSpinner from "components/loader/Loading";
 
 const Cart = () => {
     
     const { user } = useAuthContext();
+    const cart = useSelector((state) => { return state.cart; });
+    const dispatch = useDispatch();   
+                
     
-    let cart = useSelector((state) => { return state.cart; });
-    const dispatch = useDispatch();
-
-    console.log(cart);
-
-
-    //const data = useLoaderData();
-    const { cartData, isSuccessCart, isPendingCart } = useFetchCart(user.email);
+    const { cartData, isSuccessCart, isPendingCart } = useFetchCart(user.email, cart.status, cart.cartId);
     
     useEffect(() => {
 
         if ( isSuccessCart) {
-            if (cart.cartItems.length === 0 && cartData.length > 0) {
-                dispatch(updateCart(cartData));            
+            if (cart.cartItems.length === 0 && cartData.length > 0) {                
+                
+                dispatch(updateCart(cartData));                            
             }
         }
     }, [cartData])
 
+    
+    if(isPendingCart) return <DotLoaderSpinner loading={isPendingCart}/>;
 
-    if(isPendingCart) return <div>Loading...</div>;
+    
 
     return (
         <>
@@ -53,21 +56,4 @@ const Cart = () => {
 };
 
 export default Cart;
-
-export const loader = async () => {
-           
-            
-        // try {
-
-        //     const { data } = await getRequest("/cart-service/api/cart/loadcart", 
-        //          { params : { userId : tokenUtil.getUser().email } }
-        //     );
-
-        //     return data;
-        // }
-        // catch (err) {
-        //     console.log(err);
-        // }
-    
-}
 

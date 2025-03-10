@@ -5,7 +5,7 @@ import AddReview from "./Review";
 import Table from "./Table";
 import { useNavigate } from "react-router-dom";
 
-const Reviews = ({ product, num_reviews, userReviews }) => {
+const Reviews = ({ product, num_reviews, userReviews, updateReviews }) => {
     const navigate = useNavigate();
 
     const { token } = useAuthContext();
@@ -13,6 +13,7 @@ const Reviews = ({ product, num_reviews, userReviews }) => {
     const [reviews, setReviews] = useState(userReviews);
     
      
+    console.log(product.rating);
     
 
     return (
@@ -32,7 +33,7 @@ const Reviews = ({ product, num_reviews, userReviews }) => {
                             style={{ color: "#FACF19 " }}
                         />
                         <span className="ml-2">
-                            {product.rating === 0
+                            {product.rating === 0.0
                                 ? "No review yet."
                                 : product.rating.toFixed(2)}
                         </span>
@@ -65,9 +66,8 @@ const Reviews = ({ product, num_reviews, userReviews }) => {
                     ))}
                 </div>
             </div>
-            {token ? (
-                // <AddReview product={product} setReviews={setReviews} />
-                  <AddReview product={product} setReviews={setReviews} />
+            {token ? (                
+                  <AddReview product={product} setReviews={setReviews} updateReviews={updateReviews} />
             ) : (
                 <button
                     onClick={() => navigate('/signin')}

@@ -12,7 +12,7 @@ const Search = ({searchHandler}) => {
     const handleSearch = (e) => {
         e.preventDefault();
         
-        if (query.length > 1) {
+        if (query.length >= 1) {
             if (pathname !== "/browse") {                
                 navigate(`/browse?search=${query}`);
                 

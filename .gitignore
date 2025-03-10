@@ -404,7 +404,7 @@ backend/bin/main/com/project/backend/model/PasswordResetToken.class
 backend/bin/main/com/project/backend/model/PaymentResult.class
 backend/bin/main/com/project/backend/model/PaymentResult$PaymentResultBuilder.class
 backend/bin/main/com/project/backend/model/Product.class
-backend/bin/main/com/project/backend/model/ProductCategory.class
+backend/bin/main/com/project/backend/model/Category.class
 backend/bin/main/com/project/backend/model/ProductColorAttribute.class
 backend/bin/main/com/project/backend/model/ProductColorAttribute$ProductColorAttributeBuilder.class
 backend/bin/main/com/project/backend/model/ProductDetails.class
@@ -522,3 +522,5 @@ chat-server/build/reports/problems/problems-report.html
 
 # Ignore Gradle build output directory
 build
+chat-server/src/main/resources/application.yml
+frontend/.env.development

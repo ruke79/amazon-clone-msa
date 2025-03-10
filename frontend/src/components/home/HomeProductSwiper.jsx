@@ -14,9 +14,7 @@ const HomeProductSwiper = ({ products, category }) => {
     let selectedProducts = products.filter(
         (p) => p.category.name === category
     );
-
-    
-    
+       
 
     return (
         <div className="z-50 flex flex-col rounded bg-white h-auto mb-4 mx-4  p-4 border">

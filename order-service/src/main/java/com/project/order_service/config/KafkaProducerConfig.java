@@ -10,6 +10,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.orm.jpa.JpaTransactionManager;
 
 import com.google.common.collect.ImmutableMap;
 import com.project.common.message.dto.request.CartEmptyRequest;
@@ -18,7 +19,10 @@ import com.project.common.message.dto.request.CouponRollbackRequest;
 import com.project.common.message.dto.request.PaymentRequest;
 import com.project.common.message.dto.request.ProductUpdateRequest;
 
+import jakarta.persistence.EntityManagerFactory;
+
 import java.util.Map;
+import java.util.UUID;
 @EnableKafka
 @Configuration
 public class KafkaProducerConfig {
@@ -26,18 +30,19 @@ public class KafkaProducerConfig {
     @Value("${kafka.url}")
     private String kafkaServerUrl;
 
+     
+
     @Bean
     public Map<String, Object> producerConfigurations() {
         return ImmutableMap.<String, Object>builder()
                 .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
                 .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
-                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)
-                //멱등성 프로듀서 명시적 설정
+                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
                 .put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true)
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
                 .build();
-
     }
-
+    
 
     @Bean
     public ProducerFactory<String, PaymentRequest> paymentRequestProducerFactory() {
@@ -51,8 +56,20 @@ public class KafkaProducerConfig {
     }
 
     @Bean
+    public Map<String, Object> couponRollbackConfigurations() {
+        return ImmutableMap.<String, Object>builder()
+                .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
+                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
+                .put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true)
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
+                .build();
+    }
+
+
+    @Bean
     public ProducerFactory<String, CouponRollbackRequest> couponRollbackProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+        return new DefaultKafkaProducerFactory<>(couponRollbackConfigurations());
 
     }
 
@@ -62,8 +79,19 @@ public class KafkaProducerConfig {
     }
 
     @Bean
+    public Map<String, Object> cartRollbackConfigurations() {
+        return ImmutableMap.<String, Object>builder()
+                .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
+                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
+                .put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true)
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
+                .build();
+    }
+
+    @Bean
     public ProducerFactory<String, CartRollbackRequest> cartRollbackProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+        return new DefaultKafkaProducerFactory<>(cartRollbackConfigurations());
 
     }
 
@@ -73,8 +101,20 @@ public class KafkaProducerConfig {
     }
 
     @Bean
+    public Map<String, Object> ProductUpdateConfigurations() {
+        return ImmutableMap.<String, Object>builder()
+                .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
+                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
+                .put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true)
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
+                .build();
+
+    }
+
+    @Bean
     public ProducerFactory<String, ProductUpdateRequest> productUpdateProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+        return new DefaultKafkaProducerFactory<>(ProductUpdateConfigurations());
 
     }
 
@@ -84,8 +124,20 @@ public class KafkaProducerConfig {
     }
 
     @Bean
+    public Map<String, Object> cartEmptyConfigurations() {
+        return ImmutableMap.<String, Object>builder()
+                .put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                .put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class)
+                .put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)                
+                .put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true)
+                .put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID().toString())
+                .build();
+
+    }
+
+    @Bean
     public ProducerFactory<String, CartEmptyRequest> cartEmptyProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigurations());
+        return new DefaultKafkaProducerFactory<>(cartEmptyConfigurations());
 
     }
 

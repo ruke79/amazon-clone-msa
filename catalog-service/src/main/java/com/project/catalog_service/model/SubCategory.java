@@ -44,7 +44,7 @@ public class SubCategory extends BaseEntity {
     @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="category_id", referencedColumnName = "category_id", nullable=false)
-    private ProductCategory category;    
+    private Category category;    
 
     @JsonIgnore
     @ManyToMany(mappedBy = "subCategories", fetch= FetchType.EAGER, cascade = CascadeType.PERSIST)

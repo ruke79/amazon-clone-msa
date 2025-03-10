@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,11 +23,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.userservice.constants.TokenType;
+import com.project.userservice.dto.UserProfileDto;
+import com.project.userservice.model.User;
 import com.project.userservice.security.jwt.JwtUtils;
 import com.project.userservice.security.request.LoginRequest;
 import com.project.userservice.security.response.LoginResponse;
 import com.project.userservice.security.service.UserDetailsImpl;
 import com.project.userservice.service.RefreshTokenService;
+import com.project.userservice.service.UserService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +44,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtils jwtUtils;
 
+    
     private final RefreshTokenService refreshTokenService;
 
     @Autowired
@@ -104,7 +109,8 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         ObjectMapper om = new ObjectMapper();
 
-        LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(),  roles);
+        LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(),  roles);                
+
 
         String data;
         try {

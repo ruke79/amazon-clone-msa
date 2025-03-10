@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { useSelector } from "react-redux";
 import Header from "pages/header/Header";
 import ShippingPage from "components/checkout/ShippingPage";
 import Product from "components/checkout/ChekoutProduct";
@@ -17,11 +18,10 @@ const Checkout = () => {
 
     const { user } = useAuthContext();
 
-    
-    //const cart = useLoaderData();
-    const { checkoutData, isPendingCheckOut, isSuccessCheckOut, status, isError } = useFetchCheckOut(user.userId, user.email);
-    
-           
+    const cart = useSelector((state) => { return state.cart; });
+
+    const { checkoutData, isPendingCheckOut, isSuccessCheckOut} =
+     useFetchCheckOut(user.email, cart.cartId, cart.status);
 
     const { addressesData, isPendingAddress, isSuccessAddress } = useFetchAddresses(user.userId);
         
@@ -32,13 +32,11 @@ const Checkout = () => {
     const [loading, setLoading] = useState(false);
 
     
-  
+    
 
      useEffect(() => {
 
-          console.log(addresses)  ;
-        let check = addresses.find((address) => address.active === true);
-        console.log(check);
+        let check = addresses.find((address) => address.active === true);        
         if (check) {
             setSelectedAddress(check);
          
@@ -49,22 +47,15 @@ const Checkout = () => {
     }, [addresses]);
     
    
-    if (isPendingCheckOut || isPendingAddress)  {        
+    if (isPendingCheckOut || isPendingAddress)  {             
         return <DotLoaderSpinner loading={isPendingCheckOut || isPendingAddress} />
     }
 
     if ( addresses.length === 0 && isSuccessCheckOut && isSuccessAddress) 
-    {        
-        setAddresses(addressesData);
-     //   setData(checkoutData);
+    {       
+        
+        setAddresses(addressesData);        
     }
-
-    
-
-
-    if (isPendingCheckOut ) return <div><p>Loading...</p></div>;
-    // if (isPendingAddress) return <div><p>Loading...</p></div>;
-
 
     return (
         <>
@@ -104,21 +95,3 @@ const Checkout = () => {
 export default Checkout;
 
 
-export const loader = async ({ params, request }) => {  
-    
-
-        
-    //     try {
-
-    //         const { data } = await getRequest("/cart-service/api/cart/checkout", 
-    //             { params : {userId : tokenUtil.getUser().email } }
-    //         );
-
-
-    //         return data;
-    //     }
-    //     catch(err) {
-            
-    //     }
-    // };
-}

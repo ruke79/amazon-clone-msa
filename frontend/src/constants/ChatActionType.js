@@ -1,8 +1,4 @@
-export const SHOW_MESSAGE = "SHOW_MESSAGE";
 export const HIDE_MESSAGE = "HIDE_MESSAGE";
-export const FETCH_START = "FETCH_START";
-export const FETCH_SUCCESS = "FETCH_SUCCESS";
-export const FETCH_ERROR = "FETCH_ERROR";
 
 export const SET_CHAT_USERS = "SET_CHAT_USERS";
 export const SET_CONTACT_USERS = "SET_CONTACT_USERS";
@@ -36,3 +32,4 @@ export const BAN_USER_FROM_ROOM = "BAN_USER_FROM_ROOM";
 export const UPDATE_THEME = "UPDATE_THEME";
 
 export const ADD_CHAT_MESSAGE = "ADD_CHAT_MESSAGE";
+export const SHOW_ROOM = "SHOW_ROOM";

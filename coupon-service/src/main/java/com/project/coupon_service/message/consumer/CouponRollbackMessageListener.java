@@ -4,6 +4,7 @@ package com.project.coupon_service.message.consumer;
 import org.springframework.stereotype.Service;
 
 import com.project.common.message.dto.request.CouponRollbackRequest;
+import com.project.coupon_service.exception.CustomDomainException;
 import com.project.coupon_service.model.Coupon;
 import com.project.coupon_service.service.CouponService;
 
@@ -24,10 +25,10 @@ public class CouponRollbackMessageListener {
         Coupon coupon = couponService.couponRollback(request);
 
         if (coupon == null) {
-            log.error("Coupon could not be created in coupon database with id: {}", coupon.getCouponId());
-            //throw new OrderDomainException("Customer could not be created in order database with id " +
-            //createdUser.getUserId());
+            log.error("Coupon could not be rollbacked in coupon database with name: {}", request.getCouponName());
+            throw new CustomDomainException("Coupon could not be created in coupon database with name " +
+            request.getCouponName());
         }
-        log.info("Coupon is created in coupon database with id: {}", coupon.getCouponId());
+        log.info("Coupon is rollbacked in coupon database with id: {}", coupon.getCouponId());
     }
 }
