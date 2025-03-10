@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.cart_service.config.FeignConfig;
-import com.project.cart_service.dto.ProductDto;
+import com.project.common.dto.ProductDto;
+
 
 /**
  * 마이크로서비스 간의 호출을 위한 feignclient

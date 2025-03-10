@@ -7,18 +7,23 @@ import slugify from "slugify";
 import api, { getRequest } from "util/api";
 import toast from "react-hot-toast";
 import { useAuthContext } from "store/AuthContext";
+import tokenUtil from "util/tokenUtil";
+import { useFetchOrders } from "hook/hooks";
 
 
 const Orders = () => {
 
      const searchParams = useSearchParams();     
      const qParam = searchParams[0].get('q');
-     console.log(qParam?.split("__")[1]);
+     //console.log(qParam?.split("__")[1]);
+     
 
      const { user} = useAuthContext();
-     const { orders, tab } = useLoaderData();
+     const { filter, tab } = useLoaderData();
 
-     console.log(user);
+     const { orders, isSuccess, isPending } = useFetchOrders(filter, user.email);
+
+     if ( isPending) return <div>Loading...</div>
      
         
     return (
@@ -87,11 +92,8 @@ const Orders = () => {
 
 export default Orders;
 
-export const loader = (authContext) => {
-
-    return async ({params, request}) => {
-    
-        //const { currentUser } = authContext;
+export const loader =  async ({params, request}) => {    
+            
         const searchParams = new URL(request.url).searchParams;
         
         const tab = Number(searchParams.get('tab')) || 0;
@@ -99,22 +101,21 @@ export const loader = (authContext) => {
 
         const filter = searchParams.get('q').split("__")[1];
 
-        console.log(filter);
-
-        try {
-
-         const { data } = await getRequest("/order-service/api/order/orders", 
-                      { params : { filter : filter }                                  
-                       } 
-            );                             
         
-          return { orders : data, tab : tab };    
-        
-        } catch (error) {
-            toast.error("Failed to load orders");            
-        }
+        // try {
 
-        return { orders : [], tab : tab };    
+        //  const { data } = await getRequest("/order-service/api/order/orders", 
+        //               { params : { filter : filter, email:tokenUtil.getUser().email }                                  
+        //                } 
+        //     );                             
+        
+        //   return { orders : data, tab : tab };    
+        
+        // } catch (error) {
+        //     toast.error("Failed to load orders");            
+        // }
+
+        return { flter : filter, tab : tab };    
     };
-}
+
 

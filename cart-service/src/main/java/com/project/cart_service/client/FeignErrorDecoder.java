@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.project.cart_service.exception.ErrorCode;
+import com.project.common.exception.ErrorCode;
+
+
+
 
 @Component
 public class FeignErrorDecoder implements ErrorDecoder {
@@ -24,7 +27,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
                 break;
             case 404:
                 if (methodKey.contains("find")) {
-                    throw ErrorCode.throwUserrNotFound();
+                    throw ErrorCode.throwUserNotFound();
                 }                
                 break;
             default:
@@ -33,3 +36,4 @@ public class FeignErrorDecoder implements ErrorDecoder {
         return null;
     }
 }
+

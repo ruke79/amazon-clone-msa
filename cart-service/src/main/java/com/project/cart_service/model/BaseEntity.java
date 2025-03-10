@@ -23,11 +23,9 @@ public class BaseEntity {
     @CreatedBy
     @Column(updatable = false)
     private String createdBy;
-    @LastModifiedDate
-    @Column(insertable=false)
+    @LastModifiedDate    
     private LocalDateTime updatedAt;
-    @LastModifiedBy
-    @Column(insertable=false)
+    @LastModifiedBy    
     private String updatedBy;
 
 }

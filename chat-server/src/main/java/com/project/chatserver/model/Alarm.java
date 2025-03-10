@@ -2,7 +2,7 @@ package com.project.chatserver.model;
 
 import lombok.Getter;
 
-import com.project.chatserver.constants.AlarmEnum;
+import com.project.common.constants.AlarmEnum;
 
 import  jakarta.persistence.*;
 /**

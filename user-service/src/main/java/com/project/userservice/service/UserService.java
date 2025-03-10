@@ -1,6 +1,7 @@
 package com.project.userservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.project.userservice.dto.AddressDto;
 import com.project.userservice.dto.UserProfileDto;
 import com.project.userservice.model.Role;
 import com.project.userservice.model.User;
@@ -74,6 +75,8 @@ public interface UserService {
     List<String> getUsersFromSessionRegistry();
 
     UserProfileDto findUserWithAddresses(User user);
+
+    List<AddressDto> findUserAddresses(User user);
 
     UserProfileDto findUserWithdefaultPaymentMethod(User user);
 

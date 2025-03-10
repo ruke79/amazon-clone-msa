@@ -3,7 +3,7 @@ package com.project.order_service.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+import com.project.common.dto.SharedUserDto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,9 +16,9 @@ import lombok.Setter;
 @Setter
 public class OrderDto {
 
-    private String orderNumber;
+    private String trackingId;
 
-    private ServiceUserDto user;
+    //private SharedUserDto user;
 
     private List<OrderedProductDto> products;
 
@@ -26,7 +26,7 @@ public class OrderDto {
 
     private String paymentMethod;
 
-    private String paymentResult;
+    private String paymentStatus;
     
     private int total;
 
@@ -37,14 +37,13 @@ public class OrderDto {
     private String couponApplied;
 
     private int taxPrice;
-
-    private boolean isPaid;
-
+    
     private String orderStatus;    
 
+    private boolean isPaid;
     
-    private LocalDateTime paidAt;
+    private LocalDateTime paidCreatedAt;
 
-    private LocalDateTime deliveredAt;
+    private LocalDateTime deliveredCreatedAt;
 
 }

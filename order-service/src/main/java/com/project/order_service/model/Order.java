@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.project.order_service.constants.OrderStatusEnum;
+import com.project.common.constants.OrderStatus;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
@@ -41,17 +41,17 @@ public class Order extends BaseEntity {
     private Long orderId;
 
     
-    private String orderNumber;
+    private String trackingId;
 
     // @ManyToOne(fetch=FetchType.EAGER)
     // @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     // private User user;    
-    private Long userId;
+    private Long customerId;
             
     
     @OneToMany(mappedBy="order", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class)
-    private List<OrderedProduct> orderedProducts;
+    cascade = CascadeType.PERSIST,targetEntity = OrderProduct.class)
+    private List<OrderProduct> orderedProducts;
 
     
     @ManyToOne(fetch=FetchType.EAGER)
@@ -74,16 +74,14 @@ public class Order extends BaseEntity {
 
     private String couponApplied;
 
-    private int taxPrice = 0;
-
-    private boolean isPaid = false;
+    private int taxPrice;
+    
 
     @Enumerated(EnumType.STRING)
-    private OrderStatusEnum orderStatus = OrderStatusEnum.NOT_PROCESSED ;    
-
+    private OrderStatus orderStatus;    
     
-    private LocalDateTime paidAt;
+    private LocalDateTime paidCreatedAt;
 
-    private LocalDateTime deliveredAt;
+    private LocalDateTime deliveredCreatedAt;
 
 }

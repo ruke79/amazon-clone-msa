@@ -20,7 +20,7 @@ export const ContextProvider = ({ children }) => {
     : false;
 
   //store the token
-  const [token, setToken] = useState(getToken);
+  const [token, setToken] = useState(null);
 
   const [user, setUser] = useState(null);
 
@@ -28,9 +28,9 @@ export const ContextProvider = ({ children }) => {
 
   const fetchUser = async () => {
 
-    const user = TokenUtil.getUser();
+    //const user = TokenUtil.getUser();
 
-    if (user.email) {
+      
 
       try {
         const { data } = await getRequest(`/user-service/api/auth/user`);
@@ -49,8 +49,7 @@ export const ContextProvider = ({ children }) => {
       } catch (error) {
         console.error("Error fetching current user", error);
         toast.error("Error fetching current user");
-      }
-    }
+      }    
   }
 
 

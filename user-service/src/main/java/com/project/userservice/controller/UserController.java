@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.userservice.constants.StatusMessages;
+import com.project.common.constants.StatusMessages;
+import com.project.common.response.MessageResponse;
 import com.project.userservice.dto.AddressDto;
-import com.project.userservice.dto.OrderDto;
 import com.project.userservice.dto.UserProfileDto;
 import com.project.userservice.model.User;
 import com.project.userservice.security.request.AddressRequest;
 import com.project.userservice.security.request.PasswordRequest;
-import com.project.userservice.security.response.MessageResponse;
 import com.project.userservice.security.service.UserDetailsImpl;
 import com.project.userservice.service.AddressService;
 import com.project.userservice.service.impl.UserServiceImpl;
@@ -42,7 +41,7 @@ public class UserController {
 
     
     @GetMapping("/address")
-    ResponseEntity<?> getUserInfoWithAddresses(@AuthenticationPrincipal UserDetails userDetails) {
+    ResponseEntity<?> getUserAddresses(@AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
 
@@ -50,7 +49,8 @@ public class UserController {
 
                 User user = userService.findByUsername(userDetails.getUsername());
 
-                UserProfileDto repsonse = userService.findUserWithAddresses(user);
+                //UserProfileDto repsonse = userService.findUserWithAddresses(user);
+                List<AddressDto> repsonse = userService.findUserAddresses(user);
 
                 return new ResponseEntity<>(repsonse, HttpStatus.OK);
             } catch (RuntimeException e) {
@@ -162,27 +162,7 @@ public class UserController {
         }
     }
 
-    // @GetMapping("/orders")
-    // public ResponseEntity<?> getOrders(@RequestParam String filter,
-    // @AuthenticationPrincipal UserDetails userDetails) {
-
-    //     if (null != userDetails) {
-
-    //         try {
-                
-    //             List<OrderDto> response =  orderService.getOrders(userDetails.getUsername(), filter);
-    //             return new ResponseEntity<>(response, HttpStatus.OK); 
-                
-    //         }
-    //         catch(RuntimeException e) {
-    //             return ResponseEntity.status(HttpStatus.BAD_REQUEST)                .body(new MessageResponse(StatusMessages.ORDER_NOT_FOUND));
-                                
-    //         }
-    //     } else {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-    //                 .body(StatusMessages.USER_NOT_FOUND);
-    //     }
-    // }
+    
     
 
     @PutMapping("/update-password")

@@ -97,12 +97,10 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());
+        String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());        
 
-        RefreshToken refreshToken = refreshTokenService.findByUserId(userDetails.getId()).orElse(null);        
-        if (null == refreshToken) {
-            refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-        }
+        
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         ObjectMapper om = new ObjectMapper();
 
@@ -123,8 +121,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
             // jwtUtils.generateRefreshJwtCookie(refreshToken.getToken()).toString());
             response.getWriter().write(data);
             response.setStatus(HttpStatus.OK.value());
-
-            log.info(role);
+            
 
             log.info("Login Success");
 

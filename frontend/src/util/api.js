@@ -16,8 +16,9 @@ export const queryClient = new QueryClient(
     },
     queryCache: new QueryCache({
       onError: (error, query) => {
+        console.log(error.message);
         if (query.state.data !== undefined) {
-          toast.error(`Something went wrong: ${error.message}`);
+          toast.error(`Something went wrong: ${error}`);
         }
       },
     }),
@@ -40,20 +41,20 @@ const api = axios.create({
 });
 
 
-api.interceptors.request.use(
-  async (config) => {
-    const token = TokenUtil.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+// api.interceptors.request.use(
+//   async (config) => {
+    
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
 
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 let isRefreshing = false;
 
@@ -61,103 +62,101 @@ const refreshAndRetryQueue = [];
 
 
 
-api.interceptors.response.use(
-  (res) => {
-    console.log(res.data)
-    return res;
-  },
-  async (err) => {
-    let originalConfig = err.config;
+// api.interceptors.response.use(
+//   (res) => {
+//     console.log(res.data)
+//     return res;
+//   },
+//   async (err) => {
+//     let originalConfig = err.config;
 
-    if (err.response) {
+//     if (err.response) {
 
-      const msg = err.response.data;
-      const status = err.response.status;
+//       const msg = err.response.data;
+//       const status = err.response.status;
 
       
-      if (status === 401) {
+//       if (status === 401) {
 
 
-        if (!isRefreshing) {
+//         if (!isRefreshing) {
 
-          isRefreshing = true;
+//           isRefreshing = true;
 
 
-          try {
+//           try {
 
-            if (msg === "access token expired" ||
-              msg === "Jwt token is not valid"
-            ) {
+//             if (msg === "access token expired") {
 
-              TokenUtil.removeToken();
+//               TokenUtil.removeToken();
 
 
 
-              const rs = await getRequest("user-service/api/token/refresh");
+//               const rs = await getRequest("user-service/api/token/refresh");
 
-              if (rs.status == 200) {
-                console.log(rs);
-                const accessToken = rs.headers['access'];
-                TokenUtil.updateToken(accessToken);
+//               if (rs.status == 200) {
+//                 console.log(rs);
+//                 const accessToken = rs.headers['access'];
+//                 TokenUtil.updateToken(accessToken);
 
-                //setToken(accessToken);
+//                 //setToken(accessToken);
 
-                originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
+//                 originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
 
-                return api(originalConfig);
-              }
+//                 return api(originalConfig);
+//               }
 
-            }
-            refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-              api
-                .request(config)
-                .then((response) => resolve(response))
-                .catch((err) => reject(err));
-            });
+//             }
+//             refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
+//               api
+//                 .request(config)
+//                 .then((response) => resolve(response))
+//                 .catch((err) => reject(err));
+//             });
 
-            refreshAndRetryQueue.length = 0;
-
-
-          } catch (refreshError) {
-            refreshAndRetryQueue.length = 0;
-
-            console.log(refreshError);
-            TokenUtil.remove();
-            throw refreshError;
-
-          } finally {
-            isRefreshing = false;
-          }
-        }
+//             refreshAndRetryQueue.length = 0;
 
 
-        return new Promise((resolve, reject) => {
-          refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
-        });
+//           } catch (refreshError) {
+//             refreshAndRetryQueue.length = 0;
 
-      }
-      else if (status === 400) {
+//             console.log(refreshError);
+//             TokenUtil.remove();
+//             throw refreshError;
+
+//           } finally {
+//             isRefreshing = false;
+//           }
+//         }
 
 
-        if (msg === "refresh token expired") {
+//         return new Promise((resolve, reject) => {
+//           refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
+//         });
 
-          TokenUtil.remove();
-          //document.location.href = '/signin'
+//       }
+//       else if (status === 400) {
 
-        }
-      }
-    }
-    else {
-      // We have a network error
-      console.error('Network error:', err);
-      //navigate('error_server');
-      TokenUtil.remove();
-    }
 
-    return Promise.reject(err);
+//         if (msg === "refresh token expired") {
 
-  }
-);
+//           TokenUtil.remove();
+//           //document.location.href = '/signin'
+
+//         }
+//       }
+//     }
+//     else {
+//       // We have a network error
+//       console.error('Network error:', err);
+//       //navigate('error_server');
+//       TokenUtil.remove();
+//     }
+
+//     return Promise.reject(err);
+
+//   }
+// );
 
 
 
@@ -278,14 +277,92 @@ export const deleteAddress = async (addressId) => {
 
 
 
-export const applyCoupon = async (coupon) => {
+export const applyCoupon = async (cartTotal, coupon, email) => {
 
   try {
 
-    const { data } = await postRequest("/coupon-service/api/coupon", {
-      coupon: coupon
-    });
+    const { data } = await postRequest("/coupon-service/api/coupon/applycoupon", {
+      totalPrice : cartTotal, couponName: coupon, userEmail : email });
     return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+}
+
+export const getOrders = async (filter,userEmail) => {
+
+  try {
+    
+    const { data } = await getRequest("/order-service/api/order/orders", 
+      { params : { filter : filter, email:userEmail }                                  
+       } 
+    );   
+    
+      return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+}
+
+export const getOrder = async (orderId, userEmail) => {
+
+    try {
+      console.log(orderId);
+    
+      const { data } = await getRequest(`/order-service/api/order/${orderId}`,
+        { params : { email : userEmail}}
+      );
+      
+        return data;
+    } catch (error) {
+      console.log("erorr >>>", error.response.data.message);
+    }
+  };                       
+
+
+export const loadCart = async (userEmail) => {
+
+  try {
+    
+    const { data } = await getRequest("/cart-service/api/cart/loadcart", 
+      { params : { userId : userEmail } }
+    );
+    
+      return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+}
+
+export const loadCheckOut = async (userEmail) => {
+
+  
+  try {
+    
+    const { data } = await getRequest("/cart-service/api/cart/checkout", 
+      { params : {userId : userEmail } }
+    );    
+    console.log(data);
+      return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+}
+
+      
+
+
+
+
+
+export const getCoupons = async (userEmail) => {
+
+  try {
+
+    
+    const { data } = await getRequest("/coupon-service/api/coupon/coupons", { params : { email : userEmail } });    
+    
+      return data;
   } catch (error) {
     console.log("erorr >>>", error.response.data.message);
   }
@@ -307,32 +384,54 @@ export const getAddresses = async() => {
   try {
     
     const {data} =   await getRequest("/user-service/api/user/profile/address");     
-    return data.addresses;
+    return data;
   } catch (error) {
     console.log("erorr >>>", error.response.data.message);
   }
 }
 
+export const processPayment = async (request) => {
+
+  try {
+    
+    const {data} =   await getRequest("/order-service/api/order/payment/process", request);     
+    return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
+
+}
+
 export const createChatRoom = ({ roomName }) => {
-  const url = `/chat-service/api/chat/room`;
+  const url = `/chat-service/chat/room`;
   return api.post(url, { roomName : roomName }).then((res) => {
     return res.data;
   });
 };
 
-export const  getChatRoomList = () => {
-  const url = `/chat-service/api/chat/rooms`;
-  return api.get(url).then((res) => {            
-    return res.data;
-  }).catch((error)=> { console.log(error.response.data)});
+export const  getChatRoomList = async () => {
+  const url = `/chat-service/chat/rooms`;
+  // return api.get(url).then((res) => {            
+  //   return res.data;
+  // }).catch((error)=> { console.log(error.response.data)});
+  try {    
+    const {data} =   await getRequest(url);     
+    return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
 };
 
-export const getRoomMessages = (room, cursor) => {
-  const url = `/chat-service/api/chat/room/${room?.roomId}`;
-  console.log(cursor);
-  return api.get(url,  {cursor : cursor}).then((res) => {
-    return res.data;
-  });
+export const getRoomMessages = async (room, cursor) => {
+  const url = `/chat-service/chat/room/${room?.roomId}`;
+  
+  
+  try {    
+    const {data} =   await getRequest(url, { params : {cursor : cursor}});     
+    return data;
+  } catch (error) {
+    console.log("erorr >>>", error.response.data.message);
+  }
 };
 
 

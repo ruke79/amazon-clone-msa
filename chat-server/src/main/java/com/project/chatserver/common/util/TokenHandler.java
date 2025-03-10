@@ -5,20 +5,23 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+
 @Slf4j
 @Component
 public class TokenHandler {
+    
+    
     @Value("${spring.app.jwtSecret}")
     private String secretKey;
-    private final Algorithm algorithm;
 
-    public TokenHandler() {
-        this.algorithm = Algorithm.HMAC256("mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm".getBytes());
-    }
+
+    
 
     public String getUid(String token) {
         DecodedJWT decodedJWT = JWT.decode(token);
@@ -27,7 +30,7 @@ public class TokenHandler {
 
     public boolean verifyToken(String token) {
         try {
-            JWTVerifier verifier = JWT.require(algorithm).build();
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey.getBytes())).build();
             DecodedJWT decodedJWT = verifier.verify(token);
             return decodedJWT.getExpiresAt().after(new Date());
         } catch (Exception e) {

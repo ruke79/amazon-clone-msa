@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CartServiceClient {
 
     @GetMapping("api/cart/{cartProductId}") 
-    ResponseEntity<?> getProductId(@PathVariable String cartProdcutId);
+    String getProductId(@PathVariable("cartProductId") String cartProdcutId);
 }

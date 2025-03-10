@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.project.common.constants.OperationStatus;
+import com.project.common.dto.ProductDto;
 import com.project.userservice.client.CatalogServiceClient;
-import com.project.userservice.constants.OperationStatus;
-import com.project.userservice.dto.ProductDto;
 import com.project.userservice.model.User;
 import com.project.userservice.model.WishList;
 import com.project.userservice.repository.UserRepository;

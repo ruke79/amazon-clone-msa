@@ -5,16 +5,20 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.project.userservice.constants.TokenType;
@@ -32,17 +36,18 @@ import java.io.PrintWriter;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtils jwtUtils;
-
+    private JwtUtils jwtUtils;    
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
+        log.info("AuthTokenFilter called for URI: {}", request.getRequestURI());
 
         String requestUri = request.getRequestURI();
 
@@ -59,6 +64,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+        if (requestUri.matches("/api/token(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
        
 
@@ -79,6 +91,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String accessToken = parseJwt(request);
 
         
+        
 
         // 1 OAUTH 2 JWT
         if (oauth2 != null && accessToken == null) {
@@ -98,7 +111,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             UserProfileDto userDto = new UserProfileDto();
             userDto.setUsername(id);
-            userDto.setRole(role);
+            userDto.getRoles().add(role);
 
             CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDto);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null,
@@ -112,12 +125,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             
 
+            // token refresh 
             try {
                 jwtUtils.isJwtTokenExpired(accessToken);
             } catch (ExpiredJwtException e) {
                 PrintWriter writer = response.getWriter();
                 writer.print("access token expired");
-
                 // response status code
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
@@ -125,22 +138,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             try {
 
-                if (jwtUtils.validateJwtToken(accessToken)) {
-                    String email = jwtUtils.getIdFromJwtToken(accessToken);
+                if (jwtUtils.validateJwtToken(accessToken) ) {
 
-                    
+                    String blackLisTToken = (String)redisTemplate.opsForValue().get(accessToken);
 
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                    log.info("blackLisTToken : {}", blackLisTToken);
 
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities());
-                    logger.debug("Roles from JWT: {}", userDetails.getAuthorities());
+                    if(ObjectUtils.isEmpty(blackLisTToken)) {
 
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        String email = jwtUtils.getIdFromJwtToken(accessToken);
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                        
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+                                log.info("Roles from JWT: {}", userDetails.getAuthorities());
+
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             } catch (Exception e) {
                 // logger.error("Cannot set user authentication: {}", e);
@@ -168,8 +188,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String parseJwt(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromHeader(request);
-        // String jwt = jwtUtils.getJwtFromCookies(request);
-        logger.debug("AuthTokenFilter.java: {}", jwt);
+        // String jwt = jwtUtils.getJwtFromCookies(request);        
         return jwt;
     }
 }

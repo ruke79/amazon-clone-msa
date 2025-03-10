@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.common.util.FileUtil;
 import com.project.userservice.client.CatalogServiceClient;
 import com.project.userservice.dto.ReviewDto;
 import com.project.userservice.dto.ReviewStyleDto;
@@ -22,7 +23,6 @@ import com.project.userservice.repository.ReviewRepository;
 import com.project.userservice.repository.UserRepository;
 import com.project.userservice.security.request.ReviewRequest;
 import com.project.userservice.security.response.ReviewsResponse;
-import com.project.userservice.util.FileUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -139,7 +139,7 @@ public class ReviewService {
                     List<String> imageUrls = new ArrayList<String>();
 
                     for(MultipartFile image : images) {
-                        String filename = FileUtils.getRandomFilename();
+                        String filename = FileUtil.getRandomFilename();
                         String filepath = imageService.upload(image, filename);
                         imageUrls.add(filepath);
                     }
@@ -197,7 +197,7 @@ public class ReviewService {
                 List<String> imageUrls = new ArrayList<String>();
 
                 for(MultipartFile image : images) {
-                    String filename = FileUtils.getRandomFilename();
+                    String filename = FileUtil.getRandomFilename();
                     String filepath = imageService.upload(image, filename);
                     imageUrls.add(filepath);
                 }

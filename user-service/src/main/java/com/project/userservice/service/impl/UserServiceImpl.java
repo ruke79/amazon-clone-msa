@@ -2,8 +2,8 @@ package com.project.userservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.common.constants.StatusMessages;
 import com.project.userservice.constants.AppRole;
-import com.project.userservice.constants.StatusMessages;
 import com.project.userservice.dto.AddressDto;
 import com.project.userservice.dto.UserProfileDto;
 import com.project.userservice.model.PasswordResetToken;
@@ -43,7 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.userservice.message.repository.OutboxEventRepository;
-import com.project.userservice.message.dto.UserCreatedDto;
+import com.project.userservice.message.dto.UserCreatedRequest;
 import com.project.userservice.message.model.OutboxEvent;
 
 import java.time.Instant;
@@ -112,36 +112,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDto getUserById(Long id) {
-        // return userRepository.findById(id).orElseThrow();
+        
         User user = userRepository.findById(id).orElseThrow();
-        return convertToDto(user);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+
+        List<String> roles = userDetails.getAuthorities().stream()
+        .map(item -> item.getAuthority())
+        .collect(Collectors.toList());
+
+        return UserProfileDto.convertToDto(user, roles);
     }
 
-    private UserProfileDto convertToDto(User user) {
-
-        return new UserProfileDto(
-                Long.toString(user.getUserId()),
-                user.getUserName(),
-                user.getName(),
-                user.getEmail(),
-                user.isAccountNonLocked(),
-                user.isAccountNonExpired(),
-                user.isCredentialsNonExpired(),
-                user.isEnabled(),
-                user.getCredentialsExpiryDate(),
-                user.getAccountExpiryDate(),
-                user.getTwoFactorSecret(),
-                user.isTwoFactorEnabled(),
-                user.getSignUpMethod(),
-                user.getRole().getRoleName().getRole(),
-                user.getImage(),
-                null,
-                null,
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-
-        );
-    }
+    
 
     @Override
     public User findByUsername(String username) {
@@ -449,6 +432,24 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public List<AddressDto> findUserAddresses(User user) {
+
+        if (!user.getShippingAddresses().isEmpty()) {
+
+            List<AddressDto> dtos = new ArrayList<>();
+            for (ShippingAddress src : user.getShippingAddresses()) {
+                AddressDto address = new AddressDto();
+                AddressDto.deepCopyShippingAddressDto(address, src);
+                address.setId(Long.toString(src.getShippingAddressId()));
+                dtos.add(address);
+            }
+
+            return dtos;
+        }
+
+        return null;              
+    }
+
     @Transactional(readOnly = true)
     public UserProfileDto findUserWithdefaultPaymentMethod(User user) {
 
@@ -475,7 +476,7 @@ public class UserServiceImpl implements UserService {
                 userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserCreatedDto in = UserCreatedDto.builder().userId(user.getUserId())
+        UserCreatedRequest in = UserCreatedRequest.builder().userId(user.getUserId())
                 .username(user.getUserName())
                 .nickname(user.getName())
                 .email(user.getEmail())
@@ -487,7 +488,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private OutboxEvent createOutboxEvent(UserCreatedDto in) throws JsonProcessingException {
+    private OutboxEvent createOutboxEvent(UserCreatedRequest in) throws JsonProcessingException {
 
         String payload = objectMapper.writeValueAsString(in);
         OutboxEvent event = new OutboxEvent(in.getUserId().toString(), "User", "user", payload);

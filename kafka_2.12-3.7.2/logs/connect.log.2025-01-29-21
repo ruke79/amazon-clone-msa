@@ -1,0 +1,4 @@
+[2025-01-29 21:00:38,130] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 21:05:39,151] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 21:10:39,249] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 21:12:21,344] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Session key updated (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2442)

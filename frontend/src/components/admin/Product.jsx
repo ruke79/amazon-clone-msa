@@ -19,7 +19,7 @@ const AllProcuct = ({ products }) => {
                             <div className="relative w-52 h-72">
                                 <img
                                     className="object-contained"                                    
-                                    src={product.sku_products[0].images[0]}
+                                    src={product.skus[0].images[0]}
                                     alt={product.name}
                                 />
                             </div>
@@ -29,7 +29,7 @@ const AllProcuct = ({ products }) => {
                                 </h3>
                             </Link>
                             <div className="mt-2 text-xs flex flex-col ">
-                                <div>Sku: {product.sku_products[0].sku}</div>
+                                <div>Sku: {product.skus[0].sku}</div>
                                 <div>Category: {product.category.name}</div>
                                 <div>
                                     Created:{" "}

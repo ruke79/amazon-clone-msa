@@ -16,7 +16,7 @@ const ChatRoomList = () => {
   
 
   
-  const { roomList, isLoading, isFetch, error, isError } =  useFetchChatRooms();   
+  const { roomList, isPending, isFetch, error, isError } =  useFetchChatRooms();   
         
   useEffect(() => {        
 
@@ -25,13 +25,15 @@ const ChatRoomList = () => {
 
   }, [dispatch, , roomList] )  
 
-  if (isLoading) return "Loading";
+  if (isPending) return "Loading";
 
 
   return (        
     <div>
       <RoomListHeader changeSearch={setInput} />                  
-      <RoomContent search={input} rooms={currRooms} />            
+       { roomList ? <RoomContent search={input} rooms={currRooms} />            
+       : <div></div>
+       }
      </div>
   );
 };

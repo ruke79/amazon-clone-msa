@@ -8,22 +8,33 @@ import { useFetcher, useLoaderData } from "react-router-dom";
 import { addToCart, updateCart } from "../redux/CartSlice";
 import { useEffect, useState } from "react";
 import tokenUtil from "util/tokenUtil";
+import { useFetchCart } from "hook/hooks";
+import { useAuthContext } from "store/AuthContext";
 
 const Cart = () => {
+    
+    const { user } = useAuthContext();
+    
     let cart = useSelector((state) => { return state.cart; });
     const dispatch = useDispatch();
 
-    const data = useLoaderData();
+    console.log(cart);
+
+
+    //const data = useLoaderData();
+    const { cartData, isSuccessCart, isPendingCart } = useFetchCart(user.email);
     
     useEffect(() => {
 
-        if (cart.cartItems.length === 0 && data.length > 0) {
-            dispatch(updateCart(data));            
+        if ( isSuccessCart) {
+            if (cart.cartItems.length === 0 && cartData.length > 0) {
+                dispatch(updateCart(cartData));            
+            }
         }
-    }, [])
+    }, [cartData])
 
 
-
+    if(isPendingCart) return <div>Loading...</div>;
 
     return (
         <>
@@ -34,6 +45,7 @@ const Cart = () => {
                 ) : (
                     <Empty />
                 )}
+                
             </main>
             <MenuSideBar />
         </>
@@ -45,17 +57,17 @@ export default Cart;
 export const loader = async () => {
            
             
-        try {
+        // try {
 
-            const { data } = await getRequest("/cart-service/api/cart/loadcart", 
-                 { params : { userId : tokenUtil.getUser().email } }
-            );
+        //     const { data } = await getRequest("/cart-service/api/cart/loadcart", 
+        //          { params : { userId : tokenUtil.getUser().email } }
+        //     );
 
-            return data;
-        }
-        catch (err) {
-            console.log(err);
-        }
+        //     return data;
+        // }
+        // catch (err) {
+        //     console.log(err);
+        // }
     
 }
 

@@ -5,10 +5,12 @@ import { getRequest, putRequest } from "util/api";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useAuthContext } from "store/AuthContext";
 
 const Payment = () => {
 
-    const { user, tab } = useLoaderData();
+    const { tab } = useLoaderData();
+    const {user} = useAuthContext();
 
     const [dbPM, setDbPM] = useState(user.defaultPaymentMethod);
     const [paymentMethod, setPaymentMethod] = useState(user.defaultPaymentMethod);
@@ -65,28 +67,28 @@ const Payment = () => {
 export default Payment;
 
 
-export const loader = (authContext) => {
-
-    return async ({params, request}) => {
+export const loader = async ({params, request}) => {
     
-        //const { currentUser } = authContext;
+        
         const searchParams = new URL(request.url).searchParams;
         const tab = Number(searchParams.get('tab')) || 0;
-        
-        try {
 
-            const { data } = await getRequest("/pay-service/api/pay/payment"); 
+        return { tab: tab };
+        
+        // try {
+
+        //     const { data } = await getRequest("/pay-service/api/pay/payment"); 
                         
         
-            return {
-                  user : data,
-                  tab : tab 
-            }
+        //     return {
+        //           user : data,
+        //           tab : tab 
+        //     }
         
-        } catch (error) {
-            toast.error(error);
-        }
-    };
-}
+        // } catch (error) {
+        //     toast.error(error);
+        // }
+};
+
 
 

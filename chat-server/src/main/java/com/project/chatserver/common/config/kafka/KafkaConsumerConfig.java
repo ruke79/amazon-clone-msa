@@ -1,8 +1,9 @@
 package com.project.chatserver.common.config.kafka;
 
 import com.google.common.collect.ImmutableMap;
-import com.project.chatserver.dto.notification.AlarmEventDto;
 import com.project.chatserver.model.ChatMessage;
+import com.project.common.message.dto.request.UserCreatedRequest;
+import com.project.common.dto.notification.AlarmEventDto;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -64,6 +65,29 @@ public class KafkaConsumerConfig {
                 ImmutableMap.<String, Object>builder()
                         .put(ConsumerConfig.GROUP_ID_CONFIG, "notification")
                         .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                        .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
+                        .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
+                        .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
+                        .build();
+
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurations, new StringDeserializer(), deserializer);
+    }
+
+    @Bean
+    ConcurrentKafkaListenerContainerFactory<String, UserCreatedRequest> userCreatedContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UserCreatedRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(userCreatedConsumerFactory());
+        factory.setBatchListener(true);
+        return factory;
+    }
+    @Bean
+    public ConsumerFactory<String, UserCreatedRequest> userCreatedConsumerFactory() {
+        JsonDeserializer<UserCreatedRequest> deserializer = new JsonDeserializer<>();
+        deserializer.addTrustedPackages("*");
+        Map<String, Object> consumerConfigurations =
+                ImmutableMap.<String, Object>builder()
+                        .put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerUrl)
+                        .put(ConsumerConfig.GROUP_ID_CONFIG, "user-3")
                         .put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class)
                         .put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer)
                         .put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")

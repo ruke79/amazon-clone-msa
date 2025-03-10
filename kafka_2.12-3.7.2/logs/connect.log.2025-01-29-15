@@ -1,0 +1,1027 @@
+[2025-01-29 15:02:37,638] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:07:38,172] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:12:21,042] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Session key updated (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2442)
+[2025-01-29 15:16:49,689] INFO Successfully processed removal of connector 'chat-connector' (org.apache.kafka.connect.storage.KafkaConfigBackingStore:1014)
+[2025-01-29 15:16:49,735] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Connector chat-connector config removed (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2371)
+[2025-01-29 15:16:50,063] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Handling connector-only config update by stopping connector chat-connector (org.apache.kafka.connect.runtime.distributed.DistributedHerder:715)
+[2025-01-29 15:16:50,368] INFO [chat-connector|worker] Stopping connector chat-connector (org.apache.kafka.connect.runtime.Worker:420)
+[2025-01-29 15:16:50,420] INFO [chat-connector|worker] Scheduled shutdown for WorkerConnector{id=chat-connector} (org.apache.kafka.connect.runtime.WorkerConnector:267)
+[2025-01-29 15:16:50,985] INFO [chat-connector|worker] Completed shutdown for WorkerConnector{id=chat-connector} (org.apache.kafka.connect.runtime.WorkerConnector:287)
+[2025-01-29 15:16:51,414] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:16:51,489] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:16:53,503] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:16:16 +0000] "DELETE /connectors/chat-connector HTTP/1.1" 204 0 "-" "PostmanRuntime/7.43.0" 36876 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:16:54,890] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=7, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:16:55,781] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=7, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:16:56,077] INFO [chat-connector|worker] Stopping connector chat-connector (org.apache.kafka.connect.runtime.Worker:420)
+[2025-01-29 15:16:56,078] WARN [chat-connector|worker] Ignoring stop request for unowned connector chat-connector (org.apache.kafka.connect.runtime.Worker:423)
+[2025-01-29 15:16:56,078] WARN [chat-connector|worker] Ignoring await stop request for non-present connector chat-connector (org.apache.kafka.connect.runtime.Worker:444)
+[2025-01-29 15:16:56,195] INFO [chat-connector|task-0] Stopping task chat-connector-0 (org.apache.kafka.connect.runtime.Worker:1009)
+[2025-01-29 15:16:56,547] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished stopping tasks in preparation for rebalance (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2667)
+[2025-01-29 15:16:56,758] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished flushing status backing store in preparation for rebalance (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2688)
+[2025-01-29 15:16:56,780] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 7 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=238, connectorIds=[], taskIds=[], revokedConnectorIds=[chat-connector], revokedTaskIds=[chat-connector-0], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:16:56,808] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 238 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:16:56,809] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:16:56,809] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:16:56,810] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:16:57,338] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=8, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:16:57,721] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=8, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:16:57,725] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 8 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=238, connectorIds=[], taskIds=[], revokedConnectorIds=[], revokedTaskIds=[], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:16:57,726] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 238 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:16:57,726] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:17:19,548] INFO MongoSinkTopicConfig values: 
+	bulk.write.ordered = true
+	change.data.capture.handler = 
+	collection = chat
+	database = chat
+	delete.on.null.values = false
+	delete.writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DeleteOneDefaultStrategy
+	document.id.strategy = com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy
+	document.id.strategy.overwrite.existing = false
+	document.id.strategy.partial.key.projection.list = 
+	document.id.strategy.partial.key.projection.type = 
+	document.id.strategy.partial.value.projection.list = 
+	document.id.strategy.partial.value.projection.type = 
+	document.id.strategy.uuid.format = string
+	errors.log.enable = false
+	errors.tolerance = none
+	field.renamer.mapping = []
+	field.renamer.regexp = []
+	key.projection.list = 
+	key.projection.type = none
+	max.batch.size = 0
+	mongo.errors.log.enable = false
+	mongo.errors.tolerance = none
+	namespace.mapper = com.mongodb.kafka.connect.sink.namespace.mapping.DefaultNamespaceMapper
+	namespace.mapper.error.if.invalid = false
+	namespace.mapper.key.collection.field = 
+	namespace.mapper.key.database.field = 
+	namespace.mapper.value.collection.field = 
+	namespace.mapper.value.database.field = 
+	post.processor.chain = [com.mongodb.kafka.connect.sink.processor.DocumentIdAdder]
+	rate.limiting.every.n = 0
+	rate.limiting.timeout = 0
+	timeseries.expire.after.seconds = 0
+	timeseries.granularity = 
+	timeseries.metafield = 
+	timeseries.timefield = 
+	timeseries.timefield.auto.convert = false
+	timeseries.timefield.auto.convert.date.format = yyyy-MM-dd[['T'][ ]][HH:mm:ss[[.][SSSSSS][SSS]][ ]VV[ ]'['VV']'][HH:mm:ss[[.][SSSSSS][SSS]][ ]X][HH:mm:ss[[.][SSSSSS][SSS]]]
+	timeseries.timefield.auto.convert.locale.language.tag = 
+	topic = chat
+	value.projection.list = 
+	value.projection.type = none
+	writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DefaultWriteModelStrategy
+ (com.mongodb.kafka.connect.sink.MongoSinkTopicConfig:372)
+[2025-01-29 15:17:19,688] INFO MongoSinkTopicConfig values: 
+	bulk.write.ordered = true
+	change.data.capture.handler = 
+	collection = chat
+	database = chat
+	delete.on.null.values = false
+	delete.writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DeleteOneDefaultStrategy
+	document.id.strategy = com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy
+	document.id.strategy.overwrite.existing = false
+	document.id.strategy.partial.key.projection.list = 
+	document.id.strategy.partial.key.projection.type = 
+	document.id.strategy.partial.value.projection.list = 
+	document.id.strategy.partial.value.projection.type = 
+	document.id.strategy.uuid.format = string
+	errors.log.enable = false
+	errors.tolerance = none
+	field.renamer.mapping = []
+	field.renamer.regexp = []
+	key.projection.list = 
+	key.projection.type = none
+	max.batch.size = 0
+	mongo.errors.log.enable = false
+	mongo.errors.tolerance = none
+	namespace.mapper = com.mongodb.kafka.connect.sink.namespace.mapping.DefaultNamespaceMapper
+	namespace.mapper.error.if.invalid = false
+	namespace.mapper.key.collection.field = 
+	namespace.mapper.key.database.field = 
+	namespace.mapper.value.collection.field = 
+	namespace.mapper.value.database.field = 
+	post.processor.chain = [com.mongodb.kafka.connect.sink.processor.DocumentIdAdder]
+	rate.limiting.every.n = 0
+	rate.limiting.timeout = 0
+	timeseries.expire.after.seconds = 0
+	timeseries.granularity = 
+	timeseries.metafield = 
+	timeseries.timefield = 
+	timeseries.timefield.auto.convert = false
+	timeseries.timefield.auto.convert.date.format = yyyy-MM-dd[['T'][ ]][HH:mm:ss[[.][SSSSSS][SSS]][ ]VV[ ]'['VV']'][HH:mm:ss[[.][SSSSSS][SSS]][ ]X][HH:mm:ss[[.][SSSSSS][SSS]]]
+	timeseries.timefield.auto.convert.locale.language.tag = 
+	topic = chat
+	value.projection.list = 
+	value.projection.type = none
+	writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DefaultWriteModelStrategy
+ (com.mongodb.kafka.connect.sink.MongoSinkTopicConfig:372)
+[2025-01-29 15:17:20,373] INFO MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync", "version": "4.7.2"}, "os": {"type": "Windows", "name": "Windows 10", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/17.0.12+7"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='admin', source='admin', password=<hidden>, mechanismProperties=<hidden>}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.Jep395RecordCodecProvider@2636f2e0]}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[com.mongodb.kafka.connect.util.ConnectionValidator$1@4604d0d]', serverSelectionTimeout='30000 ms', localThreshold='30000 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, sendBufferSize=0}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, sendBufferSize=0}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, contextProvider=null} (org.mongodb.driver.client:71)
+[2025-01-29 15:17:21,051] INFO Opened connection [connectionId{localValue:4, serverValue:17}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:17:21,059] INFO Opened connection [connectionId{localValue:3, serverValue:18}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:17:21,059] INFO Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=364245100} (org.mongodb.driver.cluster:71)
+[2025-01-29 15:17:22,924] INFO Opened connection [connectionId{localValue:5, serverValue:19}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:17:23,288] INFO AbstractConfig values: 
+ (org.apache.kafka.common.config.AbstractConfig:372)
+[2025-01-29 15:17:23,389] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Connector chat-connector config updated (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2384)
+[2025-01-29 15:17:23,390] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:17:23,390] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:17:23,440] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=9, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:17:23,456] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=9, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:17:23,456] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 9 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=239, connectorIds=[chat-connector], taskIds=[], revokedConnectorIds=[], revokedTaskIds=[], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:17:23,457] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 239 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:17:23,458] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connector chat-connector (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2039)
+[2025-01-29 15:17:23,458] INFO [chat-connector|worker] Creating connector chat-connector of type com.mongodb.kafka.connect.MongoSinkConnector (org.apache.kafka.connect.runtime.Worker:309)
+[2025-01-29 15:17:23,497] INFO [chat-connector|worker] SinkConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.SinkConnectorConfig:372)
+[2025-01-29 15:17:23,500] INFO [chat-connector|worker] EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:17:23,507] INFO [chat-connector|worker] Instantiated connector chat-connector with version 1.11.0 of type class com.mongodb.kafka.connect.MongoSinkConnector (org.apache.kafka.connect.runtime.Worker:331)
+[2025-01-29 15:17:23,672] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:17:15 +0000] "POST /connectors/ HTTP/1.1" 201 327 "-" "curl/8.9.1" 7977 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:17:23,694] INFO [chat-connector|worker] Finished creating connector chat-connector (org.apache.kafka.connect.runtime.Worker:352)
+[2025-01-29 15:17:23,695] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:17:23,718] INFO SinkConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.SinkConnectorConfig:372)
+[2025-01-29 15:17:23,723] INFO EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:17:23,764] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Tasks [chat-connector-0] configs updated (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2399)
+[2025-01-29 15:17:23,766] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:17:23,766] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:17:23,801] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=10, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:17:23,857] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=10, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:17:23,858] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 10 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=241, connectorIds=[chat-connector], taskIds=[chat-connector-0], revokedConnectorIds=[], revokedTaskIds=[], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:17:23,906] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 241 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:17:23,907] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting task chat-connector-0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1964)
+[2025-01-29 15:17:23,908] INFO [chat-connector|task-0] Creating task chat-connector-0 (org.apache.kafka.connect.runtime.Worker:612)
+[2025-01-29 15:17:23,926] INFO [chat-connector|task-0] ConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.ConnectorConfig:372)
+[2025-01-29 15:17:23,927] INFO [chat-connector|task-0] EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:17:23,929] INFO [chat-connector|task-0] TaskConfig values: 
+	task.class = class com.mongodb.kafka.connect.sink.MongoSinkTask
+ (org.apache.kafka.connect.runtime.TaskConfig:372)
+[2025-01-29 15:17:23,942] INFO [chat-connector|task-0] Instantiated task chat-connector-0 with version 1.11.0 of type com.mongodb.kafka.connect.sink.MongoSinkTask (org.apache.kafka.connect.runtime.Worker:626)
+[2025-01-29 15:17:24,176] INFO [chat-connector|task-0] StringConverterConfig values: 
+	converter.encoding = UTF-8
+	converter.type = key
+ (org.apache.kafka.connect.storage.StringConverterConfig:372)
+[2025-01-29 15:17:24,249] INFO [chat-connector|task-0] Set up the key converter class org.apache.kafka.connect.storage.StringConverter for task chat-connector-0 using the connector config (org.apache.kafka.connect.runtime.Worker:641)
+[2025-01-29 15:17:24,250] INFO [chat-connector|task-0] JsonConverterConfig values: 
+	converter.type = value
+	decimal.format = BASE64
+	replace.null.with.default = true
+	schemas.cache.size = 1000
+	schemas.enable = true
+ (org.apache.kafka.connect.json.JsonConverterConfig:372)
+[2025-01-29 15:17:24,251] INFO [chat-connector|task-0] Set up the value converter class org.apache.kafka.connect.json.JsonConverter for task chat-connector-0 using the worker config (org.apache.kafka.connect.runtime.Worker:645)
+[2025-01-29 15:17:24,252] INFO [chat-connector|task-0] Set up the header converter class org.apache.kafka.connect.storage.SimpleHeaderConverter for task chat-connector-0 using the worker config (org.apache.kafka.connect.runtime.Worker:652)
+[2025-01-29 15:17:24,252] INFO [chat-connector|task-0] Initializing: org.apache.kafka.connect.runtime.TransformationChain{} (org.apache.kafka.connect.runtime.Worker:1799)
+[2025-01-29 15:17:24,253] INFO [chat-connector|task-0] SinkConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.SinkConnectorConfig:372)
+[2025-01-29 15:17:24,254] INFO [chat-connector|task-0] EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = null
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:17:24,284] INFO [chat-connector|task-0] ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = connector-consumer-chat-connector-0
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = connect-chat-connector
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+ (org.apache.kafka.clients.consumer.ConsumerConfig:372)
+[2025-01-29 15:17:24,399] INFO [chat-connector|task-0] initializing Kafka metrics collector (org.apache.kafka.common.telemetry.internals.KafkaMetricsCollector:297)
+[2025-01-29 15:17:24,750] INFO [chat-connector|task-0] These configurations '[metrics.context.connect.kafka.cluster.id, metrics.context.connect.group.id]' were supplied but are not used yet. (org.apache.kafka.clients.consumer.ConsumerConfig:381)
+[2025-01-29 15:17:24,751] INFO [chat-connector|task-0] Kafka version: 3.7.2 (org.apache.kafka.common.utils.AppInfoParser:124)
+[2025-01-29 15:17:24,751] INFO [chat-connector|task-0] Kafka commitId: 79a8f2b5f44f9d5a (org.apache.kafka.common.utils.AppInfoParser:125)
+[2025-01-29 15:17:24,752] INFO [chat-connector|task-0] Kafka startTimeMs: 1738131444751 (org.apache.kafka.common.utils.AppInfoParser:126)
+[2025-01-29 15:17:24,914] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:17:24,914] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Subscribed to topic(s): chat (org.apache.kafka.clients.consumer.internals.LegacyKafkaConsumer:475)
+[2025-01-29 15:17:24,915] INFO [chat-connector|task-0] Starting MongoDB sink task (com.mongodb.kafka.connect.sink.MongoSinkTask:66)
+[2025-01-29 15:17:24,916] INFO [chat-connector|task-0] MongoSinkTopicConfig values: 
+	bulk.write.ordered = true
+	change.data.capture.handler = 
+	collection = chat
+	database = chat
+	delete.on.null.values = false
+	delete.writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DeleteOneDefaultStrategy
+	document.id.strategy = com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy
+	document.id.strategy.overwrite.existing = false
+	document.id.strategy.partial.key.projection.list = 
+	document.id.strategy.partial.key.projection.type = 
+	document.id.strategy.partial.value.projection.list = 
+	document.id.strategy.partial.value.projection.type = 
+	document.id.strategy.uuid.format = string
+	errors.log.enable = false
+	errors.tolerance = none
+	field.renamer.mapping = []
+	field.renamer.regexp = []
+	key.projection.list = 
+	key.projection.type = none
+	max.batch.size = 0
+	mongo.errors.log.enable = false
+	mongo.errors.tolerance = none
+	namespace.mapper = com.mongodb.kafka.connect.sink.namespace.mapping.DefaultNamespaceMapper
+	namespace.mapper.error.if.invalid = false
+	namespace.mapper.key.collection.field = 
+	namespace.mapper.key.database.field = 
+	namespace.mapper.value.collection.field = 
+	namespace.mapper.value.database.field = 
+	post.processor.chain = [com.mongodb.kafka.connect.sink.processor.DocumentIdAdder]
+	rate.limiting.every.n = 0
+	rate.limiting.timeout = 0
+	timeseries.expire.after.seconds = 0
+	timeseries.granularity = 
+	timeseries.metafield = 
+	timeseries.timefield = 
+	timeseries.timefield.auto.convert = false
+	timeseries.timefield.auto.convert.date.format = yyyy-MM-dd[['T'][ ]][HH:mm:ss[[.][SSSSSS][SSS]][ ]VV[ ]'['VV']'][HH:mm:ss[[.][SSSSSS][SSS]][ ]X][HH:mm:ss[[.][SSSSSS][SSS]]]
+	timeseries.timefield.auto.convert.locale.language.tag = 
+	topic = chat
+	value.projection.list = 
+	value.projection.type = none
+	writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DefaultWriteModelStrategy
+ (com.mongodb.kafka.connect.sink.MongoSinkTopicConfig:372)
+[2025-01-29 15:17:24,920] INFO [chat-connector|task-0] MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|mongo-kafka|sink", "version": "4.7.2|1.11.0"}, "os": {"type": "Windows", "name": "Windows 10", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/17.0.12+7"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='admin', source='admin', password=<hidden>, mechanismProperties=<hidden>}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.Jep395RecordCodecProvider@2636f2e0]}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='30000 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, sendBufferSize=0}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, sendBufferSize=0}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, contextProvider=null} (org.mongodb.driver.client:71)
+[2025-01-29 15:17:24,921] INFO [chat-connector|task-0] Errant record reporter not configured. (com.mongodb.kafka.connect.sink.MongoSinkTask:138)
+[2025-01-29 15:17:24,923] INFO [chat-connector|task-0] Opened connection [connectionId{localValue:7, serverValue:21}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:17:24,938] INFO [chat-connector|task-0] Opened connection [connectionId{localValue:6, serverValue:20}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:17:24,938] INFO [chat-connector|task-0] Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=16566700} (org.mongodb.driver.cluster:71)
+[2025-01-29 15:17:24,995] INFO [chat-connector|task-0] WorkerSinkTask{id=chat-connector-0} Sink task finished initialization and start (org.apache.kafka.connect.runtime.WorkerSinkTask:330)
+[2025-01-29 15:17:24,996] INFO [chat-connector|task-0] WorkerSinkTask{id=chat-connector-0} Executing sink task (org.apache.kafka.connect.runtime.WorkerSinkTask:214)
+[2025-01-29 15:17:25,196] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Cluster ID: 8HYB7rDDQyCF5mINKWHRMg (org.apache.kafka.clients.Metadata:356)
+[2025-01-29 15:17:25,466] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Discovered group coordinator 121.178.140.30:9092 (id: 2147483647 rack: null) (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:936)
+[2025-01-29 15:17:25,468] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] (Re-)joining group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:604)
+[2025-01-29 15:17:26,274] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Request joining group due to: need to re-join with the given member-id: connector-consumer-chat-connector-0-ce1c88b1-bf1b-443d-a670-c17c9f5b727c (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1102)
+[2025-01-29 15:17:26,280] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] (Re-)joining group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:604)
+[2025-01-29 15:17:26,648] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Successfully joined group with generation Generation{generationId=1, memberId='connector-consumer-chat-connector-0-ce1c88b1-bf1b-443d-a670-c17c9f5b727c', protocol='range'} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:665)
+[2025-01-29 15:17:26,650] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Finished assignment for group at generation 1: {connector-consumer-chat-connector-0-ce1c88b1-bf1b-443d-a670-c17c9f5b727c=Assignment(partitions=[chat-0])} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:659)
+[2025-01-29 15:17:26,765] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Successfully synced group in generation Generation{generationId=1, memberId='connector-consumer-chat-connector-0-ce1c88b1-bf1b-443d-a670-c17c9f5b727c', protocol='range'} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:842)
+[2025-01-29 15:17:26,766] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Notifying assignor about the new Assignment(partitions=[chat-0]) (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:319)
+[2025-01-29 15:17:26,766] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Adding newly assigned partitions: chat-0 (org.apache.kafka.clients.consumer.internals.ConsumerRebalanceListenerInvoker:56)
+[2025-01-29 15:17:27,021] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Found no committed offset for partition chat-0 (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1502)
+[2025-01-29 15:17:27,358] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Resetting offset for partition chat-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[121.178.140.30:9092 (id: 0 rack: null)], epoch=0}}. (org.apache.kafka.clients.consumer.internals.SubscriptionState:396)
+[2025-01-29 15:17:27,780] ERROR [chat-connector|task-0] WorkerSinkTask{id=chat-connector-0} Task threw an uncaught and unrecoverable exception. Task is being killed and will not recover until manually restarted (org.apache.kafka.connect.runtime.WorkerTask:212)
+org.apache.kafka.connect.errors.ConnectException: Tolerance exceeded in error handler
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndHandleError(RetryWithToleranceOperator.java:230)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execute(RetryWithToleranceOperator.java:156)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.convertAndTransformRecord(WorkerSinkTask.java:536)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.convertMessages(WorkerSinkTask.java:513)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.poll(WorkerSinkTask.java:349)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.iteration(WorkerSinkTask.java:250)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.execute(WorkerSinkTask.java:219)
+	at org.apache.kafka.connect.runtime.WorkerTask.doRun(WorkerTask.java:204)
+	at org.apache.kafka.connect.runtime.WorkerTask.run(WorkerTask.java:259)
+	at org.apache.kafka.connect.runtime.isolation.Plugins.lambda$withClassLoader$1(Plugins.java:237)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.apache.kafka.connect.errors.DataException: JsonConverter with schemas.enable requires "schema" and "payload" fields and may not contain additional fields. If you are trying to deserialize plain JSON data, set schemas.enable=false in your converter configuration.
+	at org.apache.kafka.connect.json.JsonConverter.toConnectData(JsonConverter.java:337)
+	at org.apache.kafka.connect.storage.Converter.toConnectData(Converter.java:91)
+	at org.apache.kafka.connect.runtime.WorkerSinkTask.lambda$convertAndTransformRecord$4(WorkerSinkTask.java:536)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndRetry(RetryWithToleranceOperator.java:180)
+	at org.apache.kafka.connect.runtime.errors.RetryWithToleranceOperator.execAndHandleError(RetryWithToleranceOperator.java:214)
+	... 14 more
+[2025-01-29 15:17:27,783] INFO [chat-connector|task-0] Stopping MongoDB sink task (com.mongodb.kafka.connect.sink.MongoSinkTask:124)
+[2025-01-29 15:17:27,784] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Revoke previously assigned partitions chat-0 (org.apache.kafka.clients.consumer.internals.ConsumerRebalanceListenerInvoker:78)
+[2025-01-29 15:17:27,784] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Member connector-consumer-chat-connector-0-ce1c88b1-bf1b-443d-a670-c17c9f5b727c sending LeaveGroup request to coordinator 121.178.140.30:9092 (id: 2147483647 rack: null) due to the consumer is being closed (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1163)
+[2025-01-29 15:17:27,808] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Resetting generation and member id due to: consumer pro-actively leaving the group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1055)
+[2025-01-29 15:17:27,809] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Request joining group due to: consumer pro-actively leaving the group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1102)
+[2025-01-29 15:17:28,362] INFO [chat-connector|task-0] Metrics scheduler closed (org.apache.kafka.common.metrics.Metrics:684)
+[2025-01-29 15:17:28,363] INFO [chat-connector|task-0] Closing reporter org.apache.kafka.common.metrics.JmxReporter (org.apache.kafka.common.metrics.Metrics:688)
+[2025-01-29 15:17:28,363] INFO [chat-connector|task-0] Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter (org.apache.kafka.common.metrics.Metrics:688)
+[2025-01-29 15:17:28,363] INFO [chat-connector|task-0] Metrics reporters closed (org.apache.kafka.common.metrics.Metrics:694)
+[2025-01-29 15:17:28,365] INFO [chat-connector|task-0] App info kafka.consumer for connector-consumer-chat-connector-0 unregistered (org.apache.kafka.common.utils.AppInfoParser:88)
+[2025-01-29 15:18:17,260] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:18:17 +0000] "GET /connectors/chat-connector/status HTTP/1.1" 200 2519 "-" "curl/8.9.1" 190 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:21:03,803] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:21:03 +0000] "GET /connectors/chat-connector/status HTTP/1.1" 200 2519 "-" "curl/8.9.1" 250 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:22:38,370] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:23:14,647] INFO Successfully processed removal of connector 'chat-connector' (org.apache.kafka.connect.storage.KafkaConfigBackingStore:1014)
+[2025-01-29 15:23:14,647] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Connector chat-connector config removed (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2371)
+[2025-01-29 15:23:14,647] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Handling connector-only config update by stopping connector chat-connector (org.apache.kafka.connect.runtime.distributed.DistributedHerder:715)
+[2025-01-29 15:23:14,648] INFO [chat-connector|worker] Stopping connector chat-connector (org.apache.kafka.connect.runtime.Worker:420)
+[2025-01-29 15:23:14,648] INFO [chat-connector|worker] Scheduled shutdown for WorkerConnector{id=chat-connector} (org.apache.kafka.connect.runtime.WorkerConnector:267)
+[2025-01-29 15:23:14,648] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:23:14 +0000] "DELETE /connectors/chat-connector HTTP/1.1" 204 0 "-" "PostmanRuntime/7.43.0" 23 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:23:14,666] INFO [chat-connector|worker] Completed shutdown for WorkerConnector{id=chat-connector} (org.apache.kafka.connect.runtime.WorkerConnector:287)
+[2025-01-29 15:23:14,874] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:23:14,874] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:23:14,876] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=11, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:23:14,948] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=11, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:23:14,949] INFO [chat-connector|worker] Stopping connector chat-connector (org.apache.kafka.connect.runtime.Worker:420)
+[2025-01-29 15:23:14,949] INFO [chat-connector|task-0] Stopping task chat-connector-0 (org.apache.kafka.connect.runtime.Worker:1009)
+[2025-01-29 15:23:14,949] WARN [chat-connector|worker] Ignoring stop request for unowned connector chat-connector (org.apache.kafka.connect.runtime.Worker:423)
+[2025-01-29 15:23:14,950] WARN [chat-connector|worker] Ignoring await stop request for non-present connector chat-connector (org.apache.kafka.connect.runtime.Worker:444)
+[2025-01-29 15:23:14,950] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished stopping tasks in preparation for rebalance (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2667)
+[2025-01-29 15:23:14,975] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished flushing status backing store in preparation for rebalance (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2688)
+[2025-01-29 15:23:14,975] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 11 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=243, connectorIds=[], taskIds=[], revokedConnectorIds=[chat-connector], revokedTaskIds=[chat-connector-0], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:23:14,976] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 243 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:23:14,977] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:23:14,977] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:23:14,977] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:23:14,979] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=12, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:23:14,981] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=12, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:23:14,982] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 12 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=243, connectorIds=[], taskIds=[], revokedConnectorIds=[], revokedTaskIds=[], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:23:14,983] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 243 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:23:14,983] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:25:09,056] INFO MongoSinkTopicConfig values: 
+	bulk.write.ordered = true
+	change.data.capture.handler = 
+	collection = chat
+	database = chat
+	delete.on.null.values = false
+	delete.writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DeleteOneDefaultStrategy
+	document.id.strategy = com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy
+	document.id.strategy.overwrite.existing = false
+	document.id.strategy.partial.key.projection.list = 
+	document.id.strategy.partial.key.projection.type = 
+	document.id.strategy.partial.value.projection.list = 
+	document.id.strategy.partial.value.projection.type = 
+	document.id.strategy.uuid.format = string
+	errors.log.enable = false
+	errors.tolerance = none
+	field.renamer.mapping = []
+	field.renamer.regexp = []
+	key.projection.list = 
+	key.projection.type = none
+	max.batch.size = 0
+	mongo.errors.log.enable = false
+	mongo.errors.tolerance = none
+	namespace.mapper = com.mongodb.kafka.connect.sink.namespace.mapping.DefaultNamespaceMapper
+	namespace.mapper.error.if.invalid = false
+	namespace.mapper.key.collection.field = 
+	namespace.mapper.key.database.field = 
+	namespace.mapper.value.collection.field = 
+	namespace.mapper.value.database.field = 
+	post.processor.chain = [com.mongodb.kafka.connect.sink.processor.DocumentIdAdder]
+	rate.limiting.every.n = 0
+	rate.limiting.timeout = 0
+	timeseries.expire.after.seconds = 0
+	timeseries.granularity = 
+	timeseries.metafield = 
+	timeseries.timefield = 
+	timeseries.timefield.auto.convert = false
+	timeseries.timefield.auto.convert.date.format = yyyy-MM-dd[['T'][ ]][HH:mm:ss[[.][SSSSSS][SSS]][ ]VV[ ]'['VV']'][HH:mm:ss[[.][SSSSSS][SSS]][ ]X][HH:mm:ss[[.][SSSSSS][SSS]]]
+	timeseries.timefield.auto.convert.locale.language.tag = 
+	topic = chat
+	value.projection.list = 
+	value.projection.type = none
+	writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DefaultWriteModelStrategy
+ (com.mongodb.kafka.connect.sink.MongoSinkTopicConfig:372)
+[2025-01-29 15:25:09,061] INFO MongoSinkTopicConfig values: 
+	bulk.write.ordered = true
+	change.data.capture.handler = 
+	collection = chat
+	database = chat
+	delete.on.null.values = false
+	delete.writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DeleteOneDefaultStrategy
+	document.id.strategy = com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy
+	document.id.strategy.overwrite.existing = false
+	document.id.strategy.partial.key.projection.list = 
+	document.id.strategy.partial.key.projection.type = 
+	document.id.strategy.partial.value.projection.list = 
+	document.id.strategy.partial.value.projection.type = 
+	document.id.strategy.uuid.format = string
+	errors.log.enable = false
+	errors.tolerance = none
+	field.renamer.mapping = []
+	field.renamer.regexp = []
+	key.projection.list = 
+	key.projection.type = none
+	max.batch.size = 0
+	mongo.errors.log.enable = false
+	mongo.errors.tolerance = none
+	namespace.mapper = com.mongodb.kafka.connect.sink.namespace.mapping.DefaultNamespaceMapper
+	namespace.mapper.error.if.invalid = false
+	namespace.mapper.key.collection.field = 
+	namespace.mapper.key.database.field = 
+	namespace.mapper.value.collection.field = 
+	namespace.mapper.value.database.field = 
+	post.processor.chain = [com.mongodb.kafka.connect.sink.processor.DocumentIdAdder]
+	rate.limiting.every.n = 0
+	rate.limiting.timeout = 0
+	timeseries.expire.after.seconds = 0
+	timeseries.granularity = 
+	timeseries.metafield = 
+	timeseries.timefield = 
+	timeseries.timefield.auto.convert = false
+	timeseries.timefield.auto.convert.date.format = yyyy-MM-dd[['T'][ ]][HH:mm:ss[[.][SSSSSS][SSS]][ ]VV[ ]'['VV']'][HH:mm:ss[[.][SSSSSS][SSS]][ ]X][HH:mm:ss[[.][SSSSSS][SSS]]]
+	timeseries.timefield.auto.convert.locale.language.tag = 
+	topic = chat
+	value.projection.list = 
+	value.projection.type = none
+	writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DefaultWriteModelStrategy
+ (com.mongodb.kafka.connect.sink.MongoSinkTopicConfig:372)
+[2025-01-29 15:25:09,068] INFO MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync", "version": "4.7.2"}, "os": {"type": "Windows", "name": "Windows 10", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/17.0.12+7"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='admin', source='admin', password=<hidden>, mechanismProperties=<hidden>}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.Jep395RecordCodecProvider@2636f2e0]}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[com.mongodb.kafka.connect.util.ConnectionValidator$1@70c02293]', serverSelectionTimeout='30000 ms', localThreshold='30000 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, sendBufferSize=0}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, sendBufferSize=0}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, contextProvider=null} (org.mongodb.driver.client:71)
+[2025-01-29 15:25:09,112] INFO Opened connection [connectionId{localValue:8, serverValue:33}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:25:09,072] INFO Opened connection [connectionId{localValue:9, serverValue:32}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:25:09,113] INFO Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=41711900} (org.mongodb.driver.cluster:71)
+[2025-01-29 15:25:09,269] INFO Opened connection [connectionId{localValue:10, serverValue:34}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:25:09,295] INFO AbstractConfig values: 
+ (org.apache.kafka.common.config.AbstractConfig:372)
+[2025-01-29 15:25:09,419] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Connector chat-connector config updated (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2384)
+[2025-01-29 15:25:09,419] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:25:09,420] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:25:09,511] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:25:09 +0000] "POST /connectors/ HTTP/1.1" 201 396 "-" "curl/8.9.1" 483 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:25:09,930] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=13, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:25:10,445] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=13, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:25:10,445] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 13 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=244, connectorIds=[chat-connector], taskIds=[], revokedConnectorIds=[], revokedTaskIds=[], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:25:10,446] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 244 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:25:10,494] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connector chat-connector (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2039)
+[2025-01-29 15:25:10,495] INFO [chat-connector|worker] Creating connector chat-connector of type com.mongodb.kafka.connect.MongoSinkConnector (org.apache.kafka.connect.runtime.Worker:309)
+[2025-01-29 15:25:10,497] INFO [chat-connector|worker] SinkConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.SinkConnectorConfig:372)
+[2025-01-29 15:25:10,498] INFO [chat-connector|worker] EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:25:10,501] INFO [chat-connector|worker] Instantiated connector chat-connector with version 1.11.0 of type class com.mongodb.kafka.connect.MongoSinkConnector (org.apache.kafka.connect.runtime.Worker:331)
+[2025-01-29 15:25:10,501] INFO [chat-connector|worker] Finished creating connector chat-connector (org.apache.kafka.connect.runtime.Worker:352)
+[2025-01-29 15:25:10,502] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:25:10,507] INFO SinkConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.SinkConnectorConfig:372)
+[2025-01-29 15:25:10,551] INFO EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:25:10,617] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Tasks [chat-connector-0] configs updated (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2399)
+[2025-01-29 15:25:10,654] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Rebalance started (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:242)
+[2025-01-29 15:25:10,654] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] (Re-)joining group (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:604)
+[2025-01-29 15:25:10,776] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully joined group with generation Generation{generationId=14, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:665)
+[2025-01-29 15:25:10,781] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Successfully synced group in generation Generation{generationId=14, memberId='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', protocol='sessioned'} (org.apache.kafka.connect.runtime.distributed.WorkerCoordinator:842)
+[2025-01-29 15:25:10,781] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Joined group at generation 14 with protocol version 2 and got assignment: Assignment{error=0, leader='connect-121.178.140.30:8083-61db8896-6d7d-4318-8a21-1f6a52f3b0e2', leaderUrl='http://121.178.140.30:8083/', offset=246, connectorIds=[chat-connector], taskIds=[chat-connector-0], revokedConnectorIds=[], revokedTaskIds=[], delay=0} with rebalance delay: 0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:2580)
+[2025-01-29 15:25:10,782] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting connectors and tasks using config offset 246 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1921)
+[2025-01-29 15:25:11,124] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Starting task chat-connector-0 (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1964)
+[2025-01-29 15:25:11,124] INFO [chat-connector|task-0] Creating task chat-connector-0 (org.apache.kafka.connect.runtime.Worker:612)
+[2025-01-29 15:25:11,125] INFO [chat-connector|task-0] ConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.ConnectorConfig:372)
+[2025-01-29 15:25:11,126] INFO [chat-connector|task-0] EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:25:11,127] INFO [chat-connector|task-0] TaskConfig values: 
+	task.class = class com.mongodb.kafka.connect.sink.MongoSinkTask
+ (org.apache.kafka.connect.runtime.TaskConfig:372)
+[2025-01-29 15:25:11,127] INFO [chat-connector|task-0] Instantiated task chat-connector-0 with version 1.11.0 of type com.mongodb.kafka.connect.sink.MongoSinkTask (org.apache.kafka.connect.runtime.Worker:626)
+[2025-01-29 15:25:11,128] INFO [chat-connector|task-0] StringConverterConfig values: 
+	converter.encoding = UTF-8
+	converter.type = key
+ (org.apache.kafka.connect.storage.StringConverterConfig:372)
+[2025-01-29 15:25:11,128] INFO [chat-connector|task-0] StringConverterConfig values: 
+	converter.encoding = UTF-8
+	converter.type = value
+ (org.apache.kafka.connect.storage.StringConverterConfig:372)
+[2025-01-29 15:25:11,128] INFO [chat-connector|task-0] Set up the key converter class org.apache.kafka.connect.storage.StringConverter for task chat-connector-0 using the connector config (org.apache.kafka.connect.runtime.Worker:641)
+[2025-01-29 15:25:11,128] INFO [chat-connector|task-0] Set up the value converter class org.apache.kafka.connect.storage.StringConverter for task chat-connector-0 using the connector config (org.apache.kafka.connect.runtime.Worker:647)
+[2025-01-29 15:25:11,129] INFO [chat-connector|task-0] Set up the header converter class org.apache.kafka.connect.storage.SimpleHeaderConverter for task chat-connector-0 using the worker config (org.apache.kafka.connect.runtime.Worker:652)
+[2025-01-29 15:25:11,130] INFO [chat-connector|task-0] Initializing: org.apache.kafka.connect.runtime.TransformationChain{} (org.apache.kafka.connect.runtime.Worker:1799)
+[2025-01-29 15:25:11,130] INFO [chat-connector|task-0] SinkConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.SinkConnectorConfig:372)
+[2025-01-29 15:25:11,132] INFO [chat-connector|task-0] EnrichedConnectorConfig values: 
+	config.action.reload = restart
+	connector.class = com.mongodb.kafka.connect.MongoSinkConnector
+	errors.deadletterqueue.context.headers.enable = false
+	errors.deadletterqueue.topic.name = 
+	errors.deadletterqueue.topic.replication.factor = 3
+	errors.log.enable = false
+	errors.log.include.messages = false
+	errors.retry.delay.max.ms = 60000
+	errors.retry.timeout = 0
+	errors.tolerance = none
+	header.converter = null
+	key.converter = class org.apache.kafka.connect.storage.StringConverter
+	name = chat-connector
+	predicates = []
+	tasks.max = 1
+	topics = [chat]
+	topics.regex = 
+	transforms = []
+	value.converter = class org.apache.kafka.connect.storage.StringConverter
+ (org.apache.kafka.connect.runtime.ConnectorConfig$EnrichedConnectorConfig:372)
+[2025-01-29 15:25:11,134] INFO [chat-connector|task-0] ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = connector-consumer-chat-connector-0
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = connect-chat-connector
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+ (org.apache.kafka.clients.consumer.ConsumerConfig:372)
+[2025-01-29 15:25:11,170] INFO [chat-connector|task-0] initializing Kafka metrics collector (org.apache.kafka.common.telemetry.internals.KafkaMetricsCollector:297)
+[2025-01-29 15:25:11,370] INFO [chat-connector|task-0] These configurations '[metrics.context.connect.kafka.cluster.id, metrics.context.connect.group.id]' were supplied but are not used yet. (org.apache.kafka.clients.consumer.ConsumerConfig:381)
+[2025-01-29 15:25:11,371] INFO [chat-connector|task-0] Kafka version: 3.7.2 (org.apache.kafka.common.utils.AppInfoParser:124)
+[2025-01-29 15:25:11,371] INFO [chat-connector|task-0] Kafka commitId: 79a8f2b5f44f9d5a (org.apache.kafka.common.utils.AppInfoParser:125)
+[2025-01-29 15:25:11,371] INFO [chat-connector|task-0] Kafka startTimeMs: 1738131911371 (org.apache.kafka.common.utils.AppInfoParser:126)
+[2025-01-29 15:25:11,372] INFO [Worker clientId=connect-121.178.140.30:8083, groupId=connect-cluster] Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder:1950)
+[2025-01-29 15:25:11,373] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Subscribed to topic(s): chat (org.apache.kafka.clients.consumer.internals.LegacyKafkaConsumer:475)
+[2025-01-29 15:25:11,373] INFO [chat-connector|task-0] Starting MongoDB sink task (com.mongodb.kafka.connect.sink.MongoSinkTask:66)
+[2025-01-29 15:25:11,374] INFO [chat-connector|task-0] MongoSinkTopicConfig values: 
+	bulk.write.ordered = true
+	change.data.capture.handler = 
+	collection = chat
+	database = chat
+	delete.on.null.values = false
+	delete.writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DeleteOneDefaultStrategy
+	document.id.strategy = com.mongodb.kafka.connect.sink.processor.id.strategy.BsonOidStrategy
+	document.id.strategy.overwrite.existing = false
+	document.id.strategy.partial.key.projection.list = 
+	document.id.strategy.partial.key.projection.type = 
+	document.id.strategy.partial.value.projection.list = 
+	document.id.strategy.partial.value.projection.type = 
+	document.id.strategy.uuid.format = string
+	errors.log.enable = false
+	errors.tolerance = none
+	field.renamer.mapping = []
+	field.renamer.regexp = []
+	key.projection.list = 
+	key.projection.type = none
+	max.batch.size = 0
+	mongo.errors.log.enable = false
+	mongo.errors.tolerance = none
+	namespace.mapper = com.mongodb.kafka.connect.sink.namespace.mapping.DefaultNamespaceMapper
+	namespace.mapper.error.if.invalid = false
+	namespace.mapper.key.collection.field = 
+	namespace.mapper.key.database.field = 
+	namespace.mapper.value.collection.field = 
+	namespace.mapper.value.database.field = 
+	post.processor.chain = [com.mongodb.kafka.connect.sink.processor.DocumentIdAdder]
+	rate.limiting.every.n = 0
+	rate.limiting.timeout = 0
+	timeseries.expire.after.seconds = 0
+	timeseries.granularity = 
+	timeseries.metafield = 
+	timeseries.timefield = 
+	timeseries.timefield.auto.convert = false
+	timeseries.timefield.auto.convert.date.format = yyyy-MM-dd[['T'][ ]][HH:mm:ss[[.][SSSSSS][SSS]][ ]VV[ ]'['VV']'][HH:mm:ss[[.][SSSSSS][SSS]][ ]X][HH:mm:ss[[.][SSSSSS][SSS]]]
+	timeseries.timefield.auto.convert.locale.language.tag = 
+	topic = chat
+	value.projection.list = 
+	value.projection.type = none
+	writemodel.strategy = com.mongodb.kafka.connect.sink.writemodel.strategy.DefaultWriteModelStrategy
+ (com.mongodb.kafka.connect.sink.MongoSinkTopicConfig:372)
+[2025-01-29 15:25:11,378] INFO [chat-connector|task-0] MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|mongo-kafka|sink", "version": "4.7.2|1.11.0"}, "os": {"type": "Windows", "name": "Windows 10", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/17.0.12+7"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='admin', source='admin', password=<hidden>, mechanismProperties=<hidden>}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.Jep395RecordCodecProvider@2636f2e0]}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='30000 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, sendBufferSize=0}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, sendBufferSize=0}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, contextProvider=null} (org.mongodb.driver.client:71)
+[2025-01-29 15:25:11,379] INFO [chat-connector|task-0] Errant record reporter not configured. (com.mongodb.kafka.connect.sink.MongoSinkTask:138)
+[2025-01-29 15:25:11,380] INFO [chat-connector|task-0] Opened connection [connectionId{localValue:11, serverValue:35}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:25:11,380] INFO [chat-connector|task-0] Opened connection [connectionId{localValue:12, serverValue:36}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:25:11,380] INFO [chat-connector|task-0] Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=1467800} (org.mongodb.driver.cluster:71)
+[2025-01-29 15:25:11,471] INFO [chat-connector|task-0] WorkerSinkTask{id=chat-connector-0} Sink task finished initialization and start (org.apache.kafka.connect.runtime.WorkerSinkTask:330)
+[2025-01-29 15:25:11,472] INFO [chat-connector|task-0] WorkerSinkTask{id=chat-connector-0} Executing sink task (org.apache.kafka.connect.runtime.WorkerSinkTask:214)
+[2025-01-29 15:25:11,498] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Cluster ID: 8HYB7rDDQyCF5mINKWHRMg (org.apache.kafka.clients.Metadata:356)
+[2025-01-29 15:25:11,529] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Discovered group coordinator 121.178.140.30:9092 (id: 2147483647 rack: null) (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:936)
+[2025-01-29 15:25:11,614] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] (Re-)joining group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:604)
+[2025-01-29 15:25:11,680] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Request joining group due to: need to re-join with the given member-id: connector-consumer-chat-connector-0-e22e0fe3-6d3b-406a-a510-5723a189fdbd (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1102)
+[2025-01-29 15:25:11,680] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] (Re-)joining group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:604)
+[2025-01-29 15:25:11,752] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Successfully joined group with generation Generation{generationId=1, memberId='connector-consumer-chat-connector-0-e22e0fe3-6d3b-406a-a510-5723a189fdbd', protocol='range'} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:665)
+[2025-01-29 15:25:11,753] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Finished assignment for group at generation 1: {connector-consumer-chat-connector-0-e22e0fe3-6d3b-406a-a510-5723a189fdbd=Assignment(partitions=[chat-0])} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:659)
+[2025-01-29 15:25:11,766] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Successfully synced group in generation Generation{generationId=1, memberId='connector-consumer-chat-connector-0-e22e0fe3-6d3b-406a-a510-5723a189fdbd', protocol='range'} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:842)
+[2025-01-29 15:25:11,767] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Notifying assignor about the new Assignment(partitions=[chat-0]) (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:319)
+[2025-01-29 15:25:11,767] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Adding newly assigned partitions: chat-0 (org.apache.kafka.clients.consumer.internals.ConsumerRebalanceListenerInvoker:56)
+[2025-01-29 15:25:11,768] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Found no committed offset for partition chat-0 (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator:1502)
+[2025-01-29 15:25:11,771] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Resetting offset for partition chat-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[121.178.140.30:9092 (id: 0 rack: null)], epoch=0}}. (org.apache.kafka.clients.consumer.internals.SubscriptionState:396)
+[2025-01-29 15:25:12,970] INFO [0:0:0:0:0:0:0:1] - - [29/1월/2025:06:25:12 +0000] "GET /connectors/chat-connector/status HTTP/1.1" 200 176 "-" "curl/8.9.1" 12 (org.apache.kafka.connect.runtime.rest.RestServer:62)
+[2025-01-29 15:25:13,834] INFO [chat-connector|task-0] Opened connection [connectionId{localValue:13, serverValue:37}] to localhost:27017 (org.mongodb.driver.connection:71)
+[2025-01-29 15:32:38,908] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:34:12,225] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Node -1 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:37:40,424] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:42:42,085] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:44:12,428] INFO [chat-connector|task-0] [Consumer clientId=connector-consumer-chat-connector-0, groupId=connect-chat-connector] Node -1 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:47:42,290] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:52:43,772] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)
+[2025-01-29 15:57:44,118] INFO [AdminClient clientId=connect-cluster-shared-admin] Node 0 disconnected. (org.apache.kafka.clients.NetworkClient:997)

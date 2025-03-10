@@ -387,8 +387,8 @@ backend/bin/main/com/project/backend/exceptionHandling/ApiError.class
 backend/bin/main/com/project/backend/exceptionHandling/CustomRestExceptionHandler.class
 backend/bin/main/com/project/backend/exceptionHandling/TokenRefreshException.class
 backend/bin/main/com/project/backend/handler/OAuth2SuccessHandler.class
-backend/bin/main/com/project/backend/message/dto/UserCreatedDto.class
-backend/bin/main/com/project/backend/message/dto/UserCreatedDto$UserCreatedDtoBuilder.class
+backend/bin/main/com/project/backend/message/dto/UserCreatedRequest.class
+backend/bin/main/com/project/backend/message/dto/UserCreatedRequest$UserCreatedRequestBuilder.class
 backend/bin/main/com/project/backend/message/model/OutboxEvent.class
 backend/bin/main/com/project/backend/message/repository/OutboxEventRepository.class
 backend/bin/main/com/project/backend/model/Address.class
@@ -516,3 +516,9 @@ backend/src/main/resources/application.yml
 .idea/vcs.xml
 chat-server/build/reports/problems/problems-report.html
 /.idea/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

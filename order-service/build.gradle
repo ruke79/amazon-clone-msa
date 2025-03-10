@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.2'
+	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -25,8 +25,10 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "2023.0.5")
+	set('springCloudVersion', "2024.0.0")
 }
+
+
 
 dependencies {
 	implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-63', version: '3.8.2'
@@ -41,10 +43,15 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.kafka:spring-kafka'
 
+	implementation project(':common')
+
+	implementation group: 'com.google.guava', name: 'guava', version: '33.2.0-jre'
+
 	
-	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
@@ -60,4 +67,5 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
 

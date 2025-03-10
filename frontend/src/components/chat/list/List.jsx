@@ -18,8 +18,8 @@ const List = () => {
   return (
     <Wrapper>
       <Userinfo/>
-      {/* <ChatRoomList/> */}
-      <Outlet/>
+      <ChatRoomList/>
+      {/* <Outlet/> */}
     </Wrapper>
   )
 }

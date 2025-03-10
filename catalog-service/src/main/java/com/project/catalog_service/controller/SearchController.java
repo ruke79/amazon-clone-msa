@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.catalog_service.constants.StatusMessages;
+
 import com.project.catalog_service.dto.SearchResultDto;
 import com.project.catalog_service.dto.request.SearchParamsRequest;
-import com.project.catalog_service.dto.response.GenericResponse;
+
 import com.project.catalog_service.service.ProductService;
 import com.project.catalog_service.service.SearchService;
+import com.project.common.response.GenericResponse;
 
 import lombok.RequiredArgsConstructor;
 

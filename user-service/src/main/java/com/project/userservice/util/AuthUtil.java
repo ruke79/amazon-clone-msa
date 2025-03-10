@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.project.userservice.constants.StatusMessages;
+import com.project.common.constants.StatusMessages;
 import com.project.userservice.model.User;
 import com.project.userservice.repository.UserRepository;
 

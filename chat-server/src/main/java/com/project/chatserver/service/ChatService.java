@@ -25,7 +25,6 @@ import com.project.chatserver.common.util.KafkaUtil;
 import com.project.chatserver.common.util.TokenHandler;
 import com.project.chatserver.dto.ChatRoomDto;
 import com.project.chatserver.dto.MessageDto;
-import com.project.chatserver.dto.ServiceUserDto;
 
 import com.project.chatserver.dto.response.RoomMessagesResponse;
 import com.project.chatserver.message.producer.MessageProducer;
@@ -48,8 +47,7 @@ public class ChatService {
     @PersistenceContext
     private EntityManager em;
 
-    private final MongoTemplate mongoTemplate;
-    private final TokenHandler tokenHandler;
+        
     private final ChatMessageRepository chatMessageRepository;
     private final MessageProducer messageProducer;
     private final ChatRoomRepository chatRoomRepository;

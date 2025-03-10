@@ -2,6 +2,8 @@ package com.project.chatserver.common.config.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
@@ -17,12 +19,15 @@ import com.project.chatserver.service.ChatService;
 
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 @Component
-@RequiredArgsConstructor
+
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
 
-    private final TokenHandler tokenHandler;
-    private final ChatService chatService;
+    // prevent circular referenece
+    @Autowired
+    private TokenHandler tokenHandler;
+    @Autowired
+    private ChatService chatService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {

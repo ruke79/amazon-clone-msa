@@ -36,13 +36,16 @@ const LOGIN_QUERY_KEY = 'login';
 
 const SignInPage = () => {
     const [step, setStep] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const { setToken, token } = useAuthContext();
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);    
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
-    const { showBoundary } = useErrorBoundary;
+
+    const { setToken } = useAuthContext();    
+
+    const navigate = useNavigate();
+
+    //const { showBoundary } = useErrorBoundary;
 
 
     const handleChange = (e) => {
@@ -91,13 +94,14 @@ const SignInPage = () => {
         const accessToken = response.headers['access'];
 
         const user = {
-            email: decodedToken.sub,
-            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
+        //    email: decodedToken.sub,
+        //    roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
         };
         localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("USER", JSON.stringify(user));
+        //localStorage.setItem("USER", JSON.stringify(user));
 
         //store the token on the context state  so that it can be shared any where in our application by context provider
+        console.log(accessToken);
         setToken(accessToken);
         toast.success("Login successed.");
 

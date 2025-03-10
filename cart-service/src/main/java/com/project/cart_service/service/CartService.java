@@ -1,27 +1,23 @@
 package com.project.cart_service.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.cart_service.client.CatalogServiceClient;
 import com.project.cart_service.client.UserServiceClient;
 import com.project.cart_service.dto.CartDto;
 import com.project.cart_service.dto.CartProductDto;
-import com.project.cart_service.dto.ColorAttributeDto;
-import com.project.cart_service.dto.ProductDto;
-import com.project.cart_service.dto.ProductInfoDto;
-import com.project.cart_service.dto.ProductSkuDto;
-import com.project.cart_service.dto.ServiceUserDto;
+
+
 import com.project.cart_service.dto.request.CartRequest;
 import com.project.cart_service.dto.request.ProductInfoRequest;
 import com.project.cart_service.model.Cart;
@@ -29,8 +25,14 @@ import com.project.cart_service.model.CartProduct;
 
 import com.project.cart_service.repository.CartProductRepository;
 import com.project.cart_service.repository.CartRepository;
-
-
+import com.project.common.dto.ProductColorDto;
+import com.project.common.dto.ProductDto;
+import com.project.common.dto.ProductInfoDto;
+import com.project.common.dto.ProductSkuDto;
+import com.project.common.dto.SharedUserDto;
+import com.project.common.message.dto.request.CartEmptyRequest;
+import com.project.common.message.dto.request.CartRollbackRequest;
+import com.project.common.message.dto.request.CouponUseRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,11 +45,13 @@ public class CartService {
     private final CartRepository cartRepository;
 
     private final CartProductRepository cartProductRepository;
-  
+
     private final UserServiceClient userServiceClient;
     private final CatalogServiceClient catalogServiceClient;
 
     public Long getProductId(String cartProductId) {
+
+        log.info(cartProductId);
 
         CartProduct product = cartProductRepository.findById(Long.parseLong(cartProductId)).orElse(null);
 
@@ -56,63 +60,31 @@ public class CartService {
 
     public CartDto getCart(String email) {
 
-        
         ObjectMapper mapper = new ObjectMapper();
-            ServiceUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(email).getBody(), 
-            ServiceUserDto.class);
+        SharedUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(email).getBody(),
+                SharedUserDto.class);
 
-               
-        Optional<Cart> cart = cartRepository.findByUserId(Long.parseLong(response.getUserId()));
+        Optional<Cart> cart = cartRepository.findByUserId(response.getUserId());
 
         if (!cart.isPresent())
             return null;
 
         CartDto result = new CartDto();
-        result.setUserId(response.getUserId());
+        result.setUserId(Long.toString(response.getUserId()));
         result.setUserImage(response.getImage());
-
-        // List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
-
-        // {
-        //     List<AddressDto> addressDtos = new ArrayList<>();
-        //     for (ShippingAddress address : addresses) {
-        //         if (address != null) {
-        //             AddressDto dto = new AddressDto();
-        //             dto.setId(Long.toString(address.getShippingAddressId()));
-
-        //             dto.setAddress1(address.getAddress1());
-        //             dto.setAddress2(address.getAddress2());
-        //             dto.setCity(address.getCity());
-        //             dto.setState(address.getState());
-        //             dto.setCountry(address.getCountry());
-        //             dto.setFirstname(address.getFirstname());
-        //             dto.setLastname(address.getLastname());
-        //             dto.setPhoneNumber(address.getPhoneNumber());
-        //             dto.setZipCode(address.getZipCode());
-        //             dto.setActive(false);
-
-        //             addressDtos.add(dto);
-        //         }
-        //     }
-        //     result.setAddress(addressDtos);
-        // }
-        // // }
 
         List<CartProductDto> products = new ArrayList<>();
 
         for (CartProduct item : cart.get().getCartProducts()) {
 
-
-
             CartProductDto dto = new CartProductDto();
             dto.setId(Long.toString(item.getCartproductId()));
-            
-            ColorAttributeDto color = mapper.convertValue(catalogServiceClient.getColorInfo(Long.toString(item.getColorId())).getBody(), 
-            ColorAttributeDto.class);
 
-             
+            ProductColorDto color = mapper.convertValue(
+                    catalogServiceClient.getColorInfo(Long.toString(item.getColorId())).getBody(),
+                    ProductColorDto.class);
 
-            dto.setColor(ColorAttributeDto.builder()
+            dto.setColor(ProductColorDto.builder()
                     .id(color.getId())
                     .color(color.getColor())
                     .colorImage(color.getColorImage()).build());
@@ -133,8 +105,6 @@ public class CartService {
 
     public int deleteCartItem(String uid, Long userId) {
 
-        
-
         CartProduct item = cartProductRepository.findBy_uid(uid)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
 
@@ -142,11 +112,12 @@ public class CartService {
 
             Cart cart = cartRepository.findByUserId(userId)
                     .orElseThrow(() -> new RuntimeException("Cart not found"));
-            cart.setCartTotal(cart.getCartTotal() - (item.getPrice() + item.getShipping()));
+            BigDecimal deletedPrice = item.getPrice().add(item.getShipping());
+            cart.setCartTotal(cart.getCartTotal().subtract(deletedPrice));
 
             cartRepository.save(cart);
 
-            if (cart.getCartTotal() <= 0)
+            if (-1 == cart.getCartTotal().compareTo(new BigDecimal(0)))
                 cartRepository.delete(cart);
 
             cartProductRepository.delete(item);
@@ -164,26 +135,23 @@ public class CartService {
 
             for (ProductInfoDto cartItem : request.getProducts()) {
 
-                //Product product = productRepository.findById(cartItem.getId()).get();
+                // Product product = productRepository.findById(cartItem.getId()).get();
                 ProductDto product = catalogServiceClient.getProductInfo(cartItem.getId()).getBody();
 
-                int originalPrice = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
-                        .filter(i -> i.getSize().equals(cartItem.getSize())).findFirst().get().getPrice();
-                // int quantity = product.getSku_products().get(cartItem.getStyle()).getSizes().stream()
-                //         .filter(i -> i.getSize().equals(i.getSize())).findFirst().get().getQuantity();
-                int discount = product.getSku_products().get(cartItem.getStyle()).getDiscount();
+                BigDecimal originalPrice = computeOriginalPriceFromSkusByStyleAndSize(
+                        product.getSkus(), cartItem.getStyle(), cartItem.getSize());
+
+                BigDecimal discount = new BigDecimal(product.getSkus().get(cartItem.getStyle()).getDiscount());
+
+                BigDecimal price = computeDiscountedPriceFromOriginalPrice(originalPrice, discount);
 
                 ProductInfoDto dto = new ProductInfoDto();
                 dto = cartItem;
-                dto.setPriceBefore(originalPrice);
+                dto.setPriceBefore(originalPrice.toPlainString());
                 dto.setQty(cartItem.getQty());
 
-                if (discount > 0) {
-                    int price = originalPrice - (originalPrice / discount);
-                    dto.setPrice(price);
-                } else {
-                    dto.setPrice(originalPrice);
-                }
+                dto.setPrice(price.toPlainString());
+
                 dto.setShipping(product.getShipping());
 
                 result.add(dto);
@@ -196,12 +164,15 @@ public class CartService {
 
     public List<ProductInfoDto> loadCart(String userId) {
 
-
         ObjectMapper mapper = new ObjectMapper();
-            ServiceUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(userId).getBody(), 
-            ServiceUserDto.class);
+        SharedUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(userId).getBody(),
+                SharedUserDto.class);
 
-        Optional<Cart> cart = cartRepository.findByUserId(Long.parseLong(response.getUserId()));
+        if (null == response) {
+            return null;
+        }
+
+        Optional<Cart> cart = cartRepository.findByUserId(response.getUserId());
         // .orElseThrow(()->new RuntimeException("Cart not found"));
 
         if (cart.isPresent()) {
@@ -210,12 +181,12 @@ public class CartService {
 
             List<ProductInfoDto> result = new ArrayList<>();
             for (CartProduct p : products) {
-                
+
                 ProductDto product = catalogServiceClient.getProductInfo(Long.toString(p.getProductId())).getBody();
-                
+
                 AtomicInteger counter = new AtomicInteger(-1);
 
-                int index = product.getSku_products().get(p.getStyle()).getSizes().stream()
+                int index = product.getSkus().get(p.getStyle()).getSizes().stream()
                         .filter(size -> {
                             counter.getAndIncrement();
                             return size.getSize().equals(p.getSize());
@@ -224,25 +195,33 @@ public class CartService {
                         .findFirst()
                         .orElse(-1);
 
-                // ProductInfoDto dto = productService.getCartProductInfo(p.getProduct().getProductId(),
-                //         p.getStyle(), index);
-                ProductInfoDto dto = mapper.convertValue(catalogServiceClient.getCartProductInfo(Long.toString(p.getProductId()),
-                         p.getStyle(), index).getBody(), ProductInfoDto.class);
+                // ProductInfoDto dto =
+                // productService.getCartProductInfo(p.getProduct().getProductId(),
+                // p.getStyle(), index);
+                ProductInfoDto dto = mapper
+                        .convertValue(catalogServiceClient.getCartProductInfo(Long.toString(p.getProductId()),
+                                p.getStyle(), index).getBody(), ProductInfoDto.class);
 
-                int originalPrice = product.getSku_products().get(p.getStyle()).getSizes().stream()
-                        .filter(i -> i.getSize().equals(p.getSize())).findFirst().get().getPrice();
-                int discount = product.getSku_products().get(p.getStyle()).getDiscount();
+                BigDecimal originalPrice = computeOriginalPriceFromSkusByStyleAndSize(
+                        product.getSkus(), p.getStyle(), p.getSize());
 
-                dto.setPriceBefore(originalPrice);
+                dto.setPriceBefore(originalPrice.toPlainString());
+
+                BigDecimal discount = new BigDecimal(product.getSkus().get(p.getStyle()).getDiscount());
+
+                BigDecimal price = computeDiscountedPriceFromOriginalPrice(originalPrice, discount);
+
+                dto.setPrice(price.toPlainString());
+
+                // if (discount > 0) {
+                // BigDecimal price = originalPrice - (originalPrice / discount);
+                // dto.setPrice(price);
+                // } else {
+                // dto.setPrice(originalPrice);
+                // }
+
                 dto.setQty(p.getQty());
                 dto.set_uid(p.get_uid());
-
-                if (discount > 0) {
-                    int price = originalPrice - (originalPrice / discount);
-                    dto.setPrice(price);
-                } else {
-                    dto.setPrice(originalPrice);
-                }
                 dto.setShipping(product.getShipping());
 
                 result.add(dto);
@@ -255,40 +234,80 @@ public class CartService {
 
     }
 
+    private BigDecimal computeDiscountedPriceFromOriginalPrice(BigDecimal originalPrice, BigDecimal discount) {
+
+        BigDecimal discountedPrice = originalPrice;
+        if (discount.compareTo(new BigDecimal(0)) > 0) {
+            discountedPrice = originalPrice.subtract(originalPrice.divide(discount, 2, RoundingMode.HALF_UP));
+        }
+        return discountedPrice;
+    }
+
+    private BigDecimal computeOriginalPriceFromSkusByStyleAndSize(List<ProductSkuDto> skus, int style, String size) {
+
+        BigDecimal originalPrice = skus.get(style).getSizes().stream()
+                .filter(i -> i.getSize().equals(size)).findFirst().get().getPrice();
+
+        return originalPrice;
+    }
+
+    @Transactional
+    private void deleteCartItem(Long userId) {
+
+        Optional<Cart> existed = cartRepository.findByUserId(userId);
+        if (existed.isPresent()) {
+
+            cartRepository.delete(existed.get());
+
+        }
+    }
+
+    private BigDecimal getPriceFromSkuBySize(ProductSkuDto sku, String size) {
+
+        BigDecimal price = sku.getSizes().stream().filter(p -> p.getSize().equals(size))
+                .findFirst().get().getPrice();
+        if (sku.getDiscount() > 0) {
+
+            BigDecimal discount = new BigDecimal(sku.getDiscount());
+            price = price.subtract(price.divide(discount, 2, RoundingMode.HALF_UP));
+        }
+        return price;
+    }
+
+    private BigDecimal computeCartTotal(List<CartProduct> products) {
+        BigDecimal cartTotal = new BigDecimal(0);
+        for (CartProduct p : products) {
+            BigDecimal qty = new BigDecimal(p.getQty());
+            cartTotal = cartTotal.add(p.getPrice().multiply(qty)).add(p.getShipping());
+        }
+        return cartTotal;
+    }
+
     public Cart saveCart(CartRequest request) {
 
-        
         if (request.getProducts().size() > 0) {
 
             ObjectMapper mapper = new ObjectMapper();
-            ServiceUserDto response = mapper.convertValue(userServiceClient.findUserByEmail(request.getEmail()).getBody(), 
-            ServiceUserDto.class);
-            
-                Optional<Cart> existed = cartRepository.findByUserId(Long.parseLong(response.getUserId()));
-                if (existed.isPresent()) {
+            SharedUserDto response = mapper.convertValue(
+                    userServiceClient.findUserByEmail(request.getEmail()).getBody(),
+                    SharedUserDto.class);
 
-                    cartRepository.delete(existed.get());
-                }
-            
+            deleteCartItem(response.getUserId());
 
             Cart cart = new Cart();
-            cart.setUserId(Long.parseLong(response.getUserId()));
+            cart.setUserId(response.getUserId());
 
             List<CartProduct> products = new ArrayList<CartProduct>();
 
             for (ProductInfoDto cartItem : request.getProducts()) {
 
-                
                 ProductDto product = catalogServiceClient.getProductInfo(cartItem.getId()).getBody();
 
                 if (null != product) {
-                    ProductSkuDto sku = product.getSku_products().get(cartItem.getStyle());
 
-                    int price = sku.getSizes().stream().filter(p -> p.getSize().equals(cartItem.getSize()))
-                            .findFirst().get().getPrice();
-                    if (sku.getDiscount() > 0)
-                        price = (price - price / sku.getDiscount());
-                    
+                    ProductSkuDto sku = product.getSkus().get(cartItem.getStyle());
+
+                    BigDecimal price = getPriceFromSkuBySize(sku, cartItem.getSize());
 
                     CartProduct cartProduct = CartProduct.builder()
                             .name(product.getName())
@@ -300,7 +319,7 @@ public class CartService {
                             .price(price)
                             .size(cartItem.getSize())
                             ._uid(cartItem.get_uid())
-                            .shipping(product.getShipping())
+                            .shipping(new BigDecimal(product.getShipping()))
                             .build();
 
                     products.add(cartProduct);
@@ -308,10 +327,8 @@ public class CartService {
                 }
 
             }
-            int cartTotal = 0;
-            for (CartProduct p : products) {
-                cartTotal = cartTotal + p.getPrice() * p.getQty() + p.getShipping();
-            }
+
+            BigDecimal cartTotal = computeCartTotal(products);
 
             cart.setCartProducts(products);
             cart.setCartTotal(cartTotal);
@@ -323,34 +340,79 @@ public class CartService {
         return null;
     }
 
-    
+    @Transactional(readOnly = true)
+    private Cart getCart(long userId) {
 
-    // public CouponResponse applyCoupon(CouponRequest request, String username) {
+        Optional<Cart> cart = cartRepository.findByUserId(userId);
 
-    //     Optional<User> user = userRepository.findByUserName(username);
+        if (cart.isPresent()) {
 
-    //     if (user.isPresent()) {
+            return cart.get();
+        }
 
-    //         Optional<Coupon> coupon = couponRepository.findById(Long.parseLong(request.getCoupon().getId()));
+        return null;
+    }
 
-    //         if (!coupon.isPresent()) {
-    //             return null;
-    //         }
+    @Transactional
+    public Cart couponUsed(CouponUseRequest request) {
 
-    //         Optional<Cart> cart = cartRepository.findByUser_UserName(username);
+        Cart cart = getCart(request.getUserId());
 
-    //         int totalAfterDiscount = (cart.get().getCartTotal() * coupon.get().getDiscount()) / 100;
+        if (null != cart) {
 
-    //         cart.get().setTotalAfterDiscount(totalAfterDiscount);
+            cart.setTotalAfterDiscount(request.getTotalAfterDiscount());
 
-    //         cartRepository.save(cart.get());
+            cart = cartRepository.save(cart);
 
-    //         CouponResponse result = new CouponResponse(totalAfterDiscount, coupon.get().getDiscount());
+            return cart;
+        }
 
-    //         return result;
-    //     }
-    //     return null;
+        return null;
+    }
 
-    // }
+    @Transactional
+    public void cartEmpty(CartEmptyRequest request) {
+
+        if (request.isEmptyCart() == true) {
+
+            deleteCartItem(request.getUserId());
+        }
+    }
+
+    @Transactional
+    void updateQtys(List<CartProduct> cartProducts, int qty) {
+
+        for (CartProduct cartProduct : cartProducts) {
+            updateQty(cartProduct, qty);
+        }
+    }
+
+    @Transactional
+    void updateQty(CartProduct product, int qty) {
+
+        product.setQty(qty);
+        cartProductRepository.save(product);
+    }
+
+    @Transactional
+    public Cart cartRollback(CartRollbackRequest request) {
+
+        Cart cart = getCart(request.getUserId());
+
+        if (null != cart) {
+
+            updateQtys(cart.getCartProducts(), 1);
+
+            BigDecimal cartTotal = computeCartTotal(cart.getCartProducts());
+
+            cart.setCartTotal(cartTotal);
+
+            cart = cartRepository.save(cart);
+
+            return cart;
+        }
+
+        return null;
+    }
 
 }

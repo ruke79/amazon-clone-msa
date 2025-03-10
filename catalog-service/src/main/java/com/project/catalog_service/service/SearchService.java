@@ -8,11 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.ProductDetailDto;
-import com.project.catalog_service.dto.ProductDto;
+import com.project.common.dto.CategoryDto;
+import com.project.common.dto.ProductDetailDto;
+import com.project.common.dto.ProductDto;
 import com.project.catalog_service.dto.SearchResultDto;
-import com.project.catalog_service.dto.SubCategoryDto;
+import com.project.common.dto.SubCategoryDto;
 import com.project.catalog_service.dto.request.SearchParamsRequest;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.model.ProductDetails;

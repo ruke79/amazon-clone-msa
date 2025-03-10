@@ -1,8 +1,8 @@
 package com.project.chatserver.dto.notification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.chatserver.common.util.LocalDateTimeUtils;
 import com.project.chatserver.model.Alarm;
+import com.project.common.util.LocalDateTimeUtil;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class AlarmResponse {
         this.type = type;
         this.content = content;
         this.url = url;
-        this.publishedAt = LocalDateTimeUtils.toArray(publishedAt);
+        this.publishedAt = LocalDateTimeUtil.toArray(publishedAt);
         this.senderId = senderId;
         this.read = read;
         this.del = del;

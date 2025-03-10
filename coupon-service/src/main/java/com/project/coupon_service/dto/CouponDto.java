@@ -1,5 +1,7 @@
 package com.project.coupon_service.dto;
 
+import com.project.coupon_service.model.Coupon;
+
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,17 @@ public class CouponDto {
     
     private String endDate;
 
-    private String discount;
+    private int discount;
+
+    public static CouponDto convertToDto(Coupon coupon) {
+        return CouponDto.builder()
+                .id(Long.toString(coupon.getCouponId()))
+                .name(coupon.getName())
+                .startDate(coupon.getStartDate().toString())
+                .endDate(coupon.getEndDate().toString())
+                .discount(coupon.getDiscount())
+                .build();
+
+    }
     
 }

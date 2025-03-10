@@ -3,12 +3,12 @@ package com.project.catalog_service.dto.request;
 
 import java.util.List;
 
-import com.project.catalog_service.dto.CategoryDto;
-import com.project.catalog_service.dto.SubCategoryDto;
-import com.project.catalog_service.model.ProductColorAttribute;
+import com.project.common.dto.CategoryDto;
+import com.project.common.dto.SubCategoryDto;
+import com.project.catalog_service.model.ProductColor;
 import com.project.catalog_service.model.ProductDetails;
 import com.project.catalog_service.model.ProductQA;
-import com.project.catalog_service.model.ProductSizeAttribute;
+import com.project.catalog_service.model.ProductSize;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,9 +40,9 @@ public class ProductInfoLoadRequest {
    private List<SubCategoryDto> subCategories;
 
   
-   private ProductColorAttribute color;
+   private ProductColor color;
 
-    private List<ProductSizeAttribute> sizes;
+    private List<ProductSize> sizes;
 
     private List<ProductDetails> details;
 

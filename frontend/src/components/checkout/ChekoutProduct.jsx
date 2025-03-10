@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 
 const Product = ({ cart }) => {
+
+    
      
-    return (
+    return ( 
         // <div className="flex flex-col md:flex-row px-2 py-1 md:px-8 gap-4">
         <div>
             <div className="flex items-center justify-between  pb-2 mb-4 border-b border-b-2 ">
@@ -58,7 +60,7 @@ const Product = ({ cart }) => {
                                 : product.name}
                         </div>
                         <div className="text-sm">
-                            {(product.price * product.qty).toFixed(2)}$
+                            {(Number(product.price) * product.qty).toFixed(2)}$
                         </div>
                     </div>
                 ))}

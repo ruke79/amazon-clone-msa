@@ -1,9 +1,10 @@
 package com.project.order_service.model;
 
-import org.springframework.data.annotation.Id;
 
-import io.hypersistence.utils.hibernate.id.Tsid;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -16,12 +17,13 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "customer")
 @Entity
-public class Customer {
+public class Customer extends BaseEntity {
 
-    @Id @Tsid
+    @Id
+    @Column(name = "customer_id")
     private Long id;
     private String username;
-    private String name;
+    private String nickname;
     @Email
     private String email;    
 }

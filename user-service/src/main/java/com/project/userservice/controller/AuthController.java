@@ -1,21 +1,19 @@
 package com.project.userservice.controller;
 
 
-import com.project.userservice.constants.StatusMessages;
-import com.project.userservice.dto.ServiceUserDto;
+import com.project.common.constants.StatusMessages;
+import com.project.common.dto.SharedUserDto;
+import com.project.common.response.GenericResponse;
+import com.project.common.response.MessageResponse;
 import com.project.userservice.dto.UserProfileDto;
 import com.project.userservice.model.User;
 
-import com.project.userservice.repository.RoleRepository;
 import com.project.userservice.repository.UserRepository;
 
 import com.project.userservice.security.jwt.JwtUtils;
 
 import com.project.userservice.security.request.SignupRequest;
-import com.project.userservice.security.response.GenericResponse;
 
-import com.project.userservice.security.response.MessageResponse;
-import com.project.userservice.security.response.UserAccountResponse;
 import com.project.userservice.service.TotpService;
 import com.project.userservice.service.UserService;
 import com.project.userservice.util.AuthUtil;
@@ -132,19 +130,25 @@ public class AuthController {
                     .map(item -> item.getAuthority())
                     .collect(Collectors.toList());
 
-            UserAccountResponse response = new UserAccountResponse(
-                    user.getUserId(),
-                    user.getUserName(),
-                    user.getEmail(),
-                    user.getImage(),
-                    user.isAccountNonLocked(),
-                    user.isAccountNonExpired(),
-                    user.isCredentialsNonExpired(),
-                    user.isEnabled(),
-                    user.getCredentialsExpiryDate(),
-                    user.getAccountExpiryDate(),
-                    user.isTwoFactorEnabled(),
-                    roles);
+            UserProfileDto response = UserProfileDto.builder()
+                    .userId(Long.toString(user.getUserId()))
+                    .username(user.getUserName())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .image(user.getImage())
+                    .isAccountNonLocked(user.isAccountNonLocked())
+                    .isAccountNonExpired(user.isAccountNonExpired())
+                    .isCredentialsNonExpired(user.isCredentialsNonExpired())
+                    .isEnabled(user.isEnabled())
+                    .credentialsExpiryDate(user.getCredentialsExpiryDate())
+                    .accountExpiryDate(user.getAccountExpiryDate())
+                    .isTwoFactorEnabled(user.isTwoFactorEnabled())
+                    .signUpMethod(user.getSignUpMethod())
+                    .defaultPaymentMethod(user.getDefaultPaymentMethod())                    
+                    .roles(roles)
+                    .createdDate(user.getCreatedAt())
+                    .updatedDate(user.getUpdatedAt())
+                    .build();
 
             return ResponseEntity.ok().body(response);
         }
@@ -165,8 +169,8 @@ public class AuthController {
 
         if (null != user ) {
 
-            ServiceUserDto response = ServiceUserDto.builder()
-            .userId(Long.toString(user.getUserId()))
+            SharedUserDto response = SharedUserDto.builder()
+            .userId(user.getUserId())
             .username(user.getUserName())
             .nickname(user.getName())
             .email(email)
@@ -189,8 +193,8 @@ public class AuthController {
 
         if (null != user ) {
 
-            ServiceUserDto response = ServiceUserDto.builder()
-            .userId(Long.toString(user.getUserId()))
+            SharedUserDto response = SharedUserDto.builder()
+            .userId(user.getUserId())
             .username(user.getUserName())
             .nickname(user.getName())
             .email(user.getEmail())

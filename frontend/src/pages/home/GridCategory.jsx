@@ -11,7 +11,7 @@ const GridCategory = ({ category, products, gridCols}) => {
  
     
     products.map(product => 
-    product.sku_products[0].images.map(image => image = JSON.stringify(image))
+    product.skus[0].images.map(image => image = JSON.stringify(image))
     );    
 
     console.log(category)    ;
@@ -31,8 +31,8 @@ const GridCategory = ({ category, products, gridCols}) => {
                             <div className={`relative`}>
                                                             
                                 <img
-                                    //  src={"data:image/jpeg;base64,"+product.sku_products[0].images[0]}                                    
-                                    src={product.sku_products[0].images[0]}
+                                    //  src={"data:image/jpeg;base64,"+product.skus[0].images[0]}                                    
+                                    src={product.skus[0].images[0]}
                                     alt={product.name}                                    
                                     className="h-[420px]  object-cover rounded  "
                                 />  

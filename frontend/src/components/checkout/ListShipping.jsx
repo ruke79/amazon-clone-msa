@@ -7,7 +7,7 @@ import {
     PlusIcon,    
     UserIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { selectShippingAddress, deleteAddress } from "util/api";
 
 
@@ -20,15 +20,19 @@ const ListShipping = ({
     profile
 }) => {
 
-    
-    
-    console.log(addresses);
-      
+    const [prevAddresses, setPrevAddresses] = useState(addresses);
+
+
+  if (addresses !== prevAddresses) {
+    setPrevAddresses(addresses);   
+  }  
+          
     
     const changeActiveHandler = async (id) => {
-                
-        console.log(id);
-        const res = await selectShippingAddress(id);        
+    
+        const res = await selectShippingAddress(id);   
+        
+        console.log(res);
 
         setAddresses(res);
     };
@@ -40,7 +44,7 @@ const ListShipping = ({
 
     return (
         <>
-            {addresses?.map((address) => (
+            {addresses?.map((address) => (                
                 <div
                     className={`relative cursor-pointer p-4 mb-4 border border-slate-100 rounded-xl shadow-md hover:shadow-xl hover:border-white hover:scale-[101%] transition duration-300 ${
                         address.active &&

@@ -1,6 +1,8 @@
 package com.project.order_service.dto;
 
 
+import com.project.common.dto.ProductColorDto;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -26,7 +28,7 @@ public class OrderedProductDto {
 
      private int qty;
         
-     private ColorAttributeDto color;
+     private ProductColorDto color;
 
     private int price;      
 

@@ -1,6 +1,8 @@
 import { paymentMethods } from "./paymentMethods";
 
+
 const PaymentCheckout = ({ paymentMethod, setPaymentMethod, profile }) => {
+
     return (
         <>
             {!profile && (
@@ -10,6 +12,7 @@ const PaymentCheckout = ({ paymentMethod, setPaymentMethod, profile }) => {
             )}
             <div>
                 {paymentMethods.map((payment) => (
+                    
                     <div
                         key={payment.id}
                         className={`cursor-pointer p-2 my-2 flex items-center rounded-xl ${
@@ -26,9 +29,9 @@ const PaymentCheckout = ({ paymentMethod, setPaymentMethod, profile }) => {
                                 checked={paymentMethod == payment.id}
                             />
                         </label>
-                        <div className="flex items-center disabled ">
+                        <div className="flex items-center disabled ">                            
                             <img
-                                src={`/../public/assets/images/${payment.id}.png`}
+                                src={`${process.env.PUBLIC_URL}/assets/images/${payment.id}.png`}
                                 alt={payment.name}
                                 width={40}
                                 height={40}

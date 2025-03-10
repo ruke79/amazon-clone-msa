@@ -6,20 +6,20 @@ const ProductCard = ({ product }) => {
 
     
     const [active, setActive] = useState(0);
-    const [images, setImages] = useState(product.sku_products[active]?.images);
+    const [images, setImages] = useState(product.skus[active]?.images);
     const [prices, setPrices] = useState(
-        product.sku_products[active]?.sizes
+        product.skus[active]?.sizes
             .map((s) => s.price)
             .sort((a, b) => a - b)
     );
     const [styles, setStyles] = useState(
-        product.sku_products.map((p) => p.color)
+        product.skus.map((p) => p.color)
     );
 
     useEffect(() => {
-        setImages(product.sku_products[active]?.images);
+        setImages(product.skus[active]?.images);
         setPrices(
-            product.sku_products[active]?.sizes
+            product.skus[active]?.sizes
                 .map((s) => s.price)
                 .sort((a, b) => a - b)
         );
@@ -28,12 +28,12 @@ const ProductCard = ({ product }) => {
     
     return (
         <div className="flex flex-col relative w-[215px] rounded p-1">
-            <Link to={`/product/${product.slug}?style=${active}${`${product.sku_products[active].sizes.length > 1 ? '&size='+ active : ''}`}`}>
+            <Link to={`/product/${product.slug}?style=${active}${`${product.skus[active].sizes.length > 1 ? '&size='+ active : ''}`}`}>
                 <ProductSwiper images={images} />
             </Link>
-            {product.sku_products[active].discount > 0 && (
+            {product.skus[active].discount > 0 && (
                 <div className=" flex items-center justify-center absolute bg-yellow-400 w-9 h-9 rounded-full top-0 -right-1 text-sm z-50">
-                    -{product.sku_products[active].discount}%
+                    -{product.skus[active].discount}%
                 </div>
             )}
             <div className=" mt-2">
@@ -65,7 +65,7 @@ const ProductCard = ({ product }) => {
                                     height={25}
                                     onMouseOver={() => {
                                         setImages(
-                                            product.sku_products[i].images
+                                            product.skus[i].images
                                         );
                                         setActive(i);
                                     }}
@@ -84,7 +84,7 @@ const ProductCard = ({ product }) => {
                                     }}
                                     onMouseOver={() => {
                                         setImages(
-                                            product.sku_products[i].images
+                                            product.skus[i].images
                                         );
                                         setActive(i);
                                     }}

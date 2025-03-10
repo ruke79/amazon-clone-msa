@@ -1,5 +1,7 @@
 package com.project.coupon_service.dto.response;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CouponResponse {
 
-    private int totalAfterDiscount;
+    private BigDecimal totalAfterDiscount;
     private int discount;
+    private String message;    
 }
