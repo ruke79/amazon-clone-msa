@@ -5,30 +5,30 @@ export const ordersLinks = [
     },
     {
         name: "Paid Orders",
-        filter: "paid",
+        filter: "PAID",
     },
     {
         name: "Unpaid Orders",
-        filter: "unpaid",
+        filter: "UNPAID",
     },
     {
         name: "Processing Orders",
-        filter: "Processing",
+        filter: "PROCESSING",
     },
     {
         name: "Unprocessing Orders",
-        filter: "Not Processed",
+        filter: "NOT_PROCESSED",
     },
     {
         name: "Dispatched Orders",
-        filter: "Dispatched",
+        filter: "DISPATCHED",
     },
     {
         name: "Delivered Orders",
-        filter: "Completed",
+        filter: "COMPLETED",
     },
     {
         name: "Cancelled Orders",
-        filter: "Cancelled",
+        filter: "CANCELED",
     },
 ]

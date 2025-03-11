@@ -162,11 +162,11 @@ public class OrderService {
 
         if(filter.isEmpty()) {
             data = orderRepository.findById(orderId)
-            .orElseThrow(()->new RuntimeException("Order not found."));
+            .orElse(null);
         }
         else {
             data = orderRepository.findByOrderIdAndOrderStatus(orderId,OrderStatus.getStatus(filter))
-            .orElseThrow(()->new RuntimeException("Order not found."));
+            .orElse(null);
         }       
         
 
@@ -198,8 +198,8 @@ public class OrderService {
                         
            
             OrderDto result = OrderDto.builder()
-            .trackingId(data.getTrackingId())
-            //.isPaid(data.isPaid())
+            .id(Long.toString(data.getOrderId()))
+            .trackingId(data.getTrackingId())            
             .couponApplied(data.getCouponApplied())
             .deliveredCreatedAt(data.getDeliveredCreatedAt())
             .orderStatus(data.getOrderStatus().name())

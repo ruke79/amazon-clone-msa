@@ -1,3 +1,7 @@
+import paypal from "assets/images/paypal.png"; 
+import credit_card from "assets/images/credit_card.png"; 
+import cash from "assets/images/cash.png"; 
+
 import { useReducer, useEffect, useState } from "react";
 import { cancelCart, emptyCart } from "../../redux/CartSlice";
 import { postRequest } from "util/api";
@@ -217,6 +221,7 @@ const Payment = ({ order, setLoading, setOrder }) => {
                                 <div className="flex items-center ">
                                     <img
                                         src={`${process.env.PUBLIC_URL}/assets/images/${payment.id}.png`}
+                                        
                                         alt={payment.name}
                                         width={40}
                                         height={40}

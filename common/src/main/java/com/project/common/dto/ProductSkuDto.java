@@ -23,9 +23,9 @@ public class ProductSkuDto {
     
     //private List<String> descriptionImages;
 
-    private int discount = 0;
+    private int discount;
 
-    private int sold = 0;
+    private int sold;
 
     private Set<ProductSizeDto> sizes;
     private ProductColorDto color;

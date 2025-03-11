@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import amazonLogo from "../../public/assets/images/amazon-logo.png";
+import amazonLogo from "assets/images/amazon-logo.png";
 import { useDispatch } from "react-redux";
 import { openMenu } from "../../redux/MenuSlice";
 import DeliveryTo from "./DeliveryTo";
@@ -46,7 +46,7 @@ const Header = ({title, searchHandler}) => {
                         {/* Logo */}
                         <Link to="/">
                             <img
-                                src={amazonLogo}
+                                src={`${process.env.PUBLIC_URL}/assets/images/amazon-logo.png`}
                                 alt="amazon-logo"
                                 className="object-contain w-20 md:w-28 pt-2"
                             />

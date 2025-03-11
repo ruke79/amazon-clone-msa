@@ -12,8 +12,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
-	//implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
-
+	
 	implementation 'io.micrometer:micrometer-core' // (2)
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
@@ -26,6 +25,8 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
 	implementation 'org.springframework.kafka:spring-kafka'
+
+	implementation project(':common')
 
 	
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '9.0.0'

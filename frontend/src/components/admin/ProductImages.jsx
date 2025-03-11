@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { showDialog } from "../../redux/DialogSlice";
 import { ErrorMessage, useField } from "formik";
 import { useRef } from "react";
-import noImage from "../../public/assets/images/no-image.png";
+import noImage from "../../assets/images/no-image.png";
 import { ArrowsPointingInIcon, SwatchIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const ImagesProduct = ({

@@ -23,7 +23,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,
-    devTools: process.env.NODE_ENV !== "production"  ,  
+    devTools: process.env.REACT_APP_PROFILE !== "production"  ,  
      middleware : 
      (getDefaultMiddleware) =>
     getDefaultMiddleware({

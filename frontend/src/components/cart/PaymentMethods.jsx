@@ -1,10 +1,12 @@
+import  payment_methods from "assets/images/payment_methods.png";
+import  buyer_protection from "assets/images/buyer_protection.png";
 
 const PaymentMethods = () => {
     return (
         <div className="mt-4  flex flex-col flex-grow h-fit bg-white rounded py-2 px-4 border">
             <h3 className="text-2xl my-2 font-semibold">Payment Methods</h3>
             <img
-                src={`${process.env.PUBLIC_URL}/assets/images/payment_methods.png`}
+                src={`${process.env.PUBLIC_URL}/assets/images/payment_methods.png`}                
                 alt="payment methods"
                 width={220}
                 height={25}
@@ -14,6 +16,7 @@ const PaymentMethods = () => {
             <div className="flex items-center space-x-1">
                 <img
                     src={`${process.env.PUBLIC_URL}/assets/images/buyer_protection.png`}
+                    
                     alt="payment methods"
                     width={25}
                     height={25}

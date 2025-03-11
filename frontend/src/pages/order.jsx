@@ -4,7 +4,7 @@ import OrderInfo from "components/order/OrderInfo";
 import Product from "components/order/Product";
 import Total from "components/order/Total";
 import UserInfo from "components/order/UserInfo";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DotLoaderSpinner from "components/loader/Loading"
 import api, { getRequest } from "util/api";
 import { useLoaderData } from "react-router-dom";
@@ -26,23 +26,13 @@ const OrderPage = () => {
     
 
     if (isPendingOrder ) {        
-        return <div>Loading...</div>;
-        //<DotLoaderSpinner loading={isPendingOrder} />
+        return <DotLoaderSpinner loading={isPendingOrder} />
     }
-    
-    console.log(orderData.orderStatus);
-
-    if ((orderData.orderStatus === "NOT_PROCESSED" || orderData.orderStatus === "UNPAID" ) )
-        console.log("orderData.orderStatus === NOT_PROCESSED");
-        
+           
     
     return (
-        <>
-        {/* {
-            isPendingOrder && (
-                <DotLoaderSpinner loading={isPendingOrder} />
-            )
-        } */}
+        <React.Fragment>
+      
             <Header title="Full Amazon Clone React" />
             <main className="max-w-screen-2xl mx-auto bg-gray-100 grid grid-cols-3 md:px-10 pt-5 pb-8 gap-8">
                 <section className="col-span-2 bg-white p-2 md:p-5 rounded-xl border">
@@ -61,7 +51,7 @@ const OrderPage = () => {
                     
                 </section>
             </main>
-        </>
+        </React.Fragment>
     );
 };
 
@@ -69,25 +59,10 @@ export default OrderPage;
 
 
 export const loader = async ({params, request}) => {
-    
-        
+            
         const orderId = params.id;
 
-        
-
-        return orderId;
-     
-        // try {
-        //     const { data } = await getRequest(`/order-service/api/order/${orderId}`,
-        //         { params : { email : tokenUtil.getUser().email}}
-        //     );                       
-
-                
-        //     return data;    
-        // }
-        // catch(err) {
-
-            
-        // }
+        return orderId;     
+    
 }
 

@@ -16,10 +16,10 @@ import lombok.Setter;
 @Setter
 public class OrderDto {
 
+    private String id;
+
     private String trackingId;
-
-    //private SharedUserDto user;
-
+    
     private List<OrderedProductDto> products;
 
     private OrderAddressDto shippingAddress;

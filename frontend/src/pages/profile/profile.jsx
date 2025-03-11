@@ -2,7 +2,7 @@ import Layout from "components/profile/Layout";
 import { redirect, useLoaderData, useSearchParams } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
 import api, { getRequest } from "util/api";
-import tokenUtil from "util/tokenUtil";
+
 
 const Profile = () => {
 
@@ -37,27 +37,7 @@ export const loader = async ({ params, request }) => {
     return {
         tab: tab,
     }
-
-    // return async ({params, request}) => {
-
-    //     const searchParams = new URL(request.url).searchParams;
-    //         const tab = Number(searchParams.get('tab')) || 0;
-
-
-    //     try {
-    //         const { data } = await getRequest(`/user-service/api/auth/user`);
-
-    //         return {
-    //                user : data,
-    //                tab : tab,                          
-    //         }
-    //     }
-    //     catch(err) {
-
-    //     }
-
-
-    // };
+   
 }
 
 

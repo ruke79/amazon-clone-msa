@@ -1,5 +1,7 @@
 import { paymentMethods } from "./paymentMethods";
-
+import paypal from "assets/images/paypal.png"; 
+import credit_card from "assets/images/credit_card.png"; 
+import cash from "assets/images/cash.png"; 
 
 const PaymentCheckout = ({ paymentMethod, setPaymentMethod, profile }) => {
 
@@ -31,7 +33,7 @@ const PaymentCheckout = ({ paymentMethod, setPaymentMethod, profile }) => {
                         </label>
                         <div className="flex items-center disabled ">                            
                             <img
-                                src={`${process.env.PUBLIC_URL}/assets/images/${payment.id}.png`}
+                                src={`${process.env.PUBLIC_URL}/assets/images/${payment.id}.png`}                                
                                 alt={payment.name}
                                 width={40}
                                 height={40}
