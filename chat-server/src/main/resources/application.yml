@@ -40,10 +40,10 @@ spring:
 
     data:
       mongodb:
-        client: mongodb://admin:1234@localhost:27017
+        client: mongodb://admin:ysY2273@localhost:27017
         name: chat
         username: admin
-        password: 1234
+        password: ysY2273!
         auto-index-creation: true
       redis:
         repositories:

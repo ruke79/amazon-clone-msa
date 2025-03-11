@@ -69,19 +69,12 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<?> getOrders(@RequestParam String filter,
+    public ResponseEntity<?> getOrders(@RequestParam(value="filter", required = false) String filter,
             @RequestParam("email") String email) {
 
-        try {
-
+        
             List<OrderDto> response = orderService.getOrders(email, filter);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MessageResponse(StatusMessages.ORDER_NOT_FOUND));
-
-        }
+            return new ResponseEntity<>(response, HttpStatus.OK);        
     }
 
     @PostMapping("/payment/paypal")

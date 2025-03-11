@@ -14,7 +14,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.kafka:spring-kafka'
 
-	//implementation project(':common')
+	implementation project(':common')
 
 
 	//implementation group: 'com.google.guava', name: 'guava', version: '33.2.0-jre'

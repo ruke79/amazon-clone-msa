@@ -1,3 +1,5 @@
+import user_image_default from "assets/images/user_image_default.jpg";
+
 import {
     ArrowRightIcon,
     ArrowLeftIcon,
@@ -27,7 +29,7 @@ import { useLogout } from 'hook/hooks';
           <nav className="flex h-full flex-col border-r bg-white shadow-sm">
             <div className="flex items-center justify-between p-4 pb-2">
               <img
-                src={`${process.env.PUBLIC_URL}/assets/images/user-image-default.jpg`}
+                src={`${process.env.PUBLIC_URL}/assets/images/user-image-default.jpg`}                
                 className={`overflow-hidden transition-all ${
                   expanded ? 'w-32' : 'w-0'
                 }`}

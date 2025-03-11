@@ -21,9 +21,13 @@ const Orders = () => {
      const { user} = useAuthContext();
      const { filter, tab } = useLoaderData();
 
+     
+
      const { orders, isSuccess, isPending } = useFetchOrders(filter, user.email);
 
      if ( isPending) return <div>Loading...</div>
+
+     
      
         
     return (
@@ -35,7 +39,7 @@ const Orders = () => {
                         <ul className="flex">
                             {ordersLinks.map((order, i) => (
                                 <li className={`${qParam?.split("__")[0] == slugify(order.name, {lower:true})  ? 'font-bold border-b' : '' } px-1 flex items-center justify-center hover:font-bold hover:border-b`} key={i}>
-                                    <Link to={`profile/orders?tab=${tab}&q=${slugify(order.name,{lower: true,})}__${order.filter}`}>{order.name}</Link>
+                                    <Link to={`?tab=${tab}&q=${slugify(order.name,{lower: true,})}__${order.filter}`}>{order.name}</Link>
                                 </li>
                             ))}
                         </ul>
@@ -56,9 +60,9 @@ const Orders = () => {
                         <tbody>
                             {orders.map((order, i) => (
                                 <tr key={i}>
-                                    <td>{order.id}</td>
+                                    <td>{order?.id}</td>
                                     <td className="flex">
-                                        {order.products.map((p) => (
+                                        {order?.products.map((p) => (
                                             <img
                                                 key={p.id}
                                                 src={p.image}
@@ -69,17 +73,17 @@ const Orders = () => {
                                             />
                                         ))}
                                     </td>
-                                    <td>{order.paymentMethod}</td>
-                                    <td>{order.total}$</td>
+                                    <td>{order?.paymentMethod}</td>
+                                    <td>{order?.total}$</td>
                                     <td>
-                                        {order.isPaid == true ? (
+                                        {order?.orderStatus === "UNPAID" ? (
                                             <CheckBadgeIcon className="w-8 h-8 fill-green-500" />
                                         ) : (
-                                            <XCircleIcon className="w-8 h-8 fill-red-500" />
+                                            order && <XCircleIcon className="w-8 h-8 fill-red-500" />
                                         )}
                                     </td>
-                                    <td>{order.status}</td>
-                                    <td><Link to={`/order/${order.id}`}><EyeIcon className="w-8 h-8 fill-slate-500 cursor-pointer hover:fill-slate-800" /></Link></td>
+                                    <td>{order?.orderStatus}</td>
+                                    <td><Link to={`/order/${order?.id}`}> {order && <EyeIcon className="w-8 h-8 fill-slate-500 cursor-pointer hover:fill-slate-800" />}</Link></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -100,10 +104,9 @@ export const loader =  async ({params, request}) => {
         
 
         const filter = searchParams.get('q').split("__")[1];
-       
-       
+                
 
-        return { flter : filter, tab : tab };    
+        return { filter : filter, tab : tab };    
     };
 
 

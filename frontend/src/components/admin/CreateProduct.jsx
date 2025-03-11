@@ -88,88 +88,88 @@ const CreateProduct = ({
 
             const path = "product images";
 
-            imageUploader = files.map(async (file) => {
-                let formData = new FormData();
-                formData.append("path", path);
-                formData.append("file", file);
-                formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_NAME);
-                formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
-                formData.append("timestamp", (Date.now() / 1000) | 0);
+            // imageUploader = files.map(async (file) => {
+            //     let formData = new FormData();
+            //     formData.append("path", path);
+            //     formData.append("file", file);
+            //     formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_NAME);
+            //     formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
+            //     formData.append("timestamp", (Date.now() / 1000) | 0);
 
 
-                const image = await uploadImages(formData, config);
-                uploaded_images.push(image.url);
-                setProgress(0);
-            });
+            //     const image = await uploadImages(formData, config);
+            //     uploaded_images.push(image.url);
+            //     setProgress(0);
+            // });
         }
 
-        if (product.color.image) {
-            let temp = dataURItoBlob(product.color.image);
-            //formData.append("colorImage", temp);               
-            let path = "product style images";
-            let formData = new FormData();
-            formData.append("path", path);
-            formData.append("file", temp);
-            formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_NAME);
-            formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
-            let cloudinary_style_img = await uploadImages(formData, config);
-            style_img = cloudinary_style_img.url;
-            console.log("uploaded style image: ", style_img);
-            setProgress(0);
-        }
-        axios.all(imageUploader).then(async () => {
-            try {
-                let formData = new FormData();
+        // if (product.color.image) {
+        //     let temp = dataURItoBlob(product.color.image);
+        //     //formData.append("colorImage", temp);               
+        //     let path = "product style images";
+        //     let formData = new FormData();
+        //     formData.append("path", path);
+        //     formData.append("file", temp);
+        //     formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_NAME);
+        //     formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
+        //     let cloudinary_style_img = await uploadImages(formData, config);
+        //     style_img = cloudinary_style_img.url;
+        //     console.log("uploaded style image: ", style_img);
+        //     setProgress(0);
+        // }
+        // axios.all(imageUploader).then(async () => {
+        //     try {
+        //         let formData = new FormData();
 
-                formData.append("images", uploaded_images);
-                formData.append("colorImage", style_img);
-
-
-                product.slug = slugify(product.name);
+        //         formData.append("images", uploaded_images);
+        //         formData.append("colorImage", style_img);
 
 
-                formData.append("product", new Blob([JSON.stringify(product)], {
-                    type: 'application/json'
-                }));
+        //         product.slug = slugify(product.name);
 
 
-                const { data } = await postRequest("admin/product", formData,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-
-                        },
-                        transformRequest: [
-                            function () {
-                                return formData;
-                            },
-                        ],
-                    }
-                );
+        //         formData.append("product", new Blob([JSON.stringify(product)], {
+        //             type: 'application/json'
+        //         }));
 
 
-                if (data.status === 200) {
-                    setProduct(initialProduct);
-                    setImages([]);
-                    setColorImage("");
-                    setColors([]);
-                    dispatch(
-                        showDialog({
-                            header: "post created.",
-                            msgs: [{
-                                msg: data.message,
-                                type: "success",
-                            }],
-                        })
-                    );
+        //         const { data } = await postRequest("admin/product", formData,
+        //             {
+        //                 headers: {
+        //                     "Content-Type": "multipart/form-data",
 
-                }
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                console.log(error.message);
-            }
-        });
+        //                 },
+        //                 transformRequest: [
+        //                     function () {
+        //                         return formData;
+        //                     },
+        //                 ],
+        //             }
+        //         );
+
+
+        //         if (data.status === 200) {
+        //             setProduct(initialProduct);
+        //             setImages([]);
+        //             setColorImage("");
+        //             setColors([]);
+        //             dispatch(
+        //                 showDialog({
+        //                     header: "post created.",
+        //                     msgs: [{
+        //                         msg: data.message,
+        //                         type: "success",
+        //                     }],
+        //                 })
+        //             );
+
+        //         }
+        //         setLoading(false);
+        //     } catch (error) {
+        //         setLoading(false);
+        //         console.log(error.message);
+        //     }
+        // });
     }
     const handleChange = (e) => {
 

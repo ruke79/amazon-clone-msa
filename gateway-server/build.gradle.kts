@@ -16,7 +16,7 @@ dependencies {
     //implementation("io.micrometer:micrometer-core")
     //implementation("io.micrometer:micrometer-registry-prometheus")
     
-    
+    implementation(project(":common"))
     
 
    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version= "0.12.6")

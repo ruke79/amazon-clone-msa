@@ -2,7 +2,7 @@ import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Form, Formik } from "formik";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import amazonLogoDark from "../../public/assets/images/amazon-dark.png";
+import amazonLogoDark from "assets/images/amazon-dark.png";
 import * as Yup from "yup";
 import api, { postRequest } from '../../util/api'
 import LoginInput from "./LoginInput";

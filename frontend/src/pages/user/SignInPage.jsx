@@ -2,7 +2,7 @@ import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Form, Formik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import amazonLogoDark from "../../public/assets/images/amazon-dark.png";
+import amazonLogoDark from "assets/images/amazon-dark.png";
 import LoginInput from "./LoginInput";
 import * as Yup from "yup";
 import ButtonInput from "./ButtonInput";
@@ -124,7 +124,8 @@ const SignInPage = () => {
                 <div className="mx-auto my-2">
                     <Link to="/">
                         <img
-                            src={amazonLogoDark}
+                            //src={amazonLogoDark}
+                            src = {`${process.env.PUBLIC_URL}/assets/images/amazon-dark.png`}
                             alt="amazon-logo"
                             className="object-contain w-28 md:w-48 pt-2"
                         />

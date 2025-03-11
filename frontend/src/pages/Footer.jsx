@@ -1,8 +1,8 @@
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-import amazonLogo from 'public/assets/images/amazon-logo.png';
-import enFlag from "public/assets/images/en-flag.png";
+import amazonLogo from 'assets/images/amazon-logo.png';
+import enFlag from "assets/images/en-flag.png";
 
 
 const Footer = () => {

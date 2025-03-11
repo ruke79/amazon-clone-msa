@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import amazonLogoDark from "public/assets/images/amazon-dark.png";
+import amazonLogoDark from "assets/images/amazon-dark.png";
 import LoginInput from "./LoginInput";
 import * as Yup from "yup";
 import ButtonInput from "./ButtonInput";

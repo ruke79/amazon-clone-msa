@@ -15,7 +15,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 
 	
-	
+	implementation project(':common')
 	
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	runtimeOnly 'com.mysql:mysql-connector-j'

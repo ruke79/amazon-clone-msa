@@ -1,42 +1,38 @@
-const webpack = require("webpack");
 const path = require("path");
-const dotenv = require('dotenv');
-const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 
-dotenv.config({path: './.env.development'})
 
-module.exports = {
+module.exports = {  
   infrastructureLogging: {
-    level: 'verbose',
- },
-  mode: "development",
+    level: 'info',
+ },  
   entry: "./src/index.jsx",
-  output: {
-    publicPath: '/',
+  output: {        
 	  path: path.resolve(__dirname, "dist"),
-	filename: '[name].bundle.js',
-  clean: true,
+	  filename: '[name].bundle.js',
+    clean: true,
   },  
   resolve: {
     alias: {
         "components": path.resolve(__dirname, './src/components'),
         "pages": path.resolve(__dirname, './src/pages'),        
         "util": path.resolve(__dirname, './src/util'),
+        "reduxs": path.resolve(__dirname, './src/redux'),
         "store": path.resolve(__dirname, './src/store'),
         "hook": path.resolve(__dirname, './src/hook'),        
-        "constants": path.resolve(__dirname, './src/constants'),
-        "public": path.resolve(__dirname, './public'),
+        "constants": path.resolve(__dirname, './src/constants'),        
         "error" : path.resolve(__dirname, './src/error'),
+        "assets" : path.resolve(__dirname, './src/assets'),
     },
     extensions: ['.js', '.jsx'],
   },
   module: {    
 
     rules: [
+    
       {
         test: /\.(js|jsx)$/,
-        exclude: "/node_modules",
+        exclude: ["/node_modules"],
         use: {
           loader: 'babel-loader',
           options:{
@@ -50,35 +46,19 @@ module.exports = {
 
       {
         test: /\.css$/,
+        exclude: ["/node_modules"],
         use: ["style-loader", "css-loader", "postcss-loader"],
         
       },
       {
         test: /\.(jpg|jpeg|gif|png|svg|ico)?$/,
-        exclude: /node_modules/,          
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 10000,
-              fallback: "file-loader",
-              name: "image/[name].[ext]"
-            }
-          }
-          
-        ]
+        exclude: ["/node_modules"],          
+        type : "asset/resource",
+        generator: {
+          filename: "image/[name].[ext]"
+        }
       }
     ],
-  },
-  plugins: [
-	new HtmlWebPackPlugin({
-	  template: './public/index.html'
-	}), 
-  
-  new webpack.DefinePlugin({
-    'process.env': JSON.stringify(process.env),
-  }),
-  
-  ],
+  },  
   
 };
