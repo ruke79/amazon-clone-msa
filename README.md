@@ -20,24 +20,43 @@ front end : react
 1. React 18
 2. React Query v5
 3. React Redux
-4. TailWind CSS 5
-5. Styled Components
+4. Material UI
+5. TailWind CSS 5
+6. Styled Components
+7. Webpack 5
+## Architecture
+
+
    
+## Description
+
+
+
+
+   
+
 
 ## Features
 ### Back end 
-1. 액세스 토큰은 메모리에 저장하고 블랙리스트를 도입하였으며, 리프레시 토큰은 httpOnly 쿠키로 저장하고 Refresh Token Rotation 으로 보안을 강화하였습니다.
+1. 액세스 토큰은 블랙리스트를 도입하고 , 리프레시 토큰은 httpOnly 쿠키에 저장하고 Refresh Token Rotation 으로 보안을 강화하였습니다.
 2. 회원 가입은 이메일 인증 방식입니다.
-3. 로그인 후에 모든 요청은 Api Gateway에서 중앙집중적인 인증/인가 
-4. Catalog Service에 Redis Cache를 적용하였습니다.
-
+3. 로그인 후에 모든 요청은 Api Gateway에서 토큰 검증 필터를 통해 인증/인가 합니다.
+4. 서비스 간의 통신은 OpenFeign 과 Kafka를 적용하였습니다.
+5. Order Service 와 Payment Service에는  Transaction OutBox Pattern을 사용했습니다.
+6. Order Service에는 Saga Pattern을 사용했습니다.
+7. Catalog Service에서 상품 조회 시 Redis Cache를 적용했습니다.
+8. Chat Service에서 채팅 메시지을 로드할 때 Cursor based paigination로 구현하였습니다.
+9. Chat Service에서 채팅 메시지는 Kafka + Mongo Sink Connector를 통해 MongoDB에 저장합니다.
+       
    
 ### Front end
-1. https://github.com/no2ehi/full-amazon-clone features
-2. load cart
-3. view orders(my profile)
-4. load products (util/loadFake.js)
-5. paypal payment
+1. https://github.com/no2ehi/full-amazon-clone 을 포크해서 NextJS에서 React로 변경하면서  React Query로 Data Fetch, Chat Service를 위한 UI를 구현하였습니다.
+2. 액세스 토큰은 메모리에 저장하고 리프레시 토큰은 httpOnly 쿠키로 저장하여 보안을 강화하였습니다. 
+3. e-commerce 에 chat 기능울 추가하였습니다.(현재는 방만들기, 방 이름 더블클릭으로 채팅 방 전환, 채팅, 무한 스크롤 기능만 구현)
+4. 회원 가입은 이메일 인증 방식으로 변경하였습니다.   
+   
+   
+
 
 ## Screenshot
 ![screenshot1](https://github.com/user-attachments/assets/1cc9e6c1-256c-4094-81ed-7501338f0130)
