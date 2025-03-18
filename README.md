@@ -1,8 +1,4 @@
-https://github.com/no2ehi/full-amazon-clone fork repository
-
-This is my first contribution in the github. 
-
-2024. 7 ~ 9.14
+2024. 7 ~ 9.14 , 2025.1 ~ .3.8
 
 back end : Spring 
 <br>
@@ -11,23 +7,30 @@ front end : react
 
 ## Technologies
 - **Back End**
-1. Spring Boot
-2. Spring Security 6
-3. MySql 8.4
-4. Java 17
+1. Spring Boot 3.4.1
+2. Spring Cloud 2024.0.0
+3. Spring Security 6
+4. MySql 5.7 이상
+5. MongoDB
+6. Redis  
+7. kafka
+8. Amazon S3
 
 - **Front End**
 1. React 18
-2. React Query
+2. React Query v5
 3. React Redux
-4. TailWind CSS
-5. Cloudinary
+4. TailWind CSS 5
+5. Styled Components
+   
 
 ## Features
 ### Back end 
-1. Access token(localStorage), Refresh Token(Httponly Cookie),  Refresh token rotation
-2. Email Verfication Registration
-3. OAuth2 login ready
+1. 액세스 토큰은 메모리에 저장하고 블랙리스트를 도입하였으며, 리프레시 토큰은 httpOnly 쿠키로 저장하고 Refresh Token Rotation 으로 보안을 강화하였습니다.
+2. 회원 가입은 이메일 인증 방식입니다.
+3. 로그인 후에 모든 요청은 Api Gateway에서 중앙집중적인 인증/인가 
+4. Catalog Service에 Redis Cache를 적용하였습니다.
+
    
 ### Front end
 1. https://github.com/no2ehi/full-amazon-clone features
@@ -52,7 +55,7 @@ front end : react
 ### Back End Setup
 **1. java 17 install**
 <br>
-**2.** **application.properties**
+**2.** **application.properties*
 ```
   spring.datasource.url=jdbc:mysql://localhost:3306
   spring.datasource.username=
