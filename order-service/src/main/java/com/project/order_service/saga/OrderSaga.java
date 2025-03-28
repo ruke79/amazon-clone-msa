@@ -178,8 +178,6 @@ public class OrderSaga {
 
             updateOrderStatus(order, OrderStatus.CANCELED);
 
-            rollbackOrderQty(order.getOrderId());
-
             publicCartStateRollback(order.getCustomerId());
 
             publishCouponStateRollback(order.getCustomerId(), order.getCouponApplied());

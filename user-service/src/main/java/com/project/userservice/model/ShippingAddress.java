@@ -43,21 +43,22 @@ public class ShippingAddress extends BaseEntity {
     private String lastname;
 
     @NotBlank(message="주소는 공백이 없어야 합니다.")
-    @Size(min=5, message="주소1은 적어도 5자 이상이어야 합니다.")
+    @Size(min=2, message="주소1은 적어도 2자 이상이어야 합니다.")
     private String address1;
 
     private String address2;
 
     @NotBlank(message="도시명은 공백이 없어야 합니다.")
-    @Size(min=5, message="도시명은 적어도 5자 이상이어야 합니다.")
+    @Size(min=2, message="도시명은 적어도 2자 이상이어야 합니다.")
     private String city;
 
     @NotBlank(message="도명은 공백이 없어야 합니다.")
-    @Size(min=5, message="도명 적어도 5자 이상이어야 합니다.")
+    @Size(min=2, message="도명 적어도 2자 이상이어야 합니다.")
     private String state;
 
     @NotBlank(message="우편번호는 공백이 없어야 합니다.")
-    @Pattern(regexp = "(^$|[0-9]{5})", message="우편번호는 5자리 숫자이어야 합니다.")
+    //@Pattern(regexp = "(^$|[0-9]{5})", message="우편번호는 5자리 숫자이어야 합니다.")
+    @Size(min=2, message="우편번호는 적어도 2자 이상이어야 합니다.")
     private String zipCode;
     
     private String country;

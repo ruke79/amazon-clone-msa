@@ -4,6 +4,7 @@ const { merge } = require("webpack-merge");
 const baseConfig = require("./webpack.config.base");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const dotenv = require('dotenv');
 
 
@@ -11,16 +12,21 @@ dotenv.config({path: './.env.production'})
 
 module.exports = merge(baseConfig, {
   mode: "production",
-
+  devtool: 'source-map',
   plugins: [
     new HtmlWebPackPlugin({
       template: './public/index.html'
     }),     
     new webpack.EnvironmentPlugin(["REACT_APP_API_URL", "REACT_APP_PROFILE", 
       "PUBLIC_URL", "REACT_APP_PAYPAL_CLIENT_ID", "REACT_APP_PAYPAL_CLIENT_SECRET" ]),
-   
+  
+      new CopyPlugin({
+        patterns: [
+          { from: "public" , to: "public" }
+        ]
+      }),
   ],
-
+  
   optimization: {
     minimize: true,
     splitChunks: {},

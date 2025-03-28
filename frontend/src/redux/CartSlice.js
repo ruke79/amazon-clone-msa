@@ -24,7 +24,7 @@ export const cartSlice = createSlice({
         },
         updateCart(state , action) {
             state.cartItems = action.payload;
-            state.status = CartStatus.UPDATED;
+            //state.status = CartStatus.UPDATED;
         },
         emptyCart(state , action) {
             state.cartItems = [];

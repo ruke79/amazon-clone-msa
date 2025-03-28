@@ -27,7 +27,7 @@ const signin = async (user) => {
         const data  = await api.post("/user-service/api/auth/public/signin", user);
         return data;
     } catch(err) {
-        console.log(err);
+        console.log("erorr >>>", err.response?.data.message);
     }
 }
 
@@ -61,8 +61,9 @@ const SignInPage = () => {
         throwOnError : true,
         onSuccess: (response) => {
 
-            try {
-                console.log(response);
+            
+
+            try {            
                 const access = response.headers['access'];
 
                 const decodedToken = jwtDecode(access);
@@ -74,10 +75,12 @@ const SignInPage = () => {
                 queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });                                
             } catch(error) {
                  toast.error("Login Failed. Please retry.");
+                 console.log("erorr >>>", error.response?.data.message);
+                 
             }
         },
         onError: (error) => {                       
-            console.log(error);            
+            console.log("erorr >>>", error.response?.data.message);
         }
     });
 
@@ -98,7 +101,7 @@ const SignInPage = () => {
         //localStorage.setItem("access_token", accessToken);
         //localStorage.setItem("USER", JSON.stringify(user));
 
-        
+         
         //store the token on the context state  so that it can be shared any where in our application by context provider       
                         
          login(user, accessToken, decodedToken.exp);
@@ -111,7 +114,7 @@ const SignInPage = () => {
     const signInHandler = async () => {
 
         setAuthenticationStatus(STATUS.PENDING);       
-        mutate({ email, password });
+        mutate({ email, password });        
 
         
         setAuthenticationStatus(STATUS.SUCCEEDED);
@@ -124,8 +127,7 @@ const SignInPage = () => {
                 <div className="mx-auto my-2">
                     <Link to="/">
                         <img
-                            //src={amazonLogoDark}
-                            src = {`${process.env.PUBLIC_URL}/assets/images/amazon-dark.png`}
+                            src={amazonLogoDark}                            
                             alt="amazon-logo"
                             className="object-contain w-28 md:w-48 pt-2"
                         />

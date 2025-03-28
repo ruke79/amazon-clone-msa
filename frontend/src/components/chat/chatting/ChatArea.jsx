@@ -55,6 +55,8 @@ export function ChatArea() {
   
   const cursor = useRef('-1');
   const messageRef = useRef(null);
+ 
+
 
   const { roomMessages, isPending, isFetch } = useFetchRoomMessages(room, cursor.current);
 

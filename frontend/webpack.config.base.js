@@ -7,7 +7,8 @@ module.exports = {
     level: 'info',
  },  
   entry: "./src/index.jsx",
-  output: {        
+  output: {     
+    publicPath: "/",   
 	  path: path.resolve(__dirname, "dist"),
 	  filename: '[name].bundle.js',
     clean: true,
@@ -55,7 +56,7 @@ module.exports = {
         exclude: ["/node_modules"],          
         type : "asset/resource",
         generator: {
-          filename: "image/[name].[ext]"
+          filename: "assets/images/[name].[ext]"
         }
       }
     ],

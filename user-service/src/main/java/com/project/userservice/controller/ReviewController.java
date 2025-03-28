@@ -58,7 +58,7 @@ public class ReviewController {
 
 
 
-    @PostMapping("/{productId}/add")
+    @PostMapping("/add/{productId}")
     ResponseEntity<?> addReview(@PathVariable("productId") Long id, @RequestPart("review") ReviewRequest request, 
     @RequestPart(value="image", required=false) List<MultipartFile> images,    @AuthenticationPrincipal UserDetails userDetails) throws IOException  {
            
@@ -95,11 +95,10 @@ public class ReviewController {
 
                 try {
 
-                    if (reviewService.deleteReview(username, productId))
-                        return new ResponseEntity<>(new MessageResponse(StatusMessages.REVIEW_DELETE_SUCCESS), HttpStatus.OK);
-                    else {
-                        return new ResponseEntity<>(new MessageResponse(StatusMessages.REVIEW_DELETE_FAILED), HttpStatus.BAD_REQUEST);
-                    }
+                    List<ReviewDto> response = reviewService.deleteReview(username, productId);
+                    
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                    
                 } catch(RuntimeException e) {
                     e.printStackTrace();
                     

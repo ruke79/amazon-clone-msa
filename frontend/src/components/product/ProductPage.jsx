@@ -23,6 +23,8 @@ const ProductPage = ({ product }) => {
 
         
         if (isSuccess) {
+            console.log(reviews[0]);
+            
             function calculatePercentage(num) {
                 return (
                     reviews.length > 0 ? (reviews.reduce((total, review) => {
@@ -57,8 +59,7 @@ const ProductPage = ({ product }) => {
             ];
         }
 
-        console.log(product);
-
+        
     }, [isPending]);
 
     

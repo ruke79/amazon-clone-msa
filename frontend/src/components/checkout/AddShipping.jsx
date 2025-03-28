@@ -68,7 +68,7 @@ const AddShipping = ({
         country: Yup.string()
             .required("Country Name is required.")
             .min(2, "Country Name must be atleast 2 charactes")
-            .max(30, "Country Name must be less than 30 charactes"),
+            .max(40, "Country Name must be less than 40 charactes"),
     });
 
     const handleChange = (e) => {

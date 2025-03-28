@@ -358,7 +358,6 @@ export const loadCheckOut = async (userEmail) => {
 export const getCoupons = async (userEmail) => {
 
   try {
-
     
     const { data } = await getRequest("/coupon-service/api/coupon/coupons", { params : { email : userEmail } });    
     

@@ -256,12 +256,8 @@ public class CartService {
 
         Optional<Cart> existed = cartRepository.findByUserId(userId);
         if (existed.isPresent()) {
-
             
-            cartRepository.delete(existed.get());
-            log.info("Deleteing cart completed");
-            
-
+            cartRepository.delete(existed.get());                        
         }
     }
 
@@ -286,6 +282,7 @@ public class CartService {
         return cartTotal;
     }
 
+    @Transactional
     public Cart saveCart(CartRequest request) {
 
         if (request.getProducts().size() > 0) {

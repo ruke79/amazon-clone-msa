@@ -73,21 +73,8 @@ export const loader = async ({params, request}) => {
         const searchParams = new URL(request.url).searchParams;
         const tab = Number(searchParams.get('tab')) || 0;
 
-        return { tab: tab };
-        
-        // try {
-
-        //     const { data } = await getRequest("/pay-service/api/pay/payment"); 
-                        
-        
-        //     return {
-        //           user : data,
-        //           tab : tab 
-        //     }
-        
-        // } catch (error) {
-        //     toast.error(error);
-        // }
+        return { tab: tab };        
+       
 };
 
 

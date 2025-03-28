@@ -65,45 +65,45 @@ export const profile =[
             },
         ],
     },
-    {
-        heading: "My Lists",
-        links: [
-            {
-                name: "Whishlist",
-                link: "/profile/whishlist",
-            },
-            {
-                name: "Recently Viewed",
-                link: "/profile/recent",
-            },
-        ],
-    },
-    {
-        heading: "Customer Service",
-        links: [
-            {
-                name: "My Message",
-                link: "/profile/messages",
-            },
-            {
-                name: "Service Records",
-                link: "/profile/services",
-            },
-        ],
-    },
-    {
-        heading: "Policy",
-        links: [
-            {
-                name: "My Message",
-                link: "/profile/messages",
-            },
-            {
-                name: "Service Records",
-                link: "/profile/services",
-            },
-        ],
-    },
+    // {
+    //     heading: "My Lists",
+    //     links: [
+    //         {
+    //             name: "Whishlist",
+    //             link: "/profile/whishlist",
+    //         },
+    //         {
+    //             name: "Recently Viewed",
+    //             link: "/profile/recent",
+    //         },
+    //     ],
+    // },
+    // {
+    //     heading: "Customer Service",
+    //     links: [
+    //         {
+    //             name: "My Message",
+    //             link: "/profile/messages",
+    //         },
+    //         {
+    //             name: "Service Records",
+    //             link: "/profile/services",
+    //         },
+    //     ],
+    // },
+    // {
+    //     heading: "Policy",
+    //     links: [
+    //         {
+    //             name: "My Message",
+    //             link: "/profile/messages",
+    //         },
+    //         {
+    //             name: "Service Records",
+    //             link: "/profile/services",
+    //         },
+    //     ],
+    // },
     {
         heading: "Sign Out",
         link: []

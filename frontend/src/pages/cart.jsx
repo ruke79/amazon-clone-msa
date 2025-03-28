@@ -22,7 +22,8 @@ const Cart = () => {
     const dispatch = useDispatch();   
                 
     
-    const { cartData, isSuccessCart, isPendingCart } = useFetchCart(user.email, cart.status, cart.cartId);
+    const { cartData, isSuccessCart, status, isPendingCart } = useFetchCart(user.email, cart.status, cart.cartId);
+
     
     useEffect(() => {
 
@@ -32,11 +33,13 @@ const Cart = () => {
                 dispatch(updateCart(cartData));                            
             }
         }
-    }, [cartData])
+    }, [cartData, isPendingCart])
 
-    
+
     if(isPendingCart) return <DotLoaderSpinner loading={isPendingCart}/>;
 
+    if(status === "error") return;
+    
     
 
     return (

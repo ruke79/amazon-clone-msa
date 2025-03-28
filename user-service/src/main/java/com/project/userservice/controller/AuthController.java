@@ -175,7 +175,7 @@ public class AuthController {
 
 
     @GetMapping("/user/id")
-    public ResponseEntity<?> findUserByEmail(@RequestParam String email) {
+    public ResponseEntity<?> findUserByEmail(@RequestParam("email") String email) {
 
         log.info("FeignClient: " + email);
 
@@ -200,7 +200,7 @@ public class AuthController {
     }    
 
     @GetMapping("/user/name")
-    public ResponseEntity<?> findUserByName(@RequestParam String userName) {
+    public ResponseEntity<?> findUserByName(@RequestParam("userName") String userName) {
 
         
         User user = userService.findByUsername(userName);
@@ -243,8 +243,8 @@ public class AuthController {
     }
 
     @PostMapping("/public/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String token,
-            @RequestParam String newPassword) {
+    public ResponseEntity<?> resetPassword(@RequestParam("token") String token,
+            @RequestParam("newPassword") String newPassword) {
 
         try {
             userService.resetPassword(token, newPassword);

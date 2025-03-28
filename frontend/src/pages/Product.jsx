@@ -11,13 +11,11 @@ const SingleProduct = () => {
     const product = useLoaderData();
         
     return (
-        <React.Fragment>
-            product ? (
+        <React.Fragment>            
             <Header title={product.name} />
             <main className="bg-white w-full">
             <ProductPage product={product} />
-            </main>    
-            ) : <></>        
+            </main>                
         </React.Fragment>
     );
 };

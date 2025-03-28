@@ -1,5 +1,6 @@
 package com.project.common.dto;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,5 +30,29 @@ public class ProductSkuDto {
 
     private Set<ProductSizeDto> sizes;
     private ProductColorDto color;
+
+    public boolean hasSize(String size) {
+        for (Iterator<ProductSizeDto> it = sizes.iterator(); it.hasNext(); ) {
+            ProductSizeDto f = it.next();
+            if (f.getSize() == size) {
+                return true;
+            }            
+        }
+        return false;
+    }
+
+    public ProductSizeDto getSize(String size) {
+        for (Iterator<ProductSizeDto> it = sizes.iterator(); it.hasNext(); ) {
+            ProductSizeDto f = it.next();
+            if (f.getSize() == size) {
+                return f;
+            }            
+        }
+        return null;
+    }
+
+    public boolean hasColor(String colorId) {
+        return color.getId() == colorId;
+    }
 
 }

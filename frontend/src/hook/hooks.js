@@ -80,12 +80,23 @@ export const useFetchReviews = (productId) => {
   };
 };
 
-export const useFetchAddresses = (userId) => {
+export const useFetchAddresses = (userId, addresses) => {
 
-  const { data, isPending, isSuccess } = useQuery({
-    queryKey: [`address/${userId}`],
+  const queryClient = useQueryClient();
+
+  const invalidate = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: [`address/${userId}`, addresses],
+      refetchType: 'active',
+    },
+    );
+  }
+
+  const { data, isPending, isSuccess, refetch } = useQuery({
+    queryKey: [`address/${userId}`, addresses],
     queryFn: async () => {
       const res = await getAddresses();
+
       return res;
     },
     throwOnError: true,
@@ -95,6 +106,8 @@ export const useFetchAddresses = (userId) => {
     addressesData: data,
     isPendingAddress: isPending,
     isSuccessAddress: isSuccess,
+    updateFetchAddresses: refetch,
+    invalidate
   };
 };
 
@@ -105,6 +118,8 @@ export const useFetchCoupons = (email) => {
     queryKey: [`coupons/${email}`],
     queryFn: async () => {
       const res = await getCoupons(email);
+      console.log("coupon");
+      console.log(res);
       return res;
     },
     throwOnError: true,
@@ -137,14 +152,14 @@ export const useFetchOrders = (filter, email) => {
   };
 };
 
-export const useFetchCart = (email, status, cartId) => {
+export const useFetchCart = (email, cartStatus, cartId) => {
 
 
-  const { data, isPending, isSuccess, refetch } = useQuery({
-    queryKey: [{ cartId: cartId, status: status }],
+  const { data, isPending, status, isSuccess, refetch } = useQuery({
+    queryKey: [{ cartId: cartId, cartStatus: cartStatus }],
     queryFn: async () => {
       const res = await loadCart(email);
-      console.log(res);
+      
       return res;
     },
     throwOnError: true,
@@ -153,6 +168,7 @@ export const useFetchCart = (email, status, cartId) => {
   return {
     cartData: data,
     isPendingCart: isPending,
+    status,
     isSuccessCart: isSuccess,
     updateCart: refetch,
   };

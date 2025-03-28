@@ -264,7 +264,7 @@ public class SearchService {
         return null;
     }
 
-    @Cacheable(value="search_cache", cacheManager = "redisCacheManager")
+    //@Cacheable(value="search_cache", cacheManager = "redisCacheManager")
     public SearchResultDto searchProducts(SearchParamsRequest params) {
 
         List<Long> productIds = null;

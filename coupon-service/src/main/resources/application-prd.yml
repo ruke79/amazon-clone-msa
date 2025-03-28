@@ -1,0 +1,44 @@
+server:
+  port: 8183
+
+kafka:
+  url: 
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://:8761/eureka
+
+feign:
+  user-url: http:/:8080
+
+
+spring:
+  application:
+    name: coupon-service
+
+  config:
+     import: "optional:configserver:http://:8888"
+
+  datasource:
+    url: jdbc:mysql://
+    username: 
+    password: 
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        dialect : org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    root : info
+      

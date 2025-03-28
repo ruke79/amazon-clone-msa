@@ -52,10 +52,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "webpack --config webpack.config.prod.js",
     "dev": "webpack-dev-server --open --config webpack.config.dev.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "webpack --config webpack.config.prod.js"
   },
   "eslintConfig": {
     "extends": [
@@ -76,6 +74,7 @@
     "autoprefixer": "^10.4.20",
     "babel-loader": "^9.2.1",
     "babel-plugin-macros": "^3.1.0",
+    "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
     "customize-cra": "^1.0.0",

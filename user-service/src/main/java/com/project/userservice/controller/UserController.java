@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @GetMapping("/select/{addressId}")
-    ResponseEntity<?> selectShippingAddresses(@PathVariable String addressId,
+    ResponseEntity<?> selectShippingAddresses(@PathVariable("addressId") String addressId,
     @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
@@ -104,7 +104,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{addressId}")
-    ResponseEntity<?> deleteShippingAddresses(@PathVariable String addressId,
+    ResponseEntity<?> deleteShippingAddresses(@PathVariable("addressId") String addressId,
     @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {

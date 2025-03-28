@@ -42,14 +42,14 @@ public class ReviewService {
     private final CatalogServiceClient catalogServiceClient;
 
     @Transactional
-    public boolean deleteReview(String username, Long id) {
+    public List<ReviewDto> deleteReview(String username, Long id) {
 
         User user = userRepository.findByUserName(username).orElse(null);
 
 
         if (null == user) {
 
-            return false;
+            return null;
         }
 
         
@@ -57,10 +57,12 @@ public class ReviewService {
         // Product p = productRepository.findById(id)
         // .orElseThrow(() -> new RuntimeException("Product not found! " + productId));
 
+        
         List<Review> reviews = reviewRepository.findByProductId(id);
 
         if (!reviews.isEmpty()) {
 
+        
             Review review = reviews.stream().filter(r -> r.getReviewedBy().equals(user)).findFirst()
                     .get();
 
@@ -68,11 +70,43 @@ public class ReviewService {
 
                 reviewRepository.deleteById(review.getReviewId());
 
-                return true;
+                reviews.remove(review);
+
+                if (! reviews.isEmpty()) {
+                    float totalPoints = reviews.stream().map(Review::getRating).reduce(0F, Float::sum);
+                    float rating = totalPoints / reviews.size();
+                            
+                    catalogServiceClient.updateRating(id, rating);
+                }
+                else 
+                   catalogServiceClient.updateRating(id, 0.0F);                
             }
+
+            List<ReviewDto> result = new ArrayList<>();   
+
+            for (Review r : reviews) {
+
+                ReviewDto dto = new ReviewDto();
+                dto.setFit(r.getFit());
+                dto.setImages(r.getImages());
+                dto.setRating(r.getRating());
+                dto.setReview(r.getReview());
+                dto.setStyle(ReviewStyleDto.builder()
+                        .color(r.getStyle().getColor())
+                        .image(r.getStyle().getImage()).build());
+                dto.setSize(r.getSize());
+                dto.setReviewedBy(ReviewerDto.builder()
+                        .name(username)
+                        .image(user.getImage())
+                        .build());
+
+                result.add(dto);
+            }
+
+            return result;
         }
 
-        return false;
+        return null;
     }
 
     @Transactional(readOnly = true)
