@@ -43,7 +43,7 @@ public class SearchController {
 
     //Test 
     @GetMapping("/search/category")
-    public ResponseEntity<?> searchProductsByCategory(@RequestParam Long  category, int pageNo, int pageSize)  {
+    public ResponseEntity<?> searchProductsByCategory(@RequestParam("category") Long  category, int pageNo, int pageSize)  {
 
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
 

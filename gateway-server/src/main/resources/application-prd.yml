@@ -1,0 +1,190 @@
+server:      
+  port: 8000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: gateway-server
+  
+  config:    
+    import: optional:configserver:http://localhost:8888
+
+
+  app:    
+     jwtSecret: 
+
+  main:
+    web-application-type: reactive
+  
+  cloud:   
+    gateway:
+      default-filters:
+       - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+       - name: CircuitBreaker
+         args:
+            name: defaultCircuitBreaker
+            fallbackUri: forward:/fallback
+      
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: '*'              
+            allow-credentials: true 
+            allowedHeaders: 
+              - 'Authorization'
+              - 'Content-Type'
+            maxAge : 3600
+            allowedMethods: 
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - PATCH
+              - OPTIONS
+            exposedHeaders: 
+              - 'ACCESS'
+              - 'Set-Cookie'
+
+
+      discovery:
+        locator:
+          enabled: true
+          #lowerCaseServiceId: true
+      
+      routes:        
+
+        - id:  user-service
+          uri: lb://user-service
+          predicates:
+              - Path=/user-service/api/auth/public/**, \
+                /user-service/registrationConfirm, /user-service/api/token/refresh, /user-service/api/review/**
+          filters:              
+              - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+              - Path=/user-service/api/user/**, /user-service/api/auth/**, 
+          filters:              
+              - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
+              - JwtAuthorization              
+            
+        - id: catalog-service
+          uri: lb://catalog-service
+          predicates:
+              - Path=/catalog-service/**
+          filters:
+              #- RemoveRequestHeader=Cookie
+              - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
+
+        - id: cart-service
+          #uri: lb://cart-service
+          uri: http://:8082
+          predicates:
+              - Path=/cart-service/**
+          filters:              
+              - JwtAuthorization       
+              #- RemoveRequestHeader=Cookie
+              - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
+
+        - id: coupon-service
+          #uri: lb://coupon-service
+          uri: http://:8183
+          predicates:
+              - Path=/coupon-service/**
+          filters:
+              #- RemoveRequestHeader=Cookie
+              - RewritePath=/coupon-service/(?<segment>.*), /$\{segment}
+              - JwtAuthorization                
+        
+        - id: order-service
+          #uri: lb://order-service
+          uri: http://:8084
+          predicates:
+              - Path=/order-service/**
+          filters:
+              #- RemoveRequestHeader=Cookie
+              - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+              - JwtAuthorization                
+
+        - id: pay-service
+          #uri: lb://pay-service
+          uri: http://:8085
+          predicates:
+              - Path=/pay-service/**
+          filters:
+              #- RemoveRequestHeader=Cookie
+              - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
+              - JwtAuthorization                
+
+        - id: chat-service
+          uri: lb:ws://chat-service
+          predicates:
+              - Path=/chat-service/**
+          filters:
+              #- RemoveRequestHeader=Cookie
+              - RewritePath=/chat-service/(?<segment>.*), /$\{segment}              
+
+  # rabbitmq:
+  #   host: localhost
+  #   port: 5672
+  #   username: 
+  #   password: 
+
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 300s
+        cancel-running-future: false
+
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        allow-health-indicator-to-fail: false
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 10s 
+        wait-duration-in-open-state: 10s
+        automatic-transition-from-open-to-half-open-enabled: false
+        permitted-number-of-calls-in-half-open-state:
+        record-exceptions:
+          - java.util.concurrent.TimeoutException
+          - org.springframework.cloud.gateway.support.NotFoundException
+          - io.github.resilience4j.circuitbreaker.CallNotPermittedException 
+
+    instances:
+      defaultCircuitBreaker:
+        baseConfig: default  
+        failure-rate-threshold: 50
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway, refresh, health, beans, http, busrefresh, info, metrics, prometheus
+
+logging:
+    level:
+      root : info       
+    
+

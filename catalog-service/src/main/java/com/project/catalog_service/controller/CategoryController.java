@@ -160,7 +160,7 @@ public class CategoryController {
     }
 
     @GetMapping("/product/subcategories")
-    ResponseEntity<?> getSubcategories(@RequestParam String category) {
+    ResponseEntity<?> getSubcategories(@RequestParam("category") String category) {
 
         try {
 

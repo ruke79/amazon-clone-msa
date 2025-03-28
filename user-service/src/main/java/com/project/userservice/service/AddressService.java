@@ -48,9 +48,6 @@ public class AddressService {
 
         userRepository.save(user);  // prevent java.stackoverflow        
 
-               
-        
-
         List<AddressDto> result = new ArrayList<>();
         for ( ShippingAddress src : user.getShippingAddresses()) {
             AddressDto dto = new AddressDto();
@@ -60,8 +57,7 @@ public class AddressService {
 
         return result;
     }
-
-
+        
     
     
 
@@ -109,9 +105,17 @@ public class AddressService {
         if (!user.isPresent())
             return null;
 
-        shippingAddressRepository.deleteById(Long.parseLong(addressId));
+        Optional<ShippingAddress> deleteAddress = shippingAddressRepository.findById(Long.parseLong(addressId));
+        ;
+        if (deleteAddress.isPresent()) {
+            user.get().getShippingAddresses().remove(deleteAddress.get());
+            shippingAddressRepository.delete(deleteAddress.get());
+        }
 
         List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
+
+        if (addresses.isEmpty()) 
+          return null;
 
         List<AddressDto> addressDtos = new ArrayList<>();
         for (ShippingAddress address : addresses) {
@@ -128,10 +132,10 @@ public class AddressService {
             dto.setPhoneNumber(address.getPhoneNumber());
             dto.setZipCode(address.getZipCode());
 
-            if (address.getShippingAddressId() == Long.parseLong(addressId)) {
-                dto.setActive(true);
-            } else
-                dto.setActive(false);
+            // if (address.getShippingAddressId() == Long.parseLong(addressId)) {
+            //     dto.setActive(true);
+            // } else
+            dto.setActive(false);
 
             addressDtos.add(dto);
         }

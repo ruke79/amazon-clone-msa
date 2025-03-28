@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
-@FeignClient(name = "cart-service")
+@FeignClient(name = "cart-service", url="${feign.cart-url}")
 public interface CartServiceClient {
 
     @GetMapping("api/cart/{cartProductId}") 

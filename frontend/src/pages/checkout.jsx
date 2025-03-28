@@ -22,20 +22,21 @@ const Checkout = () => {
 
     const { checkoutData, isPendingCheckOut, isSuccessCheckOut} =
      useFetchCheckOut(user.email, cart.cartId, cart.status);
-
-    const { addressesData, isPendingAddress, isSuccessAddress } = useFetchAddresses(user.userId);
-        
+            
     const [addresses, setAddresses] = useState([]);        
+
+    const { addressesData, isPendingAddress, invalidate, isSuccessAddress } = useFetchAddresses(user.userId, addresses);
+
     const [paymentMethod, setPaymentMethod] = useState(user.defaultPaymentMethod);
     const [totalAfterDiscount, setTotalAfterDiscount] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("");
     const [loading, setLoading] = useState(false);
 
-    
-    
+ 
 
      useEffect(() => {
 
+        console.log(addresses);
         let check = addresses.find((address) => address.active === true);        
         if (check) {
             setSelectedAddress(check);
@@ -51,10 +52,10 @@ const Checkout = () => {
         return <DotLoaderSpinner loading={isPendingCheckOut || isPendingAddress} />
     }
 
-    if ( addresses.length === 0 && isSuccessCheckOut && isSuccessAddress) 
+    if ( addresses.length === 0 && addressesData && isSuccessCheckOut && isSuccessAddress) 
     {       
-        
         setAddresses(addressesData);        
+        invalidate();
     }
 
     return (

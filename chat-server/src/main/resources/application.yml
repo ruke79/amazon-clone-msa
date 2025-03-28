@@ -1,11 +1,8 @@
 server:
   port: 8086
 
-frontend:
-    url: http://localhost:3000
-
 kafka:
-    url: http://localhost:9092
+    url: http://localhost:29092
 
 
 eureka:
@@ -18,7 +15,8 @@ eureka:
       service-url:
         defaultZone: http://localhost:8761/eureka
 
-    
+feign:
+  user-url: http://localhost:8080     
 
 spring:
     application:
@@ -30,9 +28,9 @@ spring:
        
 
     datasource:
-      url: jdbc:mysql://localhost:3306/chatdb?serverTimezone=Asia/Seoul
-      username: admin
-      password: ysY2273!
+      url: jdbc:mysql://localhost:3306/chatdb
+      username: 
+      password: 
 
     jpa:
       hibernate:
@@ -40,10 +38,10 @@ spring:
 
     data:
       mongodb:
-        client: mongodb://admin:ysY2273@localhost:27017
+        client: mongodb://localhost:27017
         name: chat
-        username: admin
-        password: ysY2273!
+        username: 
+        password: 
         auto-index-creation: true
       redis:
         repositories:
@@ -55,10 +53,10 @@ spring:
             min-idle: 2  
         host: localhost
         port: 6379
-        password: ysY2273!
+        password: 
 
     app:    
-      jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+      jwtSecret: 
 
 logging:
     level:

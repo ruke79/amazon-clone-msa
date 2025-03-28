@@ -12,6 +12,7 @@ import ChatDetail from "components/chat/detail/ChatSidebar";
 import ChatUserinfo from "components/chat/list/ChatUserinfo";
 import { useSelector } from "react-redux";
 import { selectedRoom } from "../../redux/ChatSelectors";
+import EmptyChatArea from "components/chat/chatting/EmptyArea";
 
 
 const Wrapper = styled.div`
@@ -52,7 +53,9 @@ flex-direction: column;
           <Outlet/>
         </ListWrapper>     
     
-        <ChatArea />         
+
+       <ChatArea />         
+       
          <ChatDetail /> 
         </Wrapper>
       </StompProvider>

@@ -1,6 +1,6 @@
 import { Rating } from "@mui/material";
 import { useAuthContext } from "../../../store/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddReview from "./Review";
 import Table from "./Table";
 import { useNavigate } from "react-router-dom";
@@ -9,15 +9,29 @@ const Reviews = ({ product, num_reviews, userReviews, updateReviews }) => {
     const navigate = useNavigate();
 
     const { token } = useAuthContext();
+    const [key, setKey] = useState(0);
+    const [prdRating, setPrdRating] = useState(product.rating);
 
     const [reviews, setReviews] = useState(userReviews);
-    
-     
-    console.log(product.rating);
-    
+
+    useEffect(() => {
+
+        if (reviews && reviews.length > 0) {
+            console.log(reviews);
+            const totalPoints = reviews.reduce((acc, currReview) => {
+                return acc + currReview.rating;           
+            }, 0.0);
+            setPrdRating(totalPoints / reviews.length);
+        }
+        
+
+    }, [reviews, setReviews]);
+
 
     return (
-        <div className="mt-4 bg-slate-100 mx-auto w-full md:w-4/5 p-4 border rounded-md">
+        
+        <div key={key} className="mt-4 bg-slate-100 mx-auto w-full md:w-4/5 p-4 border rounded-md" >
+            
             <h3 className="mb-2 font-bold text-2xl">
                 Customer Reviews ({num_reviews})
             </h3>
@@ -27,15 +41,15 @@ const Reviews = ({ product, num_reviews, userReviews, updateReviews }) => {
                     <div className="mt-2 max-md:ml-auto flex items-center text-m font-semibold">
                         <Rating
                             name="half-rating-react"
-                            value={product.rating}
+                            value={prdRating}
                             precision={0.5}
                             readOnly
                             style={{ color: "#FACF19 " }}
                         />
                         <span className="ml-2">
-                            {product.rating === 0.0
+                            {prdRating === 0.0
                                 ? "No review yet."
-                                : product.rating.toFixed(2)}
+                                : prdRating.toFixed(2)}
                         </span>
                     </div>
                 </div>
@@ -65,9 +79,9 @@ const Reviews = ({ product, num_reviews, userReviews, updateReviews }) => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div>            
             {token ? (                
-                  <AddReview product={product} setReviews={setReviews} updateReviews={updateReviews} />
+                  <AddReview product={product} key={key} setKey={setKey} setPrdRating={setPrdRating} setReviews={setReviews} updateReviews={updateReviews} />
             ) : (
                 <button
                     onClick={() => navigate('/signin')}

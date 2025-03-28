@@ -47,7 +47,7 @@ const Summary = ({
           const result = await applyCoupon(cart.cartTotal, applycoupon ? applycoupon : coupon, user.email);
 
           
-        if (result.message) {
+        if (result?.message) {
             setError(result.message);
             setDiscount("");
             setTotalAfterDiscount("");
@@ -96,7 +96,7 @@ const Summary = ({
         }
     };
 
-    if(coupon ==="" && isSuccess) {
+    if(coupon ==="" && coupons && isSuccess) {
 
         if (coupons?.length > 0) {
             setCoupon(coupons[0]);            

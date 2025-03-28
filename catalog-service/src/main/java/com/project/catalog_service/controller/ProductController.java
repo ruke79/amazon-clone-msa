@@ -65,7 +65,7 @@ public class ProductController {
     
 
     @GetMapping(value = "/product/products/page")
-    ResponseEntity<?> getProducts(@RequestParam String category, @RequestParam String cursorId, @RequestParam int pageSize) {
+    ResponseEntity<?> getProducts(@RequestParam("category") String category, @RequestParam("cursorId") String cursorId, @RequestParam("pageSize") int pageSize) {
 
         try {
            
@@ -81,7 +81,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    ResponseEntity<?> getParentProduct(@PathVariable String productId) {
+    ResponseEntity<?> getParentProduct(@PathVariable("productId") String productId) {
 
         try {
 
@@ -109,7 +109,7 @@ public class ProductController {
     }
 
     @GetMapping("/cart/{product_id}")
-    public ResponseEntity<?> getCartProductInfo(@PathVariable(required = true) String product_id,
+    public ResponseEntity<?> getCartProductInfo(@PathVariable(value="product_id", required = true) String product_id,
             @RequestParam("style") int style, @RequestParam("size") int size)
 
     {
@@ -181,7 +181,7 @@ public class ProductController {
 
 
     @PutMapping("/product/rating")
-    public void updateRating(@RequestParam Long id, @RequestParam float rating) {
+    public void updateRating(@RequestParam("id") Long id, @RequestParam("rating") float rating) {
 
         productService.updateRating(id, rating);
         

@@ -78,7 +78,7 @@ public class CartController {
     // }
 
     @GetMapping("/loadcart") 
-    ResponseEntity<?> loadCart(@RequestParam String userId) {
+    ResponseEntity<?> loadCart(@RequestParam("userId") String userId) {
 
         
             try {

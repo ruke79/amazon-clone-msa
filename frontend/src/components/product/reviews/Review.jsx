@@ -5,7 +5,7 @@ import { uploadImages } from "util/imageUtil";
 import dataURItoBlob from "util/dataURItoBlob";
 import { Rating } from "@mui/material";
 import api, { postRequest, deleteRequest } from 'util/api';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImagesReview from "./Images";
 import Select from "./Select";
 import axios from "axios";
@@ -21,10 +21,10 @@ const deleteReview = async (productId) => {
     return data;
 }
 
-const addReview = async ({ productId, formData, updateReviews }) => {
+const addReview = async ({ productId, formData }) => {
     
     const { data } = await postRequest(
-        `user-service/api/review/${productId}/add`, formData,
+        `user-service/api/review/add/${productId}`, formData,
         {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -42,7 +42,7 @@ const addReview = async ({ productId, formData, updateReviews }) => {
 
 
 
-const AddReview = ({ product, setReviews }) => {
+const AddReview = ({ product, key, setKey, setPrdRating, setReviews, updateReviews }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [size, setSize] = useState("");
@@ -54,11 +54,10 @@ const AddReview = ({ product, setReviews }) => {
 
     const showBoundary = useErrorBoundary();
 
-
+    
     const { mutate: addReviewOp } = useMutation({
         mutationFn: addReview,
-        onSuccess: (response) => {
-
+        onSuccess: (response) => {            
             setReviews(response);
             dispatch(
                 showDialog({
@@ -79,6 +78,7 @@ const AddReview = ({ product, setReviews }) => {
 
             updateReviews();
 
+
         },
         onError: (error) => {
             showBoundary(error);
@@ -88,7 +88,8 @@ const AddReview = ({ product, setReviews }) => {
     const { mutate: deleteReviewOp } = useMutation({
         mutationFn: deleteReview,
         onSuccess: (response) => {
-            setReviews(null);
+            setReviews(response);            
+            
             dispatch(
                 showDialog({
                     header: "Delete review Successfully!",
@@ -98,6 +99,11 @@ const AddReview = ({ product, setReviews }) => {
                     }],
                 })
             );
+
+            setPrdRating(0.0);
+            updateReviews();
+
+
         },
         onError: (error) => {
             showBoundary(error);
@@ -166,20 +172,7 @@ const AddReview = ({ product, setReviews }) => {
             let files = images.map((img) => {
                 return dataURItoBlob(img);
             });
-
-            // const path = "review images";
-            // let imageUploader = files.map(async (file) => {
-            //     let formData = new FormData();
-            //     formData.append("path", path);
-            //     formData.append("file", file);
-            //     formData.append("upload_preset", "nd7idl8b");
-            //     formData.append("api_key", process.env.REACT_APP_CLOUDINARY_KEY);
-            //     formData.append("timestamp", (Date.now() / 1000) | 0);
-
-
-            //     const image = await uploadImages(formData);
-            //     uploaded_images.push(image.url);
-            // });
+            
             
             files.map((file) => {
                 formData.append("image", file);
@@ -236,7 +229,7 @@ const AddReview = ({ product, setReviews }) => {
                     className="mt-4"
                     name="half-rating-read"
                     defaultValue={0}
-                    value={rating}
+                    value={parseFloat(rating)}
                     precision={0.5}
                     onChange={(e) => setRating(e.target.value)}
                     style={{ color: "#FACF19", fontSize: "3rem" }}

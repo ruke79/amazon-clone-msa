@@ -86,7 +86,7 @@ public class CouponController {
     }
 
     @DeleteMapping("/delete")
-    ResponseEntity<?> deleteCoupon(@RequestParam String id) {
+    ResponseEntity<?> deleteCoupon(@RequestParam("id") String id) {
 
         try {
             couponService.delete(id);

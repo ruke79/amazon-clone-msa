@@ -25,7 +25,8 @@ const Orders = () => {
 
      const { orders, isSuccess, isPending } = useFetchOrders(filter, user.email);
 
-     if ( isPending) return <div>Loading...</div>
+     if ( isPending) return <div>Loading...</div>;
+     //if (!orders) return <div>Something Wrong</div>;
 
      
      
@@ -58,7 +59,7 @@ const Orders = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((order, i) => (
+                            {orders && orders.map((order, i) => (
                                 <tr key={i}>
                                     <td>{order?.id}</td>
                                     <td className="flex">

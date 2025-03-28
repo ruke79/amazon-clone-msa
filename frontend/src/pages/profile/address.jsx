@@ -3,17 +3,29 @@ import Layout from "components/profile/Layout";
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
+import DotLoaderSpinner from "components/loader/Loading";
 import api, { getRequest } from "util/api";
+import { useFetchAddresses } from "hook/hooks";
 
 const Address = () => {
 
-    const { userAddresses, tab } = useLoaderData();
-
+    const { tab } = useLoaderData();
     const { user } = useAuthContext();
-    const [addresses, setAddresses] = useState(userAddresses);
+
+    const [addresses, setAddresses] = useState([]);
+    const { addressesData, isPendingAddress, isSuccessAddress, updateFetchAddresses } = useFetchAddresses(user.userId, addresses);
     const [selectedAddress, setSelectedAddress] = useState(null);
 
-    console.log(addresses);
+    if ( isPendingAddress)  {             
+        return <DotLoaderSpinner loading={ isPendingAddress} />
+    }
+
+    if ( addresses.length === 0 && addressesData && isSuccessAddress ) 
+    {
+        updateFetchAddresses();                       
+        setAddresses(addressesData);        
+    }
+    
 
     return (
         <>
@@ -36,19 +48,23 @@ export const loader = async ({ params, request }) => {
     const searchParams = new URL(request.url).searchParams;
     const tab = Number(searchParams.get('tab')) || 0;
 
-    try {
+    return {
+        tab: tab,
+    }
 
-        const { res } = await getRequest("/user-service/api/user/profile/address");
+    // try {
+
+    //     const { res } = await getRequest("/user-service/api/user/profile/address");
 
         
-        return {
-            userAddresses: res,
-            tab: tab
-        }
+    //     return {
+    //         userAddresses: res,
+    //         tab: tab
+    //     }
 
-    } catch (error) {
-        console.log("erorr >>>", error.response?.data.message);
-    }
+    // } catch (error) {
+    //     console.log("erorr >>>", error.response?.data.message);
+    // }
 };
 
 

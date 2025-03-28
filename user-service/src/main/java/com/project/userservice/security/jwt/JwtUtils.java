@@ -179,43 +179,43 @@ public class JwtUtils {
 
   // Http only cookie + JWT
 
-  // public ResponseCookie generateJwtCookie(User user) {
-  // String jwt = generateTokenFromUser(user);
-  // return generateCookie(jwtCookie, jwt, "/api");
-  // }
+  public ResponseCookie generateJwtCookie(User user) {
+  String jwt = generateTokenFromUser(user);
+  return generateCookie(jwtCookie, jwt, "/api");
+  }
 
-  // public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-  // return generateCookie(jwtRefreshCookie, refreshToken, "/");
-  // }\
+  public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
+  return generateCookie(jwtRefreshCookie, refreshToken, "/");
+  }
 
-  // public ResponseCookie getCleanJwtCookie() {
-  // ResponseCookie cookie = ResponseCookie.from(jwtCookie,
-  // null).path("/api").build();
-  // return cookie;
-  // }
+  public ResponseCookie getCleanJwtCookie() {
+  ResponseCookie cookie = ResponseCookie.from(jwtCookie,
+  null).path("/api").build();
+  return cookie;
+  }
 
-  // public ResponseCookie getCleanJwtRefreshCookie() {
-  // ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie,
-  // null).path("/api").build();
-  // return cookie;
-  // }
+  public ResponseCookie getCleanJwtRefreshCookie() {
+  ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie,
+  null).path("/api").build();
+  return cookie;
+  }
 
-  // private ResponseCookie generateCookie(String name, String value, String path)
-  // {
-  // ResponseCookie cookie = ResponseCookie.from(name, value)
-  // .path(path).maxAge(24 * 60 * 60)
-  // .sameSite("None")
-  // .secure(true)
-  // .httpOnly(true).build();
-  // return cookie;
-  // }
+  private ResponseCookie generateCookie(String name, String value, String path)
+  {
+  ResponseCookie cookie = ResponseCookie.from(name, value)
+  .path(path).maxAge(24 * 60 * 60)
+  .sameSite("None")
+  .secure(true)
+  .httpOnly(true).build();
+  return cookie;
+  }
 
   public Cookie createCookie(String key, String value, int expiry) {
 
     Cookie cookie = new Cookie(key, value);
     cookie.setMaxAge(expiry);
     cookie.setSecure(true);
-    cookie.setPath("/");
+    cookie.setPath("/");    
     cookie.setHttpOnly(true);
 
     return cookie;

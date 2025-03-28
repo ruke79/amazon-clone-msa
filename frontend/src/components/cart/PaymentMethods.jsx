@@ -6,7 +6,7 @@ const PaymentMethods = () => {
         <div className="mt-4  flex flex-col flex-grow h-fit bg-white rounded py-2 px-4 border">
             <h3 className="text-2xl my-2 font-semibold">Payment Methods</h3>
             <img
-                src={`${process.env.PUBLIC_URL}/assets/images/payment_methods.png`}                
+                src={payment_methods}                
                 alt="payment methods"
                 width={220}
                 height={25}
@@ -15,7 +15,7 @@ const PaymentMethods = () => {
 
             <div className="flex items-center space-x-1">
                 <img
-                    src={`${process.env.PUBLIC_URL}/assets/images/buyer_protection.png`}
+                    src={buyer_protection}
                     
                     alt="payment methods"
                     width={25}

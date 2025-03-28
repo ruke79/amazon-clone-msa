@@ -46,7 +46,7 @@ const Header = ({title, searchHandler}) => {
                         {/* Logo */}
                         <Link to="/">
                             <img
-                                src={`${process.env.PUBLIC_URL}/assets/images/amazon-logo.png`}
+                                src={amazonLogo}
                                 alt="amazon-logo"
                                 className="object-contain w-20 md:w-28 pt-2"
                             />

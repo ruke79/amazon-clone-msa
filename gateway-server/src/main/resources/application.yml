@@ -1,4 +1,4 @@
-server:
+server:  
   port: 8000
 
 eureka:
@@ -22,7 +22,7 @@ spring:
 
 
   app:    
-     jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+     jwtSecret: 
 
   main:
     web-application-type: reactive
@@ -40,19 +40,21 @@ spring:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
           '[/**]':
-            allowedOrigins:
-              - 'http://localhost:3000'                  
-              - 'http://localhost:3001'
+            allowedOrigins:              
+              - 'http://localhost:3000'                                                                                            
             allow-credentials: true 
-            allowedHeaders: '*'
+            allowedHeaders: 
+              - 'Authorization'
+              - 'Content-Type'
             allowedMethods: 
               - PUT
               - GET
               - POST
               - DELETE
               - OPTIONS
-            exposedHeaders: '*'
-
+            exposedHeaders: 
+              - 'ACCESS'
+              - 'Set-Cookie'
 
       discovery:
         locator:
@@ -131,8 +133,8 @@ spring:
   # rabbitmq:
   #   host: localhost
   #   port: 5672
-  #   username: admin
-  #   password: 1234
+  #   username: 
+  #   password: 
 
 resilience4j:
   timelimiter:

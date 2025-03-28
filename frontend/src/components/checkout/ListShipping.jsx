@@ -38,7 +38,7 @@ const ListShipping = ({
 
     return (
         <>
-            {addresses?.map((address) => (                
+            {addresses && addresses.map((address) => (                
                 <div
                     className={`relative cursor-pointer p-4 mb-4 border border-slate-100 rounded-xl shadow-md hover:shadow-xl hover:border-white hover:scale-[101%] transition duration-300 ${
                         address.active &&
@@ -47,7 +47,7 @@ const ListShipping = ({
                     key={address.id}
                     onClick={() => changeActiveHandler(address.id)}
                 >
-                    {addresses.length > 1 ? (
+                    {addresses.length > 0 ? (
                         <div
                             className="z-10 absolute top-2 right-2 text-slate-600 hover:text-red-500 hover:scale-110 transition"
                             onClick={(e) => deleteHandler(address.id, e)}
@@ -120,10 +120,9 @@ const ListShipping = ({
                         </span>
                     ) : (
                         <span className="flex items-center">
-                            <PlusIcon className="h-6 w-6" /> Add New
-                            Address
-                        </span>
-                    )}
+                            <PlusIcon className="h-6 w-6" /> Add New Address
+                        </span>                        
+                    ) }
                 </button>                
             </div>
         </>
