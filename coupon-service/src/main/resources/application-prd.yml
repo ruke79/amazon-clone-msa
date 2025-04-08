@@ -2,7 +2,7 @@ server:
   port: 8183
 
 kafka:
-  url: 
+  url: http://mywebserv.site:29092
 
 eureka:
   instance:
@@ -12,10 +12,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://:8761/eureka
+      defaultZone: http://57.182.208.121:8761/eureka
 
 feign:
-  user-url: http:/:8080
+  user-url: http://57.182.208.121:8080
 
 
 spring:
@@ -23,12 +23,12 @@ spring:
     name: coupon-service
 
   config:
-     import: "optional:configserver:http://:8888"
+     import: "optional:configserver:http://57.182.208.121:8888"
 
   datasource:
-    url: jdbc:mysql://
-    username: 
-    password: 
+    url: jdbc:mysql://mywebserv.site:3306/coupondb?serverTimezone=Asia/Seoul
+    username: admin
+    password: ysY2273!
   jpa:
     show-sql: true
     hibernate:

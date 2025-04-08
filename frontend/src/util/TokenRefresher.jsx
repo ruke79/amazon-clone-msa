@@ -6,17 +6,15 @@ import { useAuthContext } from 'store/AuthContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
 
-let refreshAndRetryQueue = [];
-let isRefreshing = false;
+
 export function useTokenRefresh() {
     // Use useRef to prevent a re-render in the useEffect.
     // A ref, cannot be used as a useEffect dependency, hence,
     // your linters shouldn't complain about missing dependencies.
     const navRef = useRef(useNavigate());
-    //const { token, login, logout } = useAuthContext();
-    
-    //const refreshAndRetryQueue = useRef([]);
-    //const isRefreshing = useRef(false);
+        
+    const refreshAndRetryQueue = useRef([]);
+    const isRefreshing = useRef(false);
 
     const { login, logout, token, isAuthenticated, expiresAt } = useAuthContext();
     const tokenRef = useRef(token);
@@ -47,7 +45,9 @@ export function useTokenRefresh() {
 
   useEffect(() => {
     
-    refreshAccessToken();
+    if (isAuthenticated) {
+      refreshAccessToken();
+    }
   }, [refreshAccessToken]);
 
 
@@ -58,7 +58,7 @@ export function useTokenRefresh() {
     if (isAuthenticated) {
       refreshAccessTokenTimerId = setTimeout(() => {
         refreshAccessToken();
-      }, new Date(expiresAt).getTime() * 1000 - Date.now() - 1 * 1000);
+      }, new Date(expiresAt).getTime() * 1000 - Date.now() - 10 * 1000);
     }
 
     return () => {
@@ -125,9 +125,9 @@ export function useTokenRefresh() {
                     case 401:
                         
 
-                        if (!isRefreshing) {
+                        if (!isRefreshing.current) {
 
-                            isRefreshing = true;
+                            isRefreshing.current = true;
 
                             try {
 
@@ -147,33 +147,33 @@ export function useTokenRefresh() {
                                       
                                         originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
 
-                                        refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
+                                        refreshAndRetryQueue.current.forEach(({ config, resolve, reject }) => {
                                             api
                                                 .request(config)
                                                 .then((response) => resolve(response))
                                                 .catch((err) => reject(err));
                                         });
         
-                                        refreshAndRetryQueue.length = 0;
+                                        refreshAndRetryQueue.current.length = 0;
 
                                         return api(originalConfig);
                                     }
                                                         
 
                             } catch (refreshError) {
-                                refreshAndRetryQueue.length = 0;
+                                refreshAndRetryQueue.current.length = 0;
 
                                 console.log(refreshError);
                                 
                                 throw refreshError;
 
                             } finally {
-                                isRefreshing = false;
+                                isRefreshing.current = false;
 
                             }
                         }
                         return new Promise((resolve, reject) => {
-                            refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
+                            refreshAndRetryQueue.current.push({ config: originalConfig, resolve, reject });
                         });                        
                     default:
                         //console.error('Network error:', error);

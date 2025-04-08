@@ -51,7 +51,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-@RedisHash(value = "refreshToken", timeToLive =60 * 60 * 5 )
+@RedisHash(value = "refreshToken", timeToLive = 60 * 60 * 24 * 14)
 public class RefreshToken {
 
     

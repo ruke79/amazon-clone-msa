@@ -146,7 +146,7 @@ public class AuthController {
 
             UserProfileDto response = UserProfileDto.builder()
                     .userId(Long.toString(user.getUserId()))
-                    .username(user.getUserName())
+                    .username(user.getUsername())
                     .name(user.getName())
                     .email(user.getEmail())
                     .image(user.getImage())
@@ -185,7 +185,7 @@ public class AuthController {
 
             SharedUserDto response = SharedUserDto.builder()
             .userId(user.getUserId())
-            .username(user.getUserName())
+            .username(user.getUsername())
             .nickname(user.getName())
             .email(email)
             .image(user.getImage())
@@ -209,7 +209,7 @@ public class AuthController {
 
             SharedUserDto response = SharedUserDto.builder()
             .userId(user.getUserId())
-            .username(user.getUserName())
+            .username(user.getUsername())
             .nickname(user.getName())
             .email(user.getEmail())
             .image(user.getImage())

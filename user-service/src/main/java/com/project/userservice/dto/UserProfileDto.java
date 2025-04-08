@@ -44,7 +44,7 @@ public class UserProfileDto {
 
         UserProfileDto dto = UserProfileDto.builder()
         .userId(Long.toString(user.getUserId()))
-        .username(user.getUserName())
+        .username(user.getUsername())
         .name(user.getName())
         .email(user.getEmail())
         .image(user.getImage())

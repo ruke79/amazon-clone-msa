@@ -128,7 +128,7 @@ public class ReviewService {
                         .image(i.getStyle().getImage()).build());
                 dto.setSize(i.getSize());
                 dto.setReviewedBy(new ReviewerDto(
-                    i.getReviewedBy().getUserName(), i.getReviewedBy().getImage()));
+                    i.getReviewedBy().getUsername(), i.getReviewedBy().getImage()));
 
                 dtos.add(dto);
             }

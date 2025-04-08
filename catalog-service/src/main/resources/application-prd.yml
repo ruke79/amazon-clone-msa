@@ -2,17 +2,17 @@ server:
   port: 8081
 
 kafka:
-  url: 
+  url: http://mywebserv.site:29092
 
 cloud:
   aws:
     credentials:
-      access-key: 
-      secret-key: 
+      access-key: AKIAYS2NW7K5A2SDATN2
+      secret-key: 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
     s3:
-      bucket: 
+      bucket: webboy-dev
     region:
-      static: 
+      static: ap-northeast-2
     stack:
       auto: false
 
@@ -25,7 +25,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://:8761/eureka
+      defaultZone: http://localhost:8761/eureka
 
 
 spring:
@@ -33,12 +33,12 @@ spring:
     name: catalog-service
 
   config:    
-    import: optional:configserver:http://:8888
+    import: optional:configserver:http://localhost:8888
 
   datasource:
-    url: jdbc:mysql://:3306/productdb
-    username: 
-    password: 
+    url: jdbc:mysql://mywebserv.site:3306/productdb?serverTimezone=Asia/Seoul
+    username: admin
+    password: ysY2273!
   jpa:
     show-sql: false
     hibernate:
@@ -55,9 +55,9 @@ spring:
               max-active: 5
               max-idle: 5
               min-idle: 2  
-          host: 
+          host: mywebserv.site
           port: 6379
-          password: 
+          password: ysY2273!
 
 logging:
     level:
