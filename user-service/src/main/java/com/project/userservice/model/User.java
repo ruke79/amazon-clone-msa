@@ -40,7 +40,7 @@ public class User extends BaseEntity{
     @NotBlank
     @Size(max = 20)
     @Column(name = "username")
-    private String userName;
+    private String username;
     
     // 별명
     @Size(max = 20)
@@ -107,13 +107,13 @@ public class User extends BaseEntity{
 
    
     public User(String userName, String email, String password) {
-        this.userName = userName;
+        this.username = userName;
         this.email = email;
         this.password = password;
     }
 
     public User(String userName, String email) {
-        this.userName = userName;
+        this.username = userName;
         this.email = email;
     }
 

@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.common.response.MessageResponse;
 import com.project.userservice.constants.TokenType;
 import com.project.userservice.dto.UserProfileDto;
 import com.project.userservice.model.User;
@@ -102,17 +103,22 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());        
-
-        
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        RefreshToken refreshToken = null;
 
         ObjectMapper om = new ObjectMapper();
 
+        String data = null;
+        
+        String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());        
+
+        
+        refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        
         LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(),  roles);                
 
-
-        String data;
+        
+        
         try {
             data = om.writeValueAsString(loginInfo);
             response.setContentType("application/json");

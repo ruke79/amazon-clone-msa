@@ -1,6 +1,7 @@
 package com.project.userservice.dto;
 
 import com.project.userservice.dto.UserProfileDto;
+import com.project.userservice.security.response.OAuth2Response;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,11 +14,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public class CustomOAuth2User implements OAuth2User {
 
-    private final UserProfileDto userDto;
+    private final OAuth2Response oAuth2Response;
+    private final String role;
 
-    public CustomOAuth2User(UserProfileDto userDto) {
+    public CustomOAuth2User(OAuth2Response oAuth2Response, String role) {
 
-        this.userDto = userDto;
+        this.oAuth2Response = oAuth2Response;
+        this.role = role;
     }
 
     @Override
@@ -31,15 +34,14 @@ public class CustomOAuth2User implements OAuth2User {
 
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
-        userDto.getRoles().forEach(role-> collection.add(new GrantedAuthority() {
+        collection.add(new GrantedAuthority() {
 
             @Override
             public String getAuthority() {
 
                 return role;
             }
-        })
-        );
+        });
 
         return collection;
     }
@@ -47,11 +49,11 @@ public class CustomOAuth2User implements OAuth2User {
     @Override
     public String getName() {
 
-        return userDto.getEmail();
+        return oAuth2Response.getName();
     }
 
     public String getUsername() {
 
-        return userDto.getUsername();
+        return oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
     }
 }

@@ -1,4 +1,4 @@
-package com.project.userservice.service;
+package com.project.userservice.security.service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,14 +14,13 @@ import org.springframework.stereotype.Service;
 import com.project.userservice.constants.AppRole;
 import com.project.userservice.dto.CustomOAuth2User;
 import com.project.userservice.dto.UserProfileDto;
+import com.project.userservice.model.Role;
 import com.project.userservice.model.User;
 import com.project.userservice.repository.UserRepository;
 import com.project.userservice.security.request.SignupRequest;
 import com.project.userservice.security.response.GoogleResponse;
 import com.project.userservice.security.response.NaverResponse;
 import com.project.userservice.security.response.OAuth2Response;
-import com.project.userservice.security.service.UserDetailsServiceImpl;
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,43 +53,26 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        String name = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        User existData = userRepository.findByName(name)
-        .orElseThrow(() -> new RuntimeException("User not found with name: " + name));;
+        String  username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        User existData = userRepository.findByUserName(username)
+        .orElseThrow(() -> new RuntimeException("User not found with name: " + username));;
 
+        String role = AppRole.ROLE_USER.getRole();
         if (existData == null) {  
-            // SignupRequest request = new SignupRequest();
-            // request.setEmail(oAuth2Response.getEmail());
-            // request.setUsername(oAuth2Response.getName());            
-            // request.setName(name);
-            // Set<String> roles = new HashSet<>();
-            // roles.add(AppRole.ROLE_USER.getRole());
-            // request.setRole(roles);
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(oAuth2Response.getEmail());            
+            user.setRole(new Role(AppRole.ROLE_USER));
 
-            
-            //userServiceImpl.registerNewUserAccount(request);
-
-            UserProfileDto userDto = UserProfileDto.builder()
-            .username(oAuth2Response.getName())
-            .name(name)
-            .email(oAuth2Response.getEmail())            
-            .build();
-            userDto.getRoles().add(AppRole.ROLE_USER.getRole());
-
-            return new CustomOAuth2User(userDto);
+            userRepository.save(user);
         }
         else {
             existData.setEmail(oAuth2Response.getEmail());
-            existData.setUserName(oAuth2Response.getName());
-
+            existData.setUsername(username);
+           
             userRepository.save(existData);
-
-            UserProfileDto userDto = new UserProfileDto();
-            userDto.setUsername(oAuth2Response.getName());
-            userDto.setName(existData.getName());
-            userDto.getRoles().add(existData.getRole().getRoleName().getRole());
-
-            return new CustomOAuth2User(userDto);
+                       
         }
+        return new CustomOAuth2User(oAuth2Response, role);
     }            
 }

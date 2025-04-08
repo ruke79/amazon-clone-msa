@@ -31,9 +31,9 @@ spring:
      import: "optional:configserver:http://localhost:8888"
 
   datasource:
-    url: jdbc:mysql://localhost:3306/cartdb
-    username: 
-    password: 
+    url: jdbc:mysql://localhost:3306/cartdb?serverTimezone=Asia/Seoul
+    username: admin
+    password: ysY2273!
   jpa:
     show-sql: false
     hibernate:
@@ -45,6 +45,5 @@ spring:
 
 logging:
     level:
-       org:
-        springframework : debug
+      root : info
         

@@ -1,4 +1,5 @@
-server:      
+server:    
+  address : 0.0.0.0
   port: 8000
 
 eureka:
@@ -22,7 +23,7 @@ spring:
 
 
   app:    
-     jwtSecret: 
+     jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
 
   main:
     web-application-type: reactive
@@ -40,7 +41,11 @@ spring:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
           '[/**]':
-            allowedOrigins: '*'              
+            allowedOrigins:
+              - 'http://www.ysyproject.com'   # 403 forbidden error reason                                                                                                                  
+              - 'https://www.ysyproject.com'   # 403 forbidden error reason                                                                                                                  
+              - 'http://ysyproject.com'   # 403 forbidden error reason                                                                                                                  
+              - 'https://ysyproject.com'   # 403 forbidden error reason                                                                                                                                
             allow-credentials: true 
             allowedHeaders: 
               - 'Authorization'
@@ -90,7 +95,7 @@ spring:
 
         - id: cart-service
           #uri: lb://cart-service
-          uri: http://:8082
+          uri: http://backend.ysyproject.com:8082
           predicates:
               - Path=/cart-service/**
           filters:              
@@ -100,7 +105,7 @@ spring:
 
         - id: coupon-service
           #uri: lb://coupon-service
-          uri: http://:8183
+          uri: http://backend.ysyproject.com:8183
           predicates:
               - Path=/coupon-service/**
           filters:
@@ -110,7 +115,7 @@ spring:
         
         - id: order-service
           #uri: lb://order-service
-          uri: http://:8084
+          uri: http://backend.ysyproject.com:8084
           predicates:
               - Path=/order-service/**
           filters:
@@ -120,7 +125,7 @@ spring:
 
         - id: pay-service
           #uri: lb://pay-service
-          uri: http://:8085
+          uri: http://backend.ysyproject.com:8085
           predicates:
               - Path=/pay-service/**
           filters:
@@ -139,8 +144,8 @@ spring:
   # rabbitmq:
   #   host: localhost
   #   port: 5672
-  #   username: 
-  #   password: 
+  #   username: admin
+  #   password: 1234
 
 resilience4j:
   timelimiter:

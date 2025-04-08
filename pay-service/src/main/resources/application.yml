@@ -24,8 +24,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/paydb?serverTimezone=Asia/Seoul
-    username: 
-    password: 
+    username: admin
+    password: ysY2273!
   jpa:
     show-sql: false
     hibernate:
@@ -44,10 +44,10 @@ spring:
               min-idle: 2  
           host: localhost
           port: 6379
-          password: 
+          password: ysY2273!
 
 logging:
   level:
     org:
-      springframework: debug
-        
+      springframework:
+        security: DEBUG

@@ -45,8 +45,9 @@ import com.project.userservice.security.RefreshToken;
 import com.project.userservice.security.jwt.JwtAuthEntryPoint;
 import com.project.userservice.security.jwt.JwtAuthFilter;
 import com.project.userservice.security.jwt.JwtUtils;
+import com.project.userservice.security.oauth2.repository.CustomClientRegistrationRepository;
+import com.project.userservice.security.service.CustomOAuth2UserService;
 import com.project.userservice.security.service.UserDetailsServiceImpl;
-import com.project.userservice.service.CustomOAuth2UserService;
 import com.project.userservice.service.RefreshTokenService;
 import com.project.userservice.service.UserService;
 
@@ -79,6 +80,7 @@ public class SecurityConfig {
         private final RefreshTokenService refreshTokenService;
 
         private final CustomOAuth2UserService customOAuth2UserService;
+        private final CustomClientRegistrationRepository customClientRegistrationRepository;
         private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
         private final UserCreatedProducer userCreatedProducer;
@@ -98,39 +100,46 @@ public class SecurityConfig {
                 // // .ignoringRequestMatchers("/api/order/**")
                 // .ignoringRequestMatchers("/api/product/**")
                 // );
-                //http.cors(cors -> cors.configurationSource(corsConfigurationSource));
-                http.cors(cors ->  cors.disable());
+                // http.cors(cors -> cors.configurationSource(corsConfigurationSource));
+                http.cors(cors -> cors.disable());
+
+                http.formLogin(login -> login.disable());
+                http.logout((logout) -> logout.disable());
 
                 http.csrf(AbstractHttpConfigurer::disable);
                 http.authorizeHttpRequests((requests) -> requests
-                                // .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/product/**").permitAll()
-                                .requestMatchers("/api/user/**").permitAll() // hasRole("USER")
+                                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/review/**").permitAll()
                                 .requestMatchers("/api/search/**").permitAll()
                                 // .requestMatchers("/api/csrf-token").permitAll()
-                                .requestMatchers("/api/token/**").permitAll()
+                                .requestMatchers("/api/token/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/user/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/logout").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/public/**").permitAll()
                                 .requestMatchers("/registrationConfirm").permitAll()
-                                .requestMatchers("/chat/**").permitAll() //hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .anyRequest().authenticated());
 
-                // http.oauth2Login((oauth2) -> oauth2.userInfoEndpoint(
-                //                 (userInfoEndpointConfig) -> userInfoEndpointConfig
-                //                                 .userService(customOAuth2UserService))
-                //                 .successHandler(oAuth2SuccessHandler));
+            
+
+                http.oauth2Login((oauth2) -> oauth2
+                                .loginPage("/signin")
+                                .clientRegistrationRepository(
+                                                customClientRegistrationRepository.clientRegistrationRepository())
+                                .userInfoEndpoint(
+                                                (userInfoEndpointConfig) -> userInfoEndpointConfig
+                                                                .userService(customOAuth2UserService))
+                                .successHandler(oAuth2SuccessHandler));
 
                 http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
 
                 http.addFilterBefore(authenticationJwtTokenFilter(),
                                 AuthLoginFilter.class);
 
-                http.logout((logout) -> logout.disable());
                 http.addFilterBefore(new AuthLogoutFilter(jwtUtils, refreshTokenService), LogoutFilter.class);
 
                 AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(http), jwtUtils,
@@ -141,8 +150,6 @@ public class SecurityConfig {
                 http.sessionManagement(
                                 (sessionManagement) -> sessionManagement
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-                http.formLogin(login -> login.disable());
 
                 return http.build();
         }
@@ -186,22 +193,21 @@ public class SecurityConfig {
                                                 .email(user1.getEmail())
                                                 .image(user1.getImage())
                                                 .nickname(user1.getName())
-                                                .username(user1.getUserName())
+                                                .username(user1.getUsername())
                                                 .build();
 
-                           //     userCreatedProducer.publish(dto);
-                        }
-                        else {
+                                // userCreatedProducer.publish(dto);
+                        } else {
                                 User user1 = userRepository.findByUserName("user1").get();
                                 UserCreatedRequest dto = UserCreatedRequest.builder()
-                                .userId(user1.getUserId())
-                                .email(user1.getEmail())
-                                .image(user1.getImage())
-                                .nickname(user1.getName())
-                                .username(user1.getUserName())
-                                .build();
+                                                .userId(user1.getUserId())
+                                                .email(user1.getEmail())
+                                                .image(user1.getImage())
+                                                .nickname(user1.getName())
+                                                .username(user1.getUsername())
+                                                .build();
 
-                                //userCreatedProducer.publish(dto);
+                                // userCreatedProducer.publish(dto);
                         }
 
                         if (!userRepository.existsByUserName("user2")) {
@@ -224,23 +230,22 @@ public class SecurityConfig {
                                                 .email(user1.getEmail())
                                                 .image(user1.getImage())
                                                 .nickname(user1.getName())
-                                                .username(user1.getUserName())
+                                                .username(user1.getUsername())
                                                 .build();
 
-                                //userCreatedProducer.publish(dto);
+                                // userCreatedProducer.publish(dto);
 
-                        }
-                        else {
+                        } else {
                                 User user1 = userRepository.findByUserName("user2").get();
                                 UserCreatedRequest dto = UserCreatedRequest.builder()
-                                .userId(user1.getUserId())
-                                .email(user1.getEmail())
-                                .image(user1.getImage())
-                                .nickname(user1.getName())
-                                .username(user1.getUserName())
-                                .build();
+                                                .userId(user1.getUserId())
+                                                .email(user1.getEmail())
+                                                .image(user1.getImage())
+                                                .nickname(user1.getName())
+                                                .username(user1.getUsername())
+                                                .build();
 
-                                //userCreatedProducer.publish(dto);
+                                // userCreatedProducer.publish(dto);
                         }
 
                         // if (!userRepository.existsByUserName("admin")) {

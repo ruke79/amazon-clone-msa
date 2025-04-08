@@ -67,52 +67,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        String oauth2 = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (null != cookies) {
-            for (Cookie cookie : cookies) {
-
-                System.out.println(cookie.getName());
-                if (cookie.getName().equals(TokenType.OAUTH2.getType())) {
-
-                    oauth2 = cookie.getValue();
-                }
-            }
-        }
-
+        
         String accessToken = parseJwt(request);
 
-        // 1 OAUTH 2 JWT
-        if (oauth2 != null && accessToken == null) {
-
-            String token = oauth2;
-
-            if (jwtUtils.isJwtTokenExpired(token)) {
-
-                System.out.println("token expired");
-                filterChain.doFilter(request, response);
-
-                // 조건이 해당되면 메소드 종료 (필수)
-                return;
-            }
-            String id = jwtUtils.getIdFromJwtToken(token);
-            String role = jwtUtils.getRoleFromJwtToken(token);
-
-            UserProfileDto userDto = new UserProfileDto();
-            userDto.setUsername(id);
-            userDto.getRoles().add(role);
-
-            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDto);
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customOAuth2User,
-                    null,
-                    customOAuth2User.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        }
-        // 2. NORMAL JWT
-        else if (oauth2 == null && accessToken != null) {
+        
+        
+        if (accessToken != null) {
 
         
             try {
@@ -163,7 +123,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
         } else // 토큰이 없다면 다음 필터로 넘김
-        if (oauth2 == null && accessToken == null) {
+        {
 
             filterChain.doFilter(request, response);
 
@@ -175,7 +135,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String parseJwt(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromHeader(request);
-        // String jwt = jwtUtils.getJwtFromCookies(request);
         return jwt;
     }
 }

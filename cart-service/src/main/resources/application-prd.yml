@@ -5,7 +5,7 @@ server:
   port: 8082
 
 kafka:
-  url: 
+  url: http://mywebserv.site:29092
 
 eureka:
   instance:
@@ -15,11 +15,11 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://:8761/eureka
+      defaultZone: http://57.182.208.121:8761/eureka
 
 feign:
-  user-url: http://:8080
-  catalog-url: http://:8081
+  user-url: http://57.182.208.121:8080
+  catalog-url: http://57.182.208.121:8081
 
 spring:
   profiles: 
@@ -32,12 +32,12 @@ spring:
      config:
         enabled: false
   config:
-     import: "optional:configserver:http://:8888"
+     import: "optional:configserver:http://57.182.208.121:8888"
 
   datasource:
-    url: jdbc:mysql://:3306/cartdb
-    username: 
-    password: 
+    url: jdbc:mysql://mywebserv.site:3306/cartdb?serverTimezone=Asia/Seoul
+    username: admin
+    password: ysY2273!
   jpa:
     show-sql: false
     hibernate:

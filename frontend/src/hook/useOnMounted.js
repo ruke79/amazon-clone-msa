@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 
-export function useOnMounted(callbackfunc) {
+
+export function useOnMounted(callbackfunc, dependencies = []) {
   const initialized = useRef(false)
 
   useEffect(() => {
@@ -8,5 +9,7 @@ export function useOnMounted(callbackfunc) {
       initialized.current = true
       callbackfunc()
     }
-  }, [])
+  }, dependencies)
 }
+
+
