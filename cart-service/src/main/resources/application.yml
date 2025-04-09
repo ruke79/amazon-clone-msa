@@ -6,3 +6,4 @@ spring:
         - prd
       local:
         - local
+         
