@@ -31,7 +31,7 @@ public class AddressService {
     @Transactional
     public List<AddressDto> saveShippingAddress(AddressRequest request, String username) {
         
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
         .orElseThrow(()->new RuntimeException("User not found"));
              
 
@@ -64,7 +64,7 @@ public class AddressService {
     @Transactional(readOnly = true)
     public List<AddressDto> getShipAddresses(String username, String addressId) {
 
-        Optional<User> user = userRepository.findByUserName(username);
+        Optional<User> user = userRepository.findByUsername(username);
 
         if (!user.isPresent())
             return null;
@@ -100,7 +100,7 @@ public class AddressService {
     @Transactional
     public List<AddressDto> deleteShippingAddress(String username, String addressId) {
 
-        Optional<User> user = userRepository.findByUserName(username);
+        Optional<User> user = userRepository.findByUsername(username);
 
         if (!user.isPresent())
             return null;

@@ -30,7 +30,7 @@ public class WishListService {
 
         Long id = Long.parseLong(request.getId());
 
-        User user = userRepository.findByUserName(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (null != user) {

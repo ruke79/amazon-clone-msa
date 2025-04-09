@@ -96,18 +96,17 @@ const SignInPage = () => {
 
         const user = {
             email: decodedToken.sub,
-            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
+            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],            
         };
         //localStorage.setItem("access_token", accessToken);
         //localStorage.setItem("USER", JSON.stringify(user));
-
-         
+        
         //store the token on the context state  so that it can be shared any where in our application by context provider       
                         
          login(user, accessToken, decodedToken.exp);
         //updateToken(accessToken);       
         navigate('/');
-        toast.success("Login successed.");
+        toast.success(response.data.message);
 
     };
 

@@ -54,7 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         String  username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        User existData = userRepository.findByUserName(username)
+        User existData = userRepository.findByUsername(username)
         .orElseThrow(() -> new RuntimeException("User not found with name: " + username));;
 
         String role = AppRole.ROLE_USER.getRole();

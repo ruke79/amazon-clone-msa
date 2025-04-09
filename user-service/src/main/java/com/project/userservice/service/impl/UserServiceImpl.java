@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        Optional<User> user = userRepository.findByUserName(username);
+        Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
     }
 
@@ -525,7 +525,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updatePaymentMethod(String username, String paymentMethod) {
 
-        Optional<User> user = userRepository.findByUserName(username);
+        Optional<User> user = userRepository.findByUsername(username);
 
         if (!user.isPresent())
             return null;

@@ -63,6 +63,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
             throws AuthenticationException {
 
         try {
+
             ObjectMapper om = new ObjectMapper();
             LoginRequest loginInfo = om.readValue(request.getInputStream(), LoginRequest.class);
             // String username = request.getParameter("email");
@@ -108,6 +109,14 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper om = new ObjectMapper();
 
         String data = null;
+
+        String message = "Login Success";
+
+        if (refreshTokenService.findByUserId(userDetails.getEmail()).isPresent()) {
+            refreshToken = refreshTokenService.findByUserId(userDetails.getEmail()).get();
+            refreshTokenService.deleteByToken(refreshToken.getToken());
+            message = "User attempted to log in multiply, logging out from previous logged in state";
+        }
         
         String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());        
 
@@ -115,11 +124,11 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
         refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
         
-        LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(),  roles);                
-
+        LoginResponse loginInfo = new LoginResponse(userDetails.getUsername(),  roles, message);                
         
         
         try {
+
             data = om.writeValueAsString(loginInfo);
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
@@ -134,7 +143,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
             response.getWriter().write(data);
             response.setStatus(HttpStatus.OK.value());
             
-
+            
             log.info("Login Success");
 
         } catch (JsonProcessingException e) {

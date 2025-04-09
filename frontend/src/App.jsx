@@ -117,7 +117,7 @@ const AppRouter = () => {
 
         {
           path: 'chat',
-          element: <ChatPage/>,
+          element: <ProtectedRoute><ChatPage/></ProtectedRoute>,
           children: [
              { path : 'chatrooms', element: <ChatRoomList/> },
           ]
@@ -170,7 +170,7 @@ const AppRouter = () => {
         },
         {
           path: '/order/:id',
-          element: <OrderPage />,
+          element: <ProtectedRoute><OrderPage /></ProtectedRoute>,
           loader: loaderOrder,
         },
         // {
@@ -217,11 +217,8 @@ function App() {
       <QueryClientProvider client={queryClient}>      
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-          <PayPalScriptProvider options={initialOptions} >          
-            {/* <ContextProvider>
-            <TokenRefresher/>     */}
-            <AppRouter/>     
-            {/* </ContextProvider> */}
+          <PayPalScriptProvider options={initialOptions} >                      
+            <AppRouter/>                 
              </PayPalScriptProvider>
           </PersistGate>
         </Provider>

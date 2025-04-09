@@ -1,11 +1,13 @@
 *.yml
-
+chat-connector.json
+order-outbox-connector.json
+payment-outbox-connector.json
 
 # Ignore Gradle project-specific cache directory
 .gradle
 
 # Ignore Gradle build output directory
-
+build/
 
 bin/
 gen/
@@ -13,5 +15,5 @@ gen/
 bin
 gen
 
-user-service/src/main/resources/*.yml
-user-service/src/main/resources/application.yml
+kafka_2.12-3.7.2/
+
