@@ -5,6 +5,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
@@ -22,6 +23,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.project.common.constants.TokenStatus;
 import com.project.userservice.model.User;
+import com.project.userservice.security.RedisSessionManager;
 import com.project.userservice.security.service.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
@@ -56,9 +58,15 @@ public class JwtUtils {
   @Value("${spring.app.jwtRefreshCookieName}")
   private String jwtRefreshCookie;
 
+  private RedisSessionManager redisSessionMgr;
+
   private SecretKey key() {
     return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8),
         Jwts.SIG.HS256.key().build().getAlgorithm());
+  }
+
+  private String generateSessionId() {
+    return UUID.randomUUID().toString();
   }
 
   public String getJwtFromHeader(HttpServletRequest request) {
@@ -74,10 +82,15 @@ public class JwtUtils {
 
     String email = user.getEmail();
     String role = user.getRole().getRoleName().name();
+
+    String sesssionId = generateSessionId();
+    redisSessionMgr.addSession(email, sesssionId);
+
     return Jwts.builder()
         .subject(email)
         .claim("role", role)
         .claim("is2faEnabled", user.isTwoFactorEnabled())
+        .claim("sessonId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
         .signWith(key())
@@ -88,10 +101,15 @@ public class JwtUtils {
 
     String email = user.getEmail();
     String role = user.getRole().getRoleName().name();
+
+    String sesssionId = generateSessionId();
+    redisSessionMgr.addSession(email, sesssionId);
+
     return Jwts.builder()
         .subject(email)
         .claim("role", role)
         .claim("is2faEnabled", user.isTwoFactorEnabled())
+        .claim("sessonId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
         .signWith(key())
@@ -100,10 +118,14 @@ public class JwtUtils {
 
   public String generateToken(String id, String role, boolean isTwoFactorEnabled, long expirationMs) {
 
+    String sesssionId = generateSessionId();
+    redisSessionMgr.addSession(id, sesssionId);
+
     return Jwts.builder()
         .subject(id)
         .claim("role", role)
         .claim("is2faEnabled", isTwoFactorEnabled)
+        .claim("sessonId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expirationMs))
         .signWith(key())
@@ -112,10 +134,14 @@ public class JwtUtils {
 
   public String generateToken(String id, String role, boolean isTwoFactorEnabled) {
 
+    String sesssionId = generateSessionId();
+    redisSessionMgr.addSession(id, sesssionId);
+
     return Jwts.builder()
         .subject(id)
         .claim("role", role)
         .claim("is2faEnabled", isTwoFactorEnabled)
+        .claim("sessonId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
         .signWith(key())
