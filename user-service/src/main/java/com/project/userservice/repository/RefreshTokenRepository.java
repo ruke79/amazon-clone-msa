@@ -50,7 +50,7 @@ public class RefreshTokenRepository {
         return Optional.of(new RefreshToken(userId, refreshToken));
     }
 
-    public void delete(final String refreshToken) {
-        redisTemplate.delete(refreshToken);
+    public void delete(final String key) {
+        redisTemplate.delete(key);
     }
 }

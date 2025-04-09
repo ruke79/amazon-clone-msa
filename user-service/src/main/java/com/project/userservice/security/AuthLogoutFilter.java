@@ -130,7 +130,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거        
         if (refreshTokenService.findByUserId(email).isPresent()) {
-            refreshTokenService.deleteByToken(refresh);
+            refreshTokenService.deleteByKey(email);
         }
 
         // Register accessToken in blacklist

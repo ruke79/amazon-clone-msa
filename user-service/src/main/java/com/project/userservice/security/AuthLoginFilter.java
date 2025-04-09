@@ -113,8 +113,8 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
         String message = "Login Success";
 
         if (refreshTokenService.findByUserId(userDetails.getEmail()).isPresent()) {
-            refreshToken = refreshTokenService.findByUserId(userDetails.getEmail()).get();
-            refreshTokenService.deleteByToken(refreshToken.getToken());
+            
+            refreshTokenService.deleteByKey(userDetails.getEmail());
             message = "User attempted to log in multiply, logging out from previous logged in state";
         }
         

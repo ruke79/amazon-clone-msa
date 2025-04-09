@@ -115,7 +115,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/review/**").permitAll()
                                 .requestMatchers("/api/search/**").permitAll()
                                 // .requestMatchers("/api/csrf-token").permitAll()
-                                .requestMatchers("/api/token/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/token/**").permitAll()
                                 .requestMatchers("/api/auth/user/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/logout").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/public/**").permitAll()

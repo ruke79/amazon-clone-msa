@@ -130,15 +130,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponse getLoginInfoByEmail(String email) {
         
-        User user = userRepository.findByEmail(email).orElseThrow();
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         List<String> roles = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
 
-        return new LoginResponse(user.getEmail(), roles);
+        return new LoginResponse(email, roles, null);
     }
     
     

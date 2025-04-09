@@ -44,8 +44,8 @@ public class RefreshTokenService {
 
   
 
-  public void  deleteByToken(String token) {
-    refreshTokenRepository.delete(token);
+  public void  deleteByKey(String userId) {
+    refreshTokenRepository.delete(userId);
   }
 
   public void resigterBlacklist(String accessToken, Long expiration) {
