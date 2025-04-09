@@ -2,24 +2,24 @@ server:
     port: 8080
 
 frontend:
-    url: http://www.ysyproject.com
+    url: 
 
 feign:
     catalog-url: http://localhost:8081
         
 
 kafka:
-  url: http://mywebserv.site:29092
+  url: 
 
 cloud:
   aws:
     credentials:
-      access-key: AKIAYS2NW7K5A2SDATN2
-      secret-key: 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
+      access-key: 
+      secret-key: 
     s3:
-      bucket: webboy-dev
+      bucket: 
     region:
-      static: ap-northeast-2
+      static: 
     stack:
       auto: false
 
@@ -45,9 +45,9 @@ spring:
       import: "optional:configserver:http://localhost:8888"
 
     datasource:
-       url: jdbc:mysql://mywebserv.site:3306/userdb?serverTimezone=Asia/Seoul
-       username: admin
-       password: ysY2273!
+       url: jdbc:mysql://
+       username: 
+       password: 
     jpa:
         show-sql: false
         hibernate:
@@ -68,22 +68,22 @@ spring:
               max-active: 5
               max-idle: 5
               min-idle: 2  
-          host: mywebserv.site
+          host: localhost
           port: 6379
-          password: ysY2273!
+          password: 
 
     app:
        jwtCookieName: user-cookie
        jwtRefreshCookieName: user-refresh-cookie
-       jwtSecret: "mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm"
-       jwtExpirationMs: 7200000
-       jwtRefreshExpirationMs: 1209600000
+       jwtSecret: 
+       jwtExpirationMs: 432000
+       jwtRefreshExpirationMs: 3024000
 
     mail: 
       host: smtp.gmail.com
       port: 587
-      username: Sangyong79@gmail.com
-      password: qfpp cubv ieio rodd
+      username: 
+      password: 
       properties:
         mail:
           smtp:
@@ -96,8 +96,8 @@ spring:
          client:
            registration:
                 google:
-                   client-id: 1015215671564-2l317hkb9l48r3fflfvr0eucto00ik88.apps.googleusercontent.com
-                   client-secret: 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
+                   client-id: 
+                   client-secret: 
     
 
 logging:

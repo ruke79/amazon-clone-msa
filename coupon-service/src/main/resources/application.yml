@@ -26,8 +26,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/coupondb?serverTimezone=Asia/Seoul
-    username: admin
-    password: ysY2273!
+    username: 
+    password: 
   jpa:
     show-sql: true
     hibernate:
@@ -40,5 +40,5 @@ spring:
 logging:
   level:
     org:
-      springframework:
-              web: DEBUG
+      springframework: debug
+              

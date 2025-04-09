@@ -22,7 +22,7 @@ spring:
 
 
   app:    
-     jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+     jwtSecret: 
 
   main:
     web-application-type: reactive
@@ -41,8 +41,7 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:              
-              - 'http://localhost:3000'                                                                              
-              #- 'http://backend.ysyproject.com'
+              - 'http://localhost:3000'                                                                                            
             allow-credentials: true 
             allowedHeaders: 
               - 'Authorization'
@@ -134,8 +133,8 @@ spring:
   # rabbitmq:
   #   host: localhost
   #   port: 5672
-  #   username: admin
-  #   password: 1234
+  #   username: 
+  #   password: 
 
 resilience4j:
   timelimiter:
