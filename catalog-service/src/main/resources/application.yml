@@ -7,12 +7,12 @@ kafka:
 cloud:
   aws:
     credentials:
-      access-key: AKIAYS2NW7K5A2SDATN2
-      secret-key: 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
+      access-key: 
+      secret-key: 
     s3:
-      bucket: webboy-dev
+      bucket: 
     region:
-      static: ap-northeast-2
+      static: 
     stack:
       auto: false
 
@@ -36,9 +36,9 @@ spring:
     import: optional:configserver:http://localhost:8888
 
   datasource:
-    url: jdbc:mysql://localhost:3306/productdb?serverTimezone=Asia/Seoul
-    username: admin
-    password: ysY2273!
+    url: jdbc:mysql://localhost:3306/productdb
+    username: 
+    password: 
   jpa:
     show-sql: false
     hibernate:
@@ -57,13 +57,12 @@ spring:
               min-idle: 2  
           host: localhost
           port: 6379
-          password: ysY2273!
+          password: 
 
 logging:
-    level:
-      #root : info
-      org:
-        springframework : debug
+    level:      
+        org:
+          springframework : debug
       
 
         

@@ -10,12 +10,12 @@ kafka:
 cloud:
   aws:
     credentials:
-      access-key: AKIAYS2NW7K5A2SDATN2
-      secret-key: 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
+      access-key: 
+      secret-key: 
     s3:
-      bucket: webboy-dev
+      bucket: 
     region:
-      static: ap-northeast-2
+      static: 
     stack:
       auto: false
 
@@ -43,8 +43,8 @@ spring:
 
     datasource:
        url: jdbc:mysql://localhost:3306/userdb?serverTimezone=Asia/Seoul
-       username: admin
-       password: ysY2273!
+       username: 
+       password: 
     jpa:
         show-sql: false
         hibernate:
@@ -67,20 +67,20 @@ spring:
               min-idle: 2  
           host: localhost
           port: 6379
-          password: ysY2273!
+          password: 
 
     app:
        jwtCookieName: user-cookie
        jwtRefreshCookieName: user-refresh-cookie
-       jwtSecret: "mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm"
-       jwtExpirationMs: 7200000
-       jwtRefreshExpirationMs: 1209600000
+       jwtSecret: 
+       jwtExpirationMs: 108000
+       jwtRefreshExpirationMs: 5184000
 
     mail: 
       host: smtp.gmail.com
       port: 587
-      username: Sangyong79@gmail.com
-      password: qfpp cubv ieio rodd
+      username: 
+      password: 
       properties:
         mail:
           smtp:
@@ -93,8 +93,8 @@ spring:
          client:
            registration:
                 google:
-                   client-id: 1015215671564-2l317hkb9l48r3fflfvr0eucto00ik88.apps.googleusercontent.com
-                   client-secret: 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
+                   client-id: 
+                   client-secret: 
     
 
 logging:
