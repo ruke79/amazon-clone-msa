@@ -76,8 +76,8 @@ spring:
        jwtCookieName: user-cookie
        jwtRefreshCookieName: user-refresh-cookie
        jwtSecret: 
-       jwtExpirationMs: 432000
-       jwtRefreshExpirationMs: 3024000
+       jwtExpirationMs: 7200000
+       jwtRefreshExpirationMs: 1209600000
 
     mail: 
       host: smtp.gmail.com
