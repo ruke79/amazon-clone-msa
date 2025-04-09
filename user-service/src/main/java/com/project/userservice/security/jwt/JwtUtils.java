@@ -34,6 +34,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +59,11 @@ public class JwtUtils {
   @Value("${spring.app.jwtRefreshCookieName}")
   private String jwtRefreshCookie;
 
-  private RedisSessionManager redisSessionMgr;
+  private RedisSessionManager redisSessionMgr ;
+
+  public JwtUtils() {
+     this.redisSessionMgr = RedisSessionManager.getInstance();
+  }  
 
   private SecretKey key() {
     return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8),

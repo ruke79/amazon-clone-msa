@@ -44,7 +44,7 @@ public class ReviewService {
     @Transactional
     public List<ReviewDto> deleteReview(String username, Long id) {
 
-        User user = userRepository.findByUserName(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
 
 
         if (null == user) {
@@ -143,7 +143,7 @@ public class ReviewService {
     @Transactional
     public List<ReviewDto> addReview(String username, Long id, ReviewRequest request, List<MultipartFile> images) throws IOException {
 
-        User user = userRepository.findByUserName(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
 
         if (null == user) {
             return null;

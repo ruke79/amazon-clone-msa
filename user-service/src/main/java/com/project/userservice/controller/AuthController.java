@@ -85,7 +85,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
        
        
-        if (userRepository.existsByUserName(signUpRequest.getUsername())) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse(StatusMessages.USERNAME_IN_USE));
         }
 

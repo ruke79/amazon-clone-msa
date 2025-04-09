@@ -19,9 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     Optional<User> findByName(String name);  // 별명으로 검색
     @Transactional
-    Optional<User> findByUserName(String name);  // 실명으로 검색
+    Optional<User> findByUsername(String name);  // 실명으로 검색
 
-    Boolean existsByUserName(String username);
+    Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
 

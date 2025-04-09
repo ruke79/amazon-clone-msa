@@ -13,6 +13,6 @@ public class LoginResponse {
     
     private String email;       
     private List<String> roles;
-    
+    private String message;
     
 }
