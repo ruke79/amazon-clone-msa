@@ -175,8 +175,8 @@ public class SecurityConfig {
 
                         if (!userRepository.existsByUserName("user1")) {
                                 User user1 = new User("user1", "user1@example.com",
-                                                passwordEncoder.encode("12345678#"));
-                                user1.setName("SuperMan");
+                                                passwordEncoder.encode("pwd1"));
+                                user1.setName("name1");
                                 user1.setAccountNonLocked(false);
                                 user1.setAccountNonExpired(true);
                                 user1.setCredentialsNonExpired(true);
@@ -212,7 +212,7 @@ public class SecurityConfig {
 
                         if (!userRepository.existsByUserName("user2")) {
                                 User user1 = new User("user2", "user2@example.com",
-                                                passwordEncoder.encode("1234"));
+                                                passwordEncoder.encode("pwd2"));
                                 user1.setAccountNonLocked(false);
                                 user1.setAccountNonExpired(true);
                                 user1.setCredentialsNonExpired(true);
@@ -222,7 +222,7 @@ public class SecurityConfig {
                                 user1.setTwoFactorEnabled(false);
                                 user1.setSignUpMethod("email");
                                 user1.setRole(userRole);
-                                user1.setName("BatMan");
+                                user1.setName("name2");
                                 user1 = userRepository.save(user1);
 
                                 UserCreatedRequest dto = UserCreatedRequest.builder()

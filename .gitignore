@@ -1,4 +1,4 @@
-config-server/src/main/resources/application.yml
+*.yml
 
 
 # Ignore Gradle project-specific cache directory
