@@ -51,7 +51,7 @@ export const useLogout = () => {
     }
     catch (err) {
       toast.error("Logout failed. ");
-
+      console.error(err.response?.data.message);
     }
 
   };

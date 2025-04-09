@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoomRequest {
 
     private String roomName;

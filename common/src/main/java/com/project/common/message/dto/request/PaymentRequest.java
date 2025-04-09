@@ -10,12 +10,16 @@ import com.project.common.constants.PaymentType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.io.Serializable;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PaymentRequest implements Serializable {
 
     private Long orderId;

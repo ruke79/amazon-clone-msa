@@ -21,7 +21,7 @@ import com.project.cart_service.outbox.OutboxStatus;
 @Entity
 @Getter
 @Table(name = "outbox_event")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)(access = AccessLevel.PROTECTED)
 public class OutboxEvent {
     @Id
     private String id;

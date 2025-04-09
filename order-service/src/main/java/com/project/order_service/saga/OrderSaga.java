@@ -90,7 +90,6 @@ public class OrderSaga {
         List<OrderProduct> orderProducts = getOrderProductsByOrder(orderId);
 
         ProductUpdateRequest request = new ProductUpdateRequest();
-        List<OrderProductRequest> dtos = new ArrayList<OrderProductRequest>();
 
         for(OrderProduct orderProduct:orderProducts)  {
 
@@ -99,7 +98,6 @@ public class OrderSaga {
             if (null != request.getOrderProducts()) {
                 boolean ok = request.getOrderProducts().add(item);
             }
-            dtos.add(item);
         }
         
         productUpdateKafkaPublisher.publish(request);
@@ -108,20 +106,17 @@ public class OrderSaga {
 
     @Transactional
     private void publicCartEmptyState(Long customerId) {
-        CartEmptyRequest request = new CartEmptyRequest();
-        request.setUserId(customerId);
-        request.setEmptyCart(true);
+        CartEmptyRequest request = new CartEmptyRequest(customerId, true);        
         cartEmptyKafkaPublisher.publish(request);
     }
 
     private OrderProductRequest mappingOrderProductToOrderProductRequest(OrderProduct orderProduct) {
 
-        OrderProductRequest request = new OrderProductRequest();
-        request.setProductId(orderProduct.getProductId());
-        request.setQty(orderProduct.getQty());
-        request.setColorId(orderProduct.getColorId());
-        request.setSize(orderProduct.getSize());
-
+        OrderProductRequest request = new OrderProductRequest(
+            orderProduct.getProductId(), orderProduct.getQty(), 
+            orderProduct.getSize(),orderProduct.getColorId() 
+        );
+        
         return request;
     }
 
@@ -150,17 +145,16 @@ public class OrderSaga {
      
     private void publishCouponStateRollback(Long customerId, String couponName) {
 
-        CouponRollbackRequest request = new CouponRollbackRequest();
-        request.setCouponName(couponName);
-        request.setUserId(customerId);        
+        CouponRollbackRequest request = new CouponRollbackRequest(
+            customerId, couponName );
+        
         couponRollbackKafkaPublisher.publish(request);
     }
 
     private void publicCartStateRollback(Long customerId) {
 
-        CartRollbackRequest request = new CartRollbackRequest();
-        request.setUserId(customerId);
-        request.setQty(1);
+        CartRollbackRequest request = new CartRollbackRequest(customerId, 1);
+        
         cartRollbackKafkaPublisher.publish(request);
     }
 

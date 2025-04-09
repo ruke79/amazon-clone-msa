@@ -8,7 +8,7 @@ import  jakarta.persistence.*;
 /**
  * mysql에 저장할 notification entity
  * 채팅 알림 도메인
- * 엔티티에는 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+ * 엔티티에는 @NoArgsConstructor(access = AccessLevel.PROTECTED)(access = AccessLevel.PROTECTED)
  * @AllArgsConstructor , @Setter지양
  * @DynamicInsert로 수정되는 컬럼만 쿼리
  */

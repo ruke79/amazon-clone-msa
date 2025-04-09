@@ -59,9 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String role = AppRole.ROLE_USER.getRole();
         if (existData == null) {  
-            User user = new User();
-            user.setUsername(username);
-            user.setEmail(oAuth2Response.getEmail());            
+            User user = new User(username,oAuth2Response.getEmail());            
             user.setRole(new Role(AppRole.ROLE_USER));
 
             userRepository.save(user);

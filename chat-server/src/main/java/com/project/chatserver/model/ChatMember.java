@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
 @Table(name="member")

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ProductSizeDto {
 

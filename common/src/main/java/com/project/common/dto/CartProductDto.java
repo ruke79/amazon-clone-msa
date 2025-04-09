@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CartProductDto {
 

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CartResponse {
 
     private String cartId;

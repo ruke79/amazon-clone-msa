@@ -19,6 +19,7 @@ import lombok.Builder;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Setter;
 
 @Builder
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="coupon")
 public class Coupon extends BaseEntity{
 

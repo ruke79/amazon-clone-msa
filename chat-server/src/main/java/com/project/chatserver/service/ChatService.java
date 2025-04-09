@@ -205,9 +205,7 @@ public class ChatService {
         
         ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);                                                
         
-        ParticipantChatRoom chatRoomInfo = new ParticipantChatRoom();
-        chatRoomInfo.setMember(member);
-        chatRoomInfo.setRoom(chatRoom);
+        ParticipantChatRoom chatRoomInfo = ParticipantChatRoom.get(chatRoom, member);        
         em.persist(chatRoomInfo);
 
         member.getRoomList().add(chatRoomInfo);

@@ -14,7 +14,7 @@ import com.project.common.constants.AlarmEnum;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class AlarmEventDto implements Serializable {
     private Integer senderNo;

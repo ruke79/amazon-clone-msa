@@ -29,45 +29,45 @@ public class PaymentService {
 
     public void persistPayment(PaymentRequest request) {
 
-
         Optional<Payment> exist = paymentRepository.findByTrackingId(request.getTrackingId());
 
-        if (!exist.isPresent()) {        
-        Payment pay = Payment.builder()                
-                .customerId(request.getCustomerId())
-                .orderId(request.getOrderId())            
-                .trackingId(request.getTrackingId())
-                .paypalOrderId(request.getPaypalOrderId())                
-                .amounts(request.getAmounts())
-                .paymentType(request.getPaymentType())
-                .paymentStatus(request.getPaymentStatus())
-                .paymentCreatedAt(request.getCreatedAt())                
-                .build();
+        if (!exist.isPresent()) {
+            Payment pay = Payment.builder()
+                    .customerId(request.getCustomerId())
+                    .orderId(request.getOrderId())
+                    .trackingId(request.getTrackingId())
+                    .paypalOrderId(request.getPaypalOrderId())
+                    .amounts(request.getAmounts())
+                    .paymentType(request.getPaymentType())
+                    .paymentStatus(request.getPaymentStatus())
+                    .paymentCreatedAt(request.getCreatedAt())
+                    .build();
 
-                pay = paymentRepository.save(pay);
-        
+            pay = paymentRepository.save(pay);
 
-                PaymentResponse response = new PaymentResponse();
-                response.setPaymentId(pay.getPaymentId());
-                response.setCustomerId(pay.getCustomerId());
-                response.setOrderId(pay.getOrderId());
-                response.setAmounts(pay.getAmounts());
-                response.setCouponName(request.getCouponName());
-                response.setPaymentStatus(pay.getPaymentStatus());
-                
-                orderOutboxHelper.saveOrderOutbox(response, OutboxStatus.STARTED);
+            PaymentResponse response = PaymentResponse.builder()
+                    .paymentId(pay.getPaymentId())
+                    .customerId(pay.getCustomerId())
+                    .orderId(pay.getOrderId())
+                    .amounts(pay.getAmounts())
+                    .couponName(request.getCouponName())
+                    .paymentStatus(pay.getPaymentStatus())
+                    .build();
+
+            orderOutboxHelper.saveOrderOutbox(response, OutboxStatus.STARTED);
+        } else {
+
+            PaymentResponse response = PaymentResponse.builder()
+                    .paymentId(exist.get().getPaymentId())
+                    .customerId(exist.get().getCustomerId())
+                    .orderId(exist.get().getOrderId())
+                    .amounts(exist.get().getAmounts())
+                    .couponName(request.getCouponName())
+                    .paymentStatus(exist.get().getPaymentStatus())
+                    .build();
+
+            orderOutboxHelper.saveOrderOutbox(response, OutboxStatus.STARTED);
         }
-        else {
-
-            PaymentResponse response = new PaymentResponse();
-                response.setPaymentId(exist.get().getPaymentId());
-                response.setCustomerId(exist.get().getCustomerId());
-                response.setOrderId(exist.get().getOrderId());
-                response.setAmounts(exist.get().getAmounts());
-                response.setCouponName(request.getCouponName());
-                response.setPaymentStatus(exist.get().getPaymentStatus());
-                orderOutboxHelper.saveOrderOutbox(response, OutboxStatus.STARTED);
-            }
     }
 
     public boolean publishIfOutboxEventProcessedForPayment(String aggregateId, OutboxStatus outboxStatus) {
@@ -84,9 +84,9 @@ public class PaymentService {
         return false;
     }
 
-
     private OrderOutboxEvent getCompletedOrderOutboxEvent(String aggregateId, OutboxStatus outboxStatus) {
-        Optional<OrderOutboxEvent> outboxEvent = orderOutboxHelper.getCompletedOrderOutboxEvent(aggregateId, outboxStatus);
+        Optional<OrderOutboxEvent> outboxEvent = orderOutboxHelper.getCompletedOrderOutboxEvent(aggregateId,
+                outboxStatus);
 
         if (outboxEvent.isPresent()) {
             return outboxEvent.get();

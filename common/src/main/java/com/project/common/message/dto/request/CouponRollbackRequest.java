@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.AccessLevel;
 import java.io.Serializable;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CouponRollbackRequest implements Serializable {
 
     private Long userId;

@@ -14,10 +14,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 @Entity
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="wishlist")
 public class WishList {
 
@@ -41,4 +42,8 @@ public class WishList {
 
 
 
+    public WishList(String style, Long productId) {
+        this.style = style;
+        this.productId = productId;
+    }
 }

@@ -69,36 +69,38 @@ public class CartService {
         if (!cart.isPresent())
             return null;
 
-        CartDto result = new CartDto();
-        result.setUserId(Long.toString(response.getUserId()));
-        result.setUserImage(response.getImage());
-
+        
         List<CartProductDto> products = new ArrayList<>();
 
         for (CartProduct item : cart.get().getCartProducts()) {
-
-            CartProductDto dto = new CartProductDto();
-            dto.setId(Long.toString(item.getCartproductId()));
 
             ProductColorDto color = mapper.convertValue(
                     catalogServiceClient.getColorInfo(Long.toString(item.getColorId())).getBody(),
                     ProductColorDto.class);
 
-            dto.setColor(ProductColorDto.builder()
+                    CartProductDto dto = CartProductDto.builder()
+            .id(Long.toString(item.getCartproductId()))
+            .color(ProductColorDto.builder()
                     .id(color.getId())
                     .color(color.getColor())
-                    .colorImage(color.getColorImage()).build());
-            dto.setImage(item.getImage());
-            dto.setName(item.getName());
-            dto.setPrice(item.getPrice());
-            dto.setQty(item.getQty());
-            dto.setSize(item.getSize());
+                    .colorImage(color.getColorImage()).build())
+            .image(item.getImage())
+            .name(item.getName())
+            .price(item.getPrice())
+            .qty(item.getQty())
+            .size(item.getSize())
+            .build();
 
             products.add(dto);
         }
-        result.setProducts(products);
-        result.setCartTotal(cart.get().getCartTotal());
-        result.setTotalAfterDiscount(cart.get().getTotalAfterDiscount());
+
+        CartDto result = CartDto.builder()
+        .userId(Long.toString(response.getUserId()))
+        .userImage(response.getImage())
+        .products(products)
+        .cartTotal(cart.get().getCartTotal())
+        .totalAfterDiscount(cart.get().getTotalAfterDiscount())
+        .build();
 
         return result;
     }
@@ -145,8 +147,7 @@ public class CartService {
 
                 BigDecimal price = computeDiscountedPriceFromOriginalPrice(originalPrice, discount);
 
-                ProductInfoDto dto = new ProductInfoDto();
-                dto = cartItem;
+                ProductInfoDto dto = new ProductInfoDto(cartItem);                
                 dto.setPriceBefore(originalPrice.toPlainString());
                 dto.setQty(cartItem.getQty());
 
@@ -294,8 +295,7 @@ public class CartService {
 
             deleteCartItem(response.getUserId());
 
-            Cart cart = new Cart();
-            cart.setUserId(response.getUserId());
+            Cart cart = new Cart(response.getUserId());            
 
             List<CartProduct> products = new ArrayList<CartProduct>();
 

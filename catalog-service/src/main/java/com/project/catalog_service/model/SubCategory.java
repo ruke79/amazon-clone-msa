@@ -20,12 +20,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="subcategory")
 public class SubCategory extends BaseEntity {
 
@@ -49,5 +52,11 @@ public class SubCategory extends BaseEntity {
     @JsonIgnore
     @ManyToMany(mappedBy = "subCategories", fetch= FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Product> products = new ArrayList<>();
+
+    public SubCategory(String name, String slug, Category category) {
+        this.subcategoryName = name;
+        this.slug = slug;
+        this.category = category;
+    }
 
 }

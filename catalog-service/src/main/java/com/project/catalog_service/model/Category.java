@@ -12,12 +12,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="category")
 public class Category extends BaseEntity {
 
@@ -42,5 +46,11 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = Product.class)
     private Set<Product> products;
+
+
+    public Category(String name, String slug) {
+        this.categoryName = name;
+        this.slug = slug;
+    }
 
 }

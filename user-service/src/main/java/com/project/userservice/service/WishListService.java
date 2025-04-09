@@ -56,10 +56,8 @@ public class WishListService {
 
                 } else {
 
-                    WishList wish = new WishList();
-                    wish.setStyle(request.getStyle());
-                    wish.setProductId(id);
-
+                    WishList wish = new WishList(request.getStyle(), id);
+                    
                     user.getWishLists().add(wish);
 
                     wish.setUser(user);

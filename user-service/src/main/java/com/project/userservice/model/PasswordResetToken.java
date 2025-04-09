@@ -3,6 +3,7 @@ package com.project.userservice.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AccessLevel;
 
 import java.time.Instant;
 
@@ -10,7 +11,7 @@ import io.hypersistence.utils.hibernate.id.Tsid;
 
 @Entity
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PasswordResetToken {
     @Id @Tsid
     //@GeneratedValue(strategy = GenerationType.IDENTITY)

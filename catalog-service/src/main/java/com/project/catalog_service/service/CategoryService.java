@@ -45,10 +45,7 @@ public class CategoryService {
 
         if (null == category) {
 
-            category = new Category();
-            category.setCategoryName(name);
-            category.setSlug(slug);
-
+            category = new Category(name, slug);            
             category = categoryRepository.save(category);
 
         }
@@ -65,13 +62,8 @@ public class CategoryService {
                 .findById(Long.parseLong(categoryId))
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        SubCategory subcategory = new SubCategory();
-        subcategory.setSubcategoryName(subCategoryName);
-
-        subcategory.setCategory(category);
-
-        subcategory.setSlug(slug);
-
+        SubCategory subcategory = new SubCategory(subCategoryName, slug, category);
+        
         subCategoryRepository.save(subcategory);
 
         return SubCategoryDto.builder()

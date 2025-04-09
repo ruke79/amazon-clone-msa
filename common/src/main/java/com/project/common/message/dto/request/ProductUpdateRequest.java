@@ -9,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class ProductUpdateRequest implements Serializable  {
 
     List<OrderProductRequest> orderProducts;

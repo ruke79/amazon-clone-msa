@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.AccessLevel;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CouponUseRequest implements Serializable {
 
     private Long userId;

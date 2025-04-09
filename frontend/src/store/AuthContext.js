@@ -161,8 +161,8 @@ export const ContextProvider = ({ children }) => {
       
 
     } catch (error) {
-      console.error("Error fetching current user", error);
-      toast.error("Error fetching current user");
+      console.error(error.response?.data.message);
+      toast.error("Can't fetch current user. Please retry later.");
     }
   }
 

@@ -266,16 +266,15 @@ public class ProductService {
             }
         } else {
 
-            Product product = new Product();
 
-            product.setBrand(request.getBrand());
-            product.setName(request.getName());
-            product.setDescription(request.getDescription());
-            product.setSlug(request.getSlug());
-
-            if (request.getShippingFee() != null)
-                product.setShipping(new BigDecimal(request.getShippingFee()));
-
+            Product product = Product.builder()
+            .brand(request.getBrand())
+            .name(request.getName())
+            .description(request.getDescription())
+            .slug(request.getSlug())
+            .shipping(new BigDecimal(request.getShippingFee()))
+            .build();
+            
             Category category = categoryRepository.findByCategoryName(request.getCategory().getName());
 
             if (null != category) {
@@ -300,10 +299,8 @@ public class ProductService {
                 }
             } else {
 
-                category = new Category();
-                category.setCategoryName(request.getCategory().getName());
-                category.setSlug(request.getCategory().getSlug());
-
+                category = new Category(request.getCategory().getName(), request.getCategory().getSlug());
+                
                 category = categoryRepository.save(category);
 
                 product.setCategory(category);
@@ -312,13 +309,7 @@ public class ProductService {
 
                 for (SubCategoryDto dto : request.getSubCategories()) {
 
-                    SubCategory subcategory = new SubCategory();
-                    subcategory.setSubcategoryName(dto.getName());
-
-                    subcategory.setCategory(category);
-
-                    subcategory.setSlug(dto.getSlug());
-
+                    SubCategory subcategory = new SubCategory(dto.getName(), dto.getSlug(), category);                  
                     subCategories.add(subcategory);
 
                     subCategoryRepository.save(subcategory);
@@ -354,15 +345,15 @@ public class ProductService {
             }
         } else {
 
-            Product product = new Product();
+            Product product = Product.builder()
+            .brand(request.getBrand())
+            .name(request.getName())
+            .description(request.getDescription())
+            .slug(request.getSlug())
+            .build();
 
-            product.setBrand(request.getBrand());
-            product.setName(request.getName());
-            product.setDescription(request.getDescription());
-            product.setSlug(request.getSlug());
-
-            if (request.getShippingFee() != null)
-                product.setShipping(new BigDecimal(request.getShippingFee()));
+            
+            product.setShipping(new BigDecimal(request.getShippingFee()));
 
             Optional<Category> category = categoryRepository.findById(Long.parseLong(request.getCategory()));
 
@@ -395,9 +386,9 @@ public class ProductService {
     private ProductSku loadSku(ProductInfoLoadRequest request, Product product, MultipartFile image,
             MultipartFile colorImage) throws IOException {
 
-        ProductSku skuProject = new ProductSku();
-
-        skuProject.setSku(request.getSku());
+        ProductSku skuProject = ProductSku.builder()
+        .sku(request.getSku())
+        .build();
 
         if (request.getDiscount() != null)
             skuProject.setDiscount(Integer.parseInt(request.getDiscount()));
@@ -455,9 +446,9 @@ public class ProductService {
     private ProductSku createSku(ProductRequest request, Product product, List<MultipartFile> images,
             MultipartFile colorImage) throws IOException {
 
-        ProductSku skuProject = new ProductSku();
-
-        skuProject.setSku(request.getSku());
+        ProductSku skuProject = ProductSku.builder()
+        .sku(request.getSku())
+        .build();
 
         if (request.getDiscount() != null)
             skuProject.setDiscount(Integer.parseInt(request.getDiscount()));

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 
 public class ProductColorDto {

@@ -52,19 +52,6 @@ export const loader = async ({ params, request }) => {
         tab: tab,
     }
 
-    // try {
-
-    //     const { res } = await getRequest("/user-service/api/user/profile/address");
-
-        
-    //     return {
-    //         userAddresses: res,
-    //         tab: tab
-    //     }
-
-    // } catch (error) {
-    //     console.log("erorr >>>", error.response?.data.message);
-    // }
 };
 
 

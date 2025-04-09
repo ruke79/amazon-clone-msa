@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 @Slf4j
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LocalDateTimeUtil {
 
     /**

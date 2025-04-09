@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @ToString
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class MessageDto implements Serializable {
 

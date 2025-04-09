@@ -21,12 +21,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import lombok.AccessLevel;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="cart")
 public class Cart extends BaseEntity {
 
@@ -47,4 +47,8 @@ public class Cart extends BaseEntity {
     // @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     // private User user;
     private Long userId;
+
+    public Cart(Long userId) {
+        this.userId = userId;
+    }
 }

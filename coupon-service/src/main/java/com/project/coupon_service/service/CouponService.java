@@ -75,8 +75,9 @@ public class CouponService {
                 }
         }
 
-        CouponResponse result = new CouponResponse();
-        result.setMessage("Failed to get coupons");
+        CouponResponse result = CouponResponse.builder()
+        .message("Failed to get coupons")
+        .build();
 
         return result;
 
