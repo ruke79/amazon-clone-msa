@@ -22,7 +22,7 @@ cloud:
       static: 
     stack:
       auto: false
-
+ 
 
 
  
