@@ -12,3 +12,6 @@ gen/
 
 bin
 gen
+
+user-service/src/main/resources/*.yml
+user-service/src/main/resources/application.yml
