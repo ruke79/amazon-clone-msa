@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom implements Serializable {
 
     private static final long serialVersionUID = 6494678977089006639L;

@@ -3,7 +3,7 @@ package com.project.cart_service.outbox.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.AccessLevel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,7 @@ import com.project.cart_service.outbox.OutboxStatus;
 @Entity
 @Getter
 @Table(name = "outbox_event")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OutboxEvent {
     @Id
     private String id;
