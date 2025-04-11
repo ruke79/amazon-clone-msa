@@ -137,8 +137,10 @@ public class AuthLogoutFilter extends GenericFilterBean{
         String accessToken = jwtUtils.getJwtFromHeader(request);
         if ( accessToken != null ) {
             log.info("registerBlacklist");
-            refreshTokenService.resigterBlacklist(accessToken, jwtUtils.getValidExpiration(accessToken));
+            refreshTokenService.resigterBlacklist(accessToken, jwtUtils.getValidExpiration(accessToken));            
         }
+
+        jwtUtils.removeSession(email);
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie(TokenType.REFRESH.getType(), null);

@@ -114,6 +114,7 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         if (refreshTokenService.findByUserId(userDetails.getEmail()).isPresent()) {
             refreshTokenService.deleteByKey(userDetails.getEmail());
+            jwtUtils.removeSession(userDetails.getEmail());
             message = "User attempted to log in multiply, logging out from previous logged in state";
         }
         

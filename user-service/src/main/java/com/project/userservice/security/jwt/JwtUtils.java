@@ -74,6 +74,10 @@ public class JwtUtils {
     return UUID.randomUUID().toString();
   }
 
+  public void removeSession(String id) {
+     redisSessionMgr.removeSession(id);
+  }
+
   public String getJwtFromHeader(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
     logger.debug("Authorization Header: {}", bearerToken);
