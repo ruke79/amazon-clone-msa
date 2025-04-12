@@ -48,6 +48,7 @@ import com.project.userservice.security.jwt.JwtUtils;
 import com.project.userservice.security.oauth2.repository.CustomClientRegistrationRepository;
 import com.project.userservice.security.service.CustomOAuth2UserService;
 import com.project.userservice.security.service.UserDetailsServiceImpl;
+import com.project.userservice.service.NotificationService;
 import com.project.userservice.service.RefreshTokenService;
 import com.project.userservice.service.UserService;
 
@@ -78,6 +79,8 @@ public class SecurityConfig {
         private final JwtUtils jwtUtils;
 
         private final RefreshTokenService refreshTokenService;
+
+        private final NotificationService notificationService;
 
         private final CustomOAuth2UserService customOAuth2UserService;
         private final CustomClientRegistrationRepository customClientRegistrationRepository;
@@ -121,6 +124,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/public/**").permitAll()
                                 .requestMatchers("/registrationConfirm").permitAll()
                                 .requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/sse").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .anyRequest().authenticated());
 
@@ -143,7 +147,7 @@ public class SecurityConfig {
                 http.addFilterBefore(new AuthLogoutFilter(jwtUtils, refreshTokenService), LogoutFilter.class);
 
                 AuthLoginFilter loginFilter = new AuthLoginFilter(authenticationManager(http), jwtUtils,
-                                refreshTokenService);
+                                refreshTokenService, notificationService);
                 loginFilter.setFilterProcessesUrl("/api/auth/public/signin");
                 http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 

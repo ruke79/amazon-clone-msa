@@ -42,7 +42,7 @@ import { jwtDecode } from "jwt-decode";
 import ChatRoomList from "components/chat/list/ChatRoomList";
 import { ChatPage } from "pages/chat/ChatPage";
 import Chat from "pages/chat/Index";
-
+import Notification from "util/Notification";
 
 
 // const DebugLayout = () => {
@@ -82,6 +82,7 @@ const ErrorBoundaryLayout = () => (
   <ErrorBoundary FallbackComponent={ErrorFallback} >
     <ContextProvider>
       <TokenRefresher />
+      <Notification/>
       <Outlet />
     </ContextProvider>
   </ErrorBoundary>

@@ -59,11 +59,11 @@ public class JwtUtils {
   @Value("${spring.app.jwtRefreshCookieName}")
   private String jwtRefreshCookie;
 
-  private RedisSessionManager redisSessionMgr ;
+  private RedisSessionManager redisSessionMgr;
 
   public JwtUtils() {
-     this.redisSessionMgr = RedisSessionManager.getInstance();
-  }  
+    this.redisSessionMgr = RedisSessionManager.getInstance();
+  }
 
   private SecretKey key() {
     return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8),
@@ -75,7 +75,7 @@ public class JwtUtils {
   }
 
   public void removeSession(String id) {
-     redisSessionMgr.removeSession(id);
+    redisSessionMgr.removeSession(id);
   }
 
   public String getJwtFromHeader(HttpServletRequest request) {
@@ -99,7 +99,7 @@ public class JwtUtils {
         .subject(email)
         .claim("role", role)
         .claim("is2faEnabled", user.isTwoFactorEnabled())
-        .claim("sessonId", sesssionId)
+        .claim("sessionId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
         .signWith(key())
@@ -118,7 +118,7 @@ public class JwtUtils {
         .subject(email)
         .claim("role", role)
         .claim("is2faEnabled", user.isTwoFactorEnabled())
-        .claim("sessonId", sesssionId)
+        .claim("sessionId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
         .signWith(key())
@@ -134,7 +134,7 @@ public class JwtUtils {
         .subject(id)
         .claim("role", role)
         .claim("is2faEnabled", isTwoFactorEnabled)
-        .claim("sessonId", sesssionId)
+        .claim("sessionId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expirationMs))
         .signWith(key())
@@ -150,7 +150,7 @@ public class JwtUtils {
         .subject(id)
         .claim("role", role)
         .claim("is2faEnabled", isTwoFactorEnabled)
-        .claim("sessonId", sesssionId)
+        .claim("sessionId", sesssionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
         .signWith(key())
@@ -172,7 +172,14 @@ public class JwtUtils {
 
   public String getRoleFromJwtToken(String token) {
 
-    return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    return Jwts.parser().verifyWith(key()).build()
+        .parseSignedClaims(token).getPayload().get("role", String.class);
+  }
+
+  public String getSessionIdFromJwtToken(String token) {
+
+    return Jwts.parser().verifyWith(key()).build()
+        .parseSignedClaims(token).getPayload().get("sessionId", String.class);
   }
 
   public Boolean isJwtTokenExpired(String token) {
@@ -190,6 +197,24 @@ public class JwtUtils {
         .verifyWith(key())
         .build().parseSignedClaims(token)
         .getPayload().getExpiration().getTime() - now.getTime();
+  }
+
+  public boolean isRequestAuthorized(String token) {
+    try {
+
+      Claims claims = Jwts.parser()
+          .verifyWith(key())
+          .build().parseSignedClaims(token)
+          .getPayload();
+
+      String userId = claims.getSubject();
+      String sessionId = (String) claims.get("sessionId");
+
+      return redisSessionMgr.isSessionActive(userId, sessionId);
+
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   public TokenStatus validateJwtToken(String authToken) {
@@ -215,34 +240,33 @@ public class JwtUtils {
   // Http only cookie + JWT
 
   public ResponseCookie generateJwtCookie(User user) {
-  String jwt = generateTokenFromUser(user);
-  return generateCookie(jwtCookie, jwt, "/api");
+    String jwt = generateTokenFromUser(user);
+    return generateCookie(jwtCookie, jwt, "/api");
   }
 
   public ResponseCookie generateRefreshJwtCookie(String refreshToken) {
-  return generateCookie(jwtRefreshCookie, refreshToken, "/");
+    return generateCookie(jwtRefreshCookie, refreshToken, "/");
   }
 
   public ResponseCookie getCleanJwtCookie() {
-  ResponseCookie cookie = ResponseCookie.from(jwtCookie,
-  null).path("/api").build();
-  return cookie;
+    ResponseCookie cookie = ResponseCookie.from(jwtCookie,
+        null).path("/api").build();
+    return cookie;
   }
 
   public ResponseCookie getCleanJwtRefreshCookie() {
-  ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie,
-  null).path("/api").build();
-  return cookie;
+    ResponseCookie cookie = ResponseCookie.from(jwtRefreshCookie,
+        null).path("/api").build();
+    return cookie;
   }
 
-  private ResponseCookie generateCookie(String name, String value, String path)
-  {
-  ResponseCookie cookie = ResponseCookie.from(name, value)
-  .path(path).maxAge(24 * 60 * 60)
-  .sameSite("None")
-  .secure(true)
-  .httpOnly(true).build();
-  return cookie;
+  private ResponseCookie generateCookie(String name, String value, String path) {
+    ResponseCookie cookie = ResponseCookie.from(name, value)
+        .path(path).maxAge(24 * 60 * 60)
+        .sameSite("None")
+        .secure(true)
+        .httpOnly(true).build();
+    return cookie;
   }
 
   public Cookie createCookie(String key, String value, int expiry) {
@@ -250,7 +274,7 @@ public class JwtUtils {
     Cookie cookie = new Cookie(key, value);
     cookie.setMaxAge(expiry);
     cookie.setSecure(true);
-    cookie.setPath("/");    
+    cookie.setPath("/");
     cookie.setHttpOnly(true);
 
     return cookie;

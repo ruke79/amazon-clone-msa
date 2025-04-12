@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -24,9 +25,9 @@ public class RefreshTokenRepository {
   @Value("${spring.app.jwtRefreshExpirationMs}")
   private int jwtRefreshExpirationMs;
 
-    private final RedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    public RefreshTokenRepository(final RedisTemplate redisTemplate) {
+    public RefreshTokenRepository(final StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

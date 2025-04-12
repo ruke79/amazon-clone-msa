@@ -63,8 +63,7 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
 
         //return new OrderedGatewayFilter(
         return (exchange, chain) -> {
-            log.info("AuthorizationHeaderFilter : {}", exchange == null, chain == null);
-            
+                        
             ServerHttpRequest request = exchange.getRequest();
 
             

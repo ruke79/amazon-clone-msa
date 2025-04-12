@@ -3,14 +3,15 @@ package com.project.userservice.constants;
 import lombok.Getter;
 
 @Getter
-public enum AlarmEnum {
+public enum NotificationEnum {
     
-    CHAT("chatroom/","채팅");
+    LOG_IN("login/","login"),
+    LOG_OUT("logout/","logout");
 
     private final String path;
     private final String alias;
 
-    AlarmEnum(String path, String alias) {
+    NotificationEnum(String path, String alias) {
         this.path = path;
         this.alias = alias;
     }

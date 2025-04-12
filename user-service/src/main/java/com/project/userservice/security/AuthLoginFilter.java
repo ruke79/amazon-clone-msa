@@ -30,6 +30,7 @@ import com.project.userservice.security.jwt.JwtUtils;
 import com.project.userservice.security.request.LoginRequest;
 import com.project.userservice.security.response.LoginResponse;
 import com.project.userservice.security.service.UserDetailsImpl;
+import com.project.userservice.service.NotificationService;
 import com.project.userservice.service.RefreshTokenService;
 import com.project.userservice.service.UserService;
 
@@ -44,18 +45,19 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
     private final JwtUtils jwtUtils;
-
     
     private final RefreshTokenService refreshTokenService;
 
+    private final NotificationService notificationService;
+
     @Autowired
     public AuthLoginFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-            RefreshTokenService refreshTokenService) {
-        this.authenticationManager = authenticationManager;
-        // jwtUtils = new JwtUtils();
-        // refreshTokenService = new RefreshTokenService();
+            RefreshTokenService refreshTokenService,
+            NotificationService notificationService) {
+        this.authenticationManager = authenticationManager;        
         this.jwtUtils = jwtUtils;
         this.refreshTokenService = refreshTokenService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -113,10 +115,16 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
         String message = "Login Success";
 
         if (refreshTokenService.findByUserId(userDetails.getEmail()).isPresent()) {
-            refreshTokenService.deleteByKey(userDetails.getEmail());
-            jwtUtils.removeSession(userDetails.getEmail());
+            //refreshTokenService.deleteByKey(userDetails.getEmail());
+            //jwtUtils.removeSession(userDetails.getEmail());
+            
+            notificationService.sendNotification(userDetails.getEmail(), "Logout");
+            
             message = "User attempted to log in multiply, logging out from previous logged in state";
+            
         }
+
+        
         
         String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());        
 

@@ -1,7 +1,7 @@
 package com.project.userservice.dto;
 
 
-import com.project.userservice.constants.AlarmEnum;
+import com.project.userservice.constants.NotificationEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class AlarmEventDto implements Serializable {
     private Integer senderNo;
     private Integer receiverNo;
-    private AlarmEnum type;
+    private NotificationEnum type;
     private String resource;
     private String content;
 
