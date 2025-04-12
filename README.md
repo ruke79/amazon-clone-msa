@@ -79,6 +79,9 @@ front end : react
 3. e-commerce 에 chat 기능울 추가하였습니다.(현재는 방만들기, 방 이름 더블클릭으로 채팅 방 전환, 채팅, 무한 스크롤 기능만 구현)
 4. 회원 가입은 이메일 인증 방식을 구현하였습니다
    
+## ERD 
+![ecommerce db erd](https://github.com/user-attachments/assets/937fb3af-ca1c-4b1a-89cf-9a43f3572aff)
+
    
 
 
