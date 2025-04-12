@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback, Children } from 'react';
 import { replace, useNavigate } from 'react-router-dom';
 import api, { getRequest } from 'util/api';
 import TokenUtil from './tokenUtil';
-import { useAuthContext } from 'store/AuthContext';
+import { STATUS, useAuthContext } from 'store/AuthContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
 
@@ -16,8 +16,10 @@ export function useTokenRefresh() {
     const refreshAndRetryQueue = useRef([]);
     const isRefreshing = useRef(false);
 
-    const { login, logout, token, isAuthenticated, expiresAt } = useAuthContext();
+    const { login, logout, token, addresses, status, isAuthenticated, expiresAt } = useAuthContext();
     const tokenRef = useRef(token);
+
+    console.log(addresses);
   
   const refreshAccessToken = useCallback(
     async () => {
@@ -45,7 +47,7 @@ export function useTokenRefresh() {
 
   useEffect(() => {
     
-    if (isAuthenticated) {
+    if (status === STATUS.PENDING) {
       refreshAccessToken();
     }
   }, [refreshAccessToken]);

@@ -184,7 +184,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value="product_cache", cacheManager = "redisCacheManager", key="#productId")
+    @Cacheable(value="product_cache", cacheManager = "redisCacheManager", key="#p0", unless = "#result == null")
     public ProductDto getProductById(Long productId) {
 
         Optional<Product> product = productRepository.findById(productId);

@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
+
 import lombok.AccessLevel;
 
 @Builder
@@ -21,7 +24,7 @@ public class CartProductDto {
     private String size;
     private int qty;
     private ProductColorDto color;
-    private int price;
+    private BigDecimal price;
 
     private int style; 
 

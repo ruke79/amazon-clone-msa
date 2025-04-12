@@ -1,6 +1,7 @@
 package com.project.userservice.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +18,5 @@ public interface ShippingAddressRepository extends JpaRepository<ShippingAddress
 
     List<ShippingAddress> findByUser_UserId(Long userId);
 
+    Optional<ShippingAddress> findByActive(boolean active);
 }

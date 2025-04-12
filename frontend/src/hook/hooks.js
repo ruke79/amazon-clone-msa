@@ -80,20 +80,20 @@ export const useFetchReviews = (productId) => {
   };
 };
 
-export const useFetchAddresses = (userId, addresses) => {
+export const useFetchAddresses = (userId) => {
 
   const queryClient = useQueryClient();
 
   const invalidate = async () => {
     await queryClient.invalidateQueries({
-      queryKey: [`address/${userId}`, addresses],
+      queryKey: [`address/${userId}`],
       refetchType: 'active',
     },
     );
   }
 
   const { data, isPending, isSuccess, refetch } = useQuery({
-    queryKey: [`address/${userId}`, addresses],
+    queryKey: [`address/${userId}`],
     queryFn: async () => {
       const res = await getAddresses();
 
@@ -110,6 +110,8 @@ export const useFetchAddresses = (userId, addresses) => {
     invalidate
   };
 };
+
+
 
 
 export const useFetchCoupons = (email) => {

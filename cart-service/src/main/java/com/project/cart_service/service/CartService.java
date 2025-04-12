@@ -51,8 +51,7 @@ public class CartService {
 
     public Long getProductId(String cartProductId) {
 
-        log.info(cartProductId);
-
+        
         CartProduct product = cartProductRepository.findById(Long.parseLong(cartProductId)).orElse(null);
 
         return product.getProductId();

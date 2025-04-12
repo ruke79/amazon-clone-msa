@@ -162,106 +162,106 @@ public class SecurityConfig {
                 return authenticationManagerBuilder.build();
         }
 
-        // @Bean
-        // public CommandLineRunner initData(RoleRepository roleRepository,
-        //                 UserRepository userRepository,
-        //                 PasswordEncoder passwordEncoder) {
-        //         return args -> {
-        //                 Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
-        //                                 .orElseGet(() -> roleRepository.save(new Role(AppRole.ROLE_USER)));
+        @Bean
+        public CommandLineRunner initData(RoleRepository roleRepository,
+                        UserRepository userRepository,
+                        PasswordEncoder passwordEncoder) {
+                return args -> {
+                        Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
+                                        .orElseGet(() -> roleRepository.save(new Role(AppRole.ROLE_USER)));
 
-        //                 Role adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
-        //                                 .orElseGet(() -> roleRepository.save(new Role(AppRole.ROLE_ADMIN)));
+                        Role adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
+                                        .orElseGet(() -> roleRepository.save(new Role(AppRole.ROLE_ADMIN)));
 
-        //                 if (!userRepository.existsByUsername("user1")) {
-        //                         User user1 = new User("user1", "user1@example.com",
-        //                                         passwordEncoder.encode("pwd1"));
-        //                         user1.setName("name1");
-        //                         user1.setAccountNonLocked(false);
-        //                         user1.setAccountNonExpired(true);
-        //                         user1.setCredentialsNonExpired(true);
-        //                         user1.setEnabled(true);
-        //                         user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
-        //                         user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
-        //                         user1.setTwoFactorEnabled(false);
-        //                         user1.setSignUpMethod("email");
-        //                         user1.setRole(userRole);
-        //                         user1 = userRepository.save(user1);
+                        if (!userRepository.existsByUsername("user1")) {
+                                User user1 = new User("user1", "user1@example.com",
+                                                passwordEncoder.encode("1234"));
+                                user1.setName("name1");
+                                user1.setAccountNonLocked(false);
+                                user1.setAccountNonExpired(true);
+                                user1.setCredentialsNonExpired(true);
+                                user1.setEnabled(true);
+                                user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
+                                user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
+                                user1.setTwoFactorEnabled(false);
+                                user1.setSignUpMethod("email");
+                                user1.setRole(userRole);
+                                user1 = userRepository.save(user1);
 
-        //                         UserCreatedRequest dto = UserCreatedRequest.builder()
-        //                                         .userId(user1.getUserId())
-        //                                         .email(user1.getEmail())
-        //                                         .image(user1.getImage())
-        //                                         .nickname(user1.getName())
-        //                                         .username(user1.getUsername())
-        //                                         .build();
+                                UserCreatedRequest dto = UserCreatedRequest.builder()
+                                                .userId(user1.getUserId())
+                                                .email(user1.getEmail())
+                                                .image(user1.getImage())
+                                                .nickname(user1.getName())
+                                                .username(user1.getUsername())
+                                                .build();
 
-        //                         // userCreatedProducer.publish(dto);
-        //                 } else {
-        //                         User user1 = userRepository.findByUsername("user1").get();
-        //                         UserCreatedRequest dto = UserCreatedRequest.builder()
-        //                                         .userId(user1.getUserId())
-        //                                         .email(user1.getEmail())
-        //                                         .image(user1.getImage())
-        //                                         .nickname(user1.getName())
-        //                                         .username(user1.getUsername())
-        //                                         .build();
+                                // userCreatedProducer.publish(dto);
+                        } else {
+                                User user1 = userRepository.findByUsername("user1").get();
+                                UserCreatedRequest dto = UserCreatedRequest.builder()
+                                                .userId(user1.getUserId())
+                                                .email(user1.getEmail())
+                                                .image(user1.getImage())
+                                                .nickname(user1.getName())
+                                                .username(user1.getUsername())
+                                                .build();
 
-        //                         // userCreatedProducer.publish(dto);
-        //                 }
+                                userCreatedProducer.publish(dto);
+                        }
 
-        //                 if (!userRepository.existsByUsername("user2")) {
-        //                         User user1 = new User("user2", "user2@example.com",
-        //                                         passwordEncoder.encode("pwd2"));
-        //                         user1.setAccountNonLocked(false);
-        //                         user1.setAccountNonExpired(true);
-        //                         user1.setCredentialsNonExpired(true);
-        //                         user1.setEnabled(true);
-        //                         user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
-        //                         user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
-        //                         user1.setTwoFactorEnabled(false);
-        //                         user1.setSignUpMethod("email");
-        //                         user1.setRole(userRole);
-        //                         user1.setName("name2");
-        //                         user1 = userRepository.save(user1);
+                        if (!userRepository.existsByUsername("user2")) {
+                                User user1 = new User("user2", "user2@example.com",
+                                                passwordEncoder.encode("1234"));
+                                user1.setAccountNonLocked(false);
+                                user1.setAccountNonExpired(true);
+                                user1.setCredentialsNonExpired(true);
+                                user1.setEnabled(true);
+                                user1.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
+                                user1.setAccountExpiryDate(LocalDate.now().plusYears(1));
+                                user1.setTwoFactorEnabled(false);
+                                user1.setSignUpMethod("email");
+                                user1.setRole(userRole);
+                                user1.setName("name2");
+                                user1 = userRepository.save(user1);
 
-        //                         UserCreatedRequest dto = UserCreatedRequest.builder()
-        //                                         .userId(user1.getUserId())
-        //                                         .email(user1.getEmail())
-        //                                         .image(user1.getImage())
-        //                                         .nickname(user1.getName())
-        //                                         .username(user1.getUsername())
-        //                                         .build();
+                                UserCreatedRequest dto = UserCreatedRequest.builder()
+                                                .userId(user1.getUserId())
+                                                .email(user1.getEmail())
+                                                .image(user1.getImage())
+                                                .nickname(user1.getName())
+                                                .username(user1.getUsername())
+                                                .build();
 
-        //                         // userCreatedProducer.publish(dto);
+                                // userCreatedProducer.publish(dto);
 
-        //                 } else {
-        //                         User user1 = userRepository.findByUsername("user2").get();
-        //                         UserCreatedRequest dto = UserCreatedRequest.builder()
-        //                                         .userId(user1.getUserId())
-        //                                         .email(user1.getEmail())
-        //                                         .image(user1.getImage())
-        //                                         .nickname(user1.getName())
-        //                                         .username(user1.getUsername())
-        //                                         .build();
+                        } else {
+                                User user1 = userRepository.findByUsername("user2").get();
+                                UserCreatedRequest dto = UserCreatedRequest.builder()
+                                                .userId(user1.getUserId())
+                                                .email(user1.getEmail())
+                                                .image(user1.getImage())
+                                                .nickname(user1.getName())
+                                                .username(user1.getUsername())
+                                                .build();
 
-        //                         // userCreatedProducer.publish(dto);
-        //                 }
+                               userCreatedProducer.publish(dto);
+                        }
 
-        //                 if (!userRepository.existsByUsername("admin")) {
-        //                 User admin = new User("admin", "admin@example.com",
-        //                 passwordEncoder.encode("adminPass"));
-        //                 admin.setAccountNonLocked(true);
-        //                 admin.setAccountNonExpired(true);
-        //                 admin.setCredentialsNonExpired(true);
-        //                 admin.setEnabled(true);
-        //                 admin.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
-        //                 admin.setAccountExpiryDate(LocalDate.now().plusYears(1));
-        //                 admin.setTwoFactorEnabled(false);
-        //                 admin.setSignUpMethod("email");
-        //                 admin.setRole(adminRole);
-        //                 userRepository.save(admin);
-        //                 }
-        //         };
-        // }
+                        if (!userRepository.existsByUsername("admin")) {
+                        User admin = new User("admin", "admin@example.com",
+                        passwordEncoder.encode("adminPass"));
+                        admin.setAccountNonLocked(true);
+                        admin.setAccountNonExpired(true);
+                        admin.setCredentialsNonExpired(true);
+                        admin.setEnabled(true);
+                        admin.setCredentialsExpiryDate(LocalDate.now().plusYears(1));
+                        admin.setAccountExpiryDate(LocalDate.now().plusYears(1));
+                        admin.setTwoFactorEnabled(false);
+                        admin.setSignUpMethod("email");
+                        admin.setRole(adminRole);
+                        userRepository.save(admin);
+                        }
+                };
+        }
 }

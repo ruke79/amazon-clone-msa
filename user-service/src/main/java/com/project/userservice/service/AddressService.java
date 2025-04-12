@@ -29,7 +29,7 @@ public class AddressService {
     
   
     @Transactional
-    public List<AddressDto> saveShippingAddress(AddressRequest request, String username) {
+    public AddressDto saveShippingAddress(AddressRequest request, String username) {
         
         User user = userRepository.findByUsername(username)
         .orElseThrow(()->new RuntimeException("User not found"));
@@ -41,28 +41,64 @@ public class AddressService {
 
         address.setUser(user);
 
-        shippingAddressRepository.save(address);       
-       
-                
+        address = shippingAddressRepository.save(address);       
+        
         user.getShippingAddresses().add(address);
 
         userRepository.save(user);  // prevent java.stackoverflow        
 
-        List<AddressDto> result = new ArrayList<>();
-        for ( ShippingAddress src : user.getShippingAddresses()) {
-            AddressDto dto = new AddressDto();
-            AddressDto.deepCopyShippingAddressDto(dto, src);
-            result.add(dto);
-        }
+        AddressDto result = new AddressDto();
+        AddressDto.deepCopyShippingAddressDto(result, address);
 
         return result;
     }
         
     
+    @Transactional
+    public AddressDto selectShipAddress(String username, String addressId) {
+
+        Optional<User> user = userRepository.findByUsername(username);
+
+        if (!user.isPresent())
+            return null;
+
+        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
+
+                           
+
+        for (ShippingAddress address : addresses) {
+
+            if (address.getShippingAddressId() == Long.parseLong(addressId)) {
+
+                ShippingAddress currActiveAddress = shippingAddressRepository.findByActive(true).orElse(null);
+                
+                if (currActiveAddress != null) {
+
+                    currActiveAddress.setActive(false);
+                    shippingAddressRepository.save(currActiveAddress);
+                }
+
+                address.setActive(true);
+
+                address = shippingAddressRepository.save(address);
+                
+                AddressDto dto = new AddressDto();
+
+                AddressDto.deepCopyShippingAddressDto(dto, address);
+
+                return dto;
+            }
+        }
+        return null;
+    }
+
+            
+
+
     
 
     @Transactional(readOnly = true)
-    public List<AddressDto> getShipAddresses(String username, String addressId) {
+    public List<AddressDto> getShipAddresses(String username) {
 
         Optional<User> user = userRepository.findByUsername(username);
 
@@ -74,22 +110,8 @@ public class AddressService {
         List<AddressDto> addressDtos = new ArrayList<>();
         for (ShippingAddress address : addresses) {
             AddressDto dto = new AddressDto();
-            dto.setId(Long.toString(address.getShippingAddressId()));
 
-            dto.setAddress1(address.getAddress1());
-            dto.setAddress2(address.getAddress2());
-            dto.setCity(address.getCity());
-            dto.setState(address.getState());
-            dto.setCountry(address.getCountry());
-            dto.setFirstname(address.getFirstname());
-            dto.setLastname(address.getLastname());
-            dto.setPhoneNumber(address.getPhoneNumber());
-            dto.setZipCode(address.getZipCode());
-
-            if (address.getShippingAddressId() == Long.parseLong(addressId)) {
-                dto.setActive(true);
-            } else
-                dto.setActive(false);
+            AddressDto.deepCopyShippingAddressDto(dto, address);
 
             addressDtos.add(dto);
         }
@@ -98,12 +120,12 @@ public class AddressService {
     }
 
     @Transactional
-    public List<AddressDto> deleteShippingAddress(String username, String addressId) {
+    public void deleteShippingAddress(String username, String addressId) {
 
         Optional<User> user = userRepository.findByUsername(username);
 
         if (!user.isPresent())
-            return null;
+            return;
 
         Optional<ShippingAddress> deleteAddress = shippingAddressRepository.findById(Long.parseLong(addressId));
         ;
@@ -111,36 +133,7 @@ public class AddressService {
             user.get().getShippingAddresses().remove(deleteAddress.get());
             shippingAddressRepository.delete(deleteAddress.get());
         }
-
-        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
-
-        if (addresses.isEmpty()) 
-          return null;
-
-        List<AddressDto> addressDtos = new ArrayList<>();
-        for (ShippingAddress address : addresses) {
-            AddressDto dto = new AddressDto();
-            dto.setId(Long.toString(address.getShippingAddressId()));
-
-            dto.setAddress1(address.getAddress1());
-            dto.setAddress2(address.getAddress2());
-            dto.setCity(address.getCity());
-            dto.setState(address.getState());
-            dto.setCountry(address.getCountry());
-            dto.setFirstname(address.getFirstname());
-            dto.setLastname(address.getLastname());
-            dto.setPhoneNumber(address.getPhoneNumber());
-            dto.setZipCode(address.getZipCode());
-
-            // if (address.getShippingAddressId() == Long.parseLong(addressId)) {
-            //     dto.setActive(true);
-            // } else
-            dto.setActive(false);
-
-            addressDtos.add(dto);
-        }
-
-        return addressDtos;
+        
     }
 
 

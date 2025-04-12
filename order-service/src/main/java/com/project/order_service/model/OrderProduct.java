@@ -1,5 +1,6 @@
 package com.project.order_service.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -27,7 +29,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="order_product")
+@Table(name="order_product", 
+        indexes = {
+        @Index(columnList = "name, size, productId, price", name = "idx_order") })
 public class OrderProduct extends BaseEntity {
         
         @Id @Tsid        
@@ -45,7 +49,7 @@ public class OrderProduct extends BaseEntity {
         
         private Long colorId;
 
-        private int price;       
+        private BigDecimal price;       
         
         private Long productId;
 

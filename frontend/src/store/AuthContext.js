@@ -17,9 +17,9 @@ export const STATUS = Object.freeze({
 });
 
 const initialState = {
-  user: {},
+  user: {},  
   token: null,
-  expiresAt: null,
+  expiresAt: null,  
   isAuthenticated: false,
   status: STATUS.PENDING,
 };
@@ -30,14 +30,14 @@ const AuthContext = createContext({
   login: (user = {}, token = '', expiresAt = '') => {},
   logout: () => {},
   updateUser: () => {},
-  updateToken: () => {},
+  updateToken: () => {},  
   setAuthenticationStatus: () => {},
 });
 
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'login': {      
-      return {            
+      return {         
         user : action.payload.user, 
         token: action.payload.token,
         expiresAt: action.payload.expiresAt,
@@ -53,7 +53,7 @@ const authReducer = (state, action) => {
       };
     }
     case 'updateUser': {
-      console.log(action.payload.user);
+      
       return {
         ...state,
         user: action.payload.user,
@@ -62,9 +62,10 @@ const authReducer = (state, action) => {
     case 'updateToken': {
       return {
         ...state,
-        user: action.payload.token,
+        token: action.payload.token,
       };
     }
+    
     case 'status': {
       return {
         ...state,
@@ -121,8 +122,7 @@ export const ContextProvider = ({ children }) => {
         token,
       },
     });
-  }, []);
-
+  }, []);  
   const setAuthenticationStatus = React.useCallback((status) => {
     dispatch({
       type: 'status',
@@ -133,12 +133,14 @@ export const ContextProvider = ({ children }) => {
   }, []);
 
   const value = React.useMemo(
-    () => ({ ...state, login, logout, updateUser, setAuthenticationStatus, updateToken }),
-    [state, setAuthenticationStatus, login, logout, updateUser, updateToken]
+    () => ({ ...state, login, logout, updateUser, setAuthenticationStatus, updateToken}),
+    [state, setAuthenticationStatus, login, logout, updateUser, updateToken ]
   );
 
 
     const token = useSelector((state) => { return state.token } );
+
+        
 
    const fetchUser = async () => {
 
@@ -169,9 +171,7 @@ export const ContextProvider = ({ children }) => {
 
   useEffect(() => {
        
-       if (token)
-        fetchUser();
-    
+        fetchUser();    
   }, [token]);
 
 

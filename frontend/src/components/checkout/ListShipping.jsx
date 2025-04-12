@@ -1,55 +1,87 @@
+import { useEffect, useState } from "react";
 import {
     CheckIcon,
     ChevronUpIcon,
     MapPinIcon,
     MinusCircleIcon,
     PhoneIcon,
-    PlusIcon,    
+    PlusIcon,
     UserIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+
+import DotLoaderSpinner from "components/loader/Loading";
+import { useAuthContext } from "store/AuthContext";
 import { selectShippingAddress, deleteAddress } from "util/api";
+import { useDispatch } from "react-redux";
 
 
 const ListShipping = ({
-    visible,
-    setVisible,
+    setLoading,
+    selectedAddress,    
     addresses,
-    setAddresses,
+    invalidate,
     user,
     profile
 }) => {
 
-              
-    
-    const changeActiveHandler = async (id) => {
-    
-        const res = await selectShippingAddress(id);   
-        
-        console.log(res);
+    const [visible, setVisible] = useState(addresses.length ? false : true);    
+    const [prevAddressId, setPrevAddressId] = useState(null);
 
-        setAddresses(res);
+
+    const changeActiveHandler = async (id, e) => {
+
+        e.stopPropagation();
+
+        if (prevAddressId !== id) {
+            setPrevAddressId(id);
+
+            try {
+                const res = await selectShippingAddress(id);
+
+
+            } catch (err) {
+                console.error(err.response?.data.message);
+            }
+
+            invalidate();
+        }
+
     };
     const deleteHandler = async (id, e) => {
-        e.stopPropagation();        
-        const res = await deleteAddress(id);
-        setAddresses(res);
+        e.stopPropagation();
+        //setLoading(true);
+        try {
+            const res = await deleteAddress(id);
+
+
+
+        } catch (err) {
+            console.error(err.response?.data.message);
+        }
+
+        invalidate();
+
+
+        //setLoading(false);
+
     };
 
+
+
     return (
-        <>
-            {addresses && addresses.map((address) => (                
+        <div>
+            {addresses && addresses.map((address) => (
                 <div
-                    className={`relative cursor-pointer p-4 mb-4 border border-slate-100 rounded-xl shadow-md hover:shadow-xl hover:border-white hover:scale-[101%] transition duration-300 ${
-                        address.active &&
+                    className={`relative cursor-pointer p-4 mb-4 border border-slate-100 rounded-xl shadow-md hover:shadow-xl hover:border-white hover:scale-[101%] transition duration-300 ${address.active &&
                         "border-l-4 border-l-amazon-blue_light hover:border-l-amazon-blue_light"
-                    } `}
+                        } `}
                     key={address.id}
-                    onClick={() => changeActiveHandler(address.id)}
+                    onClick={(e) => changeActiveHandler(address.id, e)}
                 >
                     {addresses.length > 0 ? (
                         <div
                             className="z-10 absolute top-2 right-2 text-slate-600 hover:text-red-500 hover:scale-110 transition"
+                            key={address.id}
                             onClick={(e) => deleteHandler(address.id, e)}
                         >
                             <MinusCircleIcon className="w-6 h-6" />
@@ -60,8 +92,8 @@ const ListShipping = ({
                     <div className="grid grid-cols-2 justify-center">
                         <div className="mb-4">
                             <img
-                                src={profile ? user.user?.image : user.image}
-                                alt={address._id}
+                                src={""}
+                                alt={address.id}
                                 width={60}
                                 height={60}
                                 className="rounded-full"
@@ -98,9 +130,8 @@ const ListShipping = ({
                         <div className="flex justify-between">
                             <span>{address.zipCode}</span>
                             <span
-                                className={`flex items-center text-amazon-blue_light font-semibold ${
-                                    !address.active && "hidden"
-                                }`}
+                                className={`flex items-center text-amazon-blue_light font-semibold ${!address.active && "hidden"
+                                    }`}
                             >
                                 <CheckIcon className="w-5 h-5 " /> Active
                             </span>
@@ -121,11 +152,11 @@ const ListShipping = ({
                     ) : (
                         <span className="flex items-center">
                             <PlusIcon className="h-6 w-6" /> Add New Address
-                        </span>                        
-                    ) }
-                </button>                
+                        </span>
+                    )}
+                </button>
             </div>
-        </>
+        </div>
     );
 };
 

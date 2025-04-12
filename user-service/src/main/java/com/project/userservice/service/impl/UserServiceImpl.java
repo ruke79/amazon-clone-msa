@@ -454,24 +454,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public List<AddressDto> findUserAddresses(User user) {
-
-        if (!user.getShippingAddresses().isEmpty()) {
-
-            List<AddressDto> dtos = new ArrayList<>();
-            for (ShippingAddress src : user.getShippingAddresses()) {
-                AddressDto address = new AddressDto();
-                AddressDto.deepCopyShippingAddressDto(address, src);
-                address.setId(Long.toString(src.getShippingAddressId()));
-                dtos.add(address);
-            }
-
-            return dtos;
-        }
-
-        return null;              
-    }
-
+    
     @Transactional(readOnly = true)
     public UserProfileDto findUserWithdefaultPaymentMethod(User user) {
 

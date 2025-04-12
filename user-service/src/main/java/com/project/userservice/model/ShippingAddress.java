@@ -69,6 +69,8 @@ public class ShippingAddress extends BaseEntity {
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable=false)
     @JsonBackReference
     private User user;    
+
+    private boolean active = false;
     
     // @OneToMany(mappedBy = "shippingAddress", fetch = FetchType.LAZY,
     // cascade = CascadeType.PERSIST,targetEntity = Order.class)
@@ -85,6 +87,7 @@ public class ShippingAddress extends BaseEntity {
         address.setLastname(src.getLastname());
         address.setPhoneNumber(src.getPhoneNumber());
         address.setZipCode(src.getZipCode());
+        address.setActive(src.isActive());
     }
 
            

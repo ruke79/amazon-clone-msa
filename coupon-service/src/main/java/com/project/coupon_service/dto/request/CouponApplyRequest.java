@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 
 import com.project.coupon_service.dto.CouponDto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class CouponApplyRequest {
 
     BigDecimal totalPrice;

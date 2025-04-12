@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { useMemo, Suspense, useEffect, useState, useCallback  } from "react";
+import { useMemo, Suspense, useEffect, useState, useCallback } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootPage from "./pages/Root";
@@ -7,33 +7,33 @@ import HomePage, { loader as homeLoader } from './pages/home/Home';
 import RegisterPage from './pages/user/RegisterPage';
 import SignInPage from './pages/user/SignInPage';
 import DashboardLayout from './components/admin/DashboardLayout';
-import { ContextProvider, useAuthContext } from "./store/AuthContext";
+import { ContextProvider } from "./store/AuthContext";
 import { persistor, store } from "./redux/store";
 // import Categories from './pages/admin/Category';
 // import AdminProduct from './pages/admin/Index';
 import SingleProduct, { loader as productLoader } from "./pages/Product";
 import Browse, { loader as browseLoader, loader } from "pages/browse";
-import Cart, { loader as loaderCart } from "pages/cart";
-import Checkout, { loader as loaderCheckout } from "pages/checkout";
+import Cart from "pages/cart";
+import Checkout from "pages/checkout";
 import OrderPage, { loader as loaderOrder } from "pages/order";
 import Address, { loader as loaderAddress } from "pages/profile/address";
 import Orders, { loader as loaderOrders } from "pages/profile/orders";
-import Security, {loader as loaderSecurity } from "pages/profile/security";
+import Security, { loader as loaderSecurity } from "pages/profile/security";
 import Profile, { loader as loaderProfile } from "pages/profile/profile";
 import Payment, { loader as loaderPayment } from "pages/profile/payment"
 
 
 import ProtectedRoute from "components/ProtectedRoute";
 import { ErrorBoundary } from "react-error-boundary";
-import { Outlet  } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import ErrorPage from "pages/Error";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from 'util/api';
 import Maintenance from 'components/error/Maintenance';
-import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
+//import Products, { loader as loaderProducts }  from "pages/admin/ProductList";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import TokenRefresher from "util/TokenRefresher";
-import toast, {Toaster} from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import loadFakeData from "util/loadFake";
 import { postRequest, getRequest } from "util/api";
@@ -77,27 +77,27 @@ const initialOptions = {
 };
 
 const ErrorBoundaryLayout = () => (
-  
-//<Suspense fallback={<div>Loading...</div>}>
-   <ErrorBoundary FallbackComponent = {ErrorFallback} >            
-  <ContextProvider>
-  <TokenRefresher/>    
-    <Outlet />     
-   </ContextProvider>
-   </ErrorBoundary>
-//  </Suspense>
+
+  //<Suspense fallback={<div>Loading...</div>}>
+  <ErrorBoundary FallbackComponent={ErrorFallback} >
+    <ContextProvider>
+      <TokenRefresher />
+      <Outlet />
+    </ContextProvider>
+  </ErrorBoundary>
+  //  </Suspense>
 );
 
 const AppRouter = () => {
 
-    
 
-  
+
+
   const router = createBrowserRouter([
     {
       element: <ErrorBoundaryLayout />,
-      errorElement : <ErrorPage/>,
-         
+      errorElement: <ErrorPage />,
+
       children: [
         {
           path: '/',
@@ -110,25 +110,25 @@ const AppRouter = () => {
             },
             { path: 'signin', element: <SignInPage /> },
             { path: 'register', element: <RegisterPage /> },
-            
+
           ]
         },
-        { path: 'error_server', element: <Maintenance/> },
+        { path: 'error_server', element: <Maintenance /> },
 
         {
           path: 'chat',
-          element: <ProtectedRoute><ChatPage/></ProtectedRoute>,
+          element: <ProtectedRoute><ChatPage /></ProtectedRoute>,
           children: [
-             { path : 'chatrooms', element: <ChatRoomList/> },
+            { path: 'chatrooms', element: <ChatRoomList /> },
           ]
         },
 
         {
           path: '/profile',
           element: <ProtectedRoute><Profile /></ProtectedRoute>,
-          loader: loaderProfile,   
-          
-        },     
+          loader: loaderProfile,
+
+        },
         {
           path: 'profile/address',
           element: <ProtectedRoute><Address /></ProtectedRoute>,
@@ -137,7 +137,7 @@ const AppRouter = () => {
         {
           path: 'profile/orders',
           element: <ProtectedRoute><Orders /></ProtectedRoute>,
-          loader : loaderOrders
+          loader: loaderOrders
         },
         {
           path: 'profile/payment',
@@ -147,10 +147,10 @@ const AppRouter = () => {
         {
           path: 'profile/security',
           element: <ProtectedRoute><Security /></ProtectedRoute>,
-          loader : loaderSecurity
+          loader: loaderSecurity
         },
         {
-          path: '/product/:slug',          
+          path: '/product/:slug',
           element: <SingleProduct />,
           loader: productLoader,
 
@@ -160,13 +160,13 @@ const AppRouter = () => {
           element: <Browse />,
           loader: browseLoader,
         },
-        {          
+        {
           path: '/cart',
-          element: <ProtectedRoute><Cart /></ProtectedRoute>,          
+          element: <ProtectedRoute><Cart /></ProtectedRoute>,
         },
         {
           path: '/checkout',
-          element: <ProtectedRoute><Checkout /></ProtectedRoute>,          
+          element: <ProtectedRoute><Checkout /></ProtectedRoute>,
         },
         {
           path: '/order/:id',
@@ -176,7 +176,7 @@ const AppRouter = () => {
         // {
         //   path: '/admin',
         //   element: <DashboardLayout />,
-          
+
         //   children: [
         //     { path: 'category', element: <Categories /> },                        
         //     { path: 'product', element: <AdminProduct />},
@@ -188,9 +188,9 @@ const AppRouter = () => {
         // }
       ]
     }]);
-  
 
-  return <RouterProvider router={router}/>     
+
+  return <RouterProvider router={router} />
 
 };
 
@@ -198,31 +198,31 @@ const AppRouter = () => {
 
 function App() {
 
- 
-  
-  
+
+
+
   // const loadData = async () => {
 
   //   await loadFakeData();            
   // }
 
   // useOnMounted(loadData);
-  
-  
+
+
   return (
-    <>   
-    <div>
-    <Toaster/>
-    </div>
-      <QueryClientProvider client={queryClient}>      
+    <>
+      <div>
+        <Toaster />
+      </div>
+      <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-          <PayPalScriptProvider options={initialOptions} >                      
-            <AppRouter/>                 
-             </PayPalScriptProvider>
+            <PayPalScriptProvider options={initialOptions} >
+              <AppRouter />
+            </PayPalScriptProvider>
           </PersistGate>
         </Provider>
-      
+
       </QueryClientProvider>
     </>
   );

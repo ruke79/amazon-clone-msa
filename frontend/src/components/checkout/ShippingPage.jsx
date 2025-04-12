@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AddShipping from "./AddShipping";
 import ListShipping from "./ListShipping";
+
+import { useFetchAddresses } from "hook/hooks";
 
 const initialValue = {
     firstname: "",
@@ -14,42 +17,67 @@ const initialValue = {
     country: "",
 };
 
-const ShippingPage = ({
-    user,
-    addresses,
-    setAddresses,
+const ShippingPage = ({    
     setSelectedAddress,
-    profile,
+    user,    
+    setLoading,
+    profile
 }) => {
-
     
-    const [shipping, setShipping] = useState(initialValue);
-    const [visible, setVisible] = useState(addresses?.length ? false : true);
+    
 
+    const [shipping, setShipping] = useState(initialValue);
+    const { addressesData, isPendingAddress, invalidate, isSuccessAddress } = useFetchAddresses(user.userId);
+         
         
+     useEffect(() => {
+    
+            
+        if (isSuccessAddress && addressesData ) {  // empty null value
+           
+            const check = addressesData.find((address) => address.active === true);
+            if (check) {
+                setSelectedAddress(check);
+
+            } else {
+                setSelectedAddress("");
+            }
+            
+        }
+    
+
+    }, [addressesData]);
+
+
+if (isPendingAddress) {
+    //return <DotLoaderSpinner loading={isPendingAddress} />
+    return;
+}
+    
+
+            
     return (
         <>
-            {!profile && (
+            {(!profile &&
                 <div className="text-xl font-semibold pb-2 mb-4 border-b border-b-2 ">
                     Shipping Information
                 </div>
             )}
             <ListShipping
-                visible={visible}
-                setVisible={setVisible}
-                addresses={addresses}
-                setAddresses={setAddresses}
+                setLoading={setLoading}      
+                addresses = {addressesData}                          
+                invalidate= {invalidate}    
                 user={user}
-                profile={false}
+                profile={profile}
             />
             {(
-                <AddShipping
+                <AddShipping                    
+                    setLoading={setLoading}                         
+                    addresses = {addressesData}      
+                    invalidate= {invalidate}    
                     shipping={shipping}
-                    setShipping={setShipping}
-                    addresses={addresses}
-                    setAddresses={setAddresses}
-                    initialValue={initialValue}
-                    setSelectedAddress={setSelectedAddress}
+                    setShipping={setShipping}                    
+                    initialValue={initialValue}                    
                 />
             )}
         </>

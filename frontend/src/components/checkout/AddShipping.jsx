@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-
+import { useEffect } from "react";
 import * as Yup from "yup";
 import "yup-phone";
 
@@ -8,17 +8,19 @@ import { countries } from "./countries";
 import SingularSelect from "./SingularSelect";
 import { saveShippingAddress } from "util/api";
 import { useAuthContext } from "store/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+
 
 //import { saveAddress } from "../../request/users";
 
 
 
 const AddShipping = ({
+    setLoading,
     shipping,
-    setShipping,    
-    setAddresses,
-    initialValue,
-    setSelectedAddress,
+    setShipping,       
+    invalidate, 
+    initialValue,    
 }) => {
     const {
         firstname,
@@ -71,6 +73,9 @@ const AddShipping = ({
             .max(40, "Country Name must be less than 40 charactes"),
     });
 
+    
+    const dispatch = useDispatch();
+        
     const handleChange = (e) => {
         const { name, value } = e.target;
         setShipping({ ...shipping, [name]: value });
@@ -79,14 +84,16 @@ const AddShipping = ({
     
     const submitHandler = async () => {
         
-        const res = await saveShippingAddress(shipping);        
+        //setLoading(true);
+        const res = await saveShippingAddress(shipping);                        
+                
+        invalidate();
+        //setLoading(false);
 
-        console.log(res);
-        
-        setAddresses(res);         
-
-        setSelectedAddress(initialValue);
+        selectAddress(initialValue);
         setShipping(initialValue);
+        
+
     };
 
     return (

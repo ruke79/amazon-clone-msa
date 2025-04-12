@@ -16,6 +16,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -33,7 +34,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="orders")        
+@Table(name="orders",indexes = {
+        @Index(columnList = "trackingId, customerId, paymentMethod", name = "idx_order") })        
 public class Order extends BaseEntity {
    
    @Id @Tsid    

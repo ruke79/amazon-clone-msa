@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 import Header from "pages/header/Header";
@@ -16,47 +16,28 @@ import { isPending } from "@reduxjs/toolkit";
 
 const Checkout = () => {
 
-    const { user } = useAuthContext();
+    const { user, addresses, updateAddresses } = useAuthContext();
 
     const cart = useSelector((state) => { return state.cart; });
 
+    const [selectedAddress, setSelectedAddress] = useState("");
+    
     const { checkoutData, isPendingCheckOut, isSuccessCheckOut} =
      useFetchCheckOut(user.email, cart.cartId, cart.status);
-            
-    const [addresses, setAddresses] = useState([]);        
-
-    const { addressesData, isPendingAddress, invalidate, isSuccessAddress } = useFetchAddresses(user.userId, addresses);
-
+    
     const [paymentMethod, setPaymentMethod] = useState(user.defaultPaymentMethod);
-    const [totalAfterDiscount, setTotalAfterDiscount] = useState("");
-    const [selectedAddress, setSelectedAddress] = useState("");
+    const [totalAfterDiscount, setTotalAfterDiscount] = useState("");    
     const [loading, setLoading] = useState(false);
 
- 
 
-     useEffect(() => {
+    if (isPendingCheckOut)  {             
+        return <DotLoaderSpinner loading={isPendingCheckOut}/>
+    }
 
-        console.log(addresses);
-        let check = addresses.find((address) => address.active === true);        
-        if (check) {
-            setSelectedAddress(check);
-         
-        } else {
-            setSelectedAddress("");
-        }
-
-    }, [addresses]);
     
-   
-    if (isPendingCheckOut || isPendingAddress)  {             
-        return <DotLoaderSpinner loading={isPendingCheckOut || isPendingAddress} />
-    }
+ 
+    
 
-    if ( addresses.length === 0 && addressesData && isSuccessCheckOut && isSuccessAddress) 
-    {       
-        setAddresses(addressesData);        
-        invalidate();
-    }
 
     return (
         <>
@@ -65,20 +46,20 @@ const Checkout = () => {
             <main className="grid grid-cols-3 md:px-10 mb-10 py-4 gap-8 ">
                 <section className="col-span-2">
                     <ShippingPage
-                        user={user}
-                        addresses={addresses}
-                        setAddresses={setAddresses}
                         setSelectedAddress={setSelectedAddress}
+                        user={user}                        
+                        setLoading={setLoading}
+                        profile={false}
                     />
-                    {<Product cart={checkoutData} />}
+                    {<Product cart={checkoutData}/>}
                 </section>
 
                 <section className="col-span-1">
                     <Payment
                         paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
+                        setPaymentMethod={setPaymentMethod}                        
                     />
-                    <Summary
+                    <Summary                        
                         selectedAddress={selectedAddress}
                         user={user}
                         cart={checkoutData}
@@ -93,6 +74,6 @@ const Checkout = () => {
     );
 };
 
-export default Checkout;
+export default memo(Checkout);
 
 

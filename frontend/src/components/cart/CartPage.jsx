@@ -23,7 +23,7 @@ const CartPage = ({ cart }) => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [enable, setEnable] = useState(cart.cartItems.length > 0);
-    //const [state, setState] = useState();
+    const [prevSelcted, setPrevSelectged] = useState(null);
 
     const navigate = useNavigate();
 
@@ -78,12 +78,20 @@ const CartPage = ({ cart }) => {
     const saveCartToDbHandler = async (e) => {
         e.preventDefault();
 
-        const res = await saveCart(selected, user.email);
+        if (prevSelcted !== selected) {
+            setPrevSelectged(selected);
 
-        dispatch(commitCart(res.cartId));
+            try {
+            const res = await saveCart(selected, user.email);
 
-        navigate("/checkout");
-
+            dispatch(commitCart(res.cartId));
+            } catch(err) {
+                console.error(err.response?.data.message);
+            }
+            finally {
+                navigate("/checkout");
+            }            
+        }
 
     };
 

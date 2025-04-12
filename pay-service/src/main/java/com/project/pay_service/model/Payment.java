@@ -19,6 +19,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +37,8 @@ import lombok.Setter;
 @Entity
 @Table(name="payment", uniqueConstraints = {
                 @UniqueConstraint(name="UniqueOrderIdAndTrackingId", columnNames = {"orderId", "trackingId"})                
-     })
+     },indexes = {
+        @Index(columnList = "orderId, trackingId, customerId, paypalOrderId", name = "idx_payment") })
 public class Payment extends BaseEntity{
 
     @Id @Tsid    

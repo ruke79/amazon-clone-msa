@@ -10,7 +10,7 @@ import { useAuthContext } from "store/AuthContext";
 
 
 
-const Summary = ({
+const Summary = ({    
     selectedAddress,
     user,
     cart,
@@ -34,7 +34,7 @@ const Summary = ({
             .max(20, "Coupon code must Between 3 and 20 character"),
     });
 
-    
+        
     const { coupons, isSuccess, isPending } = useFetchCoupons(user.email);
 
       
@@ -42,34 +42,31 @@ const Summary = ({
 
    
     const applyCouponHandler = async (applycoupon="") => {
-        //setLoading(true);
         
-          const result = await applyCoupon(cart.cartTotal, applycoupon ? applycoupon : coupon, user.email);
-
+        const result = await applyCoupon(cart.cartTotal, applycoupon ? applycoupon : coupon, user.email);
           
         if (result?.message) {
             setError(result.message);
             setDiscount("");
             setTotalAfterDiscount("");
-            //setLoading(false);
+
         } else {
             setTotalAfterDiscount(result.totalAfterDiscount);
             setDiscount(result.discount);
             setError("");
-            //setLoading(false);
         }
     };
 
     const placeOrderHandler = async () => {
         try {
-            //setLoading(true);
+            setLoading(true);
             if (paymentMethod == "") {
                 setOrder_Error("please choose a payment method.");
-                //setLoading(false);
+                setLoading(false);
                 return;
             } else if (!selectedAddress) {
                 setOrder_Error("please choose a shipping address.");
-                //setLoading(false);
+                setLoading(false);
                 return;
             }
 

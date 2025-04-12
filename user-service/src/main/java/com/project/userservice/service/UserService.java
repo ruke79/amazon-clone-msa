@@ -80,9 +80,7 @@ public interface UserService {
     List<String> getUsersFromSessionRegistry();
 
     UserProfileDto findUserWithAddresses(User user);
-
-    List<AddressDto> findUserAddresses(User user);
-
+    
     UserProfileDto findUserWithdefaultPaymentMethod(User user);
 
 }

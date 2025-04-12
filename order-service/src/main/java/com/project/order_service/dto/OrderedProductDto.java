@@ -1,6 +1,8 @@
 package com.project.order_service.dto;
 
 
+import java.math.BigDecimal;
+
 import com.project.common.dto.ProductColorDto;
 
 import jakarta.persistence.CascadeType;
@@ -31,6 +33,6 @@ public class OrderedProductDto {
         
      private ProductColorDto color;
 
-    private int price;      
+    private BigDecimal price;      
 
 }

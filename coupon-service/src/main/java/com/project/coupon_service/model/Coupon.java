@@ -12,7 +12,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 import jakarta.persistence.Id;
-
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,9 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="coupon")
+@Table(name="coupon", 
+indexes = {
+        @Index(columnList = "name, user_id", name = "idx_coupon") })
 public class Coupon extends BaseEntity{
 
     @Id @Tsid    

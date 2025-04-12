@@ -134,9 +134,9 @@ public class OrderService {
             OrderAddress address = new OrderAddress();
             OrderAddress.deepCopyShippingAddress(address, request.getShippingAddress());
 
-            order.setShippingAddress(address);
+            result.setShippingAddress(address);
 
-            address.setOrder(order);
+            address.setOrder(result);
 
             orderAddressRepository.save(address);
 

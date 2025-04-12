@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -28,7 +29,9 @@ import lombok.AccessLevel;
 @Getter
 @Setter
 @Entity
-@Table(name="cart_product")
+@Table(name="cart_product", 
+      indexes = {
+        @Index(columnList = "_uid, name, size, style", name = "idx_cart_product") })
 public class CartProduct extends BaseEntity {
 
     @Id @Tsid

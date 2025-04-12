@@ -31,7 +31,9 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
-        })
+        }, 
+        indexes = {
+            @Index(columnList = "username, email", name = "idx_user") })
 public class User extends BaseEntity{
     @Id @Tsid    
     @Column(name = "user_id")
@@ -40,7 +42,7 @@ public class User extends BaseEntity{
     // 실명
     @NotBlank
     @Size(max = 20)
-    @Column(name = "username")
+    @Column(name = "username")    
     private String username;
     
     // 별명

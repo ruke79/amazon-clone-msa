@@ -48,5 +48,6 @@ public class AddressDto {
         address.setLastname(src.getLastname());
         address.setPhoneNumber(src.getPhoneNumber());
         address.setZipCode(src.getZipCode());
+        address.setActive(src.isActive());
     }
 }

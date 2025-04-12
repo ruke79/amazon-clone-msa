@@ -46,11 +46,8 @@ public class UserController {
         if (null != userDetails) {
 
             try {
-
-                User user = userService.findByUsername(userDetails.getUsername());
-
-                //UserProfileDto repsonse = userService.findUserWithAddresses(user);
-                List<AddressDto> repsonse = userService.findUserAddresses(user);
+                                
+                List<AddressDto> repsonse = addressService.getShipAddresses(userDetails.getUsername());
 
                 return new ResponseEntity<>(repsonse, HttpStatus.OK);
             } catch (RuntimeException e) {
@@ -72,7 +69,7 @@ public class UserController {
             String username = userDetails.getUsername();
 
             try {
-                List<AddressDto> response = addressService.saveShippingAddress(request, username);
+                AddressDto response = addressService.saveShippingAddress(request, username);
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } catch (RuntimeException e) {
@@ -85,7 +82,7 @@ public class UserController {
     }
 
     @GetMapping("/select/{addressId}")
-    ResponseEntity<?> selectShippingAddresses(@PathVariable("addressId") String addressId,
+    ResponseEntity<?> selectShippingAddress(@PathVariable("addressId") String addressId,
     @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
@@ -93,7 +90,7 @@ public class UserController {
             String username = userDetails.getUsername();
 
             try {
-                return new ResponseEntity<>(addressService.getShipAddresses(username, addressId), HttpStatus.OK);
+                return new ResponseEntity<>(addressService.selectShipAddress(username, addressId), HttpStatus.OK);
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse(e.getMessage()));
@@ -108,9 +105,10 @@ public class UserController {
     @AuthenticationPrincipal UserDetails userDetails) {
 
         if (null != userDetails) {
-            String username = userDetails.getUsername();
             try {
-                return new ResponseEntity<>(addressService.deleteShippingAddress(username, addressId), HttpStatus.OK);
+                String username = userDetails.getUsername();
+                addressService.deleteShippingAddress(username, addressId);            
+                return new ResponseEntity<>(null, HttpStatus.OK);
             } catch (RuntimeException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new MessageResponse(e.getMessage()));
