@@ -96,27 +96,18 @@ front end : react
 ## Installation 
 
 ### Back End Setup
-**1. java 17 install**
+**. java 17 install**
+**. kafa install**
+**. redis install**
+**. mongodb install**
+**. mysql install**    
+**. chat-connector, order-payment-connector, payment-connector**
 <br>
-**2.** **application.properties*
-```
-  spring.datasource.url=jdbc:mysql://localhost:3306
-  spring.datasource.username=
-  spring.datasource.password=
-
-  spring.mail.host=smtp.gmail.com
-  spring.mail.port=
-  spring.mail.username=
-  spring.mail.password= 
-```
 
 ### Front End Setup  
 **1. .env.development**
 ```  
-  REACT_APP_API_URL=http://localhost:8080
-  REACT_APP_CLOUDINARY_NAME=
-  REACT_APP_CLOUDINARY_KEY=
-  REACT_APP_CLOUDINARY_SECRET=
+  REACT_APP_API_URL=http://localhost:8000  
   NODE_ENV = "development"
   PUBLIC_URL=http://localhost:3000
   REACT_APP_PAYPAL_CLIENT_ID=
