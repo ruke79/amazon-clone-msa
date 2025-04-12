@@ -63,15 +63,14 @@ front end : react
 ## Features
 ### Back end 
 1. 액세스 토큰은 블랙리스트를 도입하고 , 리프레시 토큰은 httpOnly 쿠키에 저장하고 Refresh Token Rotation 으로 보안을 강화하였습니다.
-2. Redis 세션 관리 기능 과 SSE 기능을 활용하여 멀티 로그인 방지 구현
-3. 회원 가입은 이메일 인증 방식입니다.
-4. 로그인 후에 모든 요청은 Api Gateway에서 토큰 검증 필터를 통해 인증/인가 합니다.
-5. 메시지 브로커는 Kafka를 사용하였고 서비스간의 데이터 조회가 필요한 경우는 OpenFeign 기능을 도입하였습니다.
-6. Order Service 와 Payment Service에는  Transaction OutBox Pattern을 사용했습니다.
-7. Order Service에는 Saga Pattern을 사용했습니다.
-8. Catalog Service에서 상품 조회 시 Redis Cache를 적용했습니다.
-9. Chat Service에서 채팅 메시지을 로드할 때 Cursor based paigination로 구현하였습니다.
-10. Chat Service에서 채팅 메시지는 Mongo Sink Connector를 통해 MongoDB에 저장합니다.
+2. 회원 가입은 이메일 인증 방식입니다.
+3. 로그인 후에 모든 요청은 Api Gateway에서 토큰 검증 필터를 통해 인증/인가 합니다.
+4. 메시지 브로커는 Kafka를 사용하였고 서비스간의 데이터 조회가 필요한 경우는 OpenFeign 기능을 도입하였습니다.
+5. Order Service 와 Payment Service에는  Transaction OutBox Pattern을 사용했습니다.
+6. Order Service에는 Saga Pattern을 사용했습니다.
+7. Catalog Service에서 상품 조회 시 Redis Cache를 적용했습니다.
+8. Chat Service에서 채팅 메시지을 로드할 때 Cursor based paigination로 구현하였습니다.
+9. Chat Service에서 채팅 메시지는 Mongo Sink Connector를 통해 MongoDB에 저장합니다.
        
    
 ### Front end
@@ -97,27 +96,18 @@ front end : react
 ## Installation 
 
 ### Back End Setup
-**1. java 17 install**
+**. java 17 install**
+**. kafa install**
+**. redis install**
+**. mongodb install**
+**. mysql install**    
+**. chat-connector, order-payment-connector, payment-connector**
 <br>
-**2.** **application.properties*
-```
-  spring.datasource.url=jdbc:mysql://localhost:3306
-  spring.datasource.username=
-  spring.datasource.password=
-
-  spring.mail.host=smtp.gmail.com
-  spring.mail.port=
-  spring.mail.username=
-  spring.mail.password= 
-```
 
 ### Front End Setup  
 **1. .env.development**
 ```  
-  REACT_APP_API_URL=http://localhost:8080
-  REACT_APP_CLOUDINARY_NAME=
-  REACT_APP_CLOUDINARY_KEY=
-  REACT_APP_CLOUDINARY_SECRET=
+  REACT_APP_API_URL=http://localhost:8000  
   NODE_ENV = "development"
   PUBLIC_URL=http://localhost:3000
   REACT_APP_PAYPAL_CLIENT_ID=
