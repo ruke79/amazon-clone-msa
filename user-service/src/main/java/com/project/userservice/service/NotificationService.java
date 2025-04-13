@@ -45,7 +45,7 @@ public class NotificationService {
         sessionId = jwtUtils.getSessionIdFromJwtToken(token);
         log.info("sessionId : {}", sessionId);
 
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        SseEmitter emitter = new SseEmitter();
         userEmitters.put(sessionId, emitter);
         
         emitter.onCompletion(() -> userEmitters.remove(sessionId));
@@ -63,7 +63,8 @@ public class NotificationService {
     }
     
     private void publishNotification(Notification notification) {
-        redisTemplate.convertAndSend("sse", notification);
+        Long num = redisTemplate.convertAndSend("sse", notification);
+        log.info("SSE Msg num: {}  Session Id : {}", num, notification.getSessionId());
     }
     
     private void sendRealTimeNotification(Notification notification) {
@@ -74,7 +75,8 @@ public class NotificationService {
                     emitter.send(SseEmitter.event().name("notification").data(notification.getMessage()));
                 } catch (Exception e) {
                     // 예외 처리
-                    log.error("SSE Error: {}", e.getStackTrace());
+                    log.error(e.getMessage());
+                    e.printStackTrace();
                 }
             });
         }

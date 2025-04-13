@@ -120,7 +120,7 @@ public class AuthController {
                 }
 
                 user = userService.registerNewUserAccount(accountDto);
-                // userService.addUserLocation(registered, getClientIP(request));
+                //userService.addUserLocation(registered, getClientIP(request));
 
                 eventPublisher.publishEvent(new com.project.userservice.registration.OnRegistrationCompleteEvent(user,
                         request.getLocale(), getAppUrl(request)));

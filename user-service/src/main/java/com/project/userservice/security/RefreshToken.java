@@ -56,8 +56,11 @@ public class RefreshToken {
 
     
     @Id    
-    private String userId;
+    private String sessionId;
     
+    @Indexed
+    private String userId;
+
     private String token;                     
     
     

@@ -33,131 +33,13 @@ export const queryClient = new QueryClient(
 // Create an Axios instance
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}`,
-  headers: {
+  headers: {    
     "Content-Type": "application/json",
     Accept: "application/json",
+    'multiLogin' : 'false',
   },
   withCredentials: true,
 });
-
-
-// api.interceptors.request.use(
-//   async (config) => {
-    
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-
-
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
-let isRefreshing = false;
-
-const refreshAndRetryQueue = [];
-
-
-
-// api.interceptors.response.use(
-//   (res) => {
-//     console.log(res.data)
-//     return res;
-//   },
-//   async (err) => {
-//     let originalConfig = err.config;
-
-//     if (err.response) {
-
-//       const msg = err.response.data;
-//       const status = err.response.status;
-
-      
-//       if (status === 401) {
-
-
-//         if (!isRefreshing) {
-
-//           isRefreshing = true;
-
-
-//           try {
-
-//             if (msg === "access token expired") {
-
-//               TokenUtil.removeToken();
-
-
-
-//               const rs = await getRequest("user-service/api/token/refresh");
-
-//               if (rs.status == 200) {
-//                 console.log(rs);
-//                 const accessToken = rs.headers['access'];
-//                 TokenUtil.updateToken(accessToken);
-
-//                 //setToken(accessToken);
-
-//                 originalConfig.headers['Authorization'] = `Bearer ${accessToken}`;
-
-//                 return api(originalConfig);
-//               }
-
-//             }
-//             refreshAndRetryQueue.forEach(({ config, resolve, reject }) => {
-//               api
-//                 .request(config)
-//                 .then((response) => resolve(response))
-//                 .catch((err) => reject(err));
-//             });
-
-//             refreshAndRetryQueue.length = 0;
-
-
-//           } catch (refreshError) {
-//             refreshAndRetryQueue.length = 0;
-
-//             console.log(refreshError);
-//             TokenUtil.remove();
-//             throw refreshError;
-
-//           } finally {
-//             isRefreshing = false;
-//           }
-//         }
-
-
-//         return new Promise((resolve, reject) => {
-//           refreshAndRetryQueue.push({ config: originalConfig, resolve, reject });
-//         });
-
-//       }
-//       else if (status === 400) {
-
-
-//         if (msg === "refresh token expired") {
-
-//           TokenUtil.remove();
-//           //document.location.href = '/signin'
-
-//         }
-//       }
-//     }
-//     else {
-//       // We have a network error
-//       console.error('Network error:', err);
-//       //navigate('error_server');
-//       TokenUtil.remove();
-//     }
-
-//     return Promise.reject(err);
-
-//   }
-// );
-
 
 
 

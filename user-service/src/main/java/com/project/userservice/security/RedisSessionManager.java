@@ -3,6 +3,9 @@ package com.project.userservice.security;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class RedisSessionManager {
     private static RedisSessionManager instatnce;
     private Map<String, String> sessions;
@@ -19,11 +22,20 @@ public class RedisSessionManager {
     }
 
     public synchronized void addSession(String userId, String sessionId) {
+        log.info("addSession : {}", sessionId);
         sessions.put(userId, sessionId);
     }
 
     public synchronized void removeSession(String userId) {
         sessions.remove(userId);
+    }
+
+    public synchronized boolean hasSession(String userId) {
+        return sessions.get(userId) != null;
+    }
+
+    public synchronized String getSession(String userId) {
+        return sessions.get(userId);
     }
 
     public synchronized boolean isSessionActive(String userId, String sessionId) {
