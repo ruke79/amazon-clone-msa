@@ -20,6 +20,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.kafka:spring-kafka'
 
+	implementation("org.apache.tomcat.embed:tomcat-embed-core:10.1.34")
 	
 	implementation group: 'org.passay', name: 'passay', version: '1.6.4'
 	implementation group: 'com.warrenstrange', name: 'googleauth', version: '1.4.0'

@@ -32,7 +32,7 @@ public class RefreshTokenRepository {
     }
 
      public void save(final RefreshToken refreshToken) {
-        redisTemplate.opsForValue().set(refreshToken.getUserId(), refreshToken.getToken());
+        redisTemplate.opsForValue().set(refreshToken.getSessionId(), refreshToken.getToken());
         redisTemplate.expire(refreshToken.getToken(), System.currentTimeMillis() + jwtRefreshExpirationMs, TimeUnit.MILLISECONDS);
     }
 
@@ -40,15 +40,15 @@ public class RefreshTokenRepository {
         redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
     }
 
-    public Optional<RefreshToken> findByUserId(final String userId) {
+    public Optional<RefreshToken> findByUserId(final String sessionId, final String userId) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String refreshToken = valueOperations.get(userId);
+        String refreshToken = valueOperations.get(sessionId);
 
         if (Objects.isNull(refreshToken)) {
             return Optional.empty();
         }
 
-        return Optional.of(new RefreshToken(userId, refreshToken));
+        return Optional.of(new RefreshToken(sessionId, userId, refreshToken));
     }
 
     public void delete(final String key) {

@@ -72,8 +72,7 @@ if (isPendingAddress) {
             />
             {(
                 <AddShipping                    
-                    setLoading={setLoading}                         
-                    addresses = {addressesData}      
+                    setLoading={setLoading}                       
                     invalidate= {invalidate}    
                     shipping={shipping}
                     setShipping={setShipping}                    

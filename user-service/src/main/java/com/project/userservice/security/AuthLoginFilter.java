@@ -114,10 +114,11 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String message = "Login Success";
 
-        if (refreshTokenService.findByUserId(userDetails.getEmail()).isPresent()) {
-            //refreshTokenService.deleteByKey(userDetails.getEmail());
-            //jwtUtils.removeSession(userDetails.getEmail());
-            
+        //if (refreshTokenService.findByUserId(userDetails.getEmail()).isPresent()) {
+        if (RedisSessionManager.getInstance().hasSession(userDetails.getEmail())) {
+        
+            log.info("Logout session Id : {}",RedisSessionManager.getInstance().getSession(userDetails.getEmail()));
+                        
             notificationService.sendNotification(userDetails.getEmail(), "Logout");
             
             message = "User attempted to log in multiply, logging out from previous logged in state";
@@ -126,8 +127,10 @@ public class AuthLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         
         
+        
         String accessToken = jwtUtils.generateToken(userDetails.getEmail(), role, userDetails.is2faEnabled());        
 
+        log.info("Login session Id : {}",RedisSessionManager.getInstance().getSession(userDetails.getEmail()));
         
         refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 

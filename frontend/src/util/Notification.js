@@ -6,32 +6,43 @@ const { useAuthContext } = require("store/AuthContext");
 
 export const useNotification = () => {
 
-    const { token } = useAuthContext();
-    const logout = useLogout();
-
-    const [data, setData] = useState(false);
+    const { token, isAuthenticated } = useAuthContext();
+    const logout = useLogout(true);
     
+    const [isConnected, setIsConnected] = useState(false);
+
     const EventSoruce = EventSourcePolyfill || NativeEventSource;    
     const eventSource = useRef(null);
+
     
     console.log(token);
 
     useEffect(()=> {
         const fetchSSE = () => {
 
-            if (!token)
+            if (!token || !isAuthenticated)
                 return;
-            
-            eventSource.current = new EventSoruce(
-                `${process.env.REACT_APP_API_URL}/user-service/sse`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,                        
-                    },
-                    heartbeatTimeout: 60000,
-                    withCredentials: true
-                }
-            );
+
+            // if (eventSource.current) {
+            //     console.log("기존 SSE 연결");
+            //     return;
+            // }
+            if (!isConnected) {            
+                eventSource.current = new EventSoruce(
+                    `${process.env.REACT_APP_API_URL}/user-service/sse`,
+                    {
+                        headers: {
+                            'Content-Type' : 'text/event-stream',
+                            'Cache-Control': 'no-cache',
+                            'Connection' : 'keep-alive',
+                            'X-Accel-Buffering' : 'no',
+                            Authorization: `Bearer ${token}`,                        
+                        },
+                        heartbeatTimeout: 120000,
+                        withCredentials: true
+                    }
+                );
+            }
 
             eventSource.current.addEventListener('notification', (event) => {
                 //const data = JSON.parse(event.data)
@@ -41,7 +52,7 @@ export const useNotification = () => {
                     logout();
                 }
 
-                setData(true);
+                
             })
 
             eventSource.current.onmessage = (event) => {
@@ -50,17 +61,21 @@ export const useNotification = () => {
         
             eventSource.current.onerror = async() => {
                 eventSource.current?.close();                
+                setIsConnected(false);
                 setTimeout(fetchSSE, 3000);
+
             };
             eventSource.current.onopen = () => {
 
                 console.log('SSE 연결');
+                setIsConnected(true);
             }
 
         };
         fetchSSE();
         return ()=> {
             eventSource.current?.close();
+            setIsConnected(false);
         }
     },[token]);
     

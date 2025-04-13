@@ -103,7 +103,7 @@ public class AuthLogoutFilter extends GenericFilterBean{
             return;
         }
 
-        if(jwtUtils.validateJwtToken(refresh) != TokenStatus.VAILD) {
+        if(jwtUtils.validateJwtToken(refresh) != TokenStatus.VALID) {
 
             PrintWriter writer = response.getWriter();
                 writer.print("refresh token invalid");
@@ -117,7 +117,8 @@ public class AuthLogoutFilter extends GenericFilterBean{
         
 
         //DB에 저장되어 있는지 확인
-        if(!refreshTokenService.findByUserId(email).isPresent())  {
+        String sessionId = jwtUtils.getSessionIdFromJwtToken(refresh);
+        if(!refreshTokenService.findByUserId(sessionId, email).isPresent())  {
 
             PrintWriter writer = response.getWriter();
                 writer.print("refresh token not found");
@@ -129,9 +130,9 @@ public class AuthLogoutFilter extends GenericFilterBean{
 
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거        
-        if (refreshTokenService.findByUserId(email).isPresent()) {
-            refreshTokenService.deleteByKey(email);
-        }
+        
+        refreshTokenService.deleteByKey(sessionId);
+        
 
         // Register accessToken in blacklist
         String accessToken = jwtUtils.getJwtFromHeader(request);
@@ -140,7 +141,12 @@ public class AuthLogoutFilter extends GenericFilterBean{
             refreshTokenService.resigterBlacklist(accessToken, jwtUtils.getValidExpiration(accessToken));            
         }
 
-        jwtUtils.removeSession(email);
+        // normal loggout
+        if (request.getHeader("multiLogin").equals("false")) {        
+          
+            jwtUtils.removeSession(email);
+        } 
+        
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie(TokenType.REFRESH.getType(), null);

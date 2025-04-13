@@ -7,11 +7,6 @@ import ShippingInput from "./ShippingInput";
 import { countries } from "./countries";
 import SingularSelect from "./SingularSelect";
 import { saveShippingAddress } from "util/api";
-import { useAuthContext } from "store/AuthContext";
-import { useDispatch, useSelector } from "react-redux";
-
-
-//import { saveAddress } from "../../request/users";
 
 
 
@@ -74,8 +69,7 @@ const AddShipping = ({
     });
 
     
-    const dispatch = useDispatch();
-        
+            
     const handleChange = (e) => {
         const { name, value } = e.target;
         setShipping({ ...shipping, [name]: value });
@@ -89,8 +83,7 @@ const AddShipping = ({
                 
         invalidate();
         //setLoading(false);
-
-        selectAddress(initialValue);
+        
         setShipping(initialValue);
         
 

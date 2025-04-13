@@ -2,6 +2,8 @@ package com.project.order_service.outbox.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +27,15 @@ public class PaymentOutboxScheduler implements OutboxScheduler {
     private final PaymentOutboxHelper paymentOutboxHelper;
     private final PaymentRequestKafkaPublisher paymentRequestMessagePublisher;
 
-
+    
     @Override
     @Transactional
     @Scheduled(fixedDelayString = "10", //"${order-service.outbox-scheduler-fixed-rate}",
                 initialDelayString = "3" )//"${order-service.outbox-scheduler-initial-delay}")
     public void processOutboxMessage() {
 
+        MDC.put("DONOTLOG", "true");
+        
         Optional<List<PaymentOutboxEvent>> outboxEvents = 
         paymentOutboxHelper.getPaymentOutboxEventByOutboxStatus(OutboxStatus.STARTED);
 
@@ -40,14 +44,16 @@ public class PaymentOutboxScheduler implements OutboxScheduler {
             List<PaymentOutboxEvent> outboxList = outboxEvents.get();
 
             
-            log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",
-            outboxList.size(),
-            outboxList.stream().map(outboxMessage ->
-                           outboxMessage.getId().toString()).collect(Collectors.joining(",")));
+            // log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",
+            // outboxList.size(),
+            // outboxList.stream().map(outboxMessage ->
+            //                outboxMessage.getId().toString()).collect(Collectors.joining(",")));
 
             outboxList.forEach(outbox ->
             paymentRequestMessagePublisher.publish(outbox, this::updateOutboxStatus));
         }        
+
+        MDC.remove("DONOTLOG");    
 
     }
 

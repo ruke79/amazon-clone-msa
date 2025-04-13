@@ -102,7 +102,7 @@ public class RefreshTokenController {
 
 
         
-        if(jwtUtils.validateJwtToken(refresh) != TokenStatus.VAILD ) {
+        if(jwtUtils.validateJwtToken(refresh) != TokenStatus.VALID ) {
 
             
             log.info("invalid refresh token");
@@ -112,7 +112,10 @@ public class RefreshTokenController {
 
         String email = jwtUtils.getIdFromJwtToken(refresh);
 
-        if(!refreshTokenService.findByUserId(email).isPresent())  {
+        String sessionId = jwtUtils.getSessionIdFromJwtToken(refresh);
+
+        //if(!refreshTokenService.findByUserId(email).isPresent())  {
+        if(!refreshTokenService.findByUserId(sessionId, email).isPresent())  {
                 //response body
             
              throw new TokenRefreshException(refresh,

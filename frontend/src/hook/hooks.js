@@ -1,13 +1,18 @@
-
+import { useCallback, useState } from "react";
+import axios from "axios";
 import { useMutation, useQuery, useQueryClient, InfiniteQueryObserverResult } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "store/AuthContext";
-import { createChatRoom, getChatRoomList, getRoomMessages, getReviews, getCoupons, getOrder } from "util/api";
+import api, { createChatRoom, getChatRoomList, getRoomMessages, getReviews, getCoupons, getOrder } from "util/api";
 import { getRequest, postRequest, getAddresses, getOrders, loadCart, loadCheckOut } from "util/api";
 import tokenUtil from "util/tokenUtil";
 
 
+export function useReRenderer() {
+  const [, setState] = useState({});
+  return useCallback(() => setState({}), []);
+}
 
 export function useInfiniteScroll({ hasNextPage, fetchNextPage }) {
 
@@ -32,16 +37,26 @@ export function useInfiniteScroll({ hasNextPage, fetchNextPage }) {
 
 }
 
-export const useLogout = () => {
+export const useLogout = (isMultipleLogin = false) => {
 
   const navigate = useNavigate();
   const { logout } = useAuthContext();
 
 
   const handleLogout = async () => {
+        
+    
 
     try {
-      await postRequest('/user-service/api/auth/logout', null);
+      if (isMultipleLogin) {
+        
+          api.defaults.headers.common["multiLogin"] = "true";
+          await postRequest('/user-service/api/auth/logout', null);
+      }
+      else {
+          api.defaults.headers.common["multiLogin"] = "false";
+        await postRequest('/user-service/api/auth/logout', null);
+      }
 
       tokenUtil.remove();
       logout();
