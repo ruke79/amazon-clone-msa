@@ -73,7 +73,7 @@ public class JwtUtils {
   private String generateSessionId() {
     return UUID.randomUUID().toString();
   }
-
+  
   public void removeSession(String id) {
     redisSessionMgr.removeSession(id);
   }
@@ -92,14 +92,14 @@ public class JwtUtils {
     String email = user.getEmail();
     String role = user.getRole().getRoleName().name();
 
-    String sesssionId = generateSessionId();
-    redisSessionMgr.addSession(email, sesssionId);
+    String sessionId = generateSessionId();
+    redisSessionMgr.addSession(email, sessionId);
 
     return Jwts.builder()
         .subject(email)
         .claim("role", role)
         .claim("is2faEnabled", user.isTwoFactorEnabled())
-        .claim("sessionId", sesssionId)
+        .claim("sessionId", sessionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
         .signWith(key())
@@ -111,14 +111,13 @@ public class JwtUtils {
     String email = user.getEmail();
     String role = user.getRole().getRoleName().name();
 
-    String sesssionId = generateSessionId();
-    redisSessionMgr.addSession(email, sesssionId);
-
+    String sessionId = generateSessionId();
+    
     return Jwts.builder()
         .subject(email)
         .claim("role", role)
         .claim("is2faEnabled", user.isTwoFactorEnabled())
-        .claim("sessionId", sesssionId)
+        .claim("sessionId", sessionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
         .signWith(key())
@@ -127,14 +126,14 @@ public class JwtUtils {
 
   public String generateToken(String id, String role, boolean isTwoFactorEnabled, long expirationMs) {
 
-    String sesssionId = generateSessionId();
-    redisSessionMgr.addSession(id, sesssionId);
+    String sessionId = generateSessionId();
+    redisSessionMgr.addSession(id, sessionId);
 
     return Jwts.builder()
         .subject(id)
         .claim("role", role)
         .claim("is2faEnabled", isTwoFactorEnabled)
-        .claim("sessionId", sesssionId)
+        .claim("sessionId", sessionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expirationMs))
         .signWith(key())
@@ -143,14 +142,14 @@ public class JwtUtils {
 
   public String generateToken(String id, String role, boolean isTwoFactorEnabled) {
 
-    String sesssionId = generateSessionId();
-    redisSessionMgr.addSession(id, sesssionId);
+    String sessionId = generateSessionId();
+    redisSessionMgr.addSession(id, sessionId);
 
     return Jwts.builder()
         .subject(id)
         .claim("role", role)
         .claim("is2faEnabled", isTwoFactorEnabled)
-        .claim("sessionId", sesssionId)
+        .claim("sessionId", sessionId)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
         .signWith(key())
@@ -221,7 +220,7 @@ public class JwtUtils {
     try {
       Jwts.parser().verifyWith(key())
           .build().parseSignedClaims(authToken);
-      return TokenStatus.VAILD;
+      return TokenStatus.VALID;
     } catch (MalformedJwtException e) {
       logger.error("Invalid JWT token: {}", e.getMessage());
       return TokenStatus.INVALID;

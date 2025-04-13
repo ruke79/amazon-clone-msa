@@ -38,8 +38,8 @@ public class RefreshTokenService {
   private final JwtUtils jwtUtils;
 
     
-  public Optional<RefreshToken> findByUserId(String userId) {
-    return refreshTokenRepository.findByUserId(userId);
+  public Optional<RefreshToken> findByUserId(String sessionId, String userId) {
+    return refreshTokenRepository.findByUserId(sessionId, userId);
   }
 
   
@@ -81,8 +81,10 @@ public class RefreshTokenService {
     // log.info("refreshTokenRepository.save(refreshToken) end");
 
     // Redis start 
+    String token = jwtUtils.generatRefreshTokenFromUser(user);
+    String sessionId = jwtUtils.getSessionIdFromJwtToken(token);
     
-    RefreshToken refreshToken = new RefreshToken(user.getEmail(), jwtUtils.generatRefreshTokenFromUser(user));
+    RefreshToken refreshToken = new RefreshToken(sessionId, user.getEmail(), token);
     refreshTokenRepository.save(refreshToken);
 
     // Redis End

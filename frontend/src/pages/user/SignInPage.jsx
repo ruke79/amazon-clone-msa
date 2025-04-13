@@ -1,7 +1,7 @@
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Form, Formik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import amazonLogoDark from "assets/images/amazon-dark.png";
 import LoginInput from "./LoginInput";
 import * as Yup from "yup";
@@ -10,8 +10,9 @@ import { useAuthContext, STATUS } from "../../store/AuthContext";
 import toast from "react-hot-toast";
 import api, { queryClient } from 'util/api'
 import { jwtDecode } from "jwt-decode";
-import {useMutation }   from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useErrorBoundary } from "react-error-boundary";
+import { useReRenderer } from "hook/hooks";
 
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -24,9 +25,9 @@ const initialUser = {
 
 const signin = async (user) => {
     try {
-        const data  = await api.post("/user-service/api/auth/public/signin", user);
+        const data = await api.post("/user-service/api/auth/public/signin", user);
         return data;
-    } catch(err) {
+    } catch (err) {
         console.log("erorr >>>", err.response?.data.message);
     }
 }
@@ -36,16 +37,19 @@ const LOGIN_QUERY_KEY = 'login';
 
 const SignInPage = () => {
     const [step, setStep] = useState(1);
-    
+
     const [needHelp, setNeedHelp] = useState(false);
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
 
-    const { login,  updateToken, setAuthenticationStatus } = useAuthContext();    
+    const isLoadingRef = useRef(false);
+    const reRender = useReRenderer();
+
+    const { login, setAuthenticationStatus } = useAuthContext();
 
     const navigate = useNavigate();
 
-    //const { showBoundary } = useErrorBoundary;
+
 
 
     const handleChange = (e) => {
@@ -57,37 +61,37 @@ const SignInPage = () => {
     };
 
     const { mutate } = useMutation({
-        mutationFn : signin, 
-        throwOnError : true,
+        mutationFn: signin,
+        throwOnError: true,
         onSuccess: (response) => {
 
-            
 
-            try {            
+
+            try {
                 const access = response.headers['access'];
 
                 const decodedToken = jwtDecode(access);
                 if (decodedToken.is2faEnabled) {
                     setStep(2); // Move to 2FA verification step
-                } else {                
+                } else {
                     handleSuccessfulLogin(response, decodedToken);
                 }
-                queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });                                
-            } catch(error) {
-                 toast.error("Login Failed. Please retry.");
-                 console.log("erorr >>>", error.response?.data.message);
-                 
+                queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
+            } catch (error) {
+                toast.error("Login Failed. Please retry.");
+                console.log("erorr >>>", error.response?.data.message);
+
             }
         },
-        onError: (error) => {                       
+        onError: (error) => {
             console.log("erorr >>>", error.response?.data.message);
         }
     });
 
     const loginValidation = Yup.object({
-         email: Yup.string()
-             .required("Email address is required.")
-             .email("Please endter a valid address"),
+        email: Yup.string()
+            .required("Email address is required.")
+            .email("Please endter a valid address"),
         password: Yup.string().required("Please enter a password."),
     });
 
@@ -96,14 +100,14 @@ const SignInPage = () => {
 
         const user = {
             email: decodedToken.sub,
-            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],            
+            roles: decodedToken.roles ? decodedToken.roles.split(",") : [],
         };
         //localStorage.setItem("access_token", accessToken);
         //localStorage.setItem("USER", JSON.stringify(user));
-        
+
         //store the token on the context state  so that it can be shared any where in our application by context provider       
-                        
-         login(user, accessToken, decodedToken.exp);
+
+        login(user, accessToken, decodedToken.exp);
         //updateToken(accessToken);       
         navigate('/');
         toast.success(response.data.message);
@@ -112,10 +116,10 @@ const SignInPage = () => {
 
     const signInHandler = async () => {
 
-        setAuthenticationStatus(STATUS.PENDING);       
-        mutate({ email, password });        
+        setAuthenticationStatus(STATUS.PENDING);
+        mutate({ email, password });
 
-        
+
         setAuthenticationStatus(STATUS.SUCCEEDED);
     };
 
@@ -126,7 +130,7 @@ const SignInPage = () => {
                 <div className="mx-auto my-2">
                     <Link to="/">
                         <img
-                            src={amazonLogoDark}                            
+                            src={amazonLogoDark}
                             alt="amazon-logo"
                             className="object-contain w-28 md:w-48 pt-2"
                         />
@@ -141,7 +145,18 @@ const SignInPage = () => {
                             password,
                         }}
                         validationSchema={loginValidation}
-                        onSubmit={() => signInHandler()}
+                        onSubmit={async () => {
+
+                            if (isLoadingRef.current) {
+                                return;
+                            }
+                            isLoadingRef.current = true;
+                            reRender();
+                            await signInHandler();
+                            isLoadingRef.current = false;
+                            reRender();
+                        }
+                        }
                     >
                         {(form) => (
                             <Form >

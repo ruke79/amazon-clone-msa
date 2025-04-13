@@ -87,7 +87,7 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
 
             TokenStatus tokenStatus = validateJwtToken(jwt); 
 
-            if (tokenStatus == TokenStatus.VAILD) {
+            if (tokenStatus == TokenStatus.VALID) {
 
                 // JWT에서 user id 추출
                 String userId = extractUserIdFromJwt(jwt);
@@ -158,7 +158,7 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
     try {
       Jwts.parser().verifyWith(key())
           .build().parseSignedClaims(authToken);
-      return TokenStatus.VAILD;
+      return TokenStatus.VALID;
     } catch (MalformedJwtException e) {
       log.error("Invalid JWT token: {}", e.getMessage());
       return TokenStatus.INVALID;

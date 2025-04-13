@@ -87,8 +87,7 @@ export function useTokenRefresh() {
                
               if (tokenRef.current) {                                   
                 config.headers.Authorization = `Bearer ${tokenRef.current}`;
-              }
-                           
+              }                           
           
               return config;
             },

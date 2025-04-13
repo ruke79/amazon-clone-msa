@@ -12,20 +12,10 @@ const Address = () => {
     const { tab } = useLoaderData();
     const { user } = useAuthContext();
 
-    const [addresses, setAddresses] = useState([]);
-    const { addressesData, isPendingAddress, isSuccessAddress, updateFetchAddresses } = useFetchAddresses(user.userId, addresses);
+    //const [addresses, setAddresses] = useState([]);
+    //const { addressesData, isPendingAddress, isSuccessAddress, updateFetchAddresses } = useFetchAddresses(user.userId, addresses);
     const [selectedAddress, setSelectedAddress] = useState(null);
-
-    if ( isPendingAddress)  {             
-        return <DotLoaderSpinner loading={ isPendingAddress} />
-    }
-
-    if ( addresses.length === 0 && addressesData && isSuccessAddress ) 
-    {
-        updateFetchAddresses();                       
-        setAddresses(addressesData);        
-    }
-    
+        
 
     return (
         <>
@@ -33,7 +23,7 @@ const Address = () => {
                 <div className="text-center">
                     <h2 className="text-4xl font-bold mb-6">My Addresses</h2>
                 </div>
-                {<ShippingPage user={user} addresses={addresses} setAddresses={setAddresses}
+                {<ShippingPage user={user} 
                     setSelectedAddress={setSelectedAddress} profile={true} />}
             </Layout>
         </>

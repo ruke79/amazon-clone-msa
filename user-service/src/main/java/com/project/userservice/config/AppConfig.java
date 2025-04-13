@@ -19,4 +19,6 @@ public class AppConfig {
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
     }
+
+    
 }

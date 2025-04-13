@@ -17,3 +17,4 @@ gen
 
 kafka_2.12-3.7.2/
 
+resources/keystore.p12
