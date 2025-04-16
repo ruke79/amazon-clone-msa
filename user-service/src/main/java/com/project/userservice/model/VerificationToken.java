@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Entity
 public class VerificationToken {
 
-    private static final int EXPIRATION = 60 * 24;
+    private static final int EXPIRATION = 3;//60 * 24;
 
     @Id @Tsid
     //@GeneratedValue(strategy = GenerationType.AUTO)

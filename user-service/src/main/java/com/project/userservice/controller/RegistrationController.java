@@ -61,10 +61,11 @@ public class RegistrationController {
         //Locale locale = request.getLocale();
         //model.addAttribute("lang", locale.getLanguage());
         final String result = userService.validateVerificationToken(token);
+
+        final User user = userService.getUser(token);
          
         if (result.equals("valid")) {
-            final User user = userService.getUser(token);
-
+            
             // if (user.isUsing2FA()) {
             // model.addAttribute("qr", userService.generateQRUrl(user));
             // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
@@ -77,6 +78,8 @@ public class RegistrationController {
             model.addAttribute("messageKey", "message.accountVerified");
             return new ModelAndView("redirect:"+frontendUrl+"/signin", model);            
         }
+
+        userService.deleteUser(user);
         
         model.addAttribute("messageKey", "auth.message." + result);
         model.addAttribute("expired", "expired".equals(result));
