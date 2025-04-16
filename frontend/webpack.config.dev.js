@@ -4,6 +4,7 @@ const { merge } = require("webpack-merge");
 const baseConfig = require("./webpack.config.base");
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require("fs");
 
 dotenv.config({path: './.env.development'})
 
@@ -11,7 +12,14 @@ module.exports = merge(baseConfig, {
   mode: "development",
 
   devServer: {     
-    port: 3000,    
+    port: 443,    
+    server : {
+      type : 'https',
+      options: {        
+        key: fs.readFileSync(path.resolve(__dirname, 'mywebserv.site_202504149248A.key.pem')),
+        cert: fs.readFileSync(path.resolve(__dirname, 'mywebserv.site_202504149248A.crt.pem')),                
+      },    
+    },
     static: {
       directory: path.join(__dirname, 'public'),
     },

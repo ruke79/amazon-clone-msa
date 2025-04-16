@@ -29,3 +29,14 @@ resources/keystore
 resources/mywebserv.site_202504149248A.jks
 resources/mywebserv.site_202504149248A.pfx
 resources/truststore
+frontend/cert.pem
+frontend/key.pem
+resources/mywebserv.site_202504149248A.jks
+resources/mywebserv.site_202504149248A.pfx
+resources/allcrt.pem
+resources/ca.pem
+resources/crt.pem
+resources/key.pem
+resources/keystore
+resources/truststore
+resources/crtkey.pem

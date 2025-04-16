@@ -2,10 +2,10 @@
  "name": "payment-outbox-connector",
   "config": {
     "connector.class": "io.debezium.connector.mysql.MySqlConnector",
-    "database.hostname": ,
+    "database.hostname": "" ,
     "database.port": "3306",
-    "database.user": 
-    "database.password": ,
+    "database.user": "",
+    "database.password": "",
     "database.server.id": "1",	
 	"database.connectionTimeZone": "Asia/Seoul",
     "database.include.list": "orderdb",

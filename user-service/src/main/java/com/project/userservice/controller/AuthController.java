@@ -1,6 +1,7 @@
 package com.project.userservice.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.common.constants.StatusMessages;
 import com.project.common.dto.SharedUserDto;
 import com.project.common.response.GenericResponse;
@@ -101,7 +102,7 @@ public class AuthController {
     // Email Vertification
     @PostMapping("/public/register")
     public ResponseEntity<?> registerUserAccount(@Valid @RequestBody SignupRequest accountDto,
-            final HttpServletRequest request) {
+            final HttpServletRequest request) throws JsonProcessingException {
 
             try {
 
@@ -121,9 +122,11 @@ public class AuthController {
 
                 user = userService.registerNewUserAccount(accountDto);
                 //userService.addUserLocation(registered, getClientIP(request));
-
                 eventPublisher.publishEvent(new com.project.userservice.registration.OnRegistrationCompleteEvent(user,
                         request.getLocale(), getAppUrl(request)));
+
+                //userService.registerConfirmed(user);
+
                 return new ResponseEntity<>(new GenericResponse(StatusMessages.USER_REGISTRATION_SUCCESS), HttpStatus.OK);
                 }
                 catch(RuntimeException e) {
@@ -311,7 +314,9 @@ public class AuthController {
     }
 
     private String getAppUrl(HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        String verifyPath = request.getScheme() +"://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        log.info(verifyPath);
+        return verifyPath;
     }
 
     private String getClientIP(HttpServletRequest request) {
