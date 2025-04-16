@@ -18,3 +18,14 @@ gen
 kafka_2.12-3.7.2/
 
 resources/keystore.p12
+frontend/cert.pem
+frontend/key.pem
+resources/allcrt.pem
+resources/ca.pem
+resources/crt.pem
+resources/crtkey.pem
+resources/key.pem
+resources/keystore
+resources/mywebserv.site_202504149248A.jks
+resources/mywebserv.site_202504149248A.pfx
+resources/truststore
