@@ -71,7 +71,7 @@ front end : react
 7. Catalog Service에서 상품 조회 시 Redis Cache를 적용했습니다.
 8. Chat Service에서 채팅 메시지을 로드할 때 Cursor based paigination로 구현하였습니다.
 9. Chat Service에서 채팅 메시지는 Mongo Sink Connector를 통해 MongoDB에 저장합니다.
-       
+10. tls        
    
 ### Front end
 1. https://github.com/no2ehi/full-amazon-clone 을 포크해서 NextJS에서 React로 변경하면서  React Query로 Data Fetch, Chat Service를 위한 UI를 구현하였습니다.
