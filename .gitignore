@@ -29,3 +29,4 @@ resources/keystore
 resources/mywebserv.site_202504149248A.jks
 resources/mywebserv.site_202504149248A.pfx
 resources/truststore
+chat-server/src/main/resources/application
