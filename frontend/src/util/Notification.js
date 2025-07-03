@@ -35,7 +35,7 @@ export const useNotification = () => {
                             'Content-Type' : 'text/event-stream',
                             'Cache-Control': 'no-cache',
                             'Connection' : 'keep-alive',
-                            'X-Accel-Buffering' : 'no',
+                            'X-Accel-Buffering' : 'no',                            
                             Authorization: `Bearer ${token}`,                        
                         },
                         heartbeatTimeout: 120000,

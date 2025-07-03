@@ -142,10 +142,14 @@ public class AuthLogoutFilter extends GenericFilterBean{
         }
 
         // normal loggout
-        if (request.getHeader("multiLogin").equals("false")) {        
+        if (request.getHeader("MultiLogin").equals("false")) {        
           
             jwtUtils.removeSession(email);
+            log.info("중복 로그 아웃");
         } 
+        else {
+            log.info("정상 로그아웃");
+        }
         
 
         //Refresh 토큰 Cookie 값 0

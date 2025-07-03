@@ -65,7 +65,7 @@ public class OrderAddress extends BaseEntity {
 
     private String phoneNumber;
 
-    @OneToOne(fetch=FetchType.EAGER)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
     @JsonBackReference
     private Order order;

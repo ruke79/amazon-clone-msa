@@ -15,7 +15,7 @@ import com.project.common.dto.ProductDto;
 
 import com.project.common.dto.SubCategoryDto;
 import com.project.common.response.MessageResponse;
-import com.project.catalog_service.model.SubCategory;
+import com.project.catalog_service.model.Subcategory;
 import com.project.catalog_service.model.Category;
 import com.project.catalog_service.repository.CategoryRepository;
 
@@ -135,7 +135,7 @@ public class CategoryController {
 
         try {
 
-            List<SubCategory> subcategories = subCategoryRepository.findAll();
+            List<Subcategory> subcategories = subCategoryRepository.findAll();
 
             if (!subcategories.isEmpty()) {
 
@@ -164,7 +164,7 @@ public class CategoryController {
 
         try {
 
-            List<SubCategory> subcategories = categoryRepository
+            List<Subcategory> subcategories = categoryRepository
                     .findSubCategoriesByCategoryId(Long.parseLong(category));
 
             if (!subcategories.isEmpty()) {

@@ -17,8 +17,9 @@ export const STATUS = Object.freeze({
 });
 
 const initialState = {
+  multiLogin: false,
   user: {},  
-  token: null,
+  token: null,  
   expiresAt: null,  
   isAuthenticated: false,
   status: STATUS.PENDING,
@@ -37,12 +38,12 @@ const AuthContext = createContext({
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'login': {      
-      return {         
+      return {        
+        // multiLogin: action.payload.multiLogin, 
         user : action.payload.user, 
         token: action.payload.token,
         expiresAt: action.payload.expiresAt,
-        isAuthenticated: true,
-        verifyingToken: false,
+        isAuthenticated: true,        
         status: STATUS.SUCCEEDED,
       };
     }

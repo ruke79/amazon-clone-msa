@@ -27,19 +27,17 @@ module.exports = merge(baseConfig, {
       }),
   ],
   
-  optimization: {
-    minimize: true,
-    splitChunks: {},
-    concatenateModules: true,
-    minimizer: [           
-      new CssMinimizerPlugin(),
-      new TerserPlugin({
-        terserOptions: {
-          compress: {
-            drop_console: true, // 콘솔 로그를 제거한다.
-          },
-        },
-      }),
-    ],
-  },
+  // optimization: {
+  //   minimize: true,
+  //   splitChunks: {},
+  //   concatenateModules: true,
+  //   minimizer: [           
+  //     new CssMinimizerPlugin(),
+  //     new TerserPlugin({
+  //       terserOptions: {          
+  //         drop_console: true, // 콘솔 로그를 제거한다.          
+  //       },
+  //     }),
+  //   ],
+  // },
 });

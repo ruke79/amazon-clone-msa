@@ -29,13 +29,13 @@ public class WishList {
     private String style;
 
     //@JsonIgnore
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=User.class)
+    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST, targetEntity=User.class)
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)
     @JsonBackReference
     private User user;    
 
     //@JsonIgnore
-    // @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=Product.class)
+    // @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST, targetEntity=Product.class)
     // @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable = false)
     // private Product product;
     private Long productId;

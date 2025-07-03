@@ -35,10 +35,8 @@ public class ProductDto  {
 
     private List<SubCategoryDto> subCategories;
 
-    private List<ProductDetailDto> details;
-    
-    //private List<ReviewDto> reviews;
-    
+    private List<ProductDetailDto> details;   
+        
     private List<ProductQADto> questions;
     
     private List<ProductSkuDto> skus;

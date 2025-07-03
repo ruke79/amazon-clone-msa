@@ -19,6 +19,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -33,7 +34,7 @@ import lombok.Setter;
 @Table(name="subcategory", 
        indexes = {
         @Index(columnList = "subcategory_name, slug", name = "idx_subcategory") })
-public class SubCategory extends BaseEntity {
+public class Subcategory extends BaseEntity {
 
     @Id @Tsid
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,11 +53,15 @@ public class SubCategory extends BaseEntity {
     @JoinColumn(name="category_id", referencedColumnName = "category_id", nullable=false)
     private Category category;    
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "subCategories", fetch= FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private List<Product> products = new ArrayList<>();
+    // @JsonIgnore
+    // @OneToMany(mappedBy = "subCategories", fetch= FetchType.LAZY, cascade = CascadeType.PERSIST)    
+    // private List<Product> products = new ArrayList<>();
 
-    public SubCategory(String name, String slug, Category category) {
+    @JsonIgnore
+    @OneToMany(mappedBy = "subcategory", fetch= FetchType.LAZY, cascade = CascadeType.PERSIST)    
+    private List<ProductSubcategory> products = new ArrayList<>();
+
+    public Subcategory(String name, String slug, Category category) {
         this.subcategoryName = name;
         this.slug = slug;
         this.category = category;

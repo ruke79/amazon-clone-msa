@@ -36,7 +36,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "UPDATE User u SET u.defaultPaymentMethod = :paymentMethod WHERE u.userId = :userId")
     int updateDefaultPaymentMethod(@Param("userId") Long userId, @Param("paymentMethod") String paymentMethod);
-    // @Query(value = "SELECT distinct a FROM User u LEFT JOIN ShippingAddress a on
-    // a.shippingAddressId = WHERE u.email = :userEmail")
 
 }

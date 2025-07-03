@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.project.common.dto.CategoryDto;
 import com.project.common.dto.SubCategoryDto;
 import com.project.catalog_service.model.Category;
-import com.project.catalog_service.model.SubCategory;
+import com.project.catalog_service.model.Subcategory;
 import com.project.catalog_service.repository.CategoryRepository;
 import com.project.catalog_service.repository.SubCategoryRepository;
 
@@ -62,7 +62,7 @@ public class CategoryService {
                 .findById(Long.parseLong(categoryId))
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        SubCategory subcategory = new SubCategory(subCategoryName, slug, category);
+        Subcategory subcategory = new Subcategory(subCategoryName, slug, category);
         
         subCategoryRepository.save(subcategory);
 

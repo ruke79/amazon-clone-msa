@@ -78,29 +78,29 @@ public class User extends BaseEntity{
     private boolean isTwoFactorEnabled = false;
     private String signUpMethod;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     @JsonBackReference
     @ToString.Exclude
     private Role role;
     
         
-    @OneToMany(mappedBy="user", fetch = FetchType.EAGER,
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ShippingAddress.class)
     @JsonBackReference
     private List<ShippingAddress> shippingAddresses = new ArrayList<>();
 
-    @OneToMany(mappedBy="user", fetch = FetchType.EAGER,
+    @OneToMany(mappedBy="user", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = WishList.class)
     @JsonBackReference
     private List<WishList> wishLists;
 
-    // @OneToMany(mappedBy="user", fetch = FetchType.EAGER,
+    // @OneToMany(mappedBy="user", fetch = FetchType.LAZY,
     // cascade = CascadeType.PERSIST, targetEntity = Order.class)    
     // private List<Order> orderLists;
     //private List<Long> orderList;
 
-    @OneToMany(mappedBy="reviewedBy", fetch = FetchType.EAGER,
+    @OneToMany(mappedBy="reviewedBy", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST, targetEntity = Review.class)    
     @JsonBackReference
     private List<Review> reviews;

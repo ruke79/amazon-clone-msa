@@ -43,12 +43,12 @@ public class Review extends BaseEntity{
 
     private List<String> images;
     
-    @OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.PERSIST, targetEntity=ReviewStyle.class)
+    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST, targetEntity=ReviewStyle.class)
     @JoinColumn(name="rstyle_id", referencedColumnName = "rstyle_id", nullable = false)
     private ReviewStyle style;
 
     //@JsonIgnore
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id", referencedColumnName = "user_id", nullable = false)    
     @JsonBackReference
     private User reviewedBy;    

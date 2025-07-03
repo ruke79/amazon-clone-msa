@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient, InfiniteQueryObserverResult } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -48,15 +48,14 @@ export const useLogout = (isMultipleLogin = false) => {
     
 
     try {
-      if (isMultipleLogin) {
-        
-          api.defaults.headers.common["multiLogin"] = "true";
-          await postRequest('/user-service/api/auth/logout', null);
+      if (isMultipleLogin) {        
+          api.defaults.headers.post["MultiLogin"] = "true";          
+          console.log("multilogout");
       }
       else {
-          api.defaults.headers.common["multiLogin"] = "false";
-        await postRequest('/user-service/api/auth/logout', null);
+          api.defaults.headers.post["MultiLogin"] = "false";        
       }
+      await postRequest('/user-service/api/auth/logout', null);
 
       tokenUtil.remove();
       logout();

@@ -33,42 +33,20 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="product_sku",
-       indexes = {
-        @Index(columnList = "sku, sold", name = "idx_product_sku") })
-public class ProductSku extends BaseEntity {
+@Table(name="product_subcategory")
+public class ProductSubcategory {
 
     @Id @Tsid
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "skuproduct_id")
-    private Long skuproductId;
-
-    private String sku;
-
-    
-    @Column(length = 256)
-    private List<String> images;
-    
-    //@Column(length = 20000)
-    //private List<String> descriptionImages;
-
-    private int discount = 0;
-
-    private int sold = 0;
-
-    @JsonIgnore
-    @OneToMany(mappedBy="sku", fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,targetEntity = ProductSize.class)
-    private List<ProductSize> sizes;
-
-    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.PERSIST, targetEntity=ProductColor.class)
-    @JoinColumn(name="color_id", referencedColumnName = "color_id", nullable = true)
-    private ProductColor color;
+    @Column(name = "proc_subcategory_id")
+    private Long id;
 
 
-    @JsonIgnore
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable=false)
+    @ManyToOne
+    @JoinColumn(name="product_id")
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name="subcategory_id")
+    private Subcategory subcategory;
 }

@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Entity
 public class VerificationToken {
 
-    private static final int EXPIRATION = 60 * 24;
+    private static final int EXPIRATION = 3;//60 * 24;
 
     @Id @Tsid
     //@GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,7 +17,7 @@ public class VerificationToken {
 
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id", foreignKey = @ForeignKey(name = "FK_VERIFY_USER"))
     private User user;
 

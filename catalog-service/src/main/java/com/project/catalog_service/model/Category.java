@@ -1,6 +1,10 @@
 package com.project.catalog_service.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
+import org.hibernate.annotations.BatchSize;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
@@ -42,14 +46,14 @@ public class Category extends BaseEntity {
 
      
     @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
-    cascade = CascadeType.PERSIST,targetEntity = SubCategory.class)
-    private Set<SubCategory> subCategories;
+    cascade = CascadeType.PERSIST,targetEntity = Subcategory.class)
+    private List<Subcategory> subCategories = new ArrayList<>();
 
 
-    
+    @BatchSize(size=250)
     @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = Product.class)
-    private Set<Product> products;
+    private List<Product> products = new ArrayList<>();
 
 
     public Category(String name, String slug) {

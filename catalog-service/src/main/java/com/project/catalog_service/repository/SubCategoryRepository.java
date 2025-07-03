@@ -7,20 +7,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.project.catalog_service.model.SubCategory;
+import com.project.catalog_service.model.Subcategory;
 
 @Repository
-public interface  SubCategoryRepository extends JpaRepository<SubCategory, Long>  {
-    List<SubCategory> findBySubcategoryNameIn(List<String> subcategoryName);    
-    List<SubCategory> findByCategory_CategoryNameAndSubcategoryNameIn(String categoryName, List<String> subcategoryName);    
+public interface  SubCategoryRepository extends JpaRepository<Subcategory, Long>  {
+    List<Subcategory> findBySubcategoryNameIn(List<String> subcategoryName);    
+    List<Subcategory> findByCategory_CategoryNameAndSubcategoryNameIn(String categoryName, List<String> subcategoryName);    
 
-    List<SubCategory> findBySubcategoryIdIn(List<Long> subcategoryName);    
-    List<SubCategory> findByCategory_CategoryIdAndSubcategoryIdIn(Long categoryId, List<Long> subcategoryId);    
+    List<Subcategory> findBySubcategoryIdIn(List<Long> subcategoryName);    
+    List<Subcategory> findByCategory_CategoryIdAndSubcategoryIdIn(Long categoryId, List<Long> subcategoryId);    
 
-    SubCategory findBySubcategoryNameAndCategory_CategoryId(String name, Long parent);
-    SubCategory findBySubcategoryNameAndCategory_CategoryName(String name, String parent);
+    Subcategory findBySubcategoryNameAndCategory_CategoryId(String name, Long parent);
+    Subcategory findBySubcategoryNameAndCategory_CategoryName(String name, String parent);
 
     
 
-    List<SubCategory> findAll();
+    List<Subcategory> findAll();
 }

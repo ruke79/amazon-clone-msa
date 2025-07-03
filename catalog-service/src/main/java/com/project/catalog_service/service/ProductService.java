@@ -39,7 +39,8 @@ import com.project.catalog_service.model.Category;
 import com.project.catalog_service.model.ProductColor;
 import com.project.catalog_service.model.ProductSize;
 import com.project.catalog_service.model.ProductSku;
-import com.project.catalog_service.model.SubCategory;
+import com.project.catalog_service.model.ProductSubcategory;
+import com.project.catalog_service.model.Subcategory;
 
 import com.project.catalog_service.repository.CategoryRepository;
 import com.project.catalog_service.repository.ProductColorRepository;
@@ -286,12 +287,23 @@ public class ProductService {
                     subcategoryNames.add(subcategory.getName());
                 }
 
-                List<SubCategory> subCategories = subCategoryRepository.findByCategory_CategoryNameAndSubcategoryNameIn(
+                List<Subcategory> subCategories = subCategoryRepository.findByCategory_CategoryNameAndSubcategoryNameIn(
                         category.getCategoryName(), subcategoryNames);
 
                 if (subCategories != null) {
 
-                    product.setSubCategories(subCategories);
+                    List<ProductSubcategory> list = new ArrayList<>();
+                    
+                    for(Subcategory sub: subCategories) {
+                        
+                        ProductSubcategory productSubCategory = ProductSubcategory.builder()
+                        .product(product)
+                        .subcategory(sub)
+                        .build();
+
+                        list.add(productSubCategory);
+                    }
+                    product.setSubcategories(list);
 
                     productRepository.save(product);
 
@@ -305,17 +317,24 @@ public class ProductService {
 
                 product.setCategory(category);
 
-                List<SubCategory> subCategories = new ArrayList<>();
+                //List<Subcategory> subCategories = new ArrayList<>();
+                List<ProductSubcategory> subCategories = new ArrayList<>();
 
                 for (SubCategoryDto dto : request.getSubCategories()) {
 
-                    SubCategory subcategory = new SubCategory(dto.getName(), dto.getSlug(), category);                  
-                    subCategories.add(subcategory);
+                    Subcategory subcategory = new Subcategory(dto.getName(), dto.getSlug(), category);                  
+                    //subCategories.add(subcategory);                   
 
                     subCategoryRepository.save(subcategory);
+
+                    ProductSubcategory productSubcategory = ProductSubcategory.builder()
+                    .product(product)
+                    .subcategory(subcategory)
+                    .build();
+                    subCategories.add(productSubcategory);
                 }
 
-                product.setSubCategories(subCategories);
+                product.setSubcategories(subCategories);
 
                 productRepository.save(product);
 
@@ -367,11 +386,23 @@ public class ProductService {
                     subcategoryIds.add(Long.parseLong(subcategory));
                 }
 
-                List<SubCategory> subCategories = subCategoryRepository.findBySubcategoryIdIn(subcategoryIds);
+                List<Subcategory> subCategories = subCategoryRepository.findBySubcategoryIdIn(subcategoryIds);
 
                 if (subCategories != null) {
 
-                    product.setSubCategories(subCategories);
+                    List<ProductSubcategory> list = new ArrayList<>();
+                    
+                    for(Subcategory sub: subCategories) {
+                        
+                        ProductSubcategory productSubCategory = ProductSubcategory.builder()
+                        .product(product)
+                        .subcategory(sub)
+                        .build();
+
+                        list.add(productSubCategory);
+                    }
+                    product.setSubcategories(list);
+                                       
 
                     productRepository.save(product);
 
@@ -561,8 +592,8 @@ public class ProductService {
                     .colorImage(product.getSkus().get(style).getColor().getColorImage())
                     .build();
 
-            List<String> subcategoryIds = product.getSubCategories().stream().map(subcategory -> {
-                return Long.toString(subcategory.getSubcategoryId());
+            List<String> subcategoryIds = product.getSubcategories().stream().map(productSubcategory -> {
+                return Long.toString(productSubcategory.getSubcategory().getSubcategoryId());
             })
                     .collect(Collectors.toList());
 

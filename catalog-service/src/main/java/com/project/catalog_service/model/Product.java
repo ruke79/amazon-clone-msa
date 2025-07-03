@@ -70,21 +70,16 @@ public class Product extends BaseEntity {
 
     
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, 
-    cascade = CascadeType.PERSIST)    
-    @JoinTable(name="product_subcatgeory",
-    joinColumns =  { @JoinColumn(name="product_id", referencedColumnName = "product_id") },
-    inverseJoinColumns = { @JoinColumn(name="subcategory_id", referencedColumnName = "subcategory_id")})
-    private List<SubCategory> subCategories = new ArrayList<>();
+    @OneToMany(mappedBy="proudct", fetch = FetchType.LAZY, 
+    cascade = CascadeType.PERSIST, targetEntity = Product.class, orphanRemoval = true)    
+//     @JoinTable(name="product_subcatgeory",
+//     joinColumns =  { @JoinColumn(name="product_id", referencedColumnName = "product_id") },
+//     inverseJoinColumns = { @JoinColumn(name="subcategory_id", referencedColumnName = "subcategory_id")})
+    private List<ProductSubcategory> subcategories = new ArrayList<>();
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = ProductDetails.class, orphanRemoval = true)
     private List<ProductDetails> details;
-
-//     // cascade = CascadeType.PERSIST 빠지면 저장 안됨..
-    // @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-    //         cascade = CascadeType.PERSIST,targetEntity = Review.class,orphanRemoval = true)
-    // private List<Review> reviews;
 
     
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
@@ -94,14 +89,6 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSku.class, orphanRemoval = true)
     private List<ProductSku> skus;
-
-//     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-//             cascade = CascadeType.PERSIST,targetEntity = OrderedProduct.class, orphanRemoval = true)
-//     private List<OrderedProduct> orderedProducts;
-
-//     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
-//             cascade = CascadeType.PERSIST,targetEntity = CartProduct.class, orphanRemoval = true)
-//  private List<CartProduct> cartProducts;
 
     private String refundPolicy = "30 days";
 
@@ -120,9 +107,9 @@ public class Product extends BaseEntity {
                 .name(product.getCategory().getCategoryName())
                 .slug(product.getCategory().getSlug()).build();
 
-        List<SubCategoryDto> subCategories = product.getSubCategories().stream()
-                .map(subcategory -> new SubCategoryDto(Long.toString(subcategory.getSubcategoryId()), parent,
-                        subcategory.getSubcategoryName(), subcategory.getSlug()))
+        List<SubCategoryDto> subCategories = product.getSubcategories().stream()
+                .map(productSubcategory -> new SubCategoryDto(Long.toString(productSubcategory.getSubcategory().getSubcategoryId()), parent,
+                productSubcategory.getSubcategory().getSubcategoryName(), productSubcategory.getSubcategory().getSlug()))
                 .collect(Collectors.toList());
 
         List<ProductDetailDto> details = product.getDetails().stream().map(detail -> {
@@ -176,13 +163,11 @@ public class Product extends BaseEntity {
                 .slug(product.getSlug())
                 .category(parent)
                 .subCategories(subCategories)
-                .details(details)
-                //.reviews(reviews)
+                .details(details)                
                 .questions(questions)
                 .skus(skus)
                 .refundPolicy(product.getRefundPolicy())
-                .rating(product.getRating())
-                //.num_reviews(product.getNum_reviews())
+                .rating(product.getRating())                
                 .shipping(product.getShipping().toPlainString())
                 .createdAt(product.getCreatedAt().toString())
                 .build();                

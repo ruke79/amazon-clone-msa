@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -19,13 +21,18 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.project.common.dto.ProductDto;
 
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.SslOptions;
+import io.lettuce.core.protocol.ProtocolVersion;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
 @Configuration
 @EnableCaching
+@RequiredArgsConstructor
 public class RedisCacheConfig {
     @Value("${spring.data.redis.host}")
     private String host;
@@ -34,22 +41,68 @@ public class RedisCacheConfig {
     private int port;
 
     @Value("${spring.data.redis.password}")
-    private String password;
+    private String  password;
+
+    @Value("${spring.data.redis.ssl.enabled}")
+    private boolean useSsl;
+
+
+    @Value("${spring.data.redis.ssl.cacert}")
+    private String cacertFileLocation;
+
+    @Value("${spring.data.redis.ssl.key}")
+    private String keyFileLocation;
+
+    @Value("${spring.data.redis.ssl.cert}")
+    private String certFileLocation;
+
+    @Value("${spring.data.redis.ssl.storePassword}")
+    private String storePassword;
+
+    private final ResourceLoader resourceLoader;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
+    public RedisConnectionFactory redisConnectionFactory() throws IOException {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
         redisConfig.setHostName(host);
         redisConfig.setPort(port);
         redisConfig.setPassword(RedisPassword.of(password));
 
-        return new LettuceConnectionFactory(redisConfig);
+        LettuceClientConfiguration.LettuceClientConfigurationBuilder lettuceClientConfigurationBuilder =
+        LettuceClientConfiguration.builder();
+
+    if (useSsl){
+      SslOptions sslOptions = SslOptions.builder()
+          .trustManager(resourceLoader.getResource("file:" + cacertFileLocation).getFile())
+          .truststore(resourceLoader.getResource("file:" + certFileLocation).getFile(), storePassword)
+          .keystore(resourceLoader.getResource("file:" + keyFileLocation).getFile(), storePassword.toCharArray())          
+          .build();
+
+    
+
+      ClientOptions clientOptions = ClientOptions
+          .builder()
+          .sslOptions(sslOptions)
+          .protocolVersion(ProtocolVersion.RESP3)
+          .build();
+
+      lettuceClientConfigurationBuilder
+          .clientOptions(clientOptions)
+          .useSsl().disablePeerVerification();
+    }
+
+    LettuceClientConfiguration lettuceClientConfiguration = lettuceClientConfigurationBuilder.build();
+
+    
+    return new LettuceConnectionFactory(redisConfig, lettuceClientConfiguration);
+
+        
     }
 
    
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate() throws IOException {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setConnectionFactory(redisConnectionFactory());
@@ -66,7 +119,7 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public RedisCacheManager redisCacheManager() {
+    public RedisCacheManager redisCacheManager() throws IOException {
 
         RedisCacheConfiguration cacheConfig = redisCacheConfiguration(Duration.ofMinutes(10)).disableCachingNullValues();
         

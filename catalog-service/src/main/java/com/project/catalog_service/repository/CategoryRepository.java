@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.project.catalog_service.model.Category;
-import com.project.catalog_service.model.SubCategory;
+import com.project.catalog_service.model.Subcategory;
 
 
 import java.util.List;
@@ -24,5 +24,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     public Long findIdByCategoryName(@Param("name") String categoryName);
 
     @Query(value ="SELECT s FROM Category c INNER JOIN SubCategory s on c.categoryId = s.category.categoryId WHERE (:categoryId is null or c.categoryId = :categoryId)")    
-    public List<SubCategory> findSubCategoriesByCategoryId(@Param("categoryId") Long categoryId);
+    public List<Subcategory> findSubCategoriesByCategoryId(@Param("categoryId") Long categoryId);
 }

@@ -54,7 +54,7 @@ public class Order extends BaseEntity {
     private List<OrderProduct> orderedProducts;
 
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="order_address_id", referencedColumnName = "order_address_id")
     private OrderAddress shippingAddress;
     
