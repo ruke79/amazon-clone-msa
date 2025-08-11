@@ -27,6 +27,67 @@ front end : react
 + Paypal react button 
 ## Architecture
 ![제목 없는 다이어그램3 (1)](https://github.com/user-attachments/assets/ccff32bb-ba78-4c75-90d9-42a1fffa3b40)
+
+## Description
+1. User service: 会員登録、ログイン、トークン発行、ユーザー情報管理などのサービスを提供します。
+  + 会員登録時に、chat service、order service、coupon serviceにユーザー生成メッセージを送信します。
+  + chat service: メッセージ情報をもとにChatMemberを作成し、テーブルに保存します。
+  + order service: メッセージ情報をもとにCustomerを作成し、テーブルに保存します。
+  + coupon service: メッセージ情報をもとにcouponを作成し、テーブルに保存します。
+
+2. Coupon service: クーポン発行、使用などのサービスを提供します。
+  + クーポン適用時に、cart serviceにクーポン使用メッセージを送信します。
+
+3. cart service: メッセージ情報をもとにクーポン適用後の価格をテーブルに保存します。
+  + order serviceからクーポンを元に戻すメッセージを受信すると、クーポンの状態をNOT_USEDに変更します。
+
+4. Catalog service: 商品情報、検索などのサービスを提供します。
+  + 注文成功時に、order serviceから商品更新メッセージを受信し、製品の販売量と在庫値を更新してテーブルに保存します。
+
+5. Cart service: カート情報管理などのサービスを提供します。
+  + order serviceからカートを空にするメッセージを受信すると、カート情報を削除します。
+  + order serviceからカートを元に戻すメッセージを受信すると、カートに入っている商品の数量を1にリセットし、カートの価格も修正します。
+
+6. Order service: 注文、注文情報管理などのサービスを提供します。
+  + PayPalでの支払いが成功すると、pay serviceに支払い完了メッセージを送信します（アウトボックスパターン）。
+  + PayPalでの支払いがキャンセルされると、pay serviceに支払いキャンセルメッセージを送信します（アウトボックスパターン）。
+  + pay serviceから支払い応答メッセージを受信し、サガパターンに従って処理します。
+  + pay serviceから支払いが完了したというメッセージを受信した場合、cart serviceにはカートを空にするメッセージを送り、catalog serviceには商品更新メッセージを送ります。
+  + pay serviceから支払いがキャンセルされたというメッセージを受信した場合、cart serviceにはカートを元に戻すメッセージを送り、coupon serviceにはクーポンを元に戻すメッセージを送ります。
+
+7. Pay service: 支払い情報管理などのサービスを提供します。
+  + order serviceから受信したメッセージ情報をもとに支払い情報をテーブルに保存します。
+  + order serviceに支払い応答メッセージを送信します（アウトボックスパターン）。
+
+## Features
+### Backend 
+
+1.アクセストークンにはブラックリストを導入し、リフレッシュトークンはhttpOnlyクッキーに保存し、Refresh Token Rotationでセキュリティを強化しました。
+2.会員登録はメール認証方式です。
+
+ログイン後、すべてのリクエストはApi Gatewayでトークン検証フィルターを介して認証・認可されます。
+
+メッセージブローカーにはKafkaを使用し、サービス間のデータ照会が必要な場合はOpenFeign機能を導入しました。
+
+Order ServiceとPayment ServiceにはTransaction OutBox Patternを使用しました。
+
+Order ServiceにはSaga Patternを使用しました。
+
+Catalog Serviceで商品照会時にRedis Cacheを適用しました。
+
+Chat Serviceでチャットメッセージをロードする際にCursor based paiginationで実装しました。
+
+Chat ServiceでチャットメッセージはMongo Sink Connectorを介してMongoDBに保存します。
+
+フロントエンド
+
+https://github.com/no2ehi/full-amazon-clone をフォークしてNextJSからReactに変更し、React QueryでData Fetch、Chat ServiceのためのUIを実装しました。
+
+アクセストークンはメモリに保存し、リフレッシュトークンはhttpOnlyクッキーに保存してセキュリティを強化しました。
+
+eコマースにチャット機能を追加しました（現在は部屋作成、部屋名ダブルクリックでのチャット部屋切り替え、チャット、無限スクロール機能のみ実装）。
+
+会員登録はメール認証方式を実装しました。
    
 ## Description
 1. User service : 회원 가입, 로그인, 토큰 발급, 유저 정보 관리 등 서비스 제공
@@ -37,7 +98,7 @@ front end : react
        
 2. Coupon service : 쿠폰 발급, 사용 등 서비스 제공
    + 쿠폰 적용 시 cart service에 쿠폰 사용 메시지를 전송합니다.
-     + cart service : 메시지 정보를 토대로 쿠폰 적용 후 가격을 테이블에 저장합니다.
+   + cart service : 메시지 정보를 토대로 쿠폰 적용 후 가격을 테이블에 저장합니다.
    + order service로부터 coupon 되돌리기 메시지를 받으면 쿠폰 상태를 NOT_USED로 변경합니다.
 
 3. Catalog service : 상품 정보, 검색 등 서비스 제공
@@ -61,7 +122,7 @@ front end : react
    + order service에 지불 응답 메시지를 보냅니다.(outbox pattern)
 
 ## Features
-### Back end 
+### Backend 
 1. 액세스 토큰은 블랙리스트를 도입하고 , 리프레시 토큰은 httpOnly 쿠키에 저장하고 Refresh Token Rotation 으로 보안을 강화하였습니다.
 2. 회원 가입은 이메일 인증 방식입니다.
 3. 로그인 후에 모든 요청은 Api Gateway에서 토큰 검증 필터를 통해 인증/인가 합니다.
@@ -73,7 +134,7 @@ front end : react
 9. Chat Service에서 채팅 메시지는 Mongo Sink Connector를 통해 MongoDB에 저장합니다.
        
    
-### Front end
+### Frontend
 1. https://github.com/no2ehi/full-amazon-clone 을 포크해서 NextJS에서 React로 변경하면서  React Query로 Data Fetch, Chat Service를 위한 UI를 구현하였습니다.
 2. 액세스 토큰은 메모리에 저장하고 리프레시 토큰은 httpOnly 쿠키로 저장하여 보안을 강화하였습니다. 
 3. e-commerce 에 chat 기능울 추가하였습니다.(현재는 방만들기, 방 이름 더블클릭으로 채팅 방 전환, 채팅, 무한 스크롤 기능만 구현)
