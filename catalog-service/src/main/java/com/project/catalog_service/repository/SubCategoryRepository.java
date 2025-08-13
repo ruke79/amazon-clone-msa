@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.project.catalog_service.model.Subcategory;
 
 @Repository
-public interface  SubCategoryRepository extends JpaRepository<Subcategory, Long>  {
+public interface  SubcategoryRepository extends JpaRepository<Subcategory, Long>  {
     List<Subcategory> findBySubcategoryNameIn(List<String> subcategoryName);    
     List<Subcategory> findByCategory_CategoryNameAndSubcategoryNameIn(String categoryName, List<String> subcategoryName);    
 

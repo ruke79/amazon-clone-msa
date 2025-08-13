@@ -20,6 +20,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,11 +34,17 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="product_subcategory")
+@Table(name="product_subcategory",  schema="product",
+       indexes = {
+        @Index(columnList = "subcategory_id, product_id", name = "idx_product_subcategory") })
 public class ProductSubcategory {
 
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Version
+    @Column(name = "version")
+    private Long version;
+
+    @Id //@Tsid
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "proc_subcategory_id")
     private Long id;
 

@@ -23,6 +23,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select categoryId from Category where categoryName = :name")
     public Long findIdByCategoryName(@Param("name") String categoryName);
 
-    @Query(value ="SELECT s FROM Category c INNER JOIN SubCategory s on c.categoryId = s.category.categoryId WHERE (:categoryId is null or c.categoryId = :categoryId)")    
+    @Query(value ="SELECT s FROM Category c INNER JOIN Subcategory s on c.categoryId = s.category.categoryId WHERE (:categoryId is null or c.categoryId = :categoryId)")    
     public List<Subcategory> findSubCategoriesByCategoryId(@Param("categoryId") Long categoryId);
 }

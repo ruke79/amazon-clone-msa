@@ -13,7 +13,10 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,14 +25,20 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="product_details", 
+@Table(name="product_details",  schema="product",
         indexes = {
         @Index(columnList = "name", name = "idx_product_details") })
 public class ProductDetails extends BaseEntity {
 
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Version
+    @Column(name = "version")
+    private Long version;
+
+    @Id //@Tsid
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pdetail_id")
     private Long pdetailId;
 

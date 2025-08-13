@@ -50,7 +50,7 @@ import com.project.catalog_service.repository.ProductRepository;
 import com.project.catalog_service.repository.ProductSizeRepository;
 import com.project.catalog_service.repository.ProductSkuRepository;
 
-import com.project.catalog_service.repository.SubCategoryRepository;
+import com.project.catalog_service.repository.SubcategoryRepository;
 import com.project.catalog_service.util.CursorPagenation;
 import com.project.common.util.FileUtil;
 
@@ -76,7 +76,7 @@ public class ProductService {
 
     private final CategoryRepository categoryRepository;
 
-    private final SubCategoryRepository subCategoryRepository;
+    private final SubcategoryRepository subCategoryRepository;
 
     private final ProductRepository productRepository;
 

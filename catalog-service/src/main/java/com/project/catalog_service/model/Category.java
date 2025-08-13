@@ -17,8 +17,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,15 +28,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="category", 
+@Table(name="category", schema="product",
        indexes = {
         @Index(columnList = "category_name, slug", name = "idx_category") }
 )
 public class Category extends BaseEntity {
 
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Version
+    @Column(name = "version")
+    private Long version;
+
+    @Id //@Tsid
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long categoryId;
 

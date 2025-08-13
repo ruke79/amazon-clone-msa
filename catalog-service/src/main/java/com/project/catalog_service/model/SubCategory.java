@@ -22,7 +22,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,14 +33,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="subcategory", 
+@Table(name="subcategory",  schema="product",
        indexes = {
         @Index(columnList = "subcategory_name, slug", name = "idx_subcategory") })
 public class Subcategory extends BaseEntity {
 
-    @Id @Tsid
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Version
+    @Column(name = "version")
+    private Long version;
+
+    @Id //@Tsid
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subcategory_id")
     private Long subcategoryId;    
 

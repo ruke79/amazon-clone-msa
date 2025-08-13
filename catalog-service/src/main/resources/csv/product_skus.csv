@@ -1,0 +1,510 @@
+skuproduct_id,sku,images,discount,sold,color_id,product_id,created_at
+1,Chang-Fisher-food-tables,"images\food\Image_2.jpg,images\food\Image_9.jpg,images\food\Image_5.jpg",24,59,1,1,2025-08-03
+2,Chang-Fisher-food-tables,"images\food\Image_2.jpg,images\food\Image_9.jpg,images\food\Image_5.jpg",41,70,2,1,2025-07-16
+3,Hamilton-Carr-books-wearable tech,"images\books\Image_5.jpg,images\books\Image_9.png,images\books\Image_4.jpg",11,50,3,2,2025-07-30
+4,"Summers, Barnett and Smith-food-beverages","images\food\Image_5.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",49,18,4,3,2025-08-04
+5,"Summers, Barnett and Smith-food-beverages","images\food\Image_5.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",9,7,5,3,2025-07-16
+6,Davis-Kaiser-furniture-smartphones,"images\furniture\Image_5.jpg,images\furniture\Image_10.jpg,images\furniture\Image_7.jpg",16,168,6,4,2025-08-04
+7,Davis-Kaiser-furniture-smartphones,"images\furniture\Image_5.jpg,images\furniture\Image_10.jpg,images\furniture\Image_7.jpg",28,83,7,4,2025-08-05
+8,Davis-Kaiser-furniture-smartphones,"images\furniture\Image_5.jpg,images\furniture\Image_10.jpg,images\furniture\Image_7.jpg",48,34,8,4,2025-07-12
+9,Jones-Shelton-furniture-non-fiction,"images\furniture\Image_3.jpg,images\furniture\Image_8.jpg,images\furniture\Image_7.jpg",49,195,9,5,2025-07-14
+10,Keller-Davies-furniture-men's clothing,"images\furniture\Image_5.jpg,images\furniture\Image_1.jpg,images\furniture\Image_10.jpg",16,122,10,6,2025-07-12
+11,Keller-Davies-furniture-men's clothing,"images\furniture\Image_5.jpg,images\furniture\Image_1.jpg,images\furniture\Image_10.jpg",24,192,11,6,2025-07-25
+12,Wyatt and Sons-fashion-men's clothing-#f7decf-XS,"images\fashion\Image_4.jpg,images\fashion\Image_6.jpg,images\fashion\Image_10.jpg",4,35,12,7,2025-07-31
+13,Reid PLC-consumer electronics-chairs,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_2.jpg",43,90,13,8,2025-07-30
+14,Reid PLC-consumer electronics-chairs,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_2.jpg",6,9,14,8,2025-08-03
+15,Jones-Jones-food-laptops,"images\food\Image_9.jpg,images\food\Image_8.jpg,images\food\Image_1.jpg",12,20,15,9,2025-07-14
+16,Howard-Dennis-food-bakery,"images\food\Image_3.jpg,images\food\Image_9.jpg,images\food\Image_1.jpg",32,22,16,10,2025-08-02
+17,Howard-Dennis-food-bakery,"images\food\Image_3.jpg,images\food\Image_9.jpg,images\food\Image_1.jpg",21,10,17,10,2025-07-20
+18,Carlson Group-fashion-laptops-#35c4fa-XS,"images\fashion\Image_4.jpg,images\fashion\Image_8.jpg,images\fashion\Image_9.jpg",37,39,18,11,2025-07-24
+19,Carlson Group-fashion-laptops-#644346-XL,"images\fashion\Image_4.jpg,images\fashion\Image_8.jpg,images\fashion\Image_9.jpg",45,35,19,11,2025-08-06
+20,Bell-Roberts-fashion-chairs-#75c016-XS,"images\fashion\Image_8.jpg,images\fashion\Image_6.jpg,images\fashion\Image_9.jpg",36,69,20,12,2025-07-30
+21,Bell-Roberts-fashion-chairs-#7259fa-XS,"images\fashion\Image_8.jpg,images\fashion\Image_6.jpg,images\fashion\Image_9.jpg",33,25,21,12,2025-08-01
+22,Bell-Roberts-fashion-chairs-#782317-M,"images\fashion\Image_8.jpg,images\fashion\Image_6.jpg,images\fashion\Image_9.jpg",44,9,22,12,2025-07-15
+23,Morales Ltd-food-accessories,"images\food\Image_8.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",16,26,23,13,2025-07-15
+24,Morales Ltd-food-accessories,"images\food\Image_8.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",1,102,24,13,2025-07-23
+25,Lopez-Key-books-bakery,"images\books\Image_2.jpg,images\books\Image_6.jpg,images\books\Image_10.jpg",49,52,25,14,2025-07-21
+26,Franklin and Sons-books-children's books,"images\books\Image_9.png,images\books\Image_8.jpg,images\books\Image_5.jpg",44,18,26,15,2025-08-02
+27,Franklin and Sons-books-children's books,"images\books\Image_9.png,images\books\Image_8.jpg,images\books\Image_5.jpg",2,35,27,15,2025-07-31
+28,Franklin and Sons-books-children's books,"images\books\Image_9.png,images\books\Image_8.jpg,images\books\Image_5.jpg",6,42,28,15,2025-07-14
+29,Ramirez Inc-fashion-tables-#e57c52-L,"images\fashion\Image_6.jpg,images\fashion\Image_4.jpg,images\fashion\Image_5.jpg",36,49,29,16,2025-08-08
+30,Ramirez Inc-fashion-tables-#348ae2-M,"images\fashion\Image_6.jpg,images\fashion\Image_4.jpg,images\fashion\Image_5.jpg",33,105,30,16,2025-08-06
+31,Ramirez Inc-fashion-tables-#c04f44-XL,"images\fashion\Image_6.jpg,images\fashion\Image_4.jpg,images\fashion\Image_5.jpg",3,54,31,16,2025-07-20
+32,Chan-Johnson-furniture-non-fiction,"images\furniture\Image_2.jpg,images\furniture\Image_7.jpg,images\furniture\Image_4.jpg",41,60,32,17,2025-07-14
+33,Chan-Johnson-furniture-non-fiction,"images\furniture\Image_2.jpg,images\furniture\Image_7.jpg,images\furniture\Image_4.jpg",47,7,33,17,2025-08-06
+34,Chan-Johnson-furniture-non-fiction,"images\furniture\Image_2.jpg,images\furniture\Image_7.jpg,images\furniture\Image_4.jpg",36,52,34,17,2025-08-04
+35,Navarro-Kline-furniture-women's clothing,"images\furniture\Image_4.jpg,images\furniture\Image_8.jpg,images\furniture\Image_3.jpg",7,38,35,18,2025-07-29
+36,Navarro-Kline-furniture-women's clothing,"images\furniture\Image_4.jpg,images\furniture\Image_8.jpg,images\furniture\Image_3.jpg",37,99,36,18,2025-07-19
+37,Navarro-Kline-furniture-women's clothing,"images\furniture\Image_4.jpg,images\furniture\Image_8.jpg,images\furniture\Image_3.jpg",37,59,37,18,2025-07-18
+38,"Klein, Robinson and Miller-books-smartphones","images\books\Image_5.jpg,images\books\Image_1.png,images\books\Image_3.jpg",10,94,38,19,2025-08-04
+39,Sanders-Clark-fashion-chairs-#d4f729-XS,"images\fashion\Image_3.jpg,images\fashion\Image_5.jpg,images\fashion\Image_10.jpg",0,71,39,20,2025-07-22
+40,Little-Henderson-consumer electronics-fresh produce,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_7.png",23,26,40,21,2025-08-10
+41,"Velazquez, Smith and Thornton-consumer electronics-beverages","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_1.jpg",32,11,41,22,2025-07-12
+42,"Velazquez, Smith and Thornton-consumer electronics-beverages","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_1.jpg",27,60,42,22,2025-07-23
+43,Jones and Sons-books-women's clothing,"images\books\Image_5.jpg,images\books\Image_7.jpg,images\books\Image_9.png",34,2,43,23,2025-07-17
+44,Jones and Sons-books-women's clothing,"images\books\Image_5.jpg,images\books\Image_7.jpg,images\books\Image_9.png",18,48,44,23,2025-08-07
+45,Sandoval Inc-furniture-tables,"images\furniture\Image_3.jpg,images\furniture\Image_10.jpg,images\furniture\Image_4.jpg",41,29,45,24,2025-07-22
+46,Sandoval Inc-furniture-tables,"images\furniture\Image_3.jpg,images\furniture\Image_10.jpg,images\furniture\Image_4.jpg",18,84,46,24,2025-08-07
+47,Sandoval Inc-furniture-tables,"images\furniture\Image_3.jpg,images\furniture\Image_10.jpg,images\furniture\Image_4.jpg",50,154,47,24,2025-07-24
+48,"Miller, Hale and Patrick-books-children's books","images\books\Image_6.jpg,images\books\Image_10.jpg,images\books\Image_9.png",13,189,48,25,2025-07-18
+49,"Miller, Hale and Patrick-books-children's books","images\books\Image_6.jpg,images\books\Image_10.jpg,images\books\Image_9.png",26,58,49,25,2025-08-06
+50,"Miller, Hale and Patrick-books-children's books","images\books\Image_6.jpg,images\books\Image_10.jpg,images\books\Image_9.png",39,5,50,25,2025-08-05
+51,"Peck, Santos and Montes-consumer electronics-chairs","images\consumer electronics\Image_8.png,images\consumer electronics\Image_4.png,images\consumer electronics\Image_1.jpg",4,81,51,26,2025-08-04
+52,Wallace-Sherman-consumer electronics-tables,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_10.jpg",11,83,52,27,2025-07-27
+53,Wallace-Sherman-consumer electronics-tables,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_10.jpg",31,51,53,27,2025-07-16
+54,Thomas PLC-furniture-children's books,"images\furniture\Image_5.jpg,images\furniture\Image_1.jpg,images\furniture\Image_7.jpg",15,28,54,28,2025-07-29
+55,Parks-Johnson-books-smartphones,"images\books\Image_10.jpg,images\books\Image_8.jpg,images\books\Image_2.jpg",31,12,55,29,2025-08-10
+56,Parks-Johnson-books-smartphones,"images\books\Image_10.jpg,images\books\Image_8.jpg,images\books\Image_2.jpg",21,131,56,29,2025-07-21
+57,Fuentes Inc-fashion-smartphones-#04074b-L,"images\fashion\Image_6.jpg,images\fashion\Image_5.jpg,images\fashion\Image_4.jpg",37,14,57,30,2025-07-12
+58,Fuentes Inc-fashion-smartphones-#ba1b4d-M,"images\fashion\Image_6.jpg,images\fashion\Image_5.jpg,images\fashion\Image_4.jpg",16,35,58,30,2025-07-30
+59,Kennedy-Carter-consumer electronics-chairs,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg",41,89,59,31,2025-07-19
+60,Kennedy-Carter-consumer electronics-chairs,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg",43,65,60,31,2025-07-20
+61,Kennedy-Carter-consumer electronics-chairs,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg",26,11,61,31,2025-08-06
+62,"Smith, Miller and Jones-furniture-smartphones","images\furniture\Image_6.jpg,images\furniture\Image_8.jpg,images\furniture\Image_3.jpg",6,41,62,32,2025-07-12
+63,Hayden-Valenzuela-fashion-men's clothing-#9b0dd5-XS,"images\fashion\Image_4.jpg,images\fashion\Image_7.jpg,images\fashion\Image_1.jpg",4,135,63,33,2025-08-05
+64,Hayden-Valenzuela-fashion-men's clothing-#e30106-S,"images\fashion\Image_4.jpg,images\fashion\Image_7.jpg,images\fashion\Image_1.jpg",37,28,64,33,2025-08-04
+65,Hayden-Valenzuela-fashion-men's clothing-#183975-M,"images\fashion\Image_4.jpg,images\fashion\Image_7.jpg,images\fashion\Image_1.jpg",48,148,65,33,2025-08-01
+66,Phillips Ltd-food-accessories,"images\food\Image_10.jpg,images\food\Image_7.jpg,images\food\Image_6.jpg",41,72,66,34,2025-08-02
+67,"Potter, Davis and Jimenez-furniture-bakery","images\furniture\Image_8.jpg,images\furniture\Image_1.jpg,images\furniture\Image_9.jpg",0,66,67,35,2025-07-27
+68,"Potter, Davis and Jimenez-furniture-bakery","images\furniture\Image_8.jpg,images\furniture\Image_1.jpg,images\furniture\Image_9.jpg",49,9,68,35,2025-08-02
+69,Johnson LLC-food-men's clothing,"images\food\Image_2.jpg,images\food\Image_7.jpg,images\food\Image_6.jpg",47,14,69,36,2025-07-24
+70,Johnson LLC-food-men's clothing,"images\food\Image_2.jpg,images\food\Image_7.jpg,images\food\Image_6.jpg",25,9,70,36,2025-07-27
+71,Johnson LLC-food-men's clothing,"images\food\Image_2.jpg,images\food\Image_7.jpg,images\food\Image_6.jpg",31,32,71,36,2025-07-29
+72,Garza-Taylor-books-men's clothing,"images\books\Image_8.jpg,images\books\Image_5.jpg,images\books\Image_1.png",45,118,72,37,2025-08-02
+73,Garza-Taylor-books-men's clothing,"images\books\Image_8.jpg,images\books\Image_5.jpg,images\books\Image_1.png",42,2,73,37,2025-07-16
+74,Ruiz-Oneal-books-men's clothing,"images\books\Image_1.png,images\books\Image_4.jpg,images\books\Image_3.jpg",38,26,74,38,2025-07-15
+75,Ruiz-Oneal-books-men's clothing,"images\books\Image_1.png,images\books\Image_4.jpg,images\books\Image_3.jpg",12,55,75,38,2025-07-22
+76,Ruiz-Oneal-books-men's clothing,"images\books\Image_1.png,images\books\Image_4.jpg,images\books\Image_3.jpg",15,105,76,38,2025-08-04
+77,Fitzpatrick-Hernandez-consumer electronics-chairs,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png",44,50,77,39,2025-07-14
+78,Fitzpatrick-Hernandez-consumer electronics-chairs,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png",16,11,78,39,2025-07-24
+79,Willis Inc-fashion-men's clothing-#83ad9a-XL,"images\fashion\Image_6.jpg,images\fashion\Image_4.jpg,images\fashion\Image_3.jpg",16,3,79,40,2025-07-27
+80,Willis Inc-fashion-men's clothing-#1deec7-S,"images\fashion\Image_6.jpg,images\fashion\Image_4.jpg,images\fashion\Image_3.jpg",48,69,80,40,2025-08-06
+81,Willis Inc-fashion-men's clothing-#3aa173-XL,"images\fashion\Image_6.jpg,images\fashion\Image_4.jpg,images\fashion\Image_3.jpg",35,49,81,40,2025-08-02
+82,Henry-Padilla-furniture-tables,"images\furniture\Image_9.jpg,images\furniture\Image_1.jpg,images\furniture\Image_6.jpg",29,38,82,41,2025-07-15
+83,"Sanders, Morse and Chavez-books-smartphones","images\books\Image_4.jpg,images\books\Image_6.jpg,images\books\Image_8.jpg",28,47,83,42,2025-08-01
+84,"Sanders, Morse and Chavez-books-smartphones","images\books\Image_4.jpg,images\books\Image_6.jpg,images\books\Image_8.jpg",37,126,84,42,2025-08-06
+85,Olson-Wiggins-furniture-chairs,"images\furniture\Image_6.jpg,images\furniture\Image_2.jpg,images\furniture\Image_10.jpg",38,21,85,43,2025-08-04
+86,Stark Group-consumer electronics-accessories,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png",31,20,86,44,2025-07-23
+87,Wright and Sons-books-non-fiction,"images\books\Image_4.jpg,images\books\Image_7.jpg,images\books\Image_3.jpg",49,146,87,45,2025-08-03
+88,Wright and Sons-books-non-fiction,"images\books\Image_4.jpg,images\books\Image_7.jpg,images\books\Image_3.jpg",43,60,88,45,2025-07-21
+89,Wright and Sons-books-non-fiction,"images\books\Image_4.jpg,images\books\Image_7.jpg,images\books\Image_3.jpg",50,250,89,45,2025-07-30
+90,Mitchell Ltd-books-bakery,"images\books\Image_10.jpg,images\books\Image_5.jpg,images\books\Image_7.jpg",48,67,90,46,2025-08-01
+91,Leonard Ltd-furniture-bakery,"images\furniture\Image_6.jpg,images\furniture\Image_2.jpg,images\furniture\Image_3.jpg",11,11,91,47,2025-07-22
+92,"Murphy, Richards and Johnson-furniture-non-fiction","images\furniture\Image_10.jpg,images\furniture\Image_9.jpg,images\furniture\Image_2.jpg",20,23,92,48,2025-08-03
+93,"Murphy, Richards and Johnson-furniture-non-fiction","images\furniture\Image_10.jpg,images\furniture\Image_9.jpg,images\furniture\Image_2.jpg",36,38,93,48,2025-07-25
+94,"Murphy, Richards and Johnson-furniture-non-fiction","images\furniture\Image_10.jpg,images\furniture\Image_9.jpg,images\furniture\Image_2.jpg",1,72,94,48,2025-07-12
+95,"Jimenez, Hardin and Jensen-books-laptops","images\books\Image_9.png,images\books\Image_3.jpg,images\books\Image_10.jpg",5,70,95,49,2025-07-15
+96,"Jimenez, Hardin and Jensen-books-laptops","images\books\Image_9.png,images\books\Image_3.jpg,images\books\Image_10.jpg",36,81,96,49,2025-07-25
+97,"Jimenez, Hardin and Jensen-books-laptops","images\books\Image_9.png,images\books\Image_3.jpg,images\books\Image_10.jpg",22,74,97,49,2025-07-14
+98,Powers-Torres-books-fresh produce,"images\books\Image_10.jpg,images\books\Image_7.jpg,images\books\Image_5.jpg",27,31,98,50,2025-08-01
+99,Powers-Torres-books-fresh produce,"images\books\Image_10.jpg,images\books\Image_7.jpg,images\books\Image_5.jpg",22,12,99,50,2025-07-14
+100,Powers-Torres-books-fresh produce,"images\books\Image_10.jpg,images\books\Image_7.jpg,images\books\Image_5.jpg",18,51,100,50,2025-07-20
+101,Banks Ltd-consumer electronics-men's clothing,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_2.jpg",42,12,101,51,2025-07-19
+102,Banks Ltd-consumer electronics-men's clothing,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_2.jpg",4,99,102,51,2025-07-13
+103,Smith and Sons-books-accessories,"images\books\Image_8.jpg,images\books\Image_2.jpg,images\books\Image_9.png",18,46,103,52,2025-07-21
+104,"Miller, Pennington and Harper-food-children's books","images\food\Image_10.jpg,images\food\Image_2.jpg,images\food\Image_9.jpg",9,230,104,53,2025-07-12
+105,"Miller, Pennington and Harper-food-children's books","images\food\Image_10.jpg,images\food\Image_2.jpg,images\food\Image_9.jpg",39,10,105,53,2025-07-26
+106,Collins LLC-furniture-fiction,"images\furniture\Image_7.jpg,images\furniture\Image_1.jpg,images\furniture\Image_5.jpg",4,111,106,54,2025-08-06
+107,Nelson Inc-furniture-men's clothing,"images\furniture\Image_6.jpg,images\furniture\Image_4.jpg,images\furniture\Image_2.jpg",48,0,107,55,2025-07-26
+108,"Peterson, Good and Bonilla-books-bakery","images\books\Image_9.png,images\books\Image_10.jpg,images\books\Image_8.jpg",47,56,108,56,2025-07-26
+109,"Peterson, Good and Bonilla-books-bakery","images\books\Image_9.png,images\books\Image_10.jpg,images\books\Image_8.jpg",6,2,109,56,2025-07-25
+110,"Carter, Simpson and Powell-books-beverages","images\books\Image_7.jpg,images\books\Image_8.jpg,images\books\Image_4.jpg",14,15,110,57,2025-07-24
+111,"Carter, Simpson and Powell-books-beverages","images\books\Image_7.jpg,images\books\Image_8.jpg,images\books\Image_4.jpg",20,41,111,57,2025-08-03
+112,"Carter, Simpson and Powell-books-beverages","images\books\Image_7.jpg,images\books\Image_8.jpg,images\books\Image_4.jpg",44,14,112,57,2025-07-21
+113,"Hogan, Jacobs and Fischer-books-accessories","images\books\Image_5.jpg,images\books\Image_2.jpg,images\books\Image_8.jpg",39,101,113,58,2025-08-04
+114,"Hogan, Jacobs and Fischer-books-accessories","images\books\Image_5.jpg,images\books\Image_2.jpg,images\books\Image_8.jpg",5,15,114,58,2025-07-30
+115,"Hogan, Jacobs and Fischer-books-accessories","images\books\Image_5.jpg,images\books\Image_2.jpg,images\books\Image_8.jpg",38,125,115,58,2025-08-03
+116,"Lee, Gomez and Graves-fashion-smartphones-#70837e-XS","images\fashion\Image_5.jpg,images\fashion\Image_3.jpg,images\fashion\Image_4.jpg",9,9,116,59,2025-07-26
+117,"Lee, Gomez and Graves-fashion-smartphones-#9d8323-XS","images\fashion\Image_5.jpg,images\fashion\Image_3.jpg,images\fashion\Image_4.jpg",29,4,117,59,2025-08-04
+118,"Lee, Gomez and Graves-fashion-smartphones-#730111-XL","images\fashion\Image_5.jpg,images\fashion\Image_3.jpg,images\fashion\Image_4.jpg",2,7,118,59,2025-07-22
+119,Walters-Shepard-fashion-laptops-#56455f-XL,"images\fashion\Image_1.jpg,images\fashion\Image_7.jpg,images\fashion\Image_6.jpg",21,141,119,60,2025-07-26
+120,"Marshall, Gallegos and Martinez-food-accessories","images\food\Image_7.jpg,images\food\Image_5.jpg,images\food\Image_8.jpg",10,86,120,61,2025-07-16
+121,"Marshall, Gallegos and Martinez-food-accessories","images\food\Image_7.jpg,images\food\Image_5.jpg,images\food\Image_8.jpg",46,30,121,61,2025-07-31
+122,"Marshall, Gallegos and Martinez-food-accessories","images\food\Image_7.jpg,images\food\Image_5.jpg,images\food\Image_8.jpg",44,15,122,61,2025-08-01
+123,"Thomas, Hernandez and Delacruz-consumer electronics-accessories","images\consumer electronics\Image_8.png,images\consumer electronics\Image_7.png,images\consumer electronics\Image_10.jpg",17,3,123,62,2025-07-14
+124,Castro LLC-furniture-fiction,"images\furniture\Image_7.jpg,images\furniture\Image_4.jpg,images\furniture\Image_6.jpg",30,153,124,63,2025-07-28
+125,May Inc-furniture-men's clothing,"images\furniture\Image_6.jpg,images\furniture\Image_8.jpg,images\furniture\Image_1.jpg",32,7,125,64,2025-07-31
+126,May Inc-furniture-men's clothing,"images\furniture\Image_6.jpg,images\furniture\Image_8.jpg,images\furniture\Image_1.jpg",34,79,126,64,2025-08-02
+127,May Inc-furniture-men's clothing,"images\furniture\Image_6.jpg,images\furniture\Image_8.jpg,images\furniture\Image_1.jpg",2,63,127,64,2025-07-15
+128,Hudson-Rogers-books-wearable tech,"images\books\Image_6.jpg,images\books\Image_9.png,images\books\Image_7.jpg",6,155,128,65,2025-07-16
+129,"Collins, Price and Williams-books-fiction","images\books\Image_6.jpg,images\books\Image_7.jpg,images\books\Image_9.png",41,1,129,66,2025-07-25
+130,"Collins, Price and Williams-books-fiction","images\books\Image_6.jpg,images\books\Image_7.jpg,images\books\Image_9.png",26,0,130,66,2025-07-18
+131,Chavez LLC-fashion-laptops-#a87d42-L,"images\fashion\Image_6.jpg,images\fashion\Image_9.jpg,images\fashion\Image_10.jpg",8,132,131,67,2025-07-12
+132,Chavez LLC-fashion-laptops-#b67dbe-XL,"images\fashion\Image_6.jpg,images\fashion\Image_9.jpg,images\fashion\Image_10.jpg",28,2,132,67,2025-07-14
+133,Gibbs-Garrison-food-tables,"images\food\Image_1.jpg,images\food\Image_3.jpg,images\food\Image_7.jpg",49,82,133,68,2025-07-17
+134,Gibbs-Garrison-food-tables,"images\food\Image_1.jpg,images\food\Image_3.jpg,images\food\Image_7.jpg",41,4,134,68,2025-07-23
+135,Thompson and Sons-books-bakery,"images\books\Image_7.jpg,images\books\Image_4.jpg,images\books\Image_1.png",4,85,135,69,2025-08-03
+136,Thompson and Sons-books-bakery,"images\books\Image_7.jpg,images\books\Image_4.jpg,images\books\Image_1.png",2,62,136,69,2025-07-18
+137,Thompson and Sons-books-bakery,"images\books\Image_7.jpg,images\books\Image_4.jpg,images\books\Image_1.png",6,56,137,69,2025-08-01
+138,Waters Inc-furniture-beverages,"images\furniture\Image_9.jpg,images\furniture\Image_5.jpg,images\furniture\Image_3.jpg",16,117,138,70,2025-08-03
+139,Waters Inc-furniture-beverages,"images\furniture\Image_9.jpg,images\furniture\Image_5.jpg,images\furniture\Image_3.jpg",7,82,139,70,2025-07-20
+140,"Hopkins, Church and Reynolds-books-smartphones","images\books\Image_10.jpg,images\books\Image_5.jpg,images\books\Image_8.jpg",40,31,140,71,2025-08-03
+141,"Hopkins, Church and Reynolds-books-smartphones","images\books\Image_10.jpg,images\books\Image_5.jpg,images\books\Image_8.jpg",22,83,141,71,2025-07-27
+142,"Morris, Yates and Maynard-furniture-chairs","images\furniture\Image_2.jpg,images\furniture\Image_8.jpg,images\furniture\Image_6.jpg",30,43,142,72,2025-08-08
+143,"Morris, Yates and Maynard-furniture-chairs","images\furniture\Image_2.jpg,images\furniture\Image_8.jpg,images\furniture\Image_6.jpg",24,40,143,72,2025-07-18
+144,"Howard, Kennedy and Stone-fashion-storage-#5d1fa6-XS","images\fashion\Image_5.jpg,images\fashion\Image_8.jpg,images\fashion\Image_7.jpg",17,128,144,73,2025-07-15
+145,"Howard, Kennedy and Stone-fashion-storage-#2c091b-M","images\fashion\Image_5.jpg,images\fashion\Image_8.jpg,images\fashion\Image_7.jpg",14,86,145,73,2025-07-12
+146,"Howard, Kennedy and Stone-fashion-storage-#e26d2e-L","images\fashion\Image_5.jpg,images\fashion\Image_8.jpg,images\fashion\Image_7.jpg",19,41,146,73,2025-07-12
+147,Ford-May-books-men's clothing,"images\books\Image_9.png,images\books\Image_4.jpg,images\books\Image_5.jpg",21,57,147,74,2025-08-10
+148,"Taylor, Snyder and Yoder-consumer electronics-children's books","images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_2.jpg",0,6,148,75,2025-07-14
+149,"Taylor, Snyder and Yoder-consumer electronics-children's books","images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_2.jpg",4,97,149,75,2025-08-05
+150,"Taylor, Snyder and Yoder-consumer electronics-children's books","images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_2.jpg",36,135,150,75,2025-07-23
+151,Vega and Sons-books-beverages,"images\books\Image_9.png,images\books\Image_1.png,images\books\Image_2.jpg",4,46,151,76,2025-07-17
+152,Vega and Sons-books-beverages,"images\books\Image_9.png,images\books\Image_1.png,images\books\Image_2.jpg",7,49,152,76,2025-07-20
+153,Stafford Ltd-consumer electronics-non-fiction,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_7.png",19,121,153,77,2025-07-22
+154,Stafford Ltd-consumer electronics-non-fiction,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_7.png",12,157,154,77,2025-07-28
+155,Matthews Group-fashion-fiction-#880f7c-S,"images\fashion\Image_10.jpg,images\fashion\Image_4.jpg,images\fashion\Image_8.jpg",16,13,155,78,2025-07-19
+156,Matthews Group-fashion-fiction-#d0b40f-L,"images\fashion\Image_10.jpg,images\fashion\Image_4.jpg,images\fashion\Image_8.jpg",10,18,156,78,2025-08-07
+157,"Garcia, Whitaker and Henry-furniture-tables","images\furniture\Image_8.jpg,images\furniture\Image_3.jpg,images\furniture\Image_5.jpg",19,132,157,79,2025-07-16
+158,"Garcia, Whitaker and Henry-furniture-tables","images\furniture\Image_8.jpg,images\furniture\Image_3.jpg,images\furniture\Image_5.jpg",40,21,158,79,2025-07-23
+159,"Garcia, Whitaker and Henry-furniture-tables","images\furniture\Image_8.jpg,images\furniture\Image_3.jpg,images\furniture\Image_5.jpg",3,13,159,79,2025-08-02
+160,Cain-Taylor-fashion-bakery-#2ec56b-M,"images\fashion\Image_10.jpg,images\fashion\Image_9.jpg,images\fashion\Image_4.jpg",5,128,160,80,2025-08-03
+161,Cain-Taylor-fashion-bakery-#487dea-M,"images\fashion\Image_10.jpg,images\fashion\Image_9.jpg,images\fashion\Image_4.jpg",24,22,161,80,2025-07-14
+162,Cain-Taylor-fashion-bakery-#77dbd7-M,"images\fashion\Image_10.jpg,images\fashion\Image_9.jpg,images\fashion\Image_4.jpg",39,83,162,80,2025-07-13
+163,Kelly-Friedman-fashion-chairs-#2c0d11-M,"images\fashion\Image_9.jpg,images\fashion\Image_10.jpg,images\fashion\Image_8.jpg",1,57,163,81,2025-07-22
+164,Kelly-Friedman-fashion-chairs-#6cdeea-XS,"images\fashion\Image_9.jpg,images\fashion\Image_10.jpg,images\fashion\Image_8.jpg",34,96,164,81,2025-07-24
+165,Kelly-Friedman-fashion-chairs-#e1ae56-S,"images\fashion\Image_9.jpg,images\fashion\Image_10.jpg,images\fashion\Image_8.jpg",16,4,165,81,2025-08-04
+166,Ramirez-Kaufman-food-women's clothing,"images\food\Image_7.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",38,121,166,82,2025-07-23
+167,Ramirez-Kaufman-food-women's clothing,"images\food\Image_7.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",42,213,167,82,2025-07-18
+168,Ramirez-Kaufman-food-women's clothing,"images\food\Image_7.jpg,images\food\Image_6.jpg,images\food\Image_9.jpg",13,74,168,82,2025-07-20
+169,Ruiz Group-consumer electronics-women's clothing,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_4.png",41,36,169,83,2025-07-31
+170,Ruiz Group-consumer electronics-women's clothing,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_4.png",45,58,170,83,2025-07-31
+171,Ruiz Group-consumer electronics-women's clothing,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_4.png",6,1,171,83,2025-08-08
+172,Jones-Thompson-food-tables,"images\food\Image_7.jpg,images\food\Image_3.jpg,images\food\Image_10.jpg",16,62,172,84,2025-07-22
+173,Jones-Thompson-food-tables,"images\food\Image_7.jpg,images\food\Image_3.jpg,images\food\Image_10.jpg",6,150,173,84,2025-07-16
+174,Jones-Thompson-food-tables,"images\food\Image_7.jpg,images\food\Image_3.jpg,images\food\Image_10.jpg",22,140,174,84,2025-07-31
+175,Steele Group-fashion-accessories-#6eaa26-L,"images\fashion\Image_3.jpg,images\fashion\Image_1.jpg,images\fashion\Image_10.jpg",23,99,175,85,2025-08-07
+176,Steele Group-fashion-accessories-#92cc34-S,"images\fashion\Image_3.jpg,images\fashion\Image_1.jpg,images\fashion\Image_10.jpg",2,14,176,85,2025-08-10
+177,Bell Group-books-children's books,"images\books\Image_10.jpg,images\books\Image_9.png,images\books\Image_2.jpg",17,16,177,86,2025-07-29
+178,Allen-Woods-furniture-wearable tech,"images\furniture\Image_7.jpg,images\furniture\Image_2.jpg,images\furniture\Image_5.jpg",23,31,178,87,2025-07-18
+179,Allen-Woods-furniture-wearable tech,"images\furniture\Image_7.jpg,images\furniture\Image_2.jpg,images\furniture\Image_5.jpg",20,57,179,87,2025-07-19
+180,Allen-Woods-furniture-wearable tech,"images\furniture\Image_7.jpg,images\furniture\Image_2.jpg,images\furniture\Image_5.jpg",10,43,180,87,2025-08-06
+181,Williams-Vaughan-books-men's clothing,"images\books\Image_5.jpg,images\books\Image_2.jpg,images\books\Image_1.png",39,59,181,88,2025-07-23
+182,"Leblanc, Marquez and Wheeler-books-chairs","images\books\Image_1.png,images\books\Image_8.jpg,images\books\Image_9.png",3,66,182,89,2025-08-02
+183,"Leblanc, Marquez and Wheeler-books-chairs","images\books\Image_1.png,images\books\Image_8.jpg,images\books\Image_9.png",45,109,183,89,2025-07-22
+184,"Leblanc, Marquez and Wheeler-books-chairs","images\books\Image_1.png,images\books\Image_8.jpg,images\books\Image_9.png",22,8,184,89,2025-07-27
+185,"Bishop, Guerrero and Rodriguez-fashion-smartphones-#7d0e75-L","images\fashion\Image_1.jpg,images\fashion\Image_9.jpg,images\fashion\Image_3.jpg",7,10,185,90,2025-08-06
+186,Grant-Kelly-books-storage,"images\books\Image_3.jpg,images\books\Image_1.png,images\books\Image_10.jpg",25,182,186,91,2025-08-05
+187,Clark-Nash-consumer electronics-men's clothing,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_4.png",4,156,187,92,2025-08-07
+188,Clark-Nash-consumer electronics-men's clothing,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_4.png",1,215,188,92,2025-08-04
+189,Clark-Nash-consumer electronics-men's clothing,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_4.png",43,67,189,92,2025-08-04
+190,"Richardson, Owens and Rodriguez-books-non-fiction","images\books\Image_9.png,images\books\Image_3.jpg,images\books\Image_6.jpg",23,41,190,93,2025-07-21
+191,Brown-Kaiser-food-tables,"images\food\Image_1.jpg,images\food\Image_10.jpg,images\food\Image_5.jpg",0,11,191,94,2025-07-19
+192,Brown-Kaiser-food-tables,"images\food\Image_1.jpg,images\food\Image_10.jpg,images\food\Image_5.jpg",26,67,192,94,2025-07-15
+193,Brown-Kaiser-food-tables,"images\food\Image_1.jpg,images\food\Image_10.jpg,images\food\Image_5.jpg",2,51,193,94,2025-07-29
+194,Carter-Jensen-food-laptops,"images\food\Image_10.jpg,images\food\Image_3.jpg,images\food\Image_2.jpg",29,22,194,95,2025-07-20
+195,Carter-Jensen-food-laptops,"images\food\Image_10.jpg,images\food\Image_3.jpg,images\food\Image_2.jpg",19,6,195,95,2025-07-30
+196,Walsh LLC-furniture-tables,"images\furniture\Image_10.jpg,images\furniture\Image_6.jpg,images\furniture\Image_7.jpg",49,11,196,96,2025-08-09
+197,Johnson-Pittman-fashion-laptops-#0b1031-S,"images\fashion\Image_7.jpg,images\fashion\Image_1.jpg,images\fashion\Image_6.jpg",41,8,197,97,2025-07-30
+198,Adams LLC-fashion-women's clothing-#ecc471-XS,"images\fashion\Image_1.jpg,images\fashion\Image_5.jpg,images\fashion\Image_3.jpg",35,46,198,98,2025-08-06
+199,Adams LLC-fashion-women's clothing-#c46316-XS,"images\fashion\Image_1.jpg,images\fashion\Image_5.jpg,images\fashion\Image_3.jpg",5,35,199,98,2025-07-21
+200,Adams LLC-fashion-women's clothing-#2184c9-M,"images\fashion\Image_1.jpg,images\fashion\Image_5.jpg,images\fashion\Image_3.jpg",48,56,200,98,2025-08-06
+201,Davis-Shaw-furniture-children's books,"images\furniture\Image_5.jpg,images\furniture\Image_8.jpg,images\furniture\Image_7.jpg",24,0,201,99,2025-07-12
+202,Davis-Shaw-furniture-children's books,"images\furniture\Image_5.jpg,images\furniture\Image_8.jpg,images\furniture\Image_7.jpg",13,55,202,99,2025-07-21
+203,Davis-Shaw-furniture-children's books,"images\furniture\Image_5.jpg,images\furniture\Image_8.jpg,images\furniture\Image_7.jpg",36,18,203,99,2025-07-31
+204,Green Inc-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",18,36,204,100,2025-07-20
+205,Green Inc-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",49,61,205,100,2025-07-26
+206,Green Inc-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",20,7,206,100,2025-08-08
+207,Martinez-Wright-consumer electronics-laptops,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_4.png",20,3,207,101,2025-07-27
+208,Arnold LLC-food-wearable tech,"images\food\Image_7.jpg,images\food\Image_5.jpg,images\food\Image_2.jpg",2,65,208,102,2025-07-16
+209,Arnold LLC-food-wearable tech,"images\food\Image_7.jpg,images\food\Image_5.jpg,images\food\Image_2.jpg",8,24,209,102,2025-08-10
+210,Wagner-Lewis-consumer electronics-storage,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png",38,9,210,103,2025-08-03
+211,Wagner-Lewis-consumer electronics-storage,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png",30,75,211,103,2025-07-28
+212,"Jones, Gill and Willis-fashion-laptops-#89f5e2-XS","images\fashion\Image_6.jpg,images\fashion\Image_7.jpg,images\fashion\Image_9.jpg",44,54,212,104,2025-07-20
+213,"Jones, Gill and Willis-fashion-laptops-#c5dff3-XS","images\fashion\Image_6.jpg,images\fashion\Image_7.jpg,images\fashion\Image_9.jpg",18,153,213,104,2025-08-03
+214,"Jones, Gill and Willis-fashion-laptops-#95d728-M","images\fashion\Image_6.jpg,images\fashion\Image_7.jpg,images\fashion\Image_9.jpg",18,177,214,104,2025-07-31
+215,Castaneda-Morrison-food-non-fiction,"images\food\Image_10.jpg,images\food\Image_3.jpg,images\food\Image_6.jpg",22,71,215,105,2025-08-02
+216,Castaneda-Morrison-food-non-fiction,"images\food\Image_10.jpg,images\food\Image_3.jpg,images\food\Image_6.jpg",32,82,216,105,2025-07-23
+217,Castaneda-Morrison-food-non-fiction,"images\food\Image_10.jpg,images\food\Image_3.jpg,images\food\Image_6.jpg",31,93,217,105,2025-08-04
+218,"Alvarez, Peterson and Hamilton-consumer electronics-accessories","images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png",10,12,218,106,2025-07-18
+219,"Alvarez, Peterson and Hamilton-consumer electronics-accessories","images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png",4,115,219,106,2025-07-26
+220,Smith-Ewing-furniture-bakery,"images\furniture\Image_10.jpg,images\furniture\Image_3.jpg,images\furniture\Image_8.jpg",9,98,220,107,2025-08-09
+221,Smith-Ewing-furniture-bakery,"images\furniture\Image_10.jpg,images\furniture\Image_3.jpg,images\furniture\Image_8.jpg",46,154,221,107,2025-07-27
+222,Flores and Sons-fashion-non-fiction-#c31d08-L,"images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_6.jpg",6,63,222,108,2025-07-24
+223,Graham PLC-food-smartphones,"images\food\Image_9.jpg,images\food\Image_4.png,images\food\Image_5.jpg",50,73,223,109,2025-07-14
+224,Graham PLC-food-smartphones,"images\food\Image_9.jpg,images\food\Image_4.png,images\food\Image_5.jpg",25,38,224,109,2025-07-12
+225,Rowland-Lynch-furniture-non-fiction,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_1.jpg",25,37,225,110,2025-07-17
+226,"Espinoza, Franklin and Fisher-consumer electronics-women's clothing","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",26,17,226,111,2025-08-09
+227,"Espinoza, Franklin and Fisher-consumer electronics-women's clothing","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",13,10,227,111,2025-07-31
+228,"Espinoza, Franklin and Fisher-consumer electronics-women's clothing","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",31,24,228,111,2025-08-02
+229,Beasley Group-consumer electronics-laptops,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",19,17,229,112,2025-08-10
+230,Beasley Group-consumer electronics-laptops,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",28,4,230,112,2025-07-25
+231,Beasley Group-consumer electronics-laptops,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",47,196,231,112,2025-07-23
+232,"Clark, Sosa and Rivas-fashion-fresh produce-#117378-L","images\fashion\Image_10.jpg,images\fashion\Image_5.jpg,images\fashion\Image_6.jpg",12,7,232,113,2025-08-05
+233,"Clark, Sosa and Rivas-fashion-fresh produce-#bed7ac-L","images\fashion\Image_10.jpg,images\fashion\Image_5.jpg,images\fashion\Image_6.jpg",44,96,233,113,2025-08-08
+234,Mays Inc-books-children's books,"images\books\Image_6.jpg,images\books\Image_7.jpg,images\books\Image_1.png",40,29,234,114,2025-08-07
+235,Mays Inc-books-children's books,"images\books\Image_6.jpg,images\books\Image_7.jpg,images\books\Image_1.png",24,18,235,114,2025-08-01
+236,"Castillo, Simmons and Jones-food-wearable tech","images\food\Image_8.jpg,images\food\Image_10.jpg,images\food\Image_7.jpg",42,45,236,115,2025-07-16
+237,"Castillo, Simmons and Jones-food-wearable tech","images\food\Image_8.jpg,images\food\Image_10.jpg,images\food\Image_7.jpg",31,142,237,115,2025-07-31
+238,"Castillo, Simmons and Jones-food-wearable tech","images\food\Image_8.jpg,images\food\Image_10.jpg,images\food\Image_7.jpg",41,98,238,115,2025-08-04
+239,Sparks-Smith-books-beverages,"images\books\Image_8.jpg,images\books\Image_10.jpg,images\books\Image_3.jpg",27,0,239,116,2025-07-21
+240,"Romero, Villegas and Hudson-books-wearable tech","images\books\Image_9.png,images\books\Image_7.jpg,images\books\Image_5.jpg",48,18,240,117,2025-07-25
+241,"Hammond, Pena and Woods-furniture-tables","images\furniture\Image_5.jpg,images\furniture\Image_4.jpg,images\furniture\Image_10.jpg",3,82,241,118,2025-07-12
+242,"Hammond, Pena and Woods-furniture-tables","images\furniture\Image_5.jpg,images\furniture\Image_4.jpg,images\furniture\Image_10.jpg",31,12,242,118,2025-07-14
+243,"Hammond, Pena and Woods-furniture-tables","images\furniture\Image_5.jpg,images\furniture\Image_4.jpg,images\furniture\Image_10.jpg",18,85,243,118,2025-08-09
+244,James-Allen-fashion-beverages-#ec1825-M,"images\fashion\Image_6.jpg,images\fashion\Image_1.jpg,images\fashion\Image_8.jpg",12,7,244,119,2025-07-22
+245,James-Allen-fashion-beverages-#12874b-XS,"images\fashion\Image_6.jpg,images\fashion\Image_1.jpg,images\fashion\Image_8.jpg",34,15,245,119,2025-08-03
+246,James-Allen-fashion-beverages-#b38830-XL,"images\fashion\Image_6.jpg,images\fashion\Image_1.jpg,images\fashion\Image_8.jpg",22,54,246,119,2025-07-31
+247,Castillo-Holt-consumer electronics-storage,"images\consumer electronics\Image_4.png,images\consumer electronics\Image_7.png,images\consumer electronics\Image_10.jpg",23,22,247,120,2025-07-27
+248,Hunt-Gomez-books-tables,"images\books\Image_1.png,images\books\Image_8.jpg,images\books\Image_9.png",27,153,248,121,2025-07-23
+249,"Tucker, Cervantes and Allison-consumer electronics-beverages","images\consumer electronics\Image_8.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",21,51,249,122,2025-08-08
+250,Brooks-Shah-books-accessories,"images\books\Image_10.jpg,images\books\Image_9.png,images\books\Image_3.jpg",50,87,250,123,2025-07-27
+251,Brooks-Shah-books-accessories,"images\books\Image_10.jpg,images\books\Image_9.png,images\books\Image_3.jpg",1,11,251,123,2025-07-26
+252,Garza and Sons-furniture-laptops,"images\furniture\Image_2.jpg,images\furniture\Image_4.jpg,images\furniture\Image_3.jpg",7,27,252,124,2025-07-12
+253,Garza and Sons-furniture-laptops,"images\furniture\Image_2.jpg,images\furniture\Image_4.jpg,images\furniture\Image_3.jpg",7,54,253,124,2025-07-16
+254,Garza and Sons-furniture-laptops,"images\furniture\Image_2.jpg,images\furniture\Image_4.jpg,images\furniture\Image_3.jpg",37,19,254,124,2025-07-27
+255,"Doyle, Smith and Thomas-fashion-smartphones-#668125-L","images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_10.jpg",50,14,255,125,2025-07-15
+256,"Doyle, Smith and Thomas-fashion-smartphones-#feba2c-L","images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_10.jpg",17,50,256,125,2025-07-20
+257,"Doyle, Smith and Thomas-fashion-smartphones-#0e5ffb-XL","images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_10.jpg",30,3,257,125,2025-07-26
+258,Bailey LLC-food-tables,"images\food\Image_10.jpg,images\food\Image_8.jpg,images\food\Image_5.jpg",47,45,258,126,2025-07-21
+259,Green-Gross-furniture-children's books,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_8.jpg",11,1,259,127,2025-07-21
+260,Green-Gross-furniture-children's books,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_8.jpg",10,57,260,127,2025-08-10
+261,Douglas LLC-consumer electronics-fresh produce,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_3.jpg",9,41,261,128,2025-07-16
+262,Douglas LLC-consumer electronics-fresh produce,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_3.jpg",29,14,262,128,2025-08-01
+263,Davis Group-consumer electronics-storage,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",0,94,263,129,2025-07-17
+264,Davis Group-consumer electronics-storage,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",13,15,264,129,2025-08-02
+265,Davis Group-consumer electronics-storage,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",21,218,265,129,2025-07-14
+266,Alexander PLC-fashion-accessories-#1a1b51-XS,"images\fashion\Image_9.jpg,images\fashion\Image_6.jpg,images\fashion\Image_10.jpg",35,45,266,130,2025-08-08
+267,Alexander PLC-fashion-accessories-#e86c15-L,"images\fashion\Image_9.jpg,images\fashion\Image_6.jpg,images\fashion\Image_10.jpg",29,77,267,130,2025-08-01
+268,Callahan Group-furniture-non-fiction,"images\furniture\Image_2.jpg,images\furniture\Image_1.jpg,images\furniture\Image_6.jpg",14,140,268,131,2025-08-07
+269,Callahan Group-furniture-non-fiction,"images\furniture\Image_2.jpg,images\furniture\Image_1.jpg,images\furniture\Image_6.jpg",44,67,269,131,2025-07-26
+270,Johnson-Alexander-furniture-fresh produce,"images\furniture\Image_3.jpg,images\furniture\Image_7.jpg,images\furniture\Image_6.jpg",41,132,270,132,2025-07-29
+271,"Lewis, David and Taylor-food-fiction","images\food\Image_4.png,images\food\Image_9.jpg,images\food\Image_5.jpg",45,174,271,133,2025-07-19
+272,"Lewis, David and Taylor-food-fiction","images\food\Image_4.png,images\food\Image_9.jpg,images\food\Image_5.jpg",38,93,272,133,2025-07-27
+273,Young Inc-consumer electronics-accessories,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_8.png,images\consumer electronics\Image_3.jpg",12,0,273,134,2025-07-25
+274,Young Inc-consumer electronics-accessories,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_8.png,images\consumer electronics\Image_3.jpg",29,58,274,134,2025-08-10
+275,Young Inc-consumer electronics-accessories,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_8.png,images\consumer electronics\Image_3.jpg",29,113,275,134,2025-08-09
+276,Braun-Erickson-consumer electronics-children's books,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_1.jpg",40,37,276,135,2025-07-22
+277,Braun-Erickson-consumer electronics-children's books,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_1.jpg",39,204,277,135,2025-08-02
+278,"Lewis, Flores and Baxter-food-tables","images\food\Image_6.jpg,images\food\Image_5.jpg,images\food\Image_9.jpg",12,4,278,136,2025-08-08
+279,"Lewis, Flores and Baxter-food-tables","images\food\Image_6.jpg,images\food\Image_5.jpg,images\food\Image_9.jpg",3,45,279,136,2025-08-09
+280,"Lewis, Flores and Baxter-food-tables","images\food\Image_6.jpg,images\food\Image_5.jpg,images\food\Image_9.jpg",6,45,280,136,2025-07-24
+281,Richardson Group-consumer electronics-men's clothing,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",10,52,281,137,2025-08-10
+282,Richardson Group-consumer electronics-men's clothing,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",9,129,282,137,2025-07-31
+283,Richardson Group-consumer electronics-men's clothing,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",11,95,283,137,2025-07-14
+284,Collins-Howell-fashion-non-fiction-#0a1150-S,"images\fashion\Image_1.jpg,images\fashion\Image_6.jpg,images\fashion\Image_7.jpg",50,0,284,138,2025-08-08
+285,Collins-Howell-fashion-non-fiction-#50077c-XS,"images\fashion\Image_1.jpg,images\fashion\Image_6.jpg,images\fashion\Image_7.jpg",39,25,285,138,2025-07-26
+286,Collins-Howell-fashion-non-fiction-#085714-XL,"images\fashion\Image_1.jpg,images\fashion\Image_6.jpg,images\fashion\Image_7.jpg",21,36,286,138,2025-08-07
+287,Smith PLC-consumer electronics-women's clothing,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_7.png",47,37,287,139,2025-07-17
+288,Smith PLC-consumer electronics-women's clothing,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_7.png",11,3,288,139,2025-08-01
+289,Sanchez Ltd-fashion-women's clothing-#0e21d9-M,"images\fashion\Image_3.jpg,images\fashion\Image_9.jpg,images\fashion\Image_5.jpg",30,32,289,140,2025-08-01
+290,Sanchez Ltd-fashion-women's clothing-#9807d6-S,"images\fashion\Image_3.jpg,images\fashion\Image_9.jpg,images\fashion\Image_5.jpg",33,3,290,140,2025-07-21
+291,Sanchez Ltd-fashion-women's clothing-#9be20e-M,"images\fashion\Image_3.jpg,images\fashion\Image_9.jpg,images\fashion\Image_5.jpg",30,10,291,140,2025-08-04
+292,Martin LLC-furniture-wearable tech,"images\furniture\Image_7.jpg,images\furniture\Image_2.jpg,images\furniture\Image_8.jpg",4,15,292,141,2025-07-19
+293,Martin LLC-furniture-wearable tech,"images\furniture\Image_7.jpg,images\furniture\Image_2.jpg,images\furniture\Image_8.jpg",42,164,293,141,2025-08-09
+294,Ford PLC-fashion-accessories-#211cae-M,"images\fashion\Image_5.jpg,images\fashion\Image_6.jpg,images\fashion\Image_4.jpg",2,50,294,142,2025-07-17
+295,Ford PLC-fashion-accessories-#6838a0-S,"images\fashion\Image_5.jpg,images\fashion\Image_6.jpg,images\fashion\Image_4.jpg",43,81,295,142,2025-08-09
+296,Howell-David-fashion-beverages-#2c6c77-L,"images\fashion\Image_6.jpg,images\fashion\Image_7.jpg,images\fashion\Image_1.jpg",4,3,296,143,2025-08-03
+297,Howell-David-fashion-beverages-#d893ea-XL,"images\fashion\Image_6.jpg,images\fashion\Image_7.jpg,images\fashion\Image_1.jpg",13,195,297,143,2025-07-25
+298,Gonzalez and Sons-food-women's clothing,"images\food\Image_6.jpg,images\food\Image_10.jpg,images\food\Image_4.png",5,62,298,144,2025-08-03
+299,Gonzalez and Sons-food-women's clothing,"images\food\Image_6.jpg,images\food\Image_10.jpg,images\food\Image_4.png",18,5,299,144,2025-07-16
+300,"Woods, Manning and Stevenson-furniture-laptops","images\furniture\Image_2.jpg,images\furniture\Image_8.jpg,images\furniture\Image_9.jpg",26,71,300,145,2025-07-22
+301,"Woods, Manning and Stevenson-furniture-laptops","images\furniture\Image_2.jpg,images\furniture\Image_8.jpg,images\furniture\Image_9.jpg",26,106,301,145,2025-08-01
+302,"Washington, Ross and Summers-food-smartphones","images\food\Image_7.jpg,images\food\Image_3.jpg,images\food\Image_8.jpg",34,66,302,146,2025-07-31
+303,"Washington, Ross and Summers-food-smartphones","images\food\Image_7.jpg,images\food\Image_3.jpg,images\food\Image_8.jpg",1,15,303,146,2025-07-29
+304,Collins-Maldonado-fashion-smartphones-#0c4d1b-XS,"images\fashion\Image_8.jpg,images\fashion\Image_1.jpg,images\fashion\Image_4.jpg",29,60,304,147,2025-07-15
+305,Collins-Maldonado-fashion-smartphones-#8b7afb-L,"images\fashion\Image_8.jpg,images\fashion\Image_1.jpg,images\fashion\Image_4.jpg",12,94,305,147,2025-07-22
+306,Collins-Maldonado-fashion-smartphones-#c10f57-XL,"images\fashion\Image_8.jpg,images\fashion\Image_1.jpg,images\fashion\Image_4.jpg",50,155,306,147,2025-07-24
+307,Myers-Willis-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_5.jpg",44,31,307,148,2025-07-28
+308,Myers-Willis-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_5.jpg",14,11,308,148,2025-08-02
+309,Myers-Willis-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_5.jpg",35,16,309,148,2025-08-09
+310,"Williams, Golden and Parrish-consumer electronics-bakery","images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg",33,122,310,149,2025-07-20
+311,"Williams, Golden and Parrish-consumer electronics-bakery","images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg",24,19,311,149,2025-07-24
+312,"Williams, Golden and Parrish-consumer electronics-bakery","images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_1.jpg",50,145,312,149,2025-08-02
+313,"Atkinson, Dixon and Miller-furniture-bakery","images\furniture\Image_6.jpg,images\furniture\Image_7.jpg,images\furniture\Image_5.jpg",0,109,313,150,2025-07-18
+314,Stout-Allen-books-chairs,"images\books\Image_4.jpg,images\books\Image_1.png,images\books\Image_7.jpg",41,115,314,151,2025-07-15
+315,Stout-Allen-books-chairs,"images\books\Image_4.jpg,images\books\Image_1.png,images\books\Image_7.jpg",31,53,315,151,2025-07-18
+316,Lowery LLC-books-bakery,"images\books\Image_8.jpg,images\books\Image_4.jpg,images\books\Image_5.jpg",36,15,316,152,2025-07-19
+317,Walters PLC-consumer electronics-chairs,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_4.png",45,68,317,153,2025-08-10
+318,Walters PLC-consumer electronics-chairs,"images\consumer electronics\Image_7.png,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_4.png",34,0,318,153,2025-07-25
+319,Osborne-Moore-fashion-fiction-#cdced1-M,"images\fashion\Image_9.jpg,images\fashion\Image_7.jpg,images\fashion\Image_3.jpg",10,25,319,154,2025-07-20
+320,Osborne-Moore-fashion-fiction-#8b68f1-XS,"images\fashion\Image_9.jpg,images\fashion\Image_7.jpg,images\fashion\Image_3.jpg",3,70,320,154,2025-07-21
+321,Osborne-Moore-fashion-fiction-#44567b-XS,"images\fashion\Image_9.jpg,images\fashion\Image_7.jpg,images\fashion\Image_3.jpg",24,6,321,154,2025-07-20
+322,Russell Ltd-consumer electronics-laptops,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_10.jpg",17,125,322,155,2025-07-29
+323,Russell Ltd-consumer electronics-laptops,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_10.jpg",2,91,323,155,2025-07-28
+324,Russell Ltd-consumer electronics-laptops,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_10.jpg",23,31,324,155,2025-07-15
+325,Diaz-Wise-fashion-beverages-#86130c-L,"images\fashion\Image_7.jpg,images\fashion\Image_9.jpg,images\fashion\Image_3.jpg",46,91,325,156,2025-07-19
+326,Diaz-Wise-fashion-beverages-#2608cb-S,"images\fashion\Image_7.jpg,images\fashion\Image_9.jpg,images\fashion\Image_3.jpg",3,87,326,156,2025-08-07
+327,Turner Ltd-food-chairs,"images\food\Image_8.jpg,images\food\Image_6.jpg,images\food\Image_5.jpg",24,7,327,157,2025-07-29
+328,"Chandler, Henry and Wilson-fashion-children's books-#d6f6dc-XL","images\fashion\Image_9.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",31,60,328,158,2025-07-18
+329,Henderson Ltd-books-non-fiction,"images\books\Image_8.jpg,images\books\Image_1.png,images\books\Image_6.jpg",23,66,329,159,2025-07-13
+330,"Shepherd, Johnson and Shelton-fashion-beverages-#de2af5-XL","images\fashion\Image_4.jpg,images\fashion\Image_9.jpg,images\fashion\Image_5.jpg",25,150,330,160,2025-07-13
+331,Davis PLC-books-fiction,"images\books\Image_7.jpg,images\books\Image_4.jpg,images\books\Image_6.jpg",42,70,331,161,2025-07-23
+332,Fletcher-Cummings-consumer electronics-fiction,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_3.jpg",25,28,332,162,2025-07-18
+333,Fletcher-Cummings-consumer electronics-fiction,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_3.jpg",19,60,333,162,2025-08-06
+334,Taylor Group-books-women's clothing,"images\books\Image_10.jpg,images\books\Image_7.jpg,images\books\Image_6.jpg",37,121,334,163,2025-07-15
+335,Taylor Group-books-women's clothing,"images\books\Image_10.jpg,images\books\Image_7.jpg,images\books\Image_6.jpg",41,16,335,163,2025-07-21
+336,White-Smith-consumer electronics-chairs,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",39,153,336,164,2025-07-19
+337,White-Smith-consumer electronics-chairs,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",16,31,337,164,2025-08-10
+338,White-Smith-consumer electronics-chairs,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",43,289,338,164,2025-07-29
+339,Moore-Herrera-consumer electronics-women's clothing,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png",35,81,339,165,2025-07-14
+340,Moore-Herrera-consumer electronics-women's clothing,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png",17,6,340,165,2025-07-18
+341,Moore-Herrera-consumer electronics-women's clothing,"images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_7.png",5,125,341,165,2025-08-10
+342,"Mills, Green and Thornton-books-non-fiction","images\books\Image_7.jpg,images\books\Image_5.jpg,images\books\Image_4.jpg",13,88,342,166,2025-08-07
+343,"Mills, Green and Thornton-books-non-fiction","images\books\Image_7.jpg,images\books\Image_5.jpg,images\books\Image_4.jpg",33,124,343,166,2025-07-12
+344,Barrera-Schmidt-books-wearable tech,"images\books\Image_3.jpg,images\books\Image_9.png,images\books\Image_4.jpg",18,198,344,167,2025-07-16
+345,Barrera-Schmidt-books-wearable tech,"images\books\Image_3.jpg,images\books\Image_9.png,images\books\Image_4.jpg",18,104,345,167,2025-07-16
+346,Porter and Sons-consumer electronics-chairs,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_4.png,images\consumer electronics\Image_8.png",29,95,346,168,2025-07-29
+347,Keller-Dalton-books-men's clothing,"images\books\Image_5.jpg,images\books\Image_6.jpg,images\books\Image_3.jpg",4,25,347,169,2025-08-08
+348,Keller-Dalton-books-men's clothing,"images\books\Image_5.jpg,images\books\Image_6.jpg,images\books\Image_3.jpg",14,19,348,169,2025-07-28
+349,Gibson PLC-food-wearable tech,"images\food\Image_10.jpg,images\food\Image_5.jpg,images\food\Image_4.png",8,1,349,170,2025-07-22
+350,Murillo Group-consumer electronics-fresh produce,"images\consumer electronics\Image_4.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",43,44,350,171,2025-07-24
+351,Murillo Group-consumer electronics-fresh produce,"images\consumer electronics\Image_4.png,images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_3.jpg",29,0,351,171,2025-07-26
+352,"Thompson, Glover and Moses-fashion-non-fiction-#2ef207-M","images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_4.jpg",48,54,352,172,2025-07-23
+353,"Thompson, Glover and Moses-fashion-non-fiction-#50d95b-L","images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_4.jpg",13,8,353,172,2025-07-24
+354,"Thompson, Glover and Moses-fashion-non-fiction-#c77f82-XL","images\fashion\Image_5.jpg,images\fashion\Image_1.jpg,images\fashion\Image_4.jpg",10,52,354,172,2025-07-20
+355,Wallace-Ferguson-food-beverages,"images\food\Image_3.jpg,images\food\Image_1.jpg,images\food\Image_6.jpg",11,47,355,173,2025-07-23
+356,Wallace-Ferguson-food-beverages,"images\food\Image_3.jpg,images\food\Image_1.jpg,images\food\Image_6.jpg",15,50,356,173,2025-08-05
+357,Stanley Inc-food-smartphones,"images\food\Image_9.jpg,images\food\Image_8.jpg,images\food\Image_7.jpg",33,12,357,174,2025-07-27
+358,"Taylor, Hart and Lucas-fashion-tables-#e06032-M","images\fashion\Image_4.jpg,images\fashion\Image_10.jpg,images\fashion\Image_7.jpg",29,0,358,175,2025-07-14
+359,"Taylor, Hart and Lucas-fashion-tables-#3bc572-XL","images\fashion\Image_4.jpg,images\fashion\Image_10.jpg,images\fashion\Image_7.jpg",0,95,359,175,2025-07-15
+360,"Taylor, Hart and Lucas-fashion-tables-#c8a08f-S","images\fashion\Image_4.jpg,images\fashion\Image_10.jpg,images\fashion\Image_7.jpg",49,155,360,175,2025-07-24
+361,Benitez-Rogers-books-smartphones,"images\books\Image_2.jpg,images\books\Image_9.png,images\books\Image_3.jpg",4,171,361,176,2025-07-16
+362,Phillips-Reyes-books-tables,"images\books\Image_10.jpg,images\books\Image_7.jpg,images\books\Image_8.jpg",0,5,362,177,2025-07-21
+363,Navarro PLC-food-storage,"images\food\Image_1.jpg,images\food\Image_6.jpg,images\food\Image_4.png",40,14,363,178,2025-07-19
+364,Navarro PLC-food-storage,"images\food\Image_1.jpg,images\food\Image_6.jpg,images\food\Image_4.png",9,96,364,178,2025-08-02
+365,Navarro PLC-food-storage,"images\food\Image_1.jpg,images\food\Image_6.jpg,images\food\Image_4.png",33,10,365,178,2025-07-21
+366,Solomon-Gutierrez-furniture-storage,"images\furniture\Image_7.jpg,images\furniture\Image_5.jpg,images\furniture\Image_9.jpg",42,29,366,179,2025-07-28
+367,Solomon-Gutierrez-furniture-storage,"images\furniture\Image_7.jpg,images\furniture\Image_5.jpg,images\furniture\Image_9.jpg",22,97,367,179,2025-08-01
+368,Leon Group-food-fiction,"images\food\Image_2.jpg,images\food\Image_10.jpg,images\food\Image_4.png",46,152,368,180,2025-07-12
+369,"Marsh, Cain and Lewis-books-laptops","images\books\Image_3.jpg,images\books\Image_1.png,images\books\Image_5.jpg",43,73,369,181,2025-07-17
+370,"Farley, Colon and Morrow-furniture-beverages","images\furniture\Image_3.jpg,images\furniture\Image_10.jpg,images\furniture\Image_8.jpg",33,83,370,182,2025-07-20
+371,"Farley, Colon and Morrow-furniture-beverages","images\furniture\Image_3.jpg,images\furniture\Image_10.jpg,images\furniture\Image_8.jpg",14,3,371,182,2025-08-02
+372,Smith Inc-books-smartphones,"images\books\Image_2.jpg,images\books\Image_5.jpg,images\books\Image_6.jpg",15,11,372,183,2025-07-21
+373,Smith Inc-books-smartphones,"images\books\Image_2.jpg,images\books\Image_5.jpg,images\books\Image_6.jpg",48,16,373,183,2025-07-23
+374,Smith Inc-books-smartphones,"images\books\Image_2.jpg,images\books\Image_5.jpg,images\books\Image_6.jpg",49,18,374,183,2025-08-02
+375,Smith-Gutierrez-books-storage,"images\books\Image_9.png,images\books\Image_4.jpg,images\books\Image_8.jpg",0,37,375,184,2025-08-01
+376,Smith-Hall-food-women's clothing,"images\food\Image_2.jpg,images\food\Image_1.jpg,images\food\Image_8.jpg",38,72,376,185,2025-08-06
+377,"Robinson, Kelley and Johnson-books-smartphones","images\books\Image_5.jpg,images\books\Image_10.jpg,images\books\Image_9.png",10,47,377,186,2025-07-27
+378,Carlson-Byrd-fashion-non-fiction-#f7247d-S,"images\fashion\Image_9.jpg,images\fashion\Image_1.jpg,images\fashion\Image_3.jpg",16,47,378,187,2025-07-20
+379,Carlson-Byrd-fashion-non-fiction-#c8a06b-XL,"images\fashion\Image_9.jpg,images\fashion\Image_1.jpg,images\fashion\Image_3.jpg",1,35,379,187,2025-08-07
+380,Carlson-Byrd-fashion-non-fiction-#2fddb4-L,"images\fashion\Image_9.jpg,images\fashion\Image_1.jpg,images\fashion\Image_3.jpg",24,194,380,187,2025-07-18
+381,Brown-Reyes-fashion-laptops-#bf8f25-XL,"images\fashion\Image_5.jpg,images\fashion\Image_10.jpg,images\fashion\Image_9.jpg",1,184,381,188,2025-07-31
+382,Brown-Reyes-fashion-laptops-#085d94-XS,"images\fashion\Image_5.jpg,images\fashion\Image_10.jpg,images\fashion\Image_9.jpg",25,74,382,188,2025-08-02
+383,Brown-Reyes-fashion-laptops-#5439a4-M,"images\fashion\Image_5.jpg,images\fashion\Image_10.jpg,images\fashion\Image_9.jpg",50,13,383,188,2025-07-23
+384,Hernandez and Sons-books-storage,"images\books\Image_9.png,images\books\Image_6.jpg,images\books\Image_3.jpg",40,50,384,189,2025-07-16
+385,Robertson Ltd-furniture-fresh produce,"images\furniture\Image_3.jpg,images\furniture\Image_1.jpg,images\furniture\Image_8.jpg",26,136,385,190,2025-07-21
+386,Robertson Ltd-furniture-fresh produce,"images\furniture\Image_3.jpg,images\furniture\Image_1.jpg,images\furniture\Image_8.jpg",9,5,386,190,2025-08-09
+387,Forbes Ltd-fashion-bakery-#e0aefb-XL,"images\fashion\Image_7.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",7,2,387,191,2025-08-09
+388,Forbes Ltd-fashion-bakery-#f9c962-XL,"images\fashion\Image_7.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",37,31,388,191,2025-07-14
+389,Forbes Ltd-fashion-bakery-#2f539a-M,"images\fashion\Image_7.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",35,1,389,191,2025-07-21
+390,"Harris, Turner and Miller-furniture-fiction","images\furniture\Image_4.jpg,images\furniture\Image_6.jpg,images\furniture\Image_10.jpg",2,29,390,192,2025-08-10
+391,"Harris, Turner and Miller-furniture-fiction","images\furniture\Image_4.jpg,images\furniture\Image_6.jpg,images\furniture\Image_10.jpg",7,60,391,192,2025-07-15
+392,"Harris, Turner and Miller-furniture-fiction","images\furniture\Image_4.jpg,images\furniture\Image_6.jpg,images\furniture\Image_10.jpg",4,10,392,192,2025-07-17
+393,Tate-Flores-books-laptops,"images\books\Image_4.jpg,images\books\Image_10.jpg,images\books\Image_2.jpg",48,40,393,193,2025-08-04
+394,Tate-Flores-books-laptops,"images\books\Image_4.jpg,images\books\Image_10.jpg,images\books\Image_2.jpg",29,117,394,193,2025-08-08
+395,Tate-Flores-books-laptops,"images\books\Image_4.jpg,images\books\Image_10.jpg,images\books\Image_2.jpg",7,187,395,193,2025-07-21
+396,"Pearson, Herring and Nichols-books-bakery","images\books\Image_10.jpg,images\books\Image_9.png,images\books\Image_2.jpg",41,176,396,194,2025-08-07
+397,Garcia LLC-food-non-fiction,"images\food\Image_4.png,images\food\Image_8.jpg,images\food\Image_6.jpg",6,40,397,195,2025-07-28
+398,Garcia LLC-food-non-fiction,"images\food\Image_4.png,images\food\Image_8.jpg,images\food\Image_6.jpg",28,53,398,195,2025-07-24
+399,"Strong, Green and Patton-books-wearable tech","images\books\Image_10.jpg,images\books\Image_8.jpg,images\books\Image_9.png",48,60,399,196,2025-07-14
+400,"Strong, Green and Patton-books-wearable tech","images\books\Image_10.jpg,images\books\Image_8.jpg,images\books\Image_9.png",17,6,400,196,2025-07-25
+401,"Strong, Green and Patton-books-wearable tech","images\books\Image_10.jpg,images\books\Image_8.jpg,images\books\Image_9.png",30,17,401,196,2025-07-22
+402,"Bond, Wilson and Johnson-food-women's clothing","images\food\Image_6.jpg,images\food\Image_10.jpg,images\food\Image_9.jpg",27,1,402,197,2025-07-29
+403,"Bond, Wilson and Johnson-food-women's clothing","images\food\Image_6.jpg,images\food\Image_10.jpg,images\food\Image_9.jpg",46,164,403,197,2025-07-24
+404,"Bond, Wilson and Johnson-food-women's clothing","images\food\Image_6.jpg,images\food\Image_10.jpg,images\food\Image_9.jpg",26,116,404,197,2025-07-13
+405,Saunders-Contreras-books-tables,"images\books\Image_5.jpg,images\books\Image_9.png,images\books\Image_7.jpg",26,54,405,198,2025-07-24
+406,Saunders-Contreras-books-tables,"images\books\Image_5.jpg,images\books\Image_9.png,images\books\Image_7.jpg",50,51,406,198,2025-07-24
+407,Saunders-Contreras-books-tables,"images\books\Image_5.jpg,images\books\Image_9.png,images\books\Image_7.jpg",32,47,407,198,2025-07-31
+408,"Warren, Macias and Flores-food-fiction","images\food\Image_7.jpg,images\food\Image_9.jpg,images\food\Image_3.jpg",9,19,408,199,2025-07-28
+409,Baker-Bates-books-beverages,"images\books\Image_1.png,images\books\Image_7.jpg,images\books\Image_10.jpg",17,34,409,200,2025-07-22
+410,Baker-Bates-books-beverages,"images\books\Image_1.png,images\books\Image_7.jpg,images\books\Image_10.jpg",44,26,410,200,2025-07-14
+411,Baker-Bates-books-beverages,"images\books\Image_1.png,images\books\Image_7.jpg,images\books\Image_10.jpg",19,64,411,200,2025-07-30
+412,Collins Group-food-storage,"images\food\Image_2.jpg,images\food\Image_8.jpg,images\food\Image_9.jpg",25,42,412,201,2025-07-28
+413,Gonzalez-Garner-books-fiction,"images\books\Image_5.jpg,images\books\Image_7.jpg,images\books\Image_2.jpg",38,5,413,202,2025-07-23
+414,Gonzalez-Garner-books-fiction,"images\books\Image_5.jpg,images\books\Image_7.jpg,images\books\Image_2.jpg",38,49,414,202,2025-07-15
+415,Gonzalez-Garner-books-fiction,"images\books\Image_5.jpg,images\books\Image_7.jpg,images\books\Image_2.jpg",8,1,415,202,2025-07-29
+416,"Meza, Miranda and Mckinney-food-fresh produce","images\food\Image_4.png,images\food\Image_8.jpg,images\food\Image_9.jpg",38,11,416,203,2025-08-01
+417,Burch-Cook-food-laptops,"images\food\Image_9.jpg,images\food\Image_2.jpg,images\food\Image_7.jpg",44,60,417,204,2025-07-14
+418,Burch-Cook-food-laptops,"images\food\Image_9.jpg,images\food\Image_2.jpg,images\food\Image_7.jpg",30,46,418,204,2025-08-10
+419,Burch-Cook-food-laptops,"images\food\Image_9.jpg,images\food\Image_2.jpg,images\food\Image_7.jpg",36,49,419,204,2025-07-18
+420,Conner-Lucas-consumer electronics-non-fiction,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_4.png,images\consumer electronics\Image_10.jpg",50,11,420,205,2025-07-14
+421,Conner-Lucas-consumer electronics-non-fiction,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_4.png,images\consumer electronics\Image_10.jpg",34,23,421,205,2025-08-08
+422,Conner-Lucas-consumer electronics-non-fiction,"images\consumer electronics\Image_8.png,images\consumer electronics\Image_4.png,images\consumer electronics\Image_10.jpg",15,0,422,205,2025-07-25
+423,Cook PLC-furniture-beverages,"images\furniture\Image_4.jpg,images\furniture\Image_9.jpg,images\furniture\Image_3.jpg",2,41,423,206,2025-08-05
+424,Cook PLC-furniture-beverages,"images\furniture\Image_4.jpg,images\furniture\Image_9.jpg,images\furniture\Image_3.jpg",20,7,424,206,2025-08-01
+425,Cook PLC-furniture-beverages,"images\furniture\Image_4.jpg,images\furniture\Image_9.jpg,images\furniture\Image_3.jpg",28,62,425,206,2025-07-17
+426,Hernandez-Baldwin-fashion-smartphones-#3f8d01-XL,"images\fashion\Image_4.jpg,images\fashion\Image_6.jpg,images\fashion\Image_10.jpg",21,69,426,207,2025-07-27
+427,Hernandez-Baldwin-fashion-smartphones-#8e4b1f-L,"images\fashion\Image_4.jpg,images\fashion\Image_6.jpg,images\fashion\Image_10.jpg",22,13,427,207,2025-08-04
+428,Hernandez-Baldwin-fashion-smartphones-#54182d-XL,"images\fashion\Image_4.jpg,images\fashion\Image_6.jpg,images\fashion\Image_10.jpg",9,10,428,207,2025-07-23
+429,"Moore, Taylor and Kelley-fashion-storage-#101bfd-M","images\fashion\Image_6.jpg,images\fashion\Image_3.jpg,images\fashion\Image_9.jpg",26,14,429,208,2025-07-28
+430,"Moore, Taylor and Kelley-fashion-storage-#d8be19-M","images\fashion\Image_6.jpg,images\fashion\Image_3.jpg,images\fashion\Image_9.jpg",12,66,430,208,2025-07-23
+431,"Moore, Taylor and Kelley-fashion-storage-#4fd8f8-L","images\fashion\Image_6.jpg,images\fashion\Image_3.jpg,images\fashion\Image_9.jpg",18,142,431,208,2025-07-23
+432,Mcdonald-Griffin-consumer electronics-tables,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_2.jpg",10,2,432,209,2025-07-29
+433,Mcdonald-Griffin-consumer electronics-tables,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_2.jpg",31,87,433,209,2025-08-07
+434,Mcdonald-Griffin-consumer electronics-tables,"images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_2.jpg",16,27,434,209,2025-08-08
+435,Taylor-Alexander-furniture-men's clothing,"images\furniture\Image_1.jpg,images\furniture\Image_9.jpg,images\furniture\Image_2.jpg",27,219,435,210,2025-07-21
+436,Taylor-Alexander-furniture-men's clothing,"images\furniture\Image_1.jpg,images\furniture\Image_9.jpg,images\furniture\Image_2.jpg",47,51,436,210,2025-08-07
+437,"Cole, Johnston and Price-books-accessories","images\books\Image_9.png,images\books\Image_6.jpg,images\books\Image_2.jpg",36,78,437,211,2025-07-22
+438,"Bass, Henry and Taylor-food-accessories","images\food\Image_9.jpg,images\food\Image_3.jpg,images\food\Image_8.jpg",13,23,438,212,2025-07-16
+439,Christian PLC-furniture-tables,"images\furniture\Image_7.jpg,images\furniture\Image_4.jpg,images\furniture\Image_1.jpg",32,106,439,213,2025-07-24
+440,"Harrison, Robbins and Taylor-consumer electronics-fiction","images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_4.png",32,215,440,214,2025-07-31
+441,Morton-Arroyo-furniture-women's clothing,"images\furniture\Image_1.jpg,images\furniture\Image_7.jpg,images\furniture\Image_6.jpg",39,104,441,215,2025-07-24
+442,Morton-Arroyo-furniture-women's clothing,"images\furniture\Image_1.jpg,images\furniture\Image_7.jpg,images\furniture\Image_6.jpg",0,91,442,215,2025-07-22
+443,Martin and Sons-consumer electronics-chairs,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",14,12,443,216,2025-07-15
+444,Martin and Sons-consumer electronics-chairs,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",16,87,444,216,2025-07-17
+445,Martin and Sons-consumer electronics-chairs,"images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",26,86,445,216,2025-07-14
+446,Yu PLC-books-tables,"images\books\Image_9.png,images\books\Image_2.jpg,images\books\Image_10.jpg",16,96,446,217,2025-07-12
+447,"Drake, Hernandez and Smith-furniture-children's books","images\furniture\Image_5.jpg,images\furniture\Image_8.jpg,images\furniture\Image_6.jpg",45,55,447,218,2025-07-13
+448,Ryan-Durham-furniture-smartphones,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_1.jpg",36,4,448,219,2025-08-10
+449,Ryan-Durham-furniture-smartphones,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_1.jpg",39,9,449,219,2025-07-31
+450,Hudson-Brewer-fashion-accessories-#2e5a4e-XL,"images\fashion\Image_9.jpg,images\fashion\Image_10.jpg,images\fashion\Image_5.jpg",4,155,450,220,2025-08-07
+451,"Garcia, Mullins and Cox-consumer electronics-men's clothing","images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png,images\consumer electronics\Image_10.jpg",13,148,451,221,2025-08-10
+452,"Garcia, Mullins and Cox-consumer electronics-men's clothing","images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png,images\consumer electronics\Image_10.jpg",46,11,452,221,2025-07-28
+453,"Garcia, Mullins and Cox-consumer electronics-men's clothing","images\consumer electronics\Image_1.jpg,images\consumer electronics\Image_8.png,images\consumer electronics\Image_10.jpg",16,17,453,221,2025-08-08
+454,Myers and Sons-consumer electronics-chairs,"images\consumer electronics\Image_4.png,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",3,141,454,222,2025-08-05
+455,Myers and Sons-consumer electronics-chairs,"images\consumer electronics\Image_4.png,images\consumer electronics\Image_9.jpg,images\consumer electronics\Image_7.png",3,57,455,222,2025-07-22
+456,Hayes-David-food-fresh produce,"images\food\Image_3.jpg,images\food\Image_10.jpg,images\food\Image_4.png",41,71,456,223,2025-07-21
+457,Jordan-Myers-consumer electronics-beverages,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg",46,14,457,224,2025-08-08
+458,Jordan-Myers-consumer electronics-beverages,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg",40,45,458,224,2025-07-13
+459,Jordan-Myers-consumer electronics-beverages,"images\consumer electronics\Image_5.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_1.jpg",9,15,459,224,2025-08-07
+460,Simmons Ltd-books-men's clothing,"images\books\Image_2.jpg,images\books\Image_7.jpg,images\books\Image_1.png",36,76,460,225,2025-07-26
+461,Rivera-Johnson-books-men's clothing,"images\books\Image_4.jpg,images\books\Image_6.jpg,images\books\Image_3.jpg",14,89,461,226,2025-08-06
+462,Rivera-Johnson-books-men's clothing,"images\books\Image_4.jpg,images\books\Image_6.jpg,images\books\Image_3.jpg",8,14,462,226,2025-07-27
+463,Rivera-Johnson-books-men's clothing,"images\books\Image_4.jpg,images\books\Image_6.jpg,images\books\Image_3.jpg",25,23,463,226,2025-07-26
+464,Webb PLC-fashion-non-fiction-#a28a48-XS,"images\fashion\Image_4.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",32,119,464,227,2025-08-02
+465,Webb PLC-fashion-non-fiction-#7bae75-L,"images\fashion\Image_4.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",36,29,465,227,2025-07-23
+466,Webb PLC-fashion-non-fiction-#d35250-S,"images\fashion\Image_4.jpg,images\fashion\Image_10.jpg,images\fashion\Image_6.jpg",40,40,466,227,2025-07-28
+467,Franklin-Lee-food-beverages,"images\food\Image_1.jpg,images\food\Image_3.jpg,images\food\Image_6.jpg",32,43,467,228,2025-07-16
+468,"Newton, Fisher and Barton-consumer electronics-women's clothing","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",31,88,468,229,2025-08-06
+469,"Newton, Fisher and Barton-consumer electronics-women's clothing","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",34,28,469,229,2025-08-10
+470,"Newton, Fisher and Barton-consumer electronics-women's clothing","images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_9.jpg",12,0,470,229,2025-07-27
+471,Hahn-Martin-furniture-laptops,"images\furniture\Image_1.jpg,images\furniture\Image_10.jpg,images\furniture\Image_2.jpg",34,15,471,230,2025-07-26
+472,Frazier-Mercer-fashion-bakery-#8365f2-L,"images\fashion\Image_7.jpg,images\fashion\Image_6.jpg,images\fashion\Image_1.jpg",16,153,472,231,2025-07-22
+473,Frazier-Mercer-fashion-bakery-#303ea9-L,"images\fashion\Image_7.jpg,images\fashion\Image_6.jpg,images\fashion\Image_1.jpg",0,28,473,231,2025-07-16
+474,Hernandez PLC-furniture-smartphones,"images\furniture\Image_5.jpg,images\furniture\Image_8.jpg,images\furniture\Image_9.jpg",11,12,474,232,2025-08-04
+475,Oliver and Sons-consumer electronics-laptops,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_8.png",41,87,475,233,2025-07-23
+476,Oliver and Sons-consumer electronics-laptops,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_8.png",37,82,476,233,2025-08-01
+477,Oliver and Sons-consumer electronics-laptops,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_8.png",14,4,477,233,2025-07-15
+478,Heath-Benjamin-food-fiction,"images\food\Image_3.jpg,images\food\Image_4.png,images\food\Image_7.jpg",17,41,478,234,2025-07-18
+479,Ramirez-Mclaughlin-books-women's clothing,"images\books\Image_5.jpg,images\books\Image_8.jpg,images\books\Image_3.jpg",16,32,479,235,2025-07-15
+480,Ramirez-Mclaughlin-books-women's clothing,"images\books\Image_5.jpg,images\books\Image_8.jpg,images\books\Image_3.jpg",49,20,480,235,2025-08-09
+481,Christian Group-consumer electronics-smartphones,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_9.jpg",49,14,481,236,2025-08-09
+482,Hall PLC-furniture-non-fiction,"images\furniture\Image_7.jpg,images\furniture\Image_10.jpg,images\furniture\Image_1.jpg",15,26,482,237,2025-07-16
+483,Hall PLC-furniture-non-fiction,"images\furniture\Image_7.jpg,images\furniture\Image_10.jpg,images\furniture\Image_1.jpg",37,24,483,237,2025-07-29
+484,Hall PLC-furniture-non-fiction,"images\furniture\Image_7.jpg,images\furniture\Image_10.jpg,images\furniture\Image_1.jpg",36,28,484,237,2025-07-15
+485,"Mcknight, Rodriguez and Mckenzie-consumer electronics-accessories","images\consumer electronics\Image_4.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_5.jpg",18,5,485,238,2025-07-20
+486,"Mcknight, Rodriguez and Mckenzie-consumer electronics-accessories","images\consumer electronics\Image_4.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_5.jpg",14,83,486,238,2025-07-13
+487,"Mcknight, Rodriguez and Mckenzie-consumer electronics-accessories","images\consumer electronics\Image_4.png,images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_5.jpg",28,128,487,238,2025-07-22
+488,Ball LLC-furniture-fiction,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_4.jpg",12,250,488,239,2025-07-17
+489,Ball LLC-furniture-fiction,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_4.jpg",47,76,489,239,2025-07-21
+490,Ball LLC-furniture-fiction,"images\furniture\Image_5.jpg,images\furniture\Image_9.jpg,images\furniture\Image_4.jpg",20,56,490,239,2025-07-12
+491,"Davis, Lewis and Williams-consumer electronics-smartphones","images\consumer electronics\Image_10.jpg,images\consumer electronics\Image_7.png,images\consumer electronics\Image_8.png",41,22,491,240,2025-07-23
+492,Mueller-Harris-books-tables,"images\books\Image_7.jpg,images\books\Image_6.jpg,images\books\Image_1.png",10,3,492,241,2025-07-23
+493,Mueller-Harris-books-tables,"images\books\Image_7.jpg,images\books\Image_6.jpg,images\books\Image_1.png",33,32,493,241,2025-07-31
+494,"Harris, Tucker and Rodriguez-food-laptops","images\food\Image_8.jpg,images\food\Image_1.jpg,images\food\Image_10.jpg",8,17,494,242,2025-08-06
+495,Jones Ltd-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_4.png,images\consumer electronics\Image_1.jpg",12,120,495,243,2025-07-18
+496,Jones Ltd-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_4.png,images\consumer electronics\Image_1.jpg",29,25,496,243,2025-07-27
+497,Jones Ltd-consumer electronics-women's clothing,"images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_4.png,images\consumer electronics\Image_1.jpg",18,155,497,243,2025-07-28
+498,Moore LLC-books-children's books,"images\books\Image_1.png,images\books\Image_5.jpg,images\books\Image_4.jpg",47,26,498,244,2025-08-05
+499,Moore LLC-books-children's books,"images\books\Image_1.png,images\books\Image_5.jpg,images\books\Image_4.jpg",34,47,499,244,2025-07-25
+500,Moore LLC-books-children's books,"images\books\Image_1.png,images\books\Image_5.jpg,images\books\Image_4.jpg",29,1,500,244,2025-07-15
+501,Ford-Ramos-fashion-fresh produce-#3b46ee-S,"images\fashion\Image_7.jpg,images\fashion\Image_4.jpg,images\fashion\Image_3.jpg",5,43,501,245,2025-07-24
+502,Ford-Ramos-fashion-fresh produce-#cd979f-L,"images\fashion\Image_7.jpg,images\fashion\Image_4.jpg,images\fashion\Image_3.jpg",7,6,502,245,2025-08-03
+503,Ford-Ramos-fashion-fresh produce-#412cd2-L,"images\fashion\Image_7.jpg,images\fashion\Image_4.jpg,images\fashion\Image_3.jpg",8,30,503,245,2025-08-01
+504,Smith Ltd-consumer electronics-fresh produce,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_10.jpg",10,55,504,246,2025-07-25
+505,Smith Ltd-consumer electronics-fresh produce,"images\consumer electronics\Image_3.jpg,images\consumer electronics\Image_2.jpg,images\consumer electronics\Image_10.jpg",40,108,505,246,2025-08-01
+506,King and Sons-food-women's clothing,"images\food\Image_3.jpg,images\food\Image_9.jpg,images\food\Image_1.jpg",8,1,506,247,2025-07-13
+507,Brewer Inc-furniture-beverages,"images\furniture\Image_4.jpg,images\furniture\Image_1.jpg,images\furniture\Image_5.jpg",28,5,507,248,2025-08-09
+508,Green-Fitzpatrick-books-fresh produce,"images\books\Image_5.jpg,images\books\Image_2.jpg,images\books\Image_4.jpg",30,20,508,249,2025-07-21
+509,Hoffman LLC-food-tables,"images\food\Image_6.jpg,images\food\Image_9.jpg,images\food\Image_3.jpg",20,88,509,250,2025-08-07

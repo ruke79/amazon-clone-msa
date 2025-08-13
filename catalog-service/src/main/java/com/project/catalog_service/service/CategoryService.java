@@ -10,7 +10,7 @@ import com.project.common.dto.SubCategoryDto;
 import com.project.catalog_service.model.Category;
 import com.project.catalog_service.model.Subcategory;
 import com.project.catalog_service.repository.CategoryRepository;
-import com.project.catalog_service.repository.SubCategoryRepository;
+import com.project.catalog_service.repository.SubcategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    private final SubCategoryRepository subCategoryRepository;
+    private final SubcategoryRepository subCategoryRepository;
 
     
     public boolean findSubCategory(String subCategoryName, String categoryId) {

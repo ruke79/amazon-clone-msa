@@ -27,7 +27,7 @@ import com.project.catalog_service.repository.ProductDetailsRepository;
 import com.project.catalog_service.repository.ProductQARepository;
 import com.project.catalog_service.repository.ProductRepository;
 import com.project.catalog_service.repository.ProductSkuRepository;
-import com.project.catalog_service.repository.SubCategoryRepository;
+import com.project.catalog_service.repository.SubcategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class SearchService {
 
     private final CategoryRepository categoryRepository;
 
-    private final SubCategoryRepository subCategoryRepository;
+    private final SubcategoryRepository subCategoryRepository;
 
     private final ProductRepository productRepository;
 

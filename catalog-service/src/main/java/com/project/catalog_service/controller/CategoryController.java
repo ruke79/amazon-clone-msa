@@ -19,7 +19,7 @@ import com.project.catalog_service.model.Subcategory;
 import com.project.catalog_service.model.Category;
 import com.project.catalog_service.repository.CategoryRepository;
 
-import com.project.catalog_service.repository.SubCategoryRepository;
+import com.project.catalog_service.repository.SubcategoryRepository;
 import com.project.catalog_service.dto.request.CategoryRequest;
 
 
@@ -52,7 +52,7 @@ public class CategoryController {
     
     private final CategoryRepository categoryRepository;
 
-    private final SubCategoryRepository subCategoryRepository;
+    private final SubcategoryRepository subCategoryRepository;
 
     private final CategoryService categoryService;
 

@@ -17,6 +17,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -31,14 +32,18 @@ import lombok.AccessLevel;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_color", 
+@Table(name = "product_color",  schema="product",
     indexes = {
         @Index(columnList = "color", name = "idx_product_color") })
 public class ProductColor {
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @Id
-    @Tsid
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Tsid
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "color_id")
     private Long colorId;
     private String color;

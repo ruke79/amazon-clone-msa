@@ -14,7 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +26,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="product_qa")
+@Table(name="product_qa" ,schema="product")
 public class ProductQA extends BaseEntity {
 
-    @Id @Tsid    
+    @Version
+    @Column(name = "version")
+    private Long version;
+
+    @Id //@Tsid    
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qa_id")
     private Long  qaId;
     
