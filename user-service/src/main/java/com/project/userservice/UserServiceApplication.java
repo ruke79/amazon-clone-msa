@@ -17,6 +17,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import jakarta.annotation.PostConstruct;
@@ -25,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @EnableFeignClients
+@EnableJpaRepositories(basePackages = {"com.project.userservice.repository", 
+									    "com.project.userservice.message.repository"})
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 @ConfigurationPropertiesScan 
 @SpringBootApplication

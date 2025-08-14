@@ -8,17 +8,21 @@ import org.springframework.stereotype.Repository;
 import com.project.chatserver.dto.ChatRoomDto;
 import com.project.chatserver.model.ChatRoom;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+
 import jakarta.annotation.Resource;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Repository
 public class ChatRoomRepository {
 
-    private static final String CHAT_ROOMS = "CHAT_ROOM"; // 채팅룸 저장
-    public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
-    public static final String ENTER_INFO = "ENTER_INFO"; // 채팅룸에 입장한 클라이언트의 sessionId와 채팅룸 id를 맵핑한 정보 저장
+    private static final String CHAT_ROOMS = "CHAT_ROOM";
+    public static final String USER_COUNT = "USER_COUNT";
+    public static final String ENTER_INFO = "ENTER_INFO";
     
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
@@ -26,6 +30,8 @@ public class ChatRoomRepository {
     private HashOperations<String, String, String> hashOpsEnterInfo;
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
+
+    private final RedissonClient redissonClient;
 
     // 모든 채팅방 조회
     public List<ChatRoom> findAllRoom() {
@@ -40,7 +46,29 @@ public class ChatRoomRepository {
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
     public ChatRoomDto saveChatRoom(ChatRoom chatRoom) throws MalformedURLException {        
         
-        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomUid(), chatRoom);
+        String lockKey = "chatroom:lock:" + chatRoom.getRoomUid();
+        RLock lock = redissonClient.getLock(lockKey);
+
+        try {
+            boolean isLocked = lock.tryLock(10, 5, TimeUnit.SECONDS);
+            if (isLocked) {
+                try {
+                    // 락을 획득한 후에만 채팅방 생성 로직 수행
+                    // 중복 생성을 방지하기 위해 이미 존재하는지 다시 확인
+                    if (findRoomById(chatRoom.getRoomUid()) == null) {
+                        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomUid(), chatRoom);
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            } else {
+                throw new IllegalStateException("Failed to acquire lock for chatroom creation.");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interrupted while acquiring lock", e);
+        }
+        
         return ChatRoomDto.builder()
                 .name(chatRoom.getRoomName())
                 .roomId(chatRoom.getRoomUid())                

@@ -27,15 +27,25 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Table(name="orders",indexes = {
-        @Index(columnList = "trackingId, customerId, paymentMethod", name = "idx_order") })        
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name="orders", schema = "orders", 
+        indexes = {
+                @Index(columnList = "trackingId, customerId, paymentMethod", name = "idx_order") }
+                , uniqueConstraints = {
+                        @UniqueConstraint(name = "uk_order_trackingId", columnNames = {"trackingId"})
+                , @UniqueConstraint(name = "uk_order_customerId", columnNames = {"customerId"})
+                , @UniqueConstraint(name = "uk_order_paymentMethod", columnNames = {"paymentMethod"})
+        })        
 public class Order extends BaseEntity {
    
    @Id @Tsid    

@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,7 +22,10 @@ import com.project.common.outbox.OutboxStatus;
 @Entity
 @Setter
 @Getter
-@Table(name = "payment_outbox_event")
+@Table(name = "payment_outbox_event", schema = "orders",
+       indexes = {
+        @Index(columnList = "aggregate_id, aggregate_type, event_type", name = "idx_payment_outbox_event") }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PaymentOutboxEvent {
     @Id

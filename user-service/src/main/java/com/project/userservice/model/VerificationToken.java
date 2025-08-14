@@ -7,6 +7,10 @@ import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="verfication_token", schema="users",
+         indexes = {
+          @Index(columnList = "token, user_id", name = "idx_verification_token") }            
+)
 public class VerificationToken {
 
     private static final int EXPIRATION = 3;//60 * 24;

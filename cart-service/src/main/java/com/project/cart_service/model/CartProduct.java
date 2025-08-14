@@ -29,9 +29,10 @@ import lombok.AccessLevel;
 @Getter
 @Setter
 @Entity
-@Table(name="cart_product", 
+@Table(name="cart_product", schema = "cart",              
       indexes = {
-        @Index(columnList = "_uid, name, size, style", name = "idx_cart_product") })
+        @Index(columnList = "_uid, name, size, style", name = "idx_cart_product") }
+      )
 public class CartProduct extends BaseEntity {
 
     @Id @Tsid

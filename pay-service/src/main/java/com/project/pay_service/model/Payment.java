@@ -29,13 +29,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name="payment", uniqueConstraints = {
+@Table(name="payment", schema = "pay", uniqueConstraints = {
                 @UniqueConstraint(name="UniqueOrderIdAndTrackingId", columnNames = {"orderId", "trackingId"})                
      },indexes = {
         @Index(columnList = "orderId, trackingId, customerId, paypalOrderId", name = "idx_payment") })

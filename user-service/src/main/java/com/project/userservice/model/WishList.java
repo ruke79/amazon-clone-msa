@@ -9,19 +9,30 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import lombok.AccessLevel;
 
+@Getter
+@Setter
 @Entity
-@Data
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="wishlist")
-public class WishList {
-
+@Table(name="wishlist", schema="users",
+       indexes = {
+        @Index(columnList = "style, user_id, product_id", name = "idx_wishlist") }       
+)
+public class WishList extends BaseEntity{
+    
+    
     @Id @Tsid
     @Column(name="wishlist_id")
     private Long wishlistId;
@@ -39,8 +50,6 @@ public class WishList {
     // @JoinColumn(name="product_id", referencedColumnName = "product_id", nullable = false)
     // private Product product;
     private Long productId;
-
-
 
     public WishList(String style, Long productId) {
         this.style = style;

@@ -25,6 +25,7 @@ import com.project.order_service.client.UserServiceClient;
 
 import com.project.order_service.dto.OrderAddressDto;
 import com.project.order_service.dto.OrderDto;
+
 import com.project.order_service.dto.OrderedProductDto;
 import com.project.order_service.dto.request.OrderRequest;
 import com.project.order_service.model.Customer;
@@ -94,45 +95,49 @@ public class OrderService {
 
         if (null != customerId) {
 
-            Order order = new Order();
-
-            order.setTrackingId(UUID.randomUUID().toString());
-            order.setPaymentMethod(request.getPaymentMethod());
-            order.setCouponApplied(request.getCouponApplied());
-            order.setTotal(request.getTotal());
-            order.setTotalBeforeDiscount(request.getTotalBeforeDiscount());
-            order.setOrderStatus(OrderStatus.NOT_PROCESSED);
-
-            order.setCustomerId(customerId);
+            Order order = Order.builder()
+                    .trackingId(UUID.randomUUID().toString())
+                    .paymentMethod(request.getPaymentMethod())
+                    .couponApplied(request.getCouponApplied())
+                    .total(request.getTotal())
+                    .totalBeforeDiscount(request.getTotalBeforeDiscount())
+                    .orderStatus(OrderStatus.NOT_PROCESSED)
+                    .customerId(customerId)
+                    .build();
 
             List<OrderProduct> ordered = new ArrayList<>();
 
             for (CartProductDto p : request.getProducts()) {
-
-                OrderProduct op = new OrderProduct();
-
-                op.setName(p.getName());
-                op.setColorId(Long.parseLong(p.getColor().getId()));
-                op.setImage(p.getImage());
-                op.setPrice(p.getPrice());
-                op.setQty(p.getQty());
-                op.setSize(p.getSize());
-
-                String productId = cartServiceClient.getProductId(p.getId());
-
-                op.setProductId(Long.parseLong(productId));
+                // Use the builder pattern to create OrderProduct
+                OrderProduct op = OrderProduct.builder()
+                        .name(p.getName())
+                        .colorId(Long.parseLong(p.getColor().getId()))
+                        .image(p.getImage())
+                        .price(p.getPrice())
+                        .qty(p.getQty())
+                        .size(p.getSize())
+                        .productId(Long.parseLong(cartServiceClient.getProductId(p.getId())))
+                        .order(order) // Set the parent Order object
+                        .build();
 
                 ordered.add(op);
-                op.setOrder(order);
-
             }
 
             order.setOrderedProducts(ordered);
 
             Order result = orderRepository.save(order);
 
-            OrderAddress address = new OrderAddress();
-            OrderAddress.deepCopyShippingAddress(address, request.getShippingAddress());
+            OrderAddress address = OrderAddress.builder()
+                    .firstname(request.getShippingAddress().getFirstname())
+                    .lastname(request.getShippingAddress().getLastname())
+                    .address1(request.getShippingAddress().getAddress1())
+                    .address2(request.getShippingAddress().getAddress2())
+                    .city(request.getShippingAddress().getCity())
+                    .state(request.getShippingAddress().getState())
+                    .zipCode(request.getShippingAddress().getZipCode())
+                    .country(request.getShippingAddress().getCountry())
+                    .phoneNumber(request.getShippingAddress().getPhoneNumber())
+                    .build();            
 
             result.setShippingAddress(address);
 
@@ -206,7 +211,6 @@ public class OrderService {
 
     public List<OrderDto> getOrders(String email, String filter) {
 
-      
         Long customerId = getCustomerIdByEmail(email);
 
         List<Order> orders = getOrdersByCustomerId(customerId);
@@ -215,7 +219,7 @@ public class OrderService {
 
             List<OrderDto> result = new ArrayList<>();
 
-            for(Order o : orders) {
+            for (Order o : orders) {
 
                 OrderDto dto = getOrder(o.getOrderId(), email, filter);
 
@@ -232,22 +236,21 @@ public class OrderService {
     @Transactional
     public void persisitPaypalPayment(PaypalPaymentRequest request) {
 
-                
         Order order = getOrderByTrackingId(request.getTrackingId());
-        if ( null != order ) {
+        if (null != order) {
 
             PaymentRequest payload = PaymentRequest.builder()
-            .orderId(order.getOrderId())                        
-            .customerId(getCustomerIdByEmail(request.getUserEmail()))
-            .trackingId(request.getTrackingId())
-            .amounts(request.getAmounts())
-            .paypalOrderId(request.getPaypalOrderId())
-            .couponName(request.getCouponName())
-            .orderStatus(OrderStatus.valueOf(request.getOrderStatus()))
-            .paymentType(PaymentType.PAYPAL)
-            .paymentStatus(PaymentStatus.valueOf(request.getPaymentStatus()))
-            .build();
-            
+                    .orderId(order.getOrderId())
+                    .customerId(getCustomerIdByEmail(request.getUserEmail()))
+                    .trackingId(request.getTrackingId())
+                    .amounts(request.getAmounts())
+                    .paypalOrderId(request.getPaypalOrderId())
+                    .couponName(request.getCouponName())
+                    .orderStatus(OrderStatus.valueOf(request.getOrderStatus()))
+                    .paymentType(PaymentType.PAYPAL)
+                    .paymentStatus(PaymentStatus.valueOf(request.getPaymentStatus()))
+                    .build();
+
             paymentOutboxHelper.savePaymentOutbox(payload, OutboxStatus.STARTED);
         }
     }

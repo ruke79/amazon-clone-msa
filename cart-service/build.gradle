@@ -16,8 +16,8 @@ dependencies {
 
 	
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	
+	//runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.postgresql:postgresql'	
 
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	

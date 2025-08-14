@@ -2,6 +2,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	 // Redisson
+    implementation 'org.redisson:redisson:3.23.5'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -29,7 +32,9 @@ dependencies {
 	implementation project(':common')
 
 	
-	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '9.0.0'
+	runtimeOnly 'org.postgresql:postgresql'		
+	//runtimeOnly 'com.mysql:mysql-connector-j'
+	
 
 	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

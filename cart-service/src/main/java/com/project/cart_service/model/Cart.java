@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -27,7 +28,10 @@ import lombok.AccessLevel;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="cart")
+@Table(name="cart", schema = "cart",
+       indexes = {
+        @Index(columnList = "user_id", name = "idx_cart_user") }
+)
 public class Cart extends BaseEntity {
 
     @Id @Tsid

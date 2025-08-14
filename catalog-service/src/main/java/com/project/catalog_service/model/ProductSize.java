@@ -20,21 +20,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="product_size",  schema="product",
         indexes = {
         @Index(columnList = "size", name = "idx_product_size") })
-public class ProductSize {
+public class ProductSize extends BaseEntity { 
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+    
 
     @Id //@Tsid
     @GeneratedValue(strategy = GenerationType.IDENTITY)

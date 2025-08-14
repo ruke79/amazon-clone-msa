@@ -30,12 +30,11 @@ public class OrderOutboxScheduler implements OutboxScheduler {
 
     @Override
     @Transactional
-    @Scheduled(fixedDelayString = "10", //"${pay-service.outbox-scheduler-fixed-rate}",
-                initialDelayString = "3" )//"${pay-service.outbox-scheduler-initial-delay}")
+    @Scheduled(fixedDelayString = "${pay-service.outbox-scheduler-fixed-rate}",
+                initialDelayString = "${pay-service.outbox-scheduler-initial-delay}")
     public void processOutboxMessage() {
 
-        MDC.put("DONOTLOG", "true");
-
+        
         Optional<List<OrderOutboxEvent>> outboxEvents = 
         orderOutboxHelper.getOrderOutboxEventByOutboxStatus(OutboxStatus.STARTED);
 
@@ -43,23 +42,21 @@ public class OrderOutboxScheduler implements OutboxScheduler {
         if (outboxEvents.isPresent() && outboxEvents.get().size() > 0) {
             List<OrderOutboxEvent> outboxList = outboxEvents.get();
 
-            // log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",
-            // outboxList.size(),
-            // outboxList.stream().map(outboxMessage ->
-            //                outboxMessage.getId().toString()).collect(Collectors.joining(",")));
+            log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",
+            outboxList.size(),
+            outboxList.stream().map(outboxMessage ->
+                           outboxMessage.getId().toString()).collect(Collectors.joining(",")));
 
             outboxList.forEach(outbox ->
             paymentResponseMessagePublisher.publish(outbox, this::updateOutboxStatus));
-        }        
-
-        MDC.remove("DONOTLOG");
+        }                
 
     }
 
     private void updateOutboxStatus(OrderOutboxEvent outboxEvent, OutboxStatus outboxStatus) {
         outboxEvent.setOutboxStatus(outboxStatus);
         orderOutboxHelper.save(outboxEvent);
-        //log.info("OutboxEvent is updated with outbox status: {}", outboxStatus.name());
+        log.info("OutboxEvent is updated with outbox status: {}", outboxStatus.name());
     }
 
 }

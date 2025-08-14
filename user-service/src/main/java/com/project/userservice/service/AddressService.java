@@ -35,7 +35,19 @@ public class AddressService {
         .orElseThrow(()->new RuntimeException("User not found"));
              
 
-       ShippingAddress address = new ShippingAddress();
+       ShippingAddress address = ShippingAddress.builder()
+            .address1(request.getAddress().getAddress1())
+            .address2(request.getAddress().getAddress2())
+            .city(request.getAddress().getCity())
+            .state(request.getAddress().getState())
+            .zipCode(request.getAddress().getZipCode())
+            .country(request.getAddress().getCountry())
+            .phoneNumber(request.getAddress().getPhoneNumber())
+            .active(request.getAddress().isActive())
+            .firstname(request.getAddress().getFirstname()) 
+            .lastname(request.getAddress().getLastname())                        
+            .build();
+            
 
         ShippingAddress.deepCopyShippingAddress(address, request.getAddress());        
 

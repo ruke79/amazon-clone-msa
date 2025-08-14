@@ -13,7 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import lombok.AccessLevel;
+import lombok.Builder;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -26,8 +29,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users",
+@Table(name = "users", schema = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
@@ -64,17 +68,23 @@ public class User extends BaseEntity{
     
     private String image;
 
+    @Builder.Default
     private boolean emailVerified = false;
 
+    @Builder.Default
     private boolean accountNonLocked = true;
+    @Builder.Default
     private boolean accountNonExpired = true;
+    @Builder.Default
     private boolean credentialsNonExpired = true;
+    @Builder.Default
     private boolean enabled = true;
 
     private LocalDate credentialsExpiryDate;
     private LocalDate accountExpiryDate;
 
     private String twoFactorSecret;
+    @Builder.Default
     private boolean isTwoFactorEnabled = false;
     private String signUpMethod;
 
@@ -85,6 +95,7 @@ public class User extends BaseEntity{
     private Role role;
     
         
+    @Builder.Default
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ShippingAddress.class)
     @JsonBackReference

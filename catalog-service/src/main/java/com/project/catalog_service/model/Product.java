@@ -39,22 +39,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 
 @Entity
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="product",  schema="product",
        indexes = {
         @Index(columnList = "name, brand, slug, category_id", name = "idx_product") })
 public class Product extends BaseEntity {
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+    
 
     @Id //@Tsid        
     @GeneratedValue(strategy = GenerationType.IDENTITY)  
@@ -76,13 +74,13 @@ public class Product extends BaseEntity {
     @JoinColumn(name="category_id", referencedColumnName = "category_id", nullable=false)
     private Category category;    
 
-    
+    @Builder.Default 
     @JsonIgnore
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY, 
     cascade = CascadeType.PERSIST, targetEntity = ProductSubcategory.class, orphanRemoval = true)    
 //     @JoinTable(name="product_subcatgeory",
 //     joinColumns =  { @JoinColumn(name="product_id", referencedColumnName = "product_id") },
-//     inverseJoinColumns = { @JoinColumn(name="subcategory_id", referencedColumnName = "subcategory_id")})
+//     inverseJoinColumns = { @JoinColumn(name="subcategory_id", referencedColumnName = "subcategory_id")})    
     private List<ProductSubcategory> subcategories = new ArrayList<>();
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
@@ -98,8 +96,10 @@ public class Product extends BaseEntity {
             cascade = CascadeType.PERSIST,targetEntity = ProductSku.class, orphanRemoval = true)
     private List<ProductSku> skus;
 
+    @Builder.Default 
     private String refundPolicy = "30 days";
 
+    @Builder.Default 
     private float rating = 0F;
 
     //private int num_reviews = 0;
