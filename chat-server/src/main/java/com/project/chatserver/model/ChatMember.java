@@ -6,7 +6,7 @@ import java.util.List;
 import com.project.chatserver.constants.MemberRole;
 
 import lombok.*;
-
+import lombok.experimental.SuperBuilder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,10 +19,18 @@ import jakarta.persistence.Table;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
-@Table(name="member")
-public class ChatMember {
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
+@Table(name="member", schema = "chat",
+		indexes = {
+				@jakarta.persistence.Index(name = "idx_member_email", columnList = "email"),
+				@jakarta.persistence.Index(name = "idx_member_nickname", columnList = "nickname")
+		},
+		uniqueConstraints = {
+				@jakarta.persistence.UniqueConstraint(name = "uk_member_email", columnNames = "email"),
+				@jakarta.persistence.UniqueConstraint(name = "uk_member_nickname", columnNames = "nickname")
+		}		
+)
+	public class ChatMember {
 
 	@Id
 	@Column(name = "member_id")
@@ -41,7 +49,7 @@ public class ChatMember {
 
 	//private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
-
+	@Builder.Default
 	@OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<ParticipantChatRoom> roomList =  new ArrayList<ParticipantChatRoom>();
 

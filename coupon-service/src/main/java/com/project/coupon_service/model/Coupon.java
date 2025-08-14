@@ -21,12 +21,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="coupon", 
 indexes = {

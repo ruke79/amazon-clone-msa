@@ -17,6 +17,10 @@ gen
 
 kafka_2.12-3.7.2/
 
+logs/
+
+resources/
+
 resources/keystore.p12
 frontend/cert.pem
 frontend/key.pem
@@ -30,3 +34,5 @@ resources/mywebserv.site_202504149248A.jks
 resources/mywebserv.site_202504149248A.pfx
 resources/truststore
 chat-server/src/main/resources/application
+.vscode/launch.json
+db/dump-productdb-202508141310.sql

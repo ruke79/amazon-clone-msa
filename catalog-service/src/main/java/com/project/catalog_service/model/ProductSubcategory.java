@@ -38,10 +38,10 @@ import lombok.Setter;
        indexes = {
         @Index(columnList = "subcategory_id, product_id", name = "idx_product_subcategory") })
 public class ProductSubcategory {
-
+    
     @Version
     @Column(name = "version")
-    private Long version;
+    private Long version;     
 
     @Id //@Tsid
     @GeneratedValue(strategy = GenerationType.IDENTITY)

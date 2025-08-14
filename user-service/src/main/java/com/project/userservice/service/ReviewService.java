@@ -80,20 +80,19 @@ public class ReviewService {
             for (Review r : reviews) {
 
                 ReviewDto dto = ReviewDto.builder()
-                            .fit(r.getFit())
-                            .images(r.getImages())
-                            .rating(r.getRating())
-                            .review(r.getReview())
-                            .style(ReviewStyleDto.builder()
-                                    .color(r.getStyle().getColor())
-                                    .image(r.getStyle().getImage()).build())
-                            .size(r.getSize())
-                            .reviewedBy(ReviewerDto.builder()
-                                    .name(username)
-                                    .image(user.getImage())
-                                    .build())
-                            .build();
-                                
+                        .fit(r.getFit())
+                        .images(r.getImages())
+                        .rating(r.getRating())
+                        .review(r.getReview())
+                        .style(ReviewStyleDto.builder()
+                                .color(r.getStyle().getColor())
+                                .image(r.getStyle().getImage()).build())
+                        .size(r.getSize())
+                        .reviewedBy(ReviewerDto.builder()
+                                .name(username)
+                                .image(user.getImage())
+                                .build())
+                        .build();
 
                 result.add(dto);
             }
@@ -114,18 +113,18 @@ public class ReviewService {
         for (Review i : reviews) {
 
             ReviewDto dto = ReviewDto.builder()
-                            .fit(i.getFit())
-                            .images(i.getImages())
-                            .rating(i.getRating())
-                            .review(i.getReview())
-                            .style(ReviewStyleDto.builder()
-                                    .color(i.getStyle().getColor())
-                                    .image(i.getStyle().getImage()).build())
-                            .size(i.getSize())
-                            .reviewedBy(new ReviewerDto(
-                                i.getReviewedBy().getUsername(), i.getReviewedBy().getImage()))
-                            .build();
-            
+                    .fit(i.getFit())
+                    .images(i.getImages())
+                    .rating(i.getRating())
+                    .review(i.getReview())
+                    .style(ReviewStyleDto.builder()
+                            .color(i.getStyle().getColor())
+                            .image(i.getStyle().getImage()).build())
+                    .size(i.getSize())
+                    .reviewedBy(new ReviewerDto(
+                            i.getReviewedBy().getUsername(), i.getReviewedBy().getImage()))
+                    .build();
+
             dtos.add(dto);
         }
 
@@ -216,36 +215,33 @@ public class ReviewService {
             }
         } else {
 
-            Review r = new Review();
-            r.setFit(request.getFit());
+            // Assuming Review also has a builder (e.g., @Builder or @SuperBuilder)
+            Review.ReviewBuilder<?,?> rBuilder = Review.builder()
+                    .fit(request.getFit())
+                    .rating(request.getRating())
+                    .review(request.getReview())
+                    .style(ReviewStyle.builder()
+                            .color(request.getStyle().getColor())
+                            .image(request.getStyle().getImage())
+                            .build())
+                    .size(request.getSize())
+                    .reviewedBy(user)
+                    .productId(id);
 
+            // Handle image uploads conditionally
             if (null != images && !images.isEmpty()) {
-
-                List<String> imageUrls = new ArrayList<String>();
-
+                List<String> imageUrls = new ArrayList<>();
                 for (MultipartFile image : images) {
                     String filename = FileUtil.getRandomFilename();
                     String filepath = imageService.upload(image, filename);
                     imageUrls.add(filepath);
                 }
-
-                r.setImages(imageUrls);
+                rBuilder.images(imageUrls);
             }
 
-            r.setRating(request.getRating());
-            r.setReview(request.getReview());
-            r.setStyle(ReviewStyle.builder()
-                    .color(request.getStyle().getColor())
-                    .image(request.getStyle().getImage()).build());
-            r.setSize(request.getSize());
-
-            r.setReviewedBy(user);
+            Review r = rBuilder.build();
 
             user.getReviews().add(r);
-
-            r.setProductId(id);
-
-            reviews.add(r);
 
             reviewRepository.save(r);
 
@@ -258,20 +254,20 @@ public class ReviewService {
             for (Review i : reviews) {
 
                 ReviewDto dto = ReviewDto.builder()
-                            .fit(i.getFit())
-                            .images(i.getImages())
-                            .rating(i.getRating())
-                            .review(i.getReview())
-                            .style(ReviewStyleDto.builder()
-                                    .color(i.getStyle().getColor())
-                                    .image(i.getStyle().getImage()).build())
-                            .size(i.getSize())
-                            .reviewedBy(ReviewerDto.builder()
-                                    .name(username)
-                                    .image(user.getImage())
-                                    .build())
-                            .build();
-                
+                        .fit(i.getFit())
+                        .images(i.getImages())
+                        .rating(i.getRating())
+                        .review(i.getReview())
+                        .style(ReviewStyleDto.builder()
+                                .color(i.getStyle().getColor())
+                                .image(i.getStyle().getImage()).build())
+                        .size(i.getSize())
+                        .reviewedBy(ReviewerDto.builder()
+                                .name(username)
+                                .image(user.getImage())
+                                .build())
+                        .build();
+
                 result.add(dto);
             }
 

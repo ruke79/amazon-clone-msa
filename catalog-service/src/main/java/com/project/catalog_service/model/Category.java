@@ -24,12 +24,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="category", schema="product",
        indexes = {
@@ -37,9 +37,7 @@ import lombok.Setter;
 )
 public class Category extends BaseEntity {
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+
 
     @Id //@Tsid
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,12 +50,13 @@ public class Category extends BaseEntity {
 
     private String slug;
 
-     
+    @Builder.Default 
     @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = Subcategory.class)
     private List<Subcategory> subCategories = new ArrayList<>();
 
 
+    @Builder.Default 
     @BatchSize(size=250)
     @OneToMany(mappedBy="category", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = Product.class)

@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,9 +16,14 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Table(name = "outbox_event")
+@Table(name = "outbox_event", schema="users", 
+        indexes = {
+            @Index(columnList = "aggregate_id, aggregate_type, event_type", name = "idx_outbox_event") }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OutboxEvent {
+    
+
     @Id
     private String id;
 

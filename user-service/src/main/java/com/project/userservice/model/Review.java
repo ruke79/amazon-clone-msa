@@ -13,19 +13,25 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 
 @Setter
 @Entity
 @Getter
-@Table(name="review")
+@SuperBuilder
+@Table(name="review", schema="users", 
+         indexes = {
+          @Index(columnList = "rating, review, size, fit", name = "idx_review") }
+)
 public class Review extends BaseEntity{
     
     @Id @Tsid
@@ -33,6 +39,7 @@ public class Review extends BaseEntity{
     @Column(name = "review_id")
     private Long reviewId;
 
+    @Builder.Default
     private float rating = 0F;
 
     private String review;

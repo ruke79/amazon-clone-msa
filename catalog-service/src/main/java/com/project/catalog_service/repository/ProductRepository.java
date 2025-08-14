@@ -3,6 +3,7 @@ package com.project.catalog_service.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.model.ProductDetails;
 
+import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import jakarta.websocket.server.PathParam;
 
@@ -21,7 +23,15 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    public List<Product> findBySlug(String slug);
+      // --- 비관적 잠금 적용 예제 ---
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select p from Product p where p.productId = :productId")
+    Product findByIdWithPessimisticLock(@Param("productId") Long productId);
+
+    // --- 낙관적 잠금 적용 예제 ---
+    // 낙관적 잠금은 엔티티의 @Version 필드만 있으면 자동으로 동작하지만, 명시적으로 락 모드를 지정할 수도 있습니다.
+    @Lock(LockModeType.OPTIMISTIC)
+    List<Product> findBySlug(String slug);
 
     public List<Product> findByName(String name);
 

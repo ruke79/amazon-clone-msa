@@ -1,4 +1,4 @@
-package com.project.chatserver.common.config;
+package com.project.chatserver.common.config.redis;
 
 import java.io.IOException;
 

@@ -5,7 +5,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.project.chatserver.constants.MessageType;
 
+import jakarta.persistence.Column;
 import  jakarta.persistence.Id;
+import jakarta.persistence.Version;
+
 import java.time.LocalDateTime;
 
 @Document(collection="chat")
@@ -15,6 +18,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //MongoDB 채팅 모델
 public class ChatMessage {
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @Id 
     private String id;

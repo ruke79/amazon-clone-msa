@@ -22,14 +22,23 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import lombok.AccessLevel;
 
 @Getter
 @Setter
 @Entity
-@Table(name="order_product", 
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name="order_product", schema = "orders",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_order_product_orderProductId", columnNames = {"order_product_id"})
+        },
         indexes = {
         @Index(columnList = "name, size, productId, price", name = "idx_order") })
 public class OrderProduct extends BaseEntity {

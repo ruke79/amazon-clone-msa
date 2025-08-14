@@ -14,22 +14,34 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Table(name="order_address")
+@SuperBuilder
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name="order_address", schema = "orders",
+        indexes = {
+                @Index(columnList = "order_id", name = "idx_order_address") },
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_order_address_orderId", columnNames = {"order_id"})
+        }
+)
 public class OrderAddress extends BaseEntity {
 
     
@@ -69,20 +81,7 @@ public class OrderAddress extends BaseEntity {
     @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
     @JsonBackReference
     private Order order;
+       
     
-    
-     public static void deepCopyShippingAddress(OrderAddress address, OrderAddressDto src) {
-
-        address.setAddress1(src.getAddress1());
-        address.setAddress2(src.getAddress2());
-        address.setCity(src.getCity());
-        address.setState(src.getState());
-        address.setCountry(src.getCountry());
-        address.setFirstname(src.getFirstname());
-        address.setLastname(src.getLastname());
-        address.setPhoneNumber(src.getPhoneNumber());
-        address.setZipCode(src.getZipCode());
-    }
-
                
 }

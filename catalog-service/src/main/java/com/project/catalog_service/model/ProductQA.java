@@ -22,19 +22,17 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="product_qa" ,schema="product")
 public class ProductQA extends BaseEntity {
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+    
 
     @Id //@Tsid    
     @GeneratedValue(strategy = GenerationType.IDENTITY)

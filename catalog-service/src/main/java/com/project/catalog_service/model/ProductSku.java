@@ -27,21 +27,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="product_sku",  schema="product",
        indexes = {
         @Index(columnList = "sku, sold", name = "idx_product_sku") })
 public class ProductSku extends BaseEntity {
 
-    @Version
-    @Column(name = "version")
-    private Long version;
+    
 
     @Id //@Tsid
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,8 +55,10 @@ public class ProductSku extends BaseEntity {
     //@Column(length = 20000)
     //private List<String> descriptionImages;
 
+    @Builder.Default 
     private int discount = 0;
 
+    @Builder.Default 
     private int sold = 0;
 
     @JsonIgnore

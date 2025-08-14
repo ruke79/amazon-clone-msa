@@ -14,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -22,14 +23,20 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Table(name="shipping_address")
+@SuperBuilder
+@Table(name="shipping_address", schema="users",
+            indexes = {
+            @Index(columnList = "firstname, lastname, address1, city, state, zipCode", name = "idx_shipping_address") }         
+)
 public class ShippingAddress extends BaseEntity {
 
     
@@ -70,6 +77,7 @@ public class ShippingAddress extends BaseEntity {
     @JsonBackReference
     private User user;    
 
+    @Builder.Default
     private boolean active = false;
     
     // @OneToMany(mappedBy = "shippingAddress", fetch = FetchType.LAZY,

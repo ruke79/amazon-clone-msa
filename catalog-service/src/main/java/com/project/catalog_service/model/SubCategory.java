@@ -29,22 +29,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Builder
-@AllArgsConstructor
+@SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="subcategory",  schema="product",
        indexes = {
         @Index(columnList = "subcategory_name, slug", name = "idx_subcategory") })
 public class Subcategory extends BaseEntity {
 
-    @Version
-    @Column(name = "version")
-    private Long version;
-
+    
     @Id //@Tsid
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subcategory_id")
@@ -66,8 +63,9 @@ public class Subcategory extends BaseEntity {
     // @OneToMany(mappedBy = "subCategories", fetch= FetchType.LAZY, cascade = CascadeType.PERSIST)    
     // private List<Product> products = new ArrayList<>();
 
+    @Builder.Default 
     @JsonIgnore
-    @OneToMany(mappedBy = "subcategory", fetch= FetchType.LAZY, cascade = CascadeType.PERSIST)    
+    @OneToMany(mappedBy = "subcategory", fetch= FetchType.LAZY, cascade = CascadeType.PERSIST)        
     private List<ProductSubcategory> products = new ArrayList<>();
 
     public Subcategory(String name, String slug, Category category) {

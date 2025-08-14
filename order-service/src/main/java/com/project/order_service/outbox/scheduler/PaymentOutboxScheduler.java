@@ -30,12 +30,11 @@ public class PaymentOutboxScheduler implements OutboxScheduler {
     
     @Override
     @Transactional
-    @Scheduled(fixedDelayString = "10", //"${order-service.outbox-scheduler-fixed-rate}",
-                initialDelayString = "3" )//"${order-service.outbox-scheduler-initial-delay}")
+    @Scheduled(fixedDelayString = "${order-service.outbox-scheduler-fixed-rate}",
+                initialDelayString = "${order-service.outbox-scheduler-initial-delay}")
     public void processOutboxMessage() {
 
-        MDC.put("DONOTLOG", "true");
-        
+                
         Optional<List<PaymentOutboxEvent>> outboxEvents = 
         paymentOutboxHelper.getPaymentOutboxEventByOutboxStatus(OutboxStatus.STARTED);
 
@@ -44,16 +43,15 @@ public class PaymentOutboxScheduler implements OutboxScheduler {
             List<PaymentOutboxEvent> outboxList = outboxEvents.get();
 
             
-            // log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",
-            // outboxList.size(),
-            // outboxList.stream().map(outboxMessage ->
-            //                outboxMessage.getId().toString()).collect(Collectors.joining(",")));
+            log.info("Received {} PaymentOutboxEvent with ids: {}, sending to message bus!",
+            outboxList.size(),
+            outboxList.stream().map(outboxMessage ->
+                           outboxMessage.getId().toString()).collect(Collectors.joining(",")));
 
             outboxList.forEach(outbox ->
             paymentRequestMessagePublisher.publish(outbox, this::updateOutboxStatus));
         }        
-
-        MDC.remove("DONOTLOG");    
+        
 
     }
 
