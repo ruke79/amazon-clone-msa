@@ -1,0 +1,158 @@
+server:
+    port: 8080    
+    ssl:    
+      key-store: ${LOCAL_KEY_STORE_PATH}    
+      key-store-type: PKCS12
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+
+frontend:
+    url: https://localhost:3000
+
+kafka:
+  security:
+       protocol: "SSL"
+  ssl: 
+        trust-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/local_truststore.jks        
+        key-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/localhost.p12        
+  url: localhost:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생
+
+cloud:
+  aws:
+    credentials:
+      access-key:${AMAZON_ACCESS_KEY}
+      secret-key:${AMAZON_SECRET_KEY}      
+    s3:
+      bucket: ${AMAZON_BUCKET_NAME}
+    region:
+      static: ${AMAZON_REGION}
+    stack:
+      auto: false
+
+feign:
+    catalog-url: https://localhost:8081
+
+ 
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    non-secure-port-enabled : false
+    secure-port-enabled : true
+    secure-port : 8080
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://localhost:8761/eureka
+
+  
+
+
+
+spring:
+    application:
+        name: user-service
+
+    cloud:
+      config:
+        enabled: false
+
+    config:    
+      #import: optional:configserver:https://localhost:8888
+      import: classpath:kafka-secrets.properties
+
+    datasource:
+      url: jdbc:postgresql://localhost:5435/userdb?sslmode=require
+      username: product
+      password: ${LOCAL_DB_PAWWORD}
+      properties:
+        ssl: true
+        sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
+        sslrootcert: ${LOCAL_KEY_STORE_PATH}
+        sslpassword: ${LOCAL_KEY_PASSWORD}
+      
+      driver-class-name: org.postgresql.Driver
+    jpa:
+        show-sql: false
+        hibernate:
+            ddl-auto: update
+        properties:
+             hibernate:
+                 format_sql: true
+                 #use_sql_comments: true
+                 #type: trace
+                 dialect: org.hibernate.dialect.PostgreSQLDialect
+
+                 
+
+    data:
+      redis:        
+          ssl:
+            enabled : false
+            cacert : ${LOCAL_CACERT_PATH}
+            cert : ${LOCAL_CRT_PATH}
+            key : ${LOCAL_KEY_PATH}
+            storePassword : ${LOCAL_KEY_PASSWORD} 
+          lettuce:
+            pool:
+              max-active: 5
+              max-idle: 5
+              min-idle: 2  
+          host: localhost
+          port: 6379
+          password: ${LOCAL_DB_PAWWORD}
+
+    app:
+       jwtCookieName: user-cookie
+       jwtRefreshCookieName: user-refresh-cookie
+       jwtSecret: ${JWT_SECRET_KEY}
+       jwtExpirationMs: 7200000
+       jwtRefreshExpirationMs: 1209600000
+
+    mail: 
+      host: ${MAIL_HOST}
+      port: ${MAIL_PORT}
+      username: ${MAIL_USERNAME}
+      password: ${MAIL_PASSWORD}
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+               enable: true
+    
+    security:    
+      require-ssl: true
+    #    oauth2:
+    #      client:
+    #        registration:
+    #             google:
+    #                client-id: 
+    #                client-secret: 
+    
+
+logging:
+  level:
+    root: info
+    # 모든 스케줄링 관련 로그를 INFO 이상으로만 기록합니다.
+    org.springframework.scheduling: WARN    
+    com.project.userservice: debug    
+    org.springframework.jdbc: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
+
+  file:
+    path: ./logs
+    name: ${logging.file.path}/user_service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+        
+                
+                
+
+
+

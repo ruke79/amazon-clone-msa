@@ -27,7 +27,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import lombok.AccessLevel;
 
-
+@Entity
 @Getter
 @Setter
 @SuperBuilder // @Builder 대신 @SuperBuilder 사용

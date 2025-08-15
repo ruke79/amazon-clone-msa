@@ -1,0 +1,164 @@
+server:
+  port: 8081
+  ssl:    
+      key-store: ${LOCAL_KEY_STORE_PATH}    
+      key-store-type: PKCS12
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+
+kafka:
+  security:
+       protocol: "SSL"
+  ssl: 
+        trust-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/local_truststore.jks        
+        key-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/localhost.p12        
+  url: localhost:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생
+
+cloud:
+  aws:
+    credentials:
+      access-key:${AMAZON_ACCESS_KEY}
+      secret-key:${AMAZON_SECRET_KEY}      
+    s3:
+      bucket: ${AMAZON_BUCKET_NAME}
+    region:
+      static: ${AMAZON_REGION}
+    stack:
+      auto: false
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    non-secure-port-enabled : false
+    secure-port-enabled : true
+    secure-port : 8081
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://localhost:8761/eureka
+
+
+spring:
+  application:
+    name: catalog-service
+
+  cloud:
+    config:
+      enabled: false
+
+  config:    
+    #import: optional:configserver:https://localhost:8888
+    import: classpath:kafka-secrets.properties
+
+
+  elasticsearch:
+      uris: https://localhost:9200
+      username: ${LOCAL_ELASTICSEARCH_USERNAME}
+      password: ${LOCAL_ELASTICSEARCH_PASSWORD}
+      ssl:
+        bundle: "my-elasticsearch-ssl"
+  ssl:
+      bundle:
+        pem:
+          my-elasticsearch-ssl:
+            truststore:
+              location: "classpath: ${LOCAL_CRT_PATH}"
+              type: "PEM"
+   # client.rest.coneection-timeout는 오타로 보이며, connection-timeout으로 수정했습니다.
+  elasticsearch.client.rest.connection-timeout: 600s
+  elasticsearch.client.rest.socket-timeout: 600s
+  
+
+  datasource-data:
+    url: jdbc:postgresql://localhost:5435/productdb?sslmode=require
+    username: product
+    password: ${LOCAL_DB_PAWWORD}
+    properties:
+      ssl: true
+      sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
+      sslrootcert: ${LOCAL_KEY_STORE_PATH}
+      sslpassword: ${LOCAL_KEY_PASSWORD}
+    
+    driver-class-name: org.postgresql.Driver
+
+  datasource-meta:
+    url: jdbc:postgresql://localhost:5435/metadb?sslmode=require
+    username: product
+    password: ${LOCAL_DB_PAWWORD}
+    properties:
+      ssl: true
+      sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
+      sslrootcert: ${LOCAL_KEY_STORE_PATH}
+      sslpassword: ${LOCAL_KEY_PASSWORD}
+    
+    driver-class-name: org.postgresql.Driver
+
+    
+  # DataSoruceConfig.java에서 적용
+  # jpa:
+  #   show-sql: false
+  #   hibernate:
+  #     ddl-auto: create-drop
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
+  #       dialect : org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+     redis:       
+          ssl:
+            enabled : false
+            cacert : ${LOCAL_CACERT_PATH}
+            cert : ${LOCAL_CRT_PATH}
+            key : ${LOCAL_KEY_PATH}
+            storePassword : ${LOCAL_KEY_PASSWORD} 
+          lettuce:
+            pool:
+              max-active: 5
+              max-idle: 5
+              min-idle: 2  
+          host: localhost
+          port: 6379
+          password: ${LOCAL_DB_PAWWORD}
+
+# csv 파일 로드 시만 사용
+  batch:
+     job:
+       enabled: false
+     jdbc:
+       initialize-schema: never
+  #     #ALTER ROLE product SET search_path TO meta, public; 미리 실행
+  #     table-prefix: meta.BATCH_
+  #   transaction:
+  #     rollback-on: java.lang.Exception
+
+logging:
+  level:
+    root: info
+    org.springframework.batch: debug
+    com.project.catalog_service: debug    
+    org.springframework.jdbc: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+
+# Elasticsearch 클라이언트 패키지의 로깅 레벨을 DEBUG로 설정
+    #co.elastic.clients: DEBUG
+# HTTP 요청/응답 헤더 및 바디를 보려면 TRACE 레벨 설정
+# 이 설정은 Elasticsearch 클라이언트가 내부적으로 사용하는 Apache HTTP 클라이언트에 대한 로그를 활성화합니다.
+    #org.apache.http: DEBUG
+    #apache.http.wire: DEBUG
+  file:
+    path: ./logs
+    name: ${logging.file.path}/catalog_service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+      
+
+        
+
+
+

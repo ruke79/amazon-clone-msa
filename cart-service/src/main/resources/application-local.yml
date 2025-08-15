@@ -1,0 +1,86 @@
+server:
+  port: 8082
+  ssl:    
+      key-store: ${LOCAL_KEY_STORE_PATH}    
+      key-store-type: PKCS12
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+
+kafka:
+  security:
+       protocol: "SSL"
+  ssl: 
+        trust-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/local_truststore.jks        
+        key-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/localhost.p12        
+  url: localhost:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    non-secure-port-enabled : false
+    secure-port-enabled : true
+    secure-port : 8082
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://localhost:8761/eureka
+
+feign:
+  user-url: https://localhost:8080
+  catalog-url: https://localhost:8081
+
+spring:
+    # profiles: 
+    #   activate:
+    #     on-profile: local
+
+    application:
+      name: cart-service
+
+    cloud:
+      config:
+        enabled: false
+    
+    config:
+      #import: optional:configserver:https://localhost:8888
+      import: classpath:kafka-secrets.properties
+
+    datasource:
+      url: jdbc:postgresql://localhost:5435/cartdb?sslmode=require
+      username: product
+      password: ${LOCAL_DB_PAWWORD}
+      properties:
+        ssl: true
+        sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
+        sslrootcert: ${LOCAL_KEY_STORE_PATH}
+        sslpassword: ${LOCAL_KEY_PASSWORD}
+    jpa:
+      show-sql: false
+      hibernate:
+        ddl-auto: update
+      properties:
+        hibernate:
+          format_sql: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    root: info
+    # 모든 스케줄링 관련 로그를 INFO 이상으로만 기록합니다.
+    org.springframework.scheduling: WARN
+    org.springframework.batch: debug
+    com.project.cart_service: debug    
+    org.springframework.jdbc: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+
+  file:
+    path: ./logs
+    name: ${logging.file.path}/cart_service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+        

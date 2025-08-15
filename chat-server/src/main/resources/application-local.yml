@@ -1,0 +1,119 @@
+server:
+  port: 8086
+
+  ssl:    
+      key-store: ${LOCAL_KEY_STORE_PATH}    
+      key-store-type: PKCS12
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+
+kafka:
+  security:
+       protocol: "SSL"
+  ssl: 
+        trust-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/local_truststore.jks        
+        key-store-location: file:E:/github/amazon-clone-msa/common/src/main/resources/localhost.p12        
+  url: localhost:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생
+
+
+eureka:
+    instance:
+      prefer-ip-address: true
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+      non-secure-port-enabled : false
+      secure-port-enabled : true
+      secure-port : 8086
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+        defaultZone: http://localhost:8761/eureka
+
+feign:
+  user-url: https://localhost:8080     
+
+spring:
+    application:
+      name: chat-service
+
+    cloud:
+      config:
+        enabled: false
+
+    config:    
+      #import: optional:configserver:https://localhost:8888
+      import: classpath:kafka-secrets.properties
+
+    datasource:
+      url: jdbc:postgresql://localhost:5435/paydb?sslmode=require
+      username: product
+      password: ${LOCAL_DB_PAWWORD}
+      properties:
+        ssl: true
+        sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
+        sslrootcert: ${LOCAL_KEY_STORE_PATH}
+        sslpassword: ${LOCAL_KEY_PASSWORD}
+    
+    driver-class-name: org.postgresql.Driver
+
+    jpa:
+      hibernate:
+         ddl-auto: update
+      properties:
+             hibernate:
+                 format_sql: false
+                 #use_sql_comments: true
+                 #type: trace
+                 dialect : org.hibernate.dialect.MySQLDialect    # ssl
+
+    data:
+      mongodb:
+        client: mongodb://admin:${LOCAL_DB_PAWWORD}@localhost:27017?ssl=true
+        name: chat
+        username: admin
+        password: ${LOCAL_DB_PAWWORD}        
+        cacert: ${LOCAL_CACERT_PATH}
+        keystore: ${LOCAL_KEY_STORE_PATH}
+        keystorePassword : ${LOCAL_KEY_STOE_PASSWORD}        
+        auto-index-creation: true
+      redis:       
+          ssl:
+            enabled : false
+            cacert : ${LOCAL_CACERT_PATH}
+            cert : ${LOCAL_CRT_PATH}
+            key : ${LOCAL_KEY_PATH}
+            storePassword : ${LOCAL_KEY_PASSWORD} 
+          lettuce:
+            pool:
+              max-active: 5
+              max-idle: 5
+              min-idle: 2  
+          host: localhost
+          port: 6379
+          password: ${LOCAL_DB_PAWWORD}
+
+    app:    
+      jwtSecret: ${JWT_SECRET_KEY}
+
+logging:
+  level:
+    root: info
+    org.springframework.batch: debug
+    com.project.chatserver: debug    
+    org.springframework.jdbc: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+
+# Elasticsearch 클라이언트 패키지의 로깅 레벨을 DEBUG로 설정
+    #co.elastic.clients: DEBUG
+# HTTP 요청/응답 헤더 및 바디를 보려면 TRACE 레벨 설정
+# 이 설정은 Elasticsearch 클라이언트가 내부적으로 사용하는 Apache HTTP 클라이언트에 대한 로그를 활성화합니다.
+    #org.apache.http: DEBUG
+    #apache.http.wire: DEBUG
+  file:
+    path: ./logs
+    name: ${logging.file.path}/chat_service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+

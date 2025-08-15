@@ -1,0 +1,275 @@
+server:  
+   port: 8000   
+   ssl:    
+      key-store: ${LOCAL_KEY_STORE_PATH}    
+      key-store-type: PKCS12
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+      #key-alias : 
+ 
+  #  ssl:
+  #   bundle:
+  #     jks:
+  #       gateway:
+  #         key:
+  #           # alias는 주석 처리하고, password는 환경 변수로 설정
+  #           # alias: 
+  #           password: ${LOCAL_KEY_PASSWORD}
+  #         keystore:
+  #           location: ${LOCAL_KEY_STORE_PATH}
+  #           password: ${LOCAL_KEY_STORE_PASSWORD}
+  #           type: PKCS12 
+    
+    
+
+password: 선택된 개인 키에 접근하기 위한 비밀번호입니다.
+
+eureka:
+  instance:
+    prefer-ip-address: false 
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+    non-secure-port-enabled : false
+    secure-port-enabled : true
+    secure-port : 8000
+
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    healthcheck:
+      enabled: false
+    service-url:
+      defaultZone: https://localhost:8761/eureka
+
+    # tls:
+    #    enabled: true
+    #    key-store: ${LOCAL_KEY_STORE_PATH}
+    #    key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+    #    key-password: ${LOCAL_KEY_PASSWORD}
+    tls:
+      enabled: true
+      # SSL 번들 대신 개별 설정으로 수정
+      key-store: ${LOCAL_KEY_STORE_PATH}
+      key-store-type: PKCS12
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+      # alias는 필수 항목이 아니므로 주석 처리합니다.
+      # key-alias: 
+      trust-store: ${LOCAL_TRUST_STORE_PATH}
+      trust-store-password: ${LOCAL_KEY_STORE_PASSWORD}      
+      #bundle: gateway
+    
+  # ssl:
+  #   bundle:
+  #     jks:
+  #       eureka-client:
+  #         truststore:
+  #           location: ${LOCAL_KEY_STORE_PATH}
+  #           password: ${LOCAL_KEY_STORE_PASSWORD}
+  #           type: PKCS12
+  #       gateway:
+  #         key:
+  #           # alias는 주석 처리하고, password는 환경 변수로 설정
+  #           # alias: 
+  #           password: ${LOCAL_KEY_PASSWORD}
+  #         keystore:
+  #           location: ${LOCAL_KEY_STORE_PATH}
+  #           password: ${LOCAL_KEY_STORE_PASSWORD}
+  #           type: PKCS12
+
+
+spring:
+  application:
+    name: gateway-server
+   
+  config:    
+    import: optional:configserver:https://localhost:8888
+
+
+  app:    
+     jwtSecret: ${JWT_SECRET_KEY}
+  main:
+    web-application-type: reactive
+  
+  cloud:   
+    gateway:
+      httpclient:
+        ssl:
+            useInsecureTrustManager: true
+            # Truststore 설정을 추가하여 Eureka Server의 인증서를 신뢰하도록 함
+            trust-store: ${LOCAL_TRUST_STORE_PATH}
+            trust-store-password: ${LOCAL_KEY_STORE_PASSWORD}            
+            # SSL 번들 설정 제거
+            # bundle: eureka-client
+
+      default-filters:
+       - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      #  - name: CircuitBreaker
+      #    args:
+      #       name: defaultCircuitBreaker
+      #       fallbackUri: forward:/fallback
+      
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:              
+              - 'https://localhost:3000'                                                                                            
+            allow-credentials: true 
+            allowedHeaders: 
+               - 'Authorization'
+               - 'Content-Type'
+               - 'Cache-Control'
+               - 'Connection'
+               - 'X-Accel-Buffering'
+               - 'MultiLogin'
+            allowedMethods: 
+              - PUT
+              - GET
+              - POST
+              - DELETE
+              - OPTIONS
+            exposedHeaders: 
+              - 'ACCESS'
+              - 'Set-Cookie'
+              - 'MultiLogin'
+
+      discovery:
+        locator:
+          enabled: true
+          #lowerCaseServiceId: true
+      
+      routes:        
+
+        - id:  user-service
+          uri: lb://user-service
+          predicates:
+              - Path=/user-service/api/auth/public/**, \
+                /user-service/registrationConfirm, /user-service/api/token/refresh, /user-service/api/review/**
+          filters:              
+              - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+              - Path=/user-service/api/user/**, /user-service/api/auth/**, /user-service/sse
+          filters:              
+              - RewritePath=/user-service/(?<segment>. *) , /$\{segment}
+              - JwtAuthorization              
+            
+        - id: catalog-service
+          uri: lb://catalog-service
+          predicates:
+              - Path=/catalog-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/catalog-service/(?<segment>.*), /$\{segment}
+
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+              - Path=/cart-service/**
+          filters:              
+              - JwtAuthorization       
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/cart-service/(?<segment>.*), /$\{segment}
+
+        - id: coupon-service
+          uri: lb://coupon-service
+          predicates:
+              - Path=/coupon-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/coupon-service/(?<segment>.*), /$\{segment}
+              - JwtAuthorization                
+        
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+              - Path=/order-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+              - JwtAuthorization                
+
+        - id: pay-service
+          uri: lb://pay-service
+          predicates:
+              - Path=/pay-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/pay-service/(?<segment>.*), /$\{segment}
+              - JwtAuthorization                
+
+        - id: chat-service
+          uri: lb:ws://chat-service
+          predicates:
+              - Path=/chat-service/**
+          filters:
+              - RemoveRequestHeader=Cookie
+              - RewritePath=/chat-service/(?<segment>.*), /$\{segment}              
+              
+
+  # rabbitmq:
+  #   host: localhost
+  #   port: 5672
+  #   username: 
+  #   password: 
+
+resilience4j:
+  timelimiter:
+    configs:
+      default:        
+        cancel-running-future: false
+
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        allow-health-indicator-to-fail: false
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 10s 
+        wait-duration-in-open-state: 10s
+        automatic-transition-from-open-to-half-open-enabled: false
+        permitted-number-of-calls-in-half-open-state:
+        record-exceptions:
+          - java.util.concurrent.TimeoutException
+          - org.springframework.cloud.gateway.support.NotFoundException
+          - io.github.resilience4j.circuitbreaker.CallNotPermittedException 
+
+    instances:
+      defaultCircuitBreaker:
+        baseConfig: default  
+        failure-rate-threshold: 50
+
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway, refresh, health, beans, http, busrefresh, info, metrics, prometheus
+
+    
+    
+logging:
+  level:
+    root: info
+    org.springframework.batch: debug
+    com.project.gatewayserver: debug    
+    org.springframework.jdbc: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
+
+  file:
+    path: ./logs
+    name: ${logging.file.path}/gateway_service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

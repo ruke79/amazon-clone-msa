@@ -1,4 +1,8 @@
-*.yml
+# common 모듈의 resources 폴더에 있는 보안 파일 제외
+common/src/main/resources/kafka-secrets.properties
+common/src/main/resources/certs/
+
+apllication-prd.yml
 chat-connector.json
 order-outbox-connector.json
 payment-outbox-connector.json
@@ -19,20 +23,35 @@ kafka_2.12-3.7.2/
 
 logs/
 
-resources/
+node_modules/
 
-resources/keystore.p12
-frontend/cert.pem
-frontend/key.pem
-resources/allcrt.pem
-resources/ca.pem
-resources/crt.pem
-resources/crtkey.pem
-resources/key.pem
-resources/keystore
-resources/mywebserv.site_202504149248A.jks
-resources/mywebserv.site_202504149248A.pfx
-resources/truststore
-chat-server/src/main/resources/application
 .vscode/launch.json
 db/dump-productdb-202508141310.sql
+chat-server/src/main/resources/application-prd.yml
+catalog-service/src/main/resources/application-prd.yml
+cart-service/src/main/resources/application-prd.yml
+config-server/src/main/resources/application-prd.yml
+coupon-service/src/main/resources/application-prd.yml
+eureka-server/src/main/resources/application-prd.yml
+gateway-server/src/main/resources/application-prd.yml
+order-service/src/main/resources/application-prd.yml
+pay-service/src/main/resources/application-prd.yml
+user-service/src/main/resources/application-prd.yml
+eureka-server/src/main/resources/application.yml
+user-service/src/main/resources/application.yml
+pay-service/src/main/resources/application.yml
+order-service/src/main/resources/application.yml
+gateway-server/src/main/resources/application.yml
+catalog-service/src/main/resources/application.yml
+cart-service/src/main/resources/application.yml
+package-lock.json
+package.json
+coupon-service/src/main/resources/application.yml
+frontend/webpack.config.base.js
+frontend/webpack.config.base.js
+common/src/main/resources/local_truststore.jks
+common/src/main/resources/localhost.crt
+common/src/main/resources/localhost.key
+common/src/main/resources/localhost.p12
+common/src/main/resources/application.yml
+chat-server/src/main/resources/application.yml

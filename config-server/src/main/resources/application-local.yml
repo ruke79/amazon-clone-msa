@@ -1,0 +1,32 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/YourUsername/your-config-repo.git
+          default-label: main
+          search-paths:
+            - '{application}'
+            - '{application}/{profile}'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+logging:
+  level:
+    root: INFO # 기본 로그 레벨을 INFO로 설정
+    org.springframework.cloud.config.server: DEBUG # Config Server 관련 로그를 DEBUG 레벨로 설정
+    org.springframework.web: INFO # Spring Web 관련 로그를 INFO 레벨로 설정
+  file:
+    path: ./logs
+    name: ${logging.file.path}/config_server.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

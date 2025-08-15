@@ -1,0 +1,61 @@
+# Standalone Eureka Server
+# Peer Aware Eureka Servers
+server:
+  port: 8761
+
+# 기존의 server.ssl 설정은 주석 처리합니다.
+  ssl:
+   key-store: ${LOCAL_KEY_STORE_PATH}
+   key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+   key-password: ${LOCAL_KEY_PASSWORD}
+      
+
+spring:
+  application:
+    name: discovery-service
+
+
+eureka:
+  server:
+    enable-self-preservation: false
+    peer-awareness:
+      enabled: true
+      # Peer Aware Eureka Server는 다른 Eureka Server와의 통신을 위해 이 설정이 필요합니다.
+      registry-sync-interval-seconds: 30
+    peer-node-read-timeout-ms: 30000
+  
+  client:
+    register-with-eureka: false
+    fetch-registry: false    
+    serviceUrl:
+      defaultZone: https://localhost:8761/eureka/
+
+    
+    # Spring Boot는 이 설정을 기반으로 HTTPS 연결을 자동으로 구성합니다.
+    tls:
+      enabled: true      
+      key-store: ${LOCAL_KEY_STORE_PATH}
+      key-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      key-password: ${LOCAL_KEY_PASSWORD}
+   
+      # 다른 Peer Eureka Server의 인증서를 신뢰하기 위한 Truststore 설정
+      # Standalone 모드라도 자기 자신의 인증서를 신뢰해야 하므로 필요합니다.
+      trust-store: ${LOCAL_TRUST_STORE_PATH}
+      trust-store-password: ${LOCAL_KEY_STORE_PASSWORD}
+      
+      
+
+ # 로깅 설정 추가
+  logging:
+    level:
+      root: info
+      # Eureka 관련 로그를 상세하게 보고 싶을 때 유용
+      com.netflix.eureka: debug
+      com.netflix.discovery: debug
+      org.springframework.cloud.netflix: DEBUG
+    file:
+      path: ./logs
+      name: ${logging.file.path}/discovery-service.log
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+      file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
