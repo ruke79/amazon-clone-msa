@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 import com.project.catalog_service.model.ProductColor;
 import com.project.catalog_service.model.ProductDetails;
@@ -40,9 +41,9 @@ public class ProductRequest {
 
     private List<ProductSize> sizes;
 
-    private List<ProductDetails> details;
+    private Set<ProductDetails> details;
 
-    private List<ProductQA> questions;
+    private Set<ProductQA> questions;
 
     private String shippingFee;  
 

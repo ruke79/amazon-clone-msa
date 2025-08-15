@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -68,10 +69,10 @@ import com.project.catalog_service.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final CategoryRepository categoryRepository;
@@ -90,37 +91,29 @@ public class ProductService {
 
     private final ImageService imageService;
 
-    private final ObjectMapper objectMapper;
-    
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, Object> productsOps;
-    
-    
-    @Transactional(readOnly = true)
-    public List<ProductDto> getProductsByCategory(String categoryName, Long cursor, int pageSize) {
+    // private final ObjectMapper objectMapper;
 
+    // @Resource(name = "redisTemplate")
+    // private ValueOperations<String, Object> productsOps;
+
+    @Cacheable(value = "products", key = "#categoryName + '_' + #cursor + '_' + #pageSize")
+    public List<ProductDto> getProductsByCategory(String categoryName, Long cursor, int pageSize) {
         PageRequest pageRequest = PageRequest.of(0, pageSize + 1);
 
-        int totalProducts = 0;
-        
-        Page<Product> productsPerCategory = null;
-        
-            if (cursor < 0) {
-                productsPerCategory = productRepository.findAllByCategory_CategoryNameOrderByProductIdDesc(categoryName,
-                        pageRequest);
-            } else {
-                productsPerCategory = productRepository
-                        .findAllByCategory_CategoryNameAndProductIdLessThanOrderByProductIdDesc(categoryName, cursor,
-                                pageRequest);
-            }
+        Page<Product> productsPage;
+        if (cursor < 0) {
+            productsPage = productRepository.findAllByCategory_CategoryNameOrderByProductIdDesc(categoryName,
+                    pageRequest);
+        } else {
+            productsPage = productRepository.findAllByCategory_CategoryNameAndProductIdLessThanOrderByProductIdDesc(
+                    categoryName, cursor, pageRequest);
+        }
 
-        totalProducts = productsPerCategory.getContent().size();
-        
-        CursorPagenation<Product> productCursor = CursorPagenation.of(productsPerCategory.getContent(), pageSize);
-        return ProductResponse.of(productCursor, totalProducts).getContents();
+        CursorPagenation<Product> productCursor = CursorPagenation.of(productsPage.getContent(), pageSize);
+        return ProductResponse.of(productCursor, productsPage.getContent().size()).getContents();
     }
 
-    @Transactional(readOnly = true)    
+    @Transactional(readOnly = true)
     public List<ProductDto> getProductsByName(String productName) {
 
         List<Product> products = productRepository.findByName(productName);
@@ -139,96 +132,126 @@ public class ProductService {
         return null;
     }
 
-    
-    //@Cacheable(value="products_cache", cacheManager = "redisCacheManager")
+    // public List<ProductDto> getProducts() {
+
+    // List<Product> products = productRepository.findAll();
+    // List<ProductDto> response = new ArrayList<ProductDto>();
+
+    // List<ProductDto> cachedData =
+    // objectMapper.convertValue(productsOps.get("products"),
+    // new TypeReference<List<ProductDto>>() {});
+
+    // if (cachedData != null) {
+    // log.info("redis products");
+    // return cachedData;
+    // }
+
+    // for (Product product : products) {
+    // List<ProductDto> sameNameeProducts = getProductsByName(product.getName());
+
+    // for (ProductDto p : sameNameeProducts) {
+    // response.add(p);
+    // }
+    // }
+
+    // productsOps.set("products" , response, 60, TimeUnit.MINUTES);
+
+    // return response;
+    // }
+
+    // @Transactional
+    // public void updateRating(Long productId, float rating) {
+
+    // productRepository.updateRating(productId, rating);
+
+    // Product product = productRepository.findById(productId).get();
+
+    // List<ProductDto> cachedData =
+    // objectMapper.convertValue(productsOps.get("products:"+product.getSlug()),
+    // new TypeReference<List<ProductDto>>() {});
+
+    // if (cachedData != null) {
+    // cachedData.get(0).setRating(rating);
+    // }
+    // productsOps.set("products:"+product.getSlug(), cachedData);
+    // }
+
+    // @Transactional(readOnly = true)
+    // @Cacheable(value="product_cache", cacheManager = "redisCacheManager",
+    // key="#p0", unless = "#result == null")
+    // public ProductDto getProductById(Long productId) {
+
+    // Optional<Product> product = productRepository.findById(productId);
+
+    // if (product.isPresent()) {
+
+    // ProductDto dto = Product.convertToDto(product.get());
+
+    // return dto;
+    // }
+    // return null;
+    // }
+
+    // @Transactional(readOnly = true)
+    // public List<ProductDto> getProductsBySlug(String slug) {
+
+    // List<Product> products = productRepository.findBySlug(slug);
+
+    // List<ProductDto> cachedData =
+    // objectMapper.convertValue(productsOps.get("products:"+slug),
+    // new TypeReference<List<ProductDto>>() {});
+
+    // if (cachedData != null) {
+    // log.info("redis products");
+    // return cachedData;
+    // }
+
+    // List<ProductDto> result = new ArrayList<>();
+    // if (products != null) {
+
+    // for (Product p : products) {
+    // ProductDto dto = Product.convertToDto(p);
+    // result.add(dto);
+    // }
+
+    // productsOps.set("products:" + slug , result, 60, TimeUnit.MINUTES);
+
+    // return result;
+    // }
+
+    // return null;
+    // }
+
+    @Cacheable(value = "products", key = "'all'")
     public List<ProductDto> getProducts() {
-
         List<Product> products = productRepository.findAll();
-        List<ProductDto> response = new ArrayList<ProductDto>();
-                
-        List<ProductDto> cachedData = objectMapper.convertValue(productsOps.get("products"),
-        new TypeReference<List<ProductDto>>() {});
-        
+        return products.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 
-        if (cachedData != null) {
-            log.info("redis products");
-            return cachedData;
-        }
+    @Cacheable(value = "product", key = "#productId")
+    public ProductDto getProductById(Long productId) {
+        return productRepository.findById(productId)
+                .map(this::convertToDto)
+                .orElse(null);
+    }
 
-        for (Product product : products) {
-            List<ProductDto> sameNameeProducts = getProductsByName(product.getName());
-
-            for (ProductDto p : sameNameeProducts) {
-                response.add(p);
-            }
-        }
-        
-        productsOps.set("products" , response, 60, TimeUnit.MINUTES);
-
-        return response;
+    @Cacheable(value = "products", key = "#slug")
+    public List<ProductDto> getProductsBySlug(String slug) {
+        List<Product> products = productRepository.findBySlug(slug);
+        return products.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public void updateRating(Long productId, float rating) {
-
-        productRepository.updateRating(productId, rating);        
-
-        Product product = productRepository.findById(productId).get();
-        
-        List<ProductDto> cachedData = objectMapper.convertValue(productsOps.get("products:"+product.getSlug()),
-        new TypeReference<List<ProductDto>>() {});
-
-        if (cachedData != null) {
-            cachedData.get(0).setRating(rating);
-        }
-        productsOps.set("products:"+product.getSlug(), cachedData);
+    @CachePut(value = "product", key = "#productId")
+    public ProductDto updateRating(Long productId, float rating) {
+        productRepository.updateRating(productId, rating);
+        Product product = productRepository.findById(productId).orElseThrow();
+        return convertToDto(product);
     }
-
-    @Transactional(readOnly = true)
-    @Cacheable(value="product_cache", cacheManager = "redisCacheManager", key="#p0", unless = "#result == null")
-    public ProductDto getProductById(Long productId) {
-
-        Optional<Product> product = productRepository.findById(productId);
-
-        if (product.isPresent()) {
-
-            ProductDto dto = Product.convertToDto(product.get());
-
-            return dto;
-        }
-        return null;
-    }
-
-    @Transactional(readOnly = true) 
-    public List<ProductDto> getProductsBySlug(String slug) {
-
-        List<Product> products = productRepository.findBySlug(slug);
-
-        
-        List<ProductDto> cachedData = objectMapper.convertValue(productsOps.get("products:"+slug),
-        new TypeReference<List<ProductDto>>() {});
-
-        if (cachedData != null) {
-            log.info("redis products");
-            return cachedData;
-        }
-
-        List<ProductDto> result = new ArrayList<>();
-        if (products != null) {
-
-            for (Product p : products) {
-                ProductDto dto = Product.convertToDto(p);
-                result.add(dto);
-            }
-
-            productsOps.set("products:" + slug , result, 60, TimeUnit.MINUTES);
-
-            return result;
-        }
-        
-        return null;
-    }
-    
 
     public List<ProductSku> load(List<ProductInfoLoadRequest> products, List<MultipartFile> images,
             List<MultipartFile> colorImages) throws IOException {
@@ -240,110 +263,69 @@ public class ProductService {
 
             ProductSku sku = null;
 
-            sku = createCategorysAndLoadProduct(pr, images.get(i), colorImages.get(i));
+            sku = load(pr, images.get(i), colorImages.get(i));
             result.add(sku);
             i++;
-
         }
 
         return result;
     }
 
-    public ProductSku createCategorysAndLoadProduct(ProductInfoLoadRequest request, MultipartFile images,
-            MultipartFile colorImage) throws IOException {
+    @Transactional
+    public ProductSku load(ProductInfoLoadRequest request, MultipartFile images, MultipartFile colorImage)
+            throws IOException {
+        Product product = createOrFindProduct(request);
+        return loadSku(request, product, images, colorImage);
+    }
 
-        if (request.getParent() != null && request.getParent().length() > 0) {
-
-            Optional<Product> existed = productRepository.findById(Long.parseLong(request.getParent()));
-
-            if (existed.isPresent()) {
-
-                ProductSku newSku = loadSku(request, existed.get(), images, colorImage);
-                existed.get().getSkus().add(newSku);
-
-                productRepository.save(existed.get());
-
-                return newSku;
-            }
+    private Product createOrFindProduct(ProductInfoLoadRequest request) {
+        if (request.getParent() != null && !request.getParent().isEmpty()) {
+            return productRepository.findById(Long.parseLong(request.getParent()))
+                    .orElseThrow(() -> new IllegalArgumentException("Parent product not found"));
         } else {
-
+            Category category = createOrFindCategory(request.getCategory().getName(), request.getCategory().getSlug());
+            List<Subcategory> subcategories = createOrFindSubcategories(category, request.getSubCategories());
 
             Product product = Product.builder()
-            .brand(request.getBrand())
-            .name(request.getName())
-            .description(request.getDescription())
-            .slug(request.getSlug())
-            .shipping(new BigDecimal(request.getShippingFee()))
-            .build();
-            
-            Category category = categoryRepository.findByCategoryName(request.getCategory().getName());
-
-            if (null != category) {
-
-                product.setCategory(category);
-
-                List<String> subcategoryNames = new ArrayList<>();
-                for (SubCategoryDto subcategory : request.getSubCategories()) {
-                    subcategoryNames.add(subcategory.getName());
-                }
-
-                List<Subcategory> subCategories = subCategoryRepository.findByCategory_CategoryNameAndSubcategoryNameIn(
-                        category.getCategoryName(), subcategoryNames);
-
-                if (subCategories != null) {
-
-                    List<ProductSubcategory> list = new ArrayList<>();
-                    
-                    for(Subcategory sub: subCategories) {
-                        
-                        ProductSubcategory productSubCategory = ProductSubcategory.builder()
-                        .product(product)
-                        .subcategory(sub)
-                        .build();
-
-                        list.add(productSubCategory);
-                    }
-                    product.setSubcategories(list);
-
-                    productRepository.save(product);
-
-                    return loadSku(request, product, images, colorImage);
-                }
-            } else {
-
-                category = new Category(request.getCategory().getName(), request.getCategory().getSlug());
-                
-                category = categoryRepository.save(category);
-
-                product.setCategory(category);
-
-                //List<Subcategory> subCategories = new ArrayList<>();
-                List<ProductSubcategory> subCategories = new ArrayList<>();
-
-                for (SubCategoryDto dto : request.getSubCategories()) {
-
-                    Subcategory subcategory = new Subcategory(dto.getName(), dto.getSlug(), category);                  
-                    //subCategories.add(subcategory);                   
-
-                    subCategoryRepository.save(subcategory);
-
-                    ProductSubcategory productSubcategory = ProductSubcategory.builder()
-                    .product(product)
-                    .subcategory(subcategory)
+                    .brand(request.getBrand())
+                    .name(request.getName())
+                    .description(request.getDescription())
+                    .slug(request.getSlug())
+                    .shipping(new BigDecimal(request.getShippingFee()))
+                    .category(category)
                     .build();
-                    subCategories.add(productSubcategory);
-                }
 
-                product.setSubcategories(subCategories);
+            Set<ProductSubcategory> productSubcategories = subcategories.stream()
+                    .map(sub -> ProductSubcategory.builder().product(product).subcategory(sub).build())
+                    .collect(Collectors.toSet());
+            product.setSubcategories(productSubcategories);
 
-                productRepository.save(product);
-
-                return loadSku(request, product, images, colorImage);
-
-            }
+            productRepository.save(product);
+            return product;
         }
+    }
 
-        return null;
+    private Category createOrFindCategory(String categoryName, String slug) {
+        return categoryRepository.findByCategoryName(categoryName)
+                .orElseGet(() -> categoryRepository.save(new Category(categoryName, slug)));
+    }
+
+    private List<Subcategory> createOrFindSubcategories(Category category, List<SubCategoryDto> subCategoryDtos) {
+        List<String> subcategoryNames = subCategoryDtos.stream()
+                .map(SubCategoryDto::getName)
+                .collect(Collectors.toList());
+        List<Subcategory> existingSubcategories = subCategoryRepository
+                .findByCategory_CategoryNameAndSubcategoryNameIn(category.getCategoryName(), subcategoryNames);
+
+        List<Subcategory> newSubcategories = subCategoryDtos.stream()
+                .filter(dto -> existingSubcategories.stream()
+                        .noneMatch(existing -> existing.getSubcategoryName().equals(dto.getName())))
+                .map(dto -> new Subcategory(dto.getName(), dto.getSlug(), category))
+                .collect(Collectors.toList());
+
+        subCategoryRepository.saveAll(newSubcategories);
+        existingSubcategories.addAll(newSubcategories);
+        return existingSubcategories;
     }
 
     public ProductSku addProduct(ProductRequest request, List<MultipartFile> images, MultipartFile colorImage)
@@ -365,13 +347,12 @@ public class ProductService {
         } else {
 
             Product product = Product.builder()
-            .brand(request.getBrand())
-            .name(request.getName())
-            .description(request.getDescription())
-            .slug(request.getSlug())
-            .build();
+                    .brand(request.getBrand())
+                    .name(request.getName())
+                    .description(request.getDescription())
+                    .slug(request.getSlug())
+                    .build();
 
-            
             product.setShipping(new BigDecimal(request.getShippingFee()));
 
             Optional<Category> category = categoryRepository.findById(Long.parseLong(request.getCategory()));
@@ -390,19 +371,18 @@ public class ProductService {
 
                 if (subCategories != null) {
 
-                    List<ProductSubcategory> list = new ArrayList<>();
-                    
-                    for(Subcategory sub: subCategories) {
-                        
+                    Set<ProductSubcategory> list = new HashSet<>();
+
+                    for (Subcategory sub : subCategories) {
+
                         ProductSubcategory productSubCategory = ProductSubcategory.builder()
-                        .product(product)
-                        .subcategory(sub)
-                        .build();
+                                .product(product)
+                                .subcategory(sub)
+                                .build();
 
                         list.add(productSubCategory);
                     }
                     product.setSubcategories(list);
-                                       
 
                     productRepository.save(product);
 
@@ -418,8 +398,8 @@ public class ProductService {
             MultipartFile colorImage) throws IOException {
 
         ProductSku skuProject = ProductSku.builder()
-        .sku(request.getSku())
-        .build();
+                .sku(request.getSku())
+                .build();
 
         if (request.getDiscount() != null)
             skuProject.setDiscount(Integer.parseInt(request.getDiscount()));
@@ -467,7 +447,11 @@ public class ProductService {
         product.setQuestions(request.getQuestions());
         product.getQuestions().forEach(question -> {
             question.setProduct(product);
-            productQARepository.save(question);
+
+            // With cascade=CascadeType.MERGE and orphanRemoval=true, saving the parent
+            // product entity will automatically handle saving the children.
+            // Manual saving with `productQARepository.save(question)` is often not needed.
+            // productQARepository.save(question);
         });
 
         return productskuRepository.save(skuProject);
@@ -478,8 +462,8 @@ public class ProductService {
             MultipartFile colorImage) throws IOException {
 
         ProductSku skuProject = ProductSku.builder()
-        .sku(request.getSku())
-        .build();
+                .sku(request.getSku())
+                .build();
 
         if (request.getDiscount() != null)
             skuProject.setDiscount(Integer.parseInt(request.getDiscount()));
@@ -579,67 +563,81 @@ public class ProductService {
 
             Product product = data.get();
 
-            BigDecimal discount = new BigDecimal(product.getSkus().get(style).getDiscount());
-            BigDecimal priceBefore = product.getSkus().get(style).getSizes().get(size).getPrice();
+            Optional<ProductSku> optionalSku = product.getSkus().stream()
+                    .skip(style) // get(style)과 유사하게 특정 순서의 요소를 건너뛰지만, Set은 순서가 없으므로 정확한 결과를 보장하지 않습니다.
+                    .findFirst();
 
-            BigDecimal price = discount.compareTo(new BigDecimal(0)) > 0
-                    ? priceBefore.subtract(priceBefore.divide(discount, 2, RoundingMode.HALF_UP))
-                    : priceBefore;
+            if (optionalSku.isPresent()) {
 
-            ProductColorDto color = ProductColorDto.builder()
-                    .id(Long.toString(product.getSkus().get(style).getColor().getColorId()))
-                    .color(product.getSkus().get(style).getColor().getColor())
-                    .colorImage(product.getSkus().get(style).getColor().getColorImage())
-                    .build();
+                ProductSku sku = optionalSku.get();
 
-            List<String> subcategoryIds = product.getSubcategories().stream().map(productSubcategory -> {
-                return Long.toString(productSubcategory.getSubcategory().getSubcategoryId());
-            })
-                    .collect(Collectors.toList());
+                BigDecimal discount = new BigDecimal(sku.getDiscount());
+                BigDecimal priceBefore = sku.getSizes().get(size).getPrice();
 
-            List<ProductDetailDto> details = product.getDetails().stream().map(detail -> {
-                return ProductDetailDto.builder()
-                        .name(detail.getName())
-                        .value(detail.getValue()).build();
-            }).collect(Collectors.toList());
+                BigDecimal price = discount.compareTo(new BigDecimal(0)) > 0
+                        ? priceBefore.subtract(priceBefore.divide(discount, 2, RoundingMode.HALF_UP))
+                        : priceBefore;
 
-            List<ProductQADto> questions = product.getQuestions().stream().map(q -> {
-                return ProductQADto.builder()
-                        .question(q.getQuestion())
-                        .answer(q.getAnswer())
+                ProductColorDto color = ProductColorDto.builder()
+                        .id(Long.toString(sku.getColor().getColorId()))
+                        .color(sku.getColor().getColor())
+                        .colorImage(sku.getColor().getColorImage())
                         .build();
-            }).collect(Collectors.toList());
 
-            ProductInfoDto dto = ProductInfoDto.builder()
-                    .id(Long.toString(product.getProductId()))
-                    .style(style)
-                    .name(product.getName())
-                    .description(product.getDescription())
-                    .slug(product.getSlug())
-                    .sku(product.getSkus().get(style).getSku())
-                    .brand(product.getBrand())
-                    .shipping(product.getShipping().toPlainString())
-                    .images(product.getSkus().get(style).getImages())
-                    .color(color)
-                    .size(product.getSkus().get(style).getSizes().get(size).getSize())
-                    .price(price.toPlainString())
-                    .priceBefore(priceBefore.toPlainString())
-                    .qty(1)
-                    .quantity(product.getSkus().get(style).getSizes().get(size).getQuantity())
-                    .category(Long.toString(product.getCategory().getCategoryId()))
-                    .subCategories(subcategoryIds)
-                    .questions(questions)
-                    .details(details)
-                    .discount(product.getSkus().get(style).getDiscount())
-                    .build();
+                List<String> subcategoryIds = product.getSubcategories().stream().map(productSubcategory -> {
+                    return Long.toString(productSubcategory.getSubcategory().getSubcategoryId());
+                })
+                        .collect(Collectors.toList());
 
-            return dto;
+                List<ProductDetailDto> details = product.getDetails().stream().map(detail -> {
+                    return ProductDetailDto.builder()
+                            .name(detail.getName())
+                            .value(detail.getValue()).build();
+                }).collect(Collectors.toList());
+
+                List<ProductQADto> questions = product.getQuestions().stream().map(q -> {
+                    return ProductQADto.builder()
+                            .question(q.getQuestion())
+                            .answer(q.getAnswer())
+                            .build();
+                }).collect(Collectors.toList());
+
+                ProductInfoDto dto = ProductInfoDto.builder()
+                        .id(Long.toString(product.getProductId()))
+                        .style(style)
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .slug(product.getSlug())
+                        .sku(sku.getSku())
+                        .brand(product.getBrand())
+                        .shipping(product.getShipping().toPlainString())
+                        .images(sku.getImages())
+                        .color(color)
+                        .size(sku.getSizes().get(size).getSize())
+                        .price(price.toPlainString())
+                        .priceBefore(priceBefore.toPlainString())
+                        .qty(1)
+                        .quantity(sku.getSizes().get(size).getQuantity())
+                        .category(Long.toString(product.getCategory().getCategoryId()))
+                        .subCategories(subcategoryIds)
+                        .questions(questions)
+                        .details(details)
+                        .discount(sku.getDiscount())
+                        .build();
+
+                return dto;
+            }
+
         }
-
+        log.info("product is null : " + Long.toString(productId));
         return null;
+
     }
 
-    @Transactional(readOnly = true)
+    private ProductDto convertToDto(Product product) {
+        return Product.convertToDto(product); // Product.java에 있는 static 메서드를 사용
+    }
+
     private Product getProductModel(Long productId) {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isPresent()) {
@@ -648,7 +646,6 @@ public class ProductService {
         return null;
     }
 
-    @Transactional(readOnly = true)
     private ProductSku getProductSkuModel(Long productId, String size, Long colorId) {
         Optional<ProductSku> sku = productskuRepository.findByProductProductIdAndSizesSizeAndColorColorId(productId,
                 size, colorId);
@@ -658,7 +655,6 @@ public class ProductService {
         return null;
     }
 
-    @Transactional(readOnly = true)
     private ProductSize getProductSizeModel(Long skuId, String size) {
         Optional<ProductSize> productSize = productSizeRepository.findBySkuSkuproductIdAndSize(skuId, size);
         if (productSize.isPresent()) {
@@ -667,74 +663,156 @@ public class ProductService {
         return null;
     }
 
-    @Transactional
-    private ProductSku updateSoldValue(Long productId, String slug, String size, Long colorId, int qty) {
+    // @Transactional
+    // private ProductSku updateSoldValue(Long productId, String slug, String size,
+    // Long colorId, int qty) {
 
-        ProductSku sku = getProductSkuModel(productId, size, colorId);
-        if (sku != null) {
+    // ProductSku sku = getProductSkuModel(productId, size, colorId);
+    // if (sku != null) {
+    // int sold = sku.getSold() + qty;
+    // sku.setSold(sold);
+
+    // List<ProductDto> cachedData =
+    // objectMapper.convertValue(productsOps.get("products:"+slug),
+    // new TypeReference<List<ProductDto>>() {});
+
+    // if (!cachedData.isEmpty()) {
+
+    // cachedData.get(0).getSkus().stream().forEach(
+    // item -> {
+    // if (item.hasSize(size) && item.hasColor(Long.toString(colorId))) {
+    // item.setSold(sold);
+    // }
+    // }
+    // );
+
+    // productsOps.set("products:"+slug, cachedData);
+
+    // }
+
+    // sku = productskuRepository.save(sku);
+    // return sku;
+    // }
+
+    // return null;
+    // }
+
+    // @Transactional
+    // private ProductSize updateProductSize_Qty(String slug, Long skuId, String
+    // size, int qty) {
+    // ProductSize productSize = getProductSizeModel(skuId, size);
+
+    // if (productSize != null) {
+
+    // if (productSize.getQuantity() >= qty) {
+
+    // int currQty = productSize.getQuantity() - qty;
+    // productSize.setQuantity(currQty);
+
+    // List<ProductDto> cachedData =
+    // objectMapper.convertValue(productsOps.get("products:"+slug),
+    // new TypeReference<List<ProductDto>>() {});
+
+    // if (!cachedData.isEmpty()) {
+    // cachedData.get(0).getSkus().stream().forEach(
+    // item -> {
+    // if (item.hasSize(size)) {
+    // item.getSize(size).setQuantity(currQty);
+    // }
+    // }
+    // );
+
+    // productsOps.set("products:"+slug, cachedData);
+
+    // }
+
+    // productSize = productSizeRepository.save(productSize);
+    // return productSize;
+    // }
+    // }
+
+    // return null;
+    // }
+
+    // A transactional public method that orchestrates the update
+    @Transactional
+    public ProductSku updateSoldValue(Long productId, String slug, String size, Long colorId, int qty) {
+        Optional<ProductSku> optionalSku = productskuRepository
+                .findByProductProductIdAndSizesSizeAndColorColorId(productId, size, colorId);
+
+        if (optionalSku.isPresent()) {
+            ProductSku sku = optionalSku.get();
             int sold = sku.getSold() + qty;
             sku.setSold(sold);
 
-            
-            List<ProductDto> cachedData = objectMapper.convertValue(productsOps.get("products:"+slug),
-            new TypeReference<List<ProductDto>>() {}); 
-            
-            if (!cachedData.isEmpty()) {
+            // 1. Database Update
+            productskuRepository.save(sku);
 
-                cachedData.get(0).getSkus().stream().forEach(
-                item -> {
-                    if (item.hasSize(size) && item.hasColor(Long.toString(colorId))) {
-                        item.setSold(sold);
-                    }                
-                }
-                );
+            // 2. Cache Update
+            // This method call will trigger the @CachePut and update the cache.
+            updateProductDtoCache(slug, sku);
 
-                productsOps.set("products:"+slug, cachedData);
-
-            }
-
-            sku = productskuRepository.save(sku);
             return sku;
         }
-
-        
-
         return null;
     }
 
+    // This method updates the cache with the latest data.
+    // It is public so that the @CachePut annotation can be applied by Spring.
+    @CachePut(value = "products", key = "#slug")
+    public List<ProductDto> updateProductDtoCache(String slug, ProductSku updatedSku) {
+        // Here, we re-fetch the product from the DB or a separate method
+        // to ensure the DTO list contains the latest data.
+        List<Product> products = productRepository.findBySlug(slug);
+
+        // Convert entities to DTOs and update the specific SKU's sold value
+        List<ProductDto> updatedDtos = products.stream()
+                .map(product -> {
+                    ProductDto dto = convertToDto(product);
+                    // Find and update the specific SKU in the DTO list
+                    dto.getSkus().stream()
+                            .filter(skuDto -> skuDto.getSku().equals(updatedSku.getSku()))
+                            .findFirst()
+                            .ifPresent(skuDto -> skuDto.setSold(updatedSku.getSold()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return updatedDtos;
+    }
+
     @Transactional
-    private ProductSize updateProductSize_Qty(String slug, Long skuId, String size, int qty) {
+    public ProductSize updateProductSize_Qty(String slug, Long skuId, String size, int qty) {
         ProductSize productSize = getProductSizeModel(skuId, size);
 
         if (productSize != null) {
-
             if (productSize.getQuantity() >= qty) {
-
                 int currQty = productSize.getQuantity() - qty;
                 productSize.setQuantity(currQty);
 
-                List<ProductDto> cachedData = objectMapper.convertValue(productsOps.get("products:"+slug),
-            new TypeReference<List<ProductDto>>() {}); 
-            
-            if (!cachedData.isEmpty()) {
-                cachedData.get(0).getSkus().stream().forEach(
-                item -> {
-                    if (item.hasSize(size)) {
-                        item.getSize(size).setQuantity(currQty);
-                    }                
-                }
-                );
-
-                productsOps.set("products:"+slug, cachedData);
-
-            }
-
+                // 데이터베이스 저장
                 productSize = productSizeRepository.save(productSize);
+
+                // 데이터베이스 업데이트 후 캐시를 갱신하는 메서드 호출
+                refreshProductsCache(slug);
+
                 return productSize;
             }
         }
-
         return null;
+    }
+
+    /**
+     * @CachePut 어노테이션을 사용하여 Redis 캐시를 갱신합니다.
+     *           이 메서드는 오직 캐시를 업데이트하는 역할만 담당합니다.
+     */
+    @CachePut(value = "products", key = "#slug")
+    public List<ProductDto> refreshProductsCache(String slug) {
+        log.info("Refreshing cache for slug: {}", slug);
+        List<Product> products = productRepository.findBySlug(slug);
+        return products.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -752,12 +830,14 @@ public class ProductService {
 
                     if (product != null) {
 
-                        ProductSku sku = updateSoldValue(product.getProductId(), product.getSlug(), item.getSize(), item.getColorId(),
+                        ProductSku sku = updateSoldValue(product.getProductId(), product.getSlug(), item.getSize(),
+                                item.getColorId(),
                                 item.getQty());
 
                         if (sku != null) {
 
-                            ProductSize productSize = updateProductSize_Qty(product.getSlug(), sku.getSkuproductId(), item.getSize(),
+                            ProductSize productSize = updateProductSize_Qty(product.getSlug(), sku.getSkuproductId(),
+                                    item.getSize(),
                                     item.getQty());
                             return productSize;
                         }

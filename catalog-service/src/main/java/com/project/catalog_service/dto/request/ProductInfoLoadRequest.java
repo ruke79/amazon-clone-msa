@@ -2,6 +2,7 @@ package com.project.catalog_service.dto.request;
 
 
 import java.util.List;
+import java.util.Set;
 
 import com.project.common.dto.CategoryDto;
 import com.project.common.dto.SubCategoryDto;
@@ -44,9 +45,9 @@ public class ProductInfoLoadRequest {
 
     private List<ProductSize> sizes;
 
-    private List<ProductDetails> details;
+    private Set<ProductDetails> details;
 
-    private List<ProductQA> questions;
+    private Set<ProductQA> questions;
 
     private String shippingFee;  
 }

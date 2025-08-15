@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.*;
 
 @Getter
 @Builder
-@Document(indexName = "product_details", createIndex = true)
+@Document(indexName = "product_details", createIndex = false) // createindex set to false to avoid automatic index creation  
 @Setting(settingPath = "/es/es-settings.json")
 public class ProductDetailsDocument {
 

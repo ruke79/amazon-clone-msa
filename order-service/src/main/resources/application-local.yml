@@ -50,7 +50,7 @@ spring:
   datasource:
       url: jdbc:postgresql://localhost:5435/orderdb?sslmode=require
       username: product
-      password: ${LOCAL_DB_PAWWORD}
+      password: ${LOCAL_DB_PASSWORD}
       properties:
         ssl: true
         sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory

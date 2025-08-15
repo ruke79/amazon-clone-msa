@@ -47,7 +47,7 @@ spring:
     datasource:
       url: jdbc:postgresql://localhost:5435/paydb?sslmode=require
       username: product
-      password: ${LOCAL_DB_PAWWORD}
+      password: ${LOCAL_DB_PASSWORD}
       properties:
         ssl: true
         sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
@@ -68,10 +68,10 @@ spring:
 
     data:
       mongodb:
-        client: mongodb://admin:${LOCAL_DB_PAWWORD}@localhost:27017?ssl=true
+        client: mongodb://admin:${LOCAL_DB_PASSWORD}@localhost:27017?ssl=true
         name: chat
         username: admin
-        password: ${LOCAL_DB_PAWWORD}        
+        password: ${LOCAL_DB_PASSWORD}        
         cacert: ${LOCAL_CACERT_PATH}
         keystore: ${LOCAL_KEY_STORE_PATH}
         keystorePassword : ${LOCAL_KEY_STOE_PASSWORD}        
@@ -90,7 +90,7 @@ spring:
               min-idle: 2  
           host: localhost
           port: 6379
-          password: ${LOCAL_DB_PAWWORD}
+          password: ${LOCAL_DB_PASSWORD}
 
     app:    
       jwtSecret: ${JWT_SECRET_KEY}

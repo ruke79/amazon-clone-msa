@@ -41,7 +41,7 @@ public class CategoryService {
     
     public CategoryDto createCategory(String name, String slug) {
 
-        Category category = categoryRepository.findByCategoryName(name);
+        Category category = categoryRepository.findByCategoryName(name).orElse(null);
 
         if (null == category) {
 

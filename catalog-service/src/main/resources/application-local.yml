@@ -17,8 +17,8 @@ kafka:
 cloud:
   aws:
     credentials:
-      access-key:${AMAZON_ACCESS_KEY}
-      secret-key:${AMAZON_SECRET_KEY}      
+      access-key: ${AMAZON_ACCESS_KEY}
+      secret-key: ${AMAZON_SECRET_KEY}      
     s3:
       bucket: ${AMAZON_BUCKET_NAME}
     region:
@@ -75,7 +75,7 @@ spring:
   datasource-data:
     url: jdbc:postgresql://localhost:5435/productdb?sslmode=require
     username: product
-    password: ${LOCAL_DB_PAWWORD}
+    password: ${LOCAL_DB_PASSWORD}
     properties:
       ssl: true
       sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
@@ -87,7 +87,7 @@ spring:
   datasource-meta:
     url: jdbc:postgresql://localhost:5435/metadb?sslmode=require
     username: product
-    password: ${LOCAL_DB_PAWWORD}
+    password: ${LOCAL_DB_PASSWORD}
     properties:
       ssl: true
       sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
@@ -122,17 +122,16 @@ spring:
               min-idle: 2  
           host: localhost
           port: 6379
-          password: ${LOCAL_DB_PAWWORD}
+          password: ${LOCAL_DB_PASSWORD}
 
 # csv 파일 로드 시만 사용
   batch:
      job:
-       enabled: false
-       name: indexingJob
+       enabled: false       
      jdbc:
        initialize-schema: never
   #     #ALTER ROLE product SET search_path TO meta, public; 미리 실행
-  #     table-prefix: meta.BATCH_
+       table-prefix: meta.BATCH_
      transaction:
        rollback-on: java.lang.Exception
 

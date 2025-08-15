@@ -13,7 +13,7 @@ import com.project.catalog_service.document.ProductDocument.ProductSubcategoryDo
 
 @Getter
 @Builder
-@Document(indexName = "products", createIndex = true)
+@Document(indexName = "products", createIndex = false) // createindex set to false to avoid automatic index creation  
 @Setting(settingPath = "/es/es-settings.json")
 public class ProductDocument {
 

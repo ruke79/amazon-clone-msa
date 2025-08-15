@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.common.dto.CategoryDto;
 import com.project.common.dto.ProductColorDto;
@@ -81,20 +83,21 @@ public class Product extends BaseEntity {
 //     @JoinTable(name="product_subcatgeory",
 //     joinColumns =  { @JoinColumn(name="product_id", referencedColumnName = "product_id") },
 //     inverseJoinColumns = { @JoinColumn(name="subcategory_id", referencedColumnName = "subcategory_id")})    
-    private List<ProductSubcategory> subcategories = new ArrayList<>();
+    private Set<ProductSubcategory> subcategories = new HashSet<>();   
 
+    //@BatchSize(size = 10) // 10개의 Product에 대한 details를 한 번에 조회
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
     cascade = CascadeType.PERSIST,targetEntity = ProductDetails.class, orphanRemoval = true)
-    private List<ProductDetails> details;
+    private Set<ProductDetails> details;
 
-    
+    //@BatchSize(size = 10) // 10개의 Product에 대한 questions를 한 번에 조회
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
     cascade = CascadeType.MERGE, targetEntity = ProductQA.class, orphanRemoval = true)    
-    private List<ProductQA> questions;
+    private Set<ProductQA> questions;
 
     @OneToMany(mappedBy="product", fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST,targetEntity = ProductSku.class, orphanRemoval = true)
-    private List<ProductSku> skus;
+    private Set<ProductSku> skus;
 
     @Builder.Default 
     private String refundPolicy = "30 days";

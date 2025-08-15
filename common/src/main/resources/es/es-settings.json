@@ -8,13 +8,12 @@
       "tokenizer": {
         "custom_nori_tokenizer": {
           "type": "nori_tokenizer",
-          "decompound_mode": "mixed",
-          "user_dictionary": "dict/userdict_ko.txt"
+          "decompound_mode": "mixed"
+          
         },
         "custom_kuromoji_tokenizer": {
           "type": "kuromoji_tokenizer",
-          "mode": "normal",
-          "user_dictionary": "dict/userdict_ja.txt"
+          "mode": "normal"          
         }
       },
       "analyzer": {

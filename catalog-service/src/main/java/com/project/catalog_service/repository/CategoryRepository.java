@@ -21,7 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     // --- 낙관적 잠금 적용 ---
     @Lock(LockModeType.OPTIMISTIC)
-    public Category findByCategoryName(String categoryName);
+    public Optional<Category> findByCategoryName(String categoryName);
 
     // 기존 메서드들은 유지
     @Query("select categoryName from Category")

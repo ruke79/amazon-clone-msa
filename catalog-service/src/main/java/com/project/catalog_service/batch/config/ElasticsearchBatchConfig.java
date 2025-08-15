@@ -46,7 +46,7 @@ public class ElasticsearchBatchConfig {
     private final ProductSizeDocumentRepository productSizeDocumentRepository;
     private final SubcategoryDocumentRepository subcategoryDocumentRepository;
 
-    @Value("${chunk.size:10}")
+    @Value("${chunk.size:1000}")
     private int CHUNK_SIZE;
 
     public ElasticsearchBatchConfig(JobRepository jobRepository,
@@ -310,7 +310,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step categoryIndexingStep() {
         return new StepBuilder("categoryIndexingStep", jobRepository)
-                .<Category, CategoryDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<Category, CategoryDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(categoryReader())
                 .processor(categoryProcessor())
                 .writer(categoryWriter())
@@ -320,7 +320,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step productColorIndexingStep() {
         return new StepBuilder("productColorIndexingStep", jobRepository)
-                .<ProductColor, ProductColorDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<ProductColor, ProductColorDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productColorReader())
                 .processor(productColorProcessor())
                 .writer(productColorWriter())
@@ -330,7 +330,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step productDetailsIndexingStep() {
         return new StepBuilder("productDetailsIndexingStep", jobRepository)
-                .<ProductDetails, ProductDetailsDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<ProductDetails, ProductDetailsDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productDetailsReader())
                 .processor(productDetailsProcessor())
                 .writer(productDetailsWriter())
@@ -340,7 +340,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step productQAIndexingStep() {
         return new StepBuilder("productQAIndexingStep", jobRepository)
-                .<ProductQA, ProductQADocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<ProductQA, ProductQADocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productQAReader())
                 .processor(productQAProcessor())
                 .writer(productQAWriter())
@@ -350,7 +350,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step productIndexingStep() {
         return new StepBuilder("productIndexingStep", jobRepository)
-                .<Product, ProductDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<Product, ProductDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productReader())
                 .processor(productProcessor())
                 .writer(productWriter())
@@ -360,7 +360,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step productSkuIndexingStep() {
         return new StepBuilder("productSkuIndexingStep", jobRepository)
-                .<ProductSku, ProductSkuDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<ProductSku, ProductSkuDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productSkuReader())
                 .processor(productSkuProcessor())
                 .writer(productSkuWriter())
@@ -370,7 +370,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step productSizeIndexingStep() {
         return new StepBuilder("productSizeIndexingStep", jobRepository)
-                .<ProductSize, ProductSizeDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<ProductSize, ProductSizeDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productSizeReader())
                 .processor(productSizeProcessor())
                 .writer(productSizeWriter())
@@ -380,7 +380,7 @@ public class ElasticsearchBatchConfig {
     @Bean
     public Step subcategoryIndexingStep() {
         return new StepBuilder("subcategoryIndexingStep", jobRepository)
-                .<Subcategory, SubcategoryDocument>chunk(CHUNK_SIZE, metaTransactionManager)
+                .<Subcategory, SubcategoryDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(subcategoryReader())
                 .processor(subcategoryProcessor())
                 .writer(subcategoryWriter())
