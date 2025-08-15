@@ -128,12 +128,13 @@ spring:
   batch:
      job:
        enabled: false
+       name: indexingJob
      jdbc:
        initialize-schema: never
   #     #ALTER ROLE product SET search_path TO meta, public; 미리 실행
   #     table-prefix: meta.BATCH_
-  #   transaction:
-  #     rollback-on: java.lang.Exception
+     transaction:
+       rollback-on: java.lang.Exception
 
 logging:
   level:

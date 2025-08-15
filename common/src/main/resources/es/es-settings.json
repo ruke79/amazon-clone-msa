@@ -1,0 +1,32 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    },
+    "analysis": {
+      "tokenizer": {
+        "custom_nori_tokenizer": {
+          "type": "nori_tokenizer",
+          "decompound_mode": "mixed",
+          "user_dictionary": "dict/userdict_ko.txt"
+        },
+        "custom_kuromoji_tokenizer": {
+          "type": "kuromoji_tokenizer",
+          "mode": "normal",
+          "user_dictionary": "dict/userdict_ja.txt"
+        }
+      },
+      "analyzer": {
+        "korean_analyzer": {
+          "type": "custom",
+          "tokenizer": "custom_nori_tokenizer"
+        },
+        "japanese_analyzer": {
+          "type": "custom",
+          "tokenizer": "custom_kuromoji_tokenizer"
+        }
+      }
+    }
+  }
+}
