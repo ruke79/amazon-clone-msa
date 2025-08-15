@@ -19,8 +19,6 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -31,8 +29,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.scope.context.StepContext;
+import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.core.StepExecution;
+
+import org.springframework.batch.core.listener.StepExecutionListenerSupport;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.elasticsearch.core.index.AliasAction;
 import org.springframework.data.elasticsearch.core.index.AliasActions;
@@ -63,8 +73,6 @@ public class ElasticsearchBatchConfig {
     private String categoryAliasName;
     @Value("${elasticsearch.alias.name.product-color:product-color-alias}")
     private String productColorAliasName;
-    @Value("#{jobParameters['newIndexName']}")
-    private String newIndexName;
 
     public ElasticsearchBatchConfig(JobRepository jobRepository,
                                     @Qualifier("batchTransactionManager") PlatformTransactionManager batchTransactionManager,
@@ -93,14 +101,36 @@ public class ElasticsearchBatchConfig {
         this.subcategoryDocumentRepository = subcategoryDocumentRepository;
     }
 
-    // --- Readers ---
+    // --- TaskExecutor 빈 추가: 병렬 처리를 위한 스레드 풀 정의 ---
+    @Bean
+    public TaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5); // 기본 스레드 수
+        executor.setMaxPoolSize(10); // 최대 스레드 수
+        executor.setQueueCapacity(25); // 큐 사이즈
+        executor.setThreadNamePrefix("batch-thread-");
+        executor.initialize();
+        return executor;
+    }
+
+    // --- Readers (수정된 부분) ---
     @Bean
     public JpaPagingItemReader<Product> productReader() {
+        String queryString = "SELECT p FROM Product p " +
+                "LEFT JOIN FETCH p.category " +
+                "LEFT JOIN FETCH p.subcategories " +
+                "LEFT JOIN FETCH p.details " +
+                "LEFT JOIN FETCH p.questions " +
+                "LEFT JOIN FETCH p.skus s " + // `p.skus`와 그 하위 `p.skus.sizes` 컬렉션도 패치해야 합니다.
+                "LEFT JOIN FETCH s.sizes " + // `ProductSku` 내의 `sizes` 컬렉션 패치 추가
+                "LEFT JOIN FETCH s.color "; // `ProductSku` 내의 `color` 컬렉션 패치 추가
+        
         return new JpaPagingItemReaderBuilder<Product>()
                 .name("productReader")
                 .entityManagerFactory(entityManagerFactory)
-                .queryString("SELECT p FROM Product p LEFT JOIN FETCH p.category LEFT JOIN FETCH p.subcategories LEFT JOIN FETCH p.details LEFT JOIN FETCH p.questions LEFT JOIN FETCH p.skus")
+                .queryString(queryString)
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
@@ -111,6 +141,7 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT c FROM Category c")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
     
@@ -121,6 +152,7 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT pc FROM ProductColor pc")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
@@ -131,6 +163,7 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT pd FROM ProductDetails pd")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
@@ -141,6 +174,7 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT qa FROM ProductQA qa")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
@@ -151,6 +185,7 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT ps FROM ProductSku ps")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
@@ -161,6 +196,7 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT ps FROM ProductSize ps")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
@@ -171,10 +207,11 @@ public class ElasticsearchBatchConfig {
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT s FROM Subcategory s")
                 .pageSize(CHUNK_SIZE)
+                .saveState(false)
                 .build();
     }
 
-    // --- Processors ---
+    // --- Processors (수정된 부분) ---
     @Bean
     public ItemProcessor<Product, ProductDocument> productProcessor() {
         return product -> {
@@ -255,7 +292,7 @@ public class ElasticsearchBatchConfig {
                 .discount(sku.getDiscount())
                 .sold(sku.getSold())
                 .build();
-    }
+    };
 
     @Bean
     public ItemProcessor<ProductSize, ProductSizeDocument> productSizeProcessor() {
@@ -266,7 +303,7 @@ public class ElasticsearchBatchConfig {
                 .quantity(size.getQuantity())
                 .price(size.getPrice().floatValue())
                 .build();
-    }
+    };
 
     @Bean
     public ItemProcessor<Subcategory, SubcategoryDocument> subcategoryProcessor() {
@@ -278,91 +315,182 @@ public class ElasticsearchBatchConfig {
                 .build();
     }
 
-    // --- Writers ---
+    // --- Writers (StepExecutionListener를 사용하여 JobParameters를 주입받도록 수정) ---
+    // ItemWriter는 StepExecutionListener를 구현해야 StepExecution에 접근할 수 있습니다.
+    public class ProductWriter implements ItemWriter<ProductDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends ProductDocument> chunk) {
+            String indexName = this.newIndexName + "-products";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class CategoryWriter implements ItemWriter<CategoryDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends CategoryDocument> chunk) {
+            String indexName = this.newIndexName + "-categories";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class ProductColorWriter implements ItemWriter<ProductColorDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends ProductColorDocument> chunk) {
+            String indexName = this.newIndexName + "-product-colors";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class ProductDetailsWriter implements ItemWriter<ProductDetailsDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends ProductDetailsDocument> chunk) {
+            String indexName = this.newIndexName + "-product-details";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class ProductQAWriter implements ItemWriter<ProductQADocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends ProductQADocument> chunk) {
+            String indexName = this.newIndexName + "-product-qa";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class ProductSkuWriter implements ItemWriter<ProductSkuDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends ProductSkuDocument> chunk) {
+            String indexName = this.newIndexName + "-product-skus";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class ProductSizeWriter implements ItemWriter<ProductSizeDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends ProductSizeDocument> chunk) {
+            String indexName = this.newIndexName + "-product-sizes";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    public class SubcategoryWriter implements ItemWriter<SubcategoryDocument>, StepExecutionListener {
+        private String newIndexName;
+
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+            this.newIndexName = stepExecution.getJobParameters().getString("newIndexName", "default");
+        }
+        
+        @Override
+        public void write(Chunk<? extends SubcategoryDocument> chunk) {
+            String indexName = this.newIndexName + "-subcategories";
+            elasticsearchOperations.save(chunk.getItems(), IndexCoordinates.of(indexName));
+        }
+    }
+
+    // --- ItemWriter 빈을 생성하여 반환하도록 수정
+    @Bean
+    public ItemWriter<ProductDocument> productWriter() {
+        return new ProductWriter();
+    }
+    
     @Bean
     public ItemWriter<CategoryDocument> categoryWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-categories" : "categories";
-        return new RepositoryItemWriterBuilder<CategoryDocument>()
-                .repository(categoryDocumentRepository)
-                .methodName("save")
-                .build();
+        return new CategoryWriter();
     }
     
     @Bean
     public ItemWriter<ProductColorDocument> productColorWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-product-colors" : "product-colors";
-        return new RepositoryItemWriterBuilder<ProductColorDocument>()
-                .repository(productColorDocumentRepository)
-                .methodName("save")
-                .build();
+        return new ProductColorWriter();
     }
     
     @Bean
     public ItemWriter<ProductDetailsDocument> productDetailsWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-product-details" : "product-details";
-        return new RepositoryItemWriterBuilder<ProductDetailsDocument>()
-                .repository(productDetailsDocumentRepository)
-                .methodName("save")
-                .build();
+        return new ProductDetailsWriter();
     }
     
     @Bean
     public ItemWriter<ProductQADocument> productQAWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-product-qa" : "product-qa";
-        return new RepositoryItemWriterBuilder<ProductQADocument>()
-                .repository(productQADocumentRepository)
-                .methodName("save")
-                .build();
-    }
-    
-    @Bean
-    public ItemWriter<ProductDocument> productWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-products" : "products";
-        return new RepositoryItemWriterBuilder<ProductDocument>()
-                .repository(productDocumentRepository)
-                .methodName("save")
-                .build();
+        return new ProductQAWriter();
     }
     
     @Bean
     public ItemWriter<ProductSkuDocument> productSkuWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-product-skus" : "product-skus";
-        return new RepositoryItemWriterBuilder<ProductSkuDocument>()
-                .repository(productSkuDocumentRepository)
-                .methodName("save")
-                .build();
+        return new ProductSkuWriter();
     }
     
     @Bean
     public ItemWriter<ProductSizeDocument> productSizeWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-product-sizes" : "product-sizes";
-        return new RepositoryItemWriterBuilder<ProductSizeDocument>()
-                .repository(productSizeDocumentRepository)
-                .methodName("save")
-                .build();
+        return new ProductSizeWriter();
     }
-
+    
     @Bean
     public ItemWriter<SubcategoryDocument> subcategoryWriter() {
-        String indexName = newIndexName != null ? newIndexName + "-subcategories" : "subcategories";
-        return new RepositoryItemWriterBuilder<SubcategoryDocument>()
-                .repository(subcategoryDocumentRepository)
-                .methodName("save")
-                .build();
+        return new SubcategoryWriter();
     }
     
     // --- Roll-over Tasklet ---
     @Bean
     public Tasklet aliasRollOverTasklet() {
         return (contribution, chunkContext) -> {
-            String newIndex = chunkContext.getStepContext().getJobParameters().get("newIndexName").toString();
+
+            Map<String, Object> jobParameters = chunkContext.getStepContext().getJobParameters();
+            Object newIndexObj = jobParameters.get("newIndexName");
+            final String newIndex = (newIndexObj != null) ? newIndexObj.toString() : "default-new-index"; // 기본값 설정
 
             List<String> existingIndices = elasticsearchOperations.indexOps(IndexCoordinates.of(productAliasName)).getAliases().keySet().stream()
                 .filter(index -> !index.equals(newIndex))
                 .collect(Collectors.toList());
 
-            // AliasActionParameters의 withIndices 메서드는 가변인자를 받습니다.
-            // The withIndices method of AliasActionParameters accepts a variable number of arguments.
             AliasAction addAction = new AliasAction.Add(
                 AliasActionParameters.builder()
                     .withIndices(newIndex)
@@ -400,97 +528,105 @@ public class ElasticsearchBatchConfig {
     }
 
     @Bean
-    public Step categoryIndexingStep() {
+    public Step categoryIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("categoryIndexingStep", jobRepository)
                 .<Category, CategoryDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(categoryReader())
                 .processor(categoryProcessor())
                 .writer(categoryWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step productColorIndexingStep() {
+    public Step productColorIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("productColorIndexingStep", jobRepository)
                 .<ProductColor, ProductColorDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productColorReader())
                 .processor(productColorProcessor())
                 .writer(productColorWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step productDetailsIndexingStep() {
+    public Step productDetailsIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("productDetailsIndexingStep", jobRepository)
                 .<ProductDetails, ProductDetailsDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productDetailsReader())
                 .processor(productDetailsProcessor())
                 .writer(productDetailsWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step productQAIndexingStep() {
+    public Step productQAIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("productQAIndexingStep", jobRepository)
                 .<ProductQA, ProductQADocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productQAReader())
                 .processor(productQAProcessor())
                 .writer(productQAWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step productIndexingStep() {
+    public Step productIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("productIndexingStep", jobRepository)
                 .<Product, ProductDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productReader())
                 .processor(productProcessor())
                 .writer(productWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step productSkuIndexingStep() {
+    public Step productSkuIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("productSkuIndexingStep", jobRepository)
                 .<ProductSku, ProductSkuDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productSkuReader())
                 .processor(productSkuProcessor())
                 .writer(productSkuWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step productSizeIndexingStep() {
+    public Step productSizeIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("productSizeIndexingStep", jobRepository)
                 .<ProductSize, ProductSizeDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productSizeReader())
                 .processor(productSizeProcessor())
                 .writer(productSizeWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
 
     @Bean
-    public Step subcategoryIndexingStep() {
+    public Step subcategoryIndexingStep(TaskExecutor taskExecutor) {
         return new StepBuilder("subcategoryIndexingStep", jobRepository)
                 .<Subcategory, SubcategoryDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(subcategoryReader())
                 .processor(subcategoryProcessor())
                 .writer(subcategoryWriter())
+                .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
-    
+
     // --- Job ---
     @Bean
     public Job indexingJob() {
         return new JobBuilder("indexingJob", jobRepository)
-                .start(categoryIndexingStep())
-                .next(productColorIndexingStep())
-                .next(productDetailsIndexingStep())
-                .next(productQAIndexingStep())
-                .next(productIndexingStep())
-                .next(productSkuIndexingStep())
-                .next(productSizeIndexingStep())
-                .next(subcategoryIndexingStep())
+                .start(categoryIndexingStep(taskExecutor()))
+                .next(productColorIndexingStep(taskExecutor()))
+                .next(productDetailsIndexingStep(taskExecutor()))
+                .next(productQAIndexingStep(taskExecutor()))
+                .next(productIndexingStep(taskExecutor()))
+                .next(productSkuIndexingStep(taskExecutor()))
+                .next(productSizeIndexingStep(taskExecutor()))
+                .next(subcategoryIndexingStep(taskExecutor()))
                 .next(aliasRollOverStep())
                 .build();
     }
