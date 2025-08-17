@@ -32,6 +32,8 @@ import jakarta.persistence.Table;
 )
 	public class ChatMember {
 
+		
+
 	@Id
 	@Column(name = "member_id")
 	private Long id;

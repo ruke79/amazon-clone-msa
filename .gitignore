@@ -47,3 +47,6 @@ common/src/main/resources/localhost.key
 common/src/main/resources/localhost.p12
 
 
+docker-compose-services-2-prd.yml
+docker-compose-services-1-prd.yml
+docker-compose-core-prd.yml

@@ -14,7 +14,7 @@ import com.project.order_service.config.FeignConfig;
 /**
  * 마이크로서비스 간의 호출을 위한 feignclient
  */
-@FeignClient(name = "catalog-service", url="${feign.catalog-url}")
+@FeignClient(name = "catalog-service", configuration = FeignConfig.class)
 public interface CatalogServiceClient {
 
     // @RequestMapping(method = RequestMethod.GET, value = "/api/{productId}")

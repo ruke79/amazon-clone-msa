@@ -30,9 +30,11 @@ eureka:
       defaultZone: https://localhost:8761/eureka
 
 feign:
-  user-url: https://localhost:8080
-  catalog-url: https://localhost:8081
-  cart-url: https://localhost:8082
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
 
 spring:
   application:

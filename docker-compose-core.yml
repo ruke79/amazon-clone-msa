@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    image: ${EUREKA_SERVER_IMAGE_NAME}:${EUREKA_SERVER_IMAGE_VERSION}
+    container_name: eureka-server
+    hostname: eureka-server-host
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    volumes:
+      - /home/ubuntu/resources/:/app/resources/
+      - /var/log/eureka-server:/var/log/eureka-server
+    environment:
+      - SERVER_PORT=8761
+      - SPRING_APPLICATION_NAME=discovery-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=
+      - SERVER_SSL_KEY_PASSWORD=
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - LOGGING_LEVEL_ROOT=INFO
+      - EUREKA_CLIENT_TLS_ENABLED=true
+    networks:
+      - msa-core-network
+    
+  gateway-server:
+    image: ${GATEWAY_SERVER_IMAGE_NAME}:${GATEWAY_SERVER_IMAGE_VERSION}
+    container_name: gateway-server
+    hostname: gateway-server-host
+    build:
+      context: ./gateway-server
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - /home/ubuntu/resources/  :/app/resources/  
+      - /var/log/gateway-server:/var/log/gateway-server
+    environment:
+      - SERVER_PORT=8000
+      - SPRING_APPLICATION_NAME=gateway-server
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SERVER_SSL_KEY_STORE_PASSWORD=
+      - SERVER_SSL_KEY_PASSWORD=
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - SPRING_APP_JWTSECRET=
+      - LOGGING_LEVEL_ROOT=INFO
+    depends_on:
+      - eureka-server
+    networks:
+      - msa-core-network
+
+networks:
+  msa-core-network:
+    driver: bridge
+    

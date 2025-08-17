@@ -14,7 +14,7 @@ import com.project.order_service.config.FeignConfig;
  * 마이크로서비스 간의 호출을 위한 feignclient
  */
 @Component
-@FeignClient(name="user-service", url="${feign.user-url}", configuration = FeignConfig.class)
+@FeignClient(name="user-service", configuration = FeignConfig.class)
 public interface UserServiceClient {
 
    @GetMapping("api/auth/user/id")

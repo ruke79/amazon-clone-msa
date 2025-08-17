@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  user-service:
+    image: ${USER_SERVICE_IMAGE_NAME}:${USER_SERVICE_IMAGE_VERSION}
+    container_name: user-service
+    hostname: user-service-host
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/user-service:/var/log/user-service
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_APPLICATION_NAME=user-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=  
+      - SERVER_SSL_KEY_PASSWORD=  
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-1-network
+
+  cart-service:
+    image: ${CART_SERVICE_IMAGE_NAME}:${CART_SERVICE_IMAGE_VERSION}
+    container_name: cart-service
+    hostname: cart-service-host
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/cart-service:/var/log/cart-service
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_APPLICATION_NAME=cart-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=  
+      - SERVER_SSL_KEY_PASSWORD=  
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-1-network
+
+  catalog-service:
+    image: ${CATALOG_SERVICE_IMAGE_NAME}:${CATALOG_SERVICE_IMAGE_VERSION}
+    container_name: catalog-service
+    hostname: catalog-service-host
+    build:
+      context: ./catalog-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/catalog-service:/var/log/catalog-service
+    environment:
+      - SERVER_PORT=8081
+      - SPRING_APPLICATION_NAME=catalog-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=  
+      - SERVER_SSL_KEY_PASSWORD=  
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-1-network
+
+  chat-service:
+    image: ${CHAT_SERVICE_IMAGE_NAME}:${CHAT_SERVICE_IMAGE_VERSION}
+    container_name: chat-service
+    hostname: chat-service-host
+    build:
+      context: ./chat-service
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/chat-service:/var/log/chat-service
+    environment:
+      - SERVER_PORT=8086
+      - SPRING_APPLICATION_NAME=chat-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=  
+      - SERVER_SSL_KEY_PASSWORD=  
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-1-network
+
+networks:
+  services-1-network:
+    driver: bridge

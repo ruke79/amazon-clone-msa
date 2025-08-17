@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  coupon-service:
+    image: ${COUPON_SERVICE_IMAGE_NAME}:${COUPON_SERVICE_IMAGE_VERSION}
+    container_name: coupon-service
+    hostname: coupon-service-host
+    build:
+      context: ./coupon-service
+      dockerfile: Dockerfile
+    ports:
+      - "8183:8183"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/coupon-service:/var/log/coupon-service
+    environment:
+      - SERVER_PORT=8183
+      - SPRING_APPLICATION_NAME=coupon-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=  
+      - SERVER_SSL_KEY_PASSWORD=  
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-2-network
+
+  pay-service:
+    image: ${PAY_SERVICE_IMAGE_NAME}:${PAY_SERVICE_IMAGE_VERSION}
+    container_name: pay-service
+    hostname: pay-service-host
+    build:
+      context: ./pay-service
+      dockerfile: Dockerfile
+    ports:
+      - "8087:8087"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/pay-service:/var/log/pay-service
+    environment:
+      - SERVER_PORT=8087
+      - SPRING_APPLICATION_NAME=pay-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-2-network
+
+  order-service:
+    image: ${ORDER_SERVICE_IMAGE_NAME}:${ORDER_SERVICE_IMAGE_VERSION}
+    container_name: order-service
+    hostname: order-service-host
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    volumes:
+      - /home/ubuntu/resources:/app/resources
+      - /var/log/order-service:/var/log/order-service
+    environment:
+      - SERVER_PORT=8084
+      - SPRING_APPLICATION_NAME=order-service
+      - SERVER_SSL_KEY_STORE_PASSWORD=  
+      - SERVER_SSL_KEY_PASSWORD=  
+      - SERVER_SSL_KEY_STORE_ALIAS=  
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=https://  :8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:https://  :8888
+      - LOGGING_LEVEL_ROOT=INFO
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - services-2-network
+
+networks:
+  services-2-network:
+    driver: bridge

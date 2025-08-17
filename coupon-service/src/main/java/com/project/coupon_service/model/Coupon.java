@@ -29,7 +29,10 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @SuperBuilder // @Builder 대신 @SuperBuilder 사용
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="coupon", 
+@Table(name="coupon", schema = "coupon",
+       uniqueConstraints = {
+        @jakarta.persistence.UniqueConstraint(columnNames = {"name", "user_id"}, name = "uk_coupon_name_user_id")
+       },
 indexes = {
         @Index(columnList = "name, user_id", name = "idx_coupon") })
 public class Coupon extends BaseEntity{
