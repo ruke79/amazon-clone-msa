@@ -6,7 +6,7 @@ WORKDIR /cart-service
 
 # JAR 파일을 컨테이너 내부로 복사
 # 프로젝트 루트에서 빌드한 후 해당 모듈의 target 디렉토리에 생성된 JAR 파일을 복사
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
 # 컨테이너가 시작될 때 실행될 명령어
