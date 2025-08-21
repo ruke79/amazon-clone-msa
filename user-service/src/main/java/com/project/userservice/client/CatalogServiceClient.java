@@ -17,7 +17,7 @@ import com.project.common.dto.ProductDto;
 /**
  * 마이크로서비스 간의 호출을 위한 feignclient
  */
-@FeignClient(name="catalog-service", url="${feign.catalog-url}")
+@FeignClient(name="catalog-service")
 public interface CatalogServiceClient {
 
    @RequestMapping(method=RequestMethod.PUT, value="/api/product/rating")
