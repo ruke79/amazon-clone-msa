@@ -7,7 +7,7 @@ services:
     hostname: coupon-service-host
     build:
       context: ./coupon-service
-      dockerfile: Dockerfile
+      Dockerfile: Dockerfile
     ports:
       - "8183:8183"
     volumes:
@@ -32,7 +32,7 @@ services:
     hostname: pay-service-host
     build:
       context: ./pay-service
-      dockerfile: Dockerfile
+      Dockerfile: Dockerfile
     ports:
       - "8087:8087"
     volumes:
@@ -54,7 +54,7 @@ services:
     hostname: order-service-host
     build:
       context: ./order-service
-      dockerfile: Dockerfile
+      Dockerfile: Dockerfile
     ports:
       - "8084:8084"
     volumes:
