@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -46,18 +47,14 @@ public class MongoSslConfig {
     private final MongoProperties mongoProperties;
 
     @Value("${spring.data.mongodb.cacert}")
-    private String certificateDecoded; //your CA Certifcate decoded (starts with BEGIN CERTIFICATE)
+    private String caCertificatePath; //your CA Certifcate decoded (starts with BEGIN CERTIFICATE)
 
     @Value("${spring.data.mongodb.keystore}")
     private String keystoreFile; //your CA Certifcate decoded (starts with BEGIN CERTIFICATE)
 
     @Value("${spring.data.mongodb.keystorePassword}")
     private String keystorePassword; //your CA Certifcate decoded (starts with BEGIN CERTIFICATE)
-
-    @Bean
-    public MongoClient mongoClient() {
-        return MongoClients.create(mongoClientOptions());
-    }
+    
 
     @Bean
     public MongoTemplate mongoTemplate() {
@@ -65,47 +62,50 @@ public class MongoSslConfig {
     }
 
     @Bean
-    public MongoClientSettings mongoClientOptions() {
-        MongoClientSettings.Builder mongoClientOptions = MongoClientSettings.builder().applyConnectionString(
-            new ConnectionString(mongoProperties.getClient()));
-        try {
-            
-                        
-            //InputStream inputStream = new ByteArrayInputStream(certificateDecoded.getBytes(StandardCharsets.UTF_8));
-            FileInputStream inputStream = new FileInputStream(certificateDecoded);
+    public MongoClient mongoClient() {
+        
+        try {           
+             
+            FileInputStream caFileStream  = new FileInputStream(caCertificatePath);
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-            X509Certificate caCert = (X509Certificate) certificateFactory.generateCertificate(inputStream);
+            X509Certificate caCert = (X509Certificate) certificateFactory.generateCertificate(caFileStream );
+            caFileStream.close();
 
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory
-                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null);
+            trustStore.setCertificateEntry("ca", caCert);
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(trustStore);
             
-            //keyStore.load(new FileInputStream(keystoreFile), keystorePassword.toCharArray()); // You don't need the KeyStore instance to come from a file.
-            keyStore.load(null); // You don't need the KeyStore instance to come from a file.
-            keyStore.setCertificateEntry("cacert", caCert);
-
-            trustManagerFactory.init(keyStore);
-
+             // KeyStore 설정 (클라이언트 인증서 및 키)
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            FileInputStream keyStoreStream = new FileInputStream(keystoreFile);
+            keyStore.load(keyStoreStream, keystorePassword.toCharArray());
+            keyStoreStream.close();
+                       
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            kmf.init(keyStore, keystorePassword.toCharArray());
+            
             SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
-            mongoClientOptions.applyToSslSettings(builder -> {
-                builder.enabled(true);
-                //builder.invalidHostNameAllowed(true);                
-                builder.context(sslContext);
-            })
-            .applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(10L, TimeUnit.SECONDS))
-             .readConcern(ReadConcern.DEFAULT)
-        .writeConcern(WriteConcern.MAJORITY)
-        .readPreference(ReadPreference.primary())
-            //.applyToSocketSettings(socketSettings -> socketSettings
-            //.connectTimeout(1, TimeUnit.MINUTES)
-            //.readTimeout(1, TimeUnit.MINUTES))
-            .build();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
+            sslContext.init(null, tmf.getTrustManagers(), null);
 
-        return mongoClientOptions.build();
+            // MongoClientSettings에 SSL Context 설정
+            MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString(mongoProperties.getClient()))
+                .applyToSslSettings(builder -> builder.enabled(true).context(sslContext))
+                .applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(10L, TimeUnit.SECONDS))
+                .readConcern(ReadConcern.DEFAULT)
+                .writeConcern(WriteConcern.MAJORITY)
+                .readPreference(ReadPreference.primary())
+                .build();
+            
+            return MongoClients.create(settings);
+
+            
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to configure MongoDB with SSL.", e);
+        }        
     }
    
 
