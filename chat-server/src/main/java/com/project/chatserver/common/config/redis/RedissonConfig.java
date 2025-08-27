@@ -14,6 +14,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
+    // Redis 서버의 비밀번호를 주입받습니다.
+    @Value("${spring.data.redis.password}")
+    private String password;
+
     @Value("${spring.data.redis.ssl.enabled}")
     private boolean useSsl;
 
@@ -29,7 +33,9 @@ public class RedissonConfig {
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-        config.useSingleServer().setAddress("rediss://mywebserv.site:6379");
+        config.useSingleServer()
+                .setAddress("rediss://mywebserv.site:6379")
+                .setPassword(password); // <- 이 줄을 추가하여 비밀번호를 설정합니다.
         
         if (useSsl) {
              try {
