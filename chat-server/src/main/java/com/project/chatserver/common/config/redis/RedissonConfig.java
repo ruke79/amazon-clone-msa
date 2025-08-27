@@ -12,7 +12,8 @@ public class RedissonConfig {
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://mywebserv.site:6379");
+        /* rediss -> SSL */
+        config.useSingleServer().setAddress("rediss://mywebserv.site:6379");
         return Redisson.create(config);
     }
 }
