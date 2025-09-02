@@ -18,6 +18,7 @@ import com.project.userservice.security.request.AddressRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class AddressService {
     private final UserRepository userRepository;
     
   
-    @Transactional
+    
     public AddressDto saveShippingAddress(AddressRequest request, String username) {
         
         User user = userRepository.findByUsername(username)
@@ -65,8 +66,7 @@ public class AddressService {
         return result;
     }
         
-    
-    @Transactional
+        
     public AddressDto selectShipAddress(String username, String addressId) {
 
         Optional<User> user = userRepository.findByUsername(username);
@@ -131,7 +131,7 @@ public class AddressService {
         return addressDtos;
     }
 
-    @Transactional
+    
     public void deleteShippingAddress(String username, String addressId) {
 
         Optional<User> user = userRepository.findByUsername(username);

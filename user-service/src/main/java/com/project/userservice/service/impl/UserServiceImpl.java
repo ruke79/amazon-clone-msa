@@ -58,6 +58,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -277,8 +278,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
-    @Transactional
+    @Override    
     public User registerNewUserAccount(SignupRequest request) {
 
         // Create new user's account
@@ -349,8 +349,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    @Transactional
+    @Override    
     public void deleteUser(User user) {
 
         final VerificationToken verificationToken = tokenRepository.findByUser(user);
@@ -469,8 +468,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    @Transactional
+    @Override    
     public void registerConfirmed(User user) throws JsonProcessingException {
 
         
@@ -502,8 +500,7 @@ public class UserServiceImpl implements UserService {
         OutboxEvent event = new OutboxEvent(in.getUserId().toString(), "User", "user", payload);
         return event;
     }
-
-    @Transactional
+    
     public String updatePaymentMethod(String username, String paymentMethod) {
 
         Optional<User> user = userRepository.findByUsername(username);

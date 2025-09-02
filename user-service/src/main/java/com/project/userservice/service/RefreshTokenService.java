@@ -24,6 +24,7 @@ import com.project.userservice.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,7 +38,8 @@ public class RefreshTokenService {
 
   private final JwtUtils jwtUtils;
 
-    
+  
+  @Transactional(readOnly = true)
   public Optional<RefreshToken> findByUserId(String sessionId, String userId) {
     return refreshTokenRepository.findByUserId(sessionId, userId);
   }

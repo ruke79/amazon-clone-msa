@@ -166,6 +166,7 @@ public class SecurityConfig {
                 return authenticationManagerBuilder.build();
         }
 
+
         // @Bean
         // public CommandLineRunner initData(RoleRepository roleRepository,
         //                 UserRepository userRepository,

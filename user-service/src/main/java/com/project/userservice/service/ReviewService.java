@@ -27,6 +27,7 @@ import com.project.userservice.security.response.ReviewsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class ReviewService {
 
     private final CatalogServiceClient catalogServiceClient;
 
-    @Transactional
+    
     public List<ReviewDto> deleteReview(String username, Long id) {
 
         User user = userRepository.findByUsername(username).orElse(null);
@@ -135,7 +136,7 @@ public class ReviewService {
         return result;
     }
 
-    @Transactional
+    
     public List<ReviewDto> addReview(String username, Long id, ReviewRequest request, List<MultipartFile> images)
             throws IOException {
 

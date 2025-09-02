@@ -24,6 +24,7 @@ import com.project.userservice.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Transactional
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -55,7 +56,7 @@ public class NotificationService {
         return emitter;
     }
     
-    @Transactional
+    
     public void sendNotification(String userId, String message) {
         Notification notification = new Notification(message, userId, sessionId);
         Notification savedNotification = notificationRepository.save(notification);
