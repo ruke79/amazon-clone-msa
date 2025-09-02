@@ -230,6 +230,67 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+     /**
+     * 모든 카테고리/서브카테고리별 상품 목록을 순회하며 캐시를 미리 채웁니다 (Warm-up).
+     */
+    public List<ProductDto> warmUpProductCaches() {
+        log.info("Starting to warm up product caches...");
+
+        // 1. 모든 카테고리 목록을 가져옵니다.
+        List<Category> allCategories = categoryRepository.findAll();
+        List<ProductDto> products = new ArrayList<>();
+
+        for (Category category : allCategories) {
+            // 2. 현재 카테고리에 속한 모든 서브카테고리 목록을 가져옵니다.
+            List<Subcategory> allSubcategories = subCategoryRepository.findByCategory(category);
+            
+            for (Subcategory subcategory : allSubcategories) {
+                int page = 0;
+                while (true) {
+                    log.info("Fetching products for Category: {}, Subcategory: {}, Page: {}",
+                            category.getCategoryName(), subcategory.getSubcategoryName(), page);
+
+                    // 3. getProductsByCategoryAndSubcategory 메소드를 호출하여 캐시를 채웁니다.
+                    products.addAll( getProductsByCategoryAndSubcategory(
+                            category.getCategoryName(), subcategory.getSubcategoryName(), page));
+
+                    // 페이지가 비었거나, 페이지 크기보다 작으면 마지막 페이지이므로 루프를 종료합니다.
+                    if (products.isEmpty() || products.size() < 10) {
+                        break;
+                    }
+
+                    page++; // 다음 페이지로 이동
+                }
+            }
+        }
+        log.info("Product cache warm-up completed.");
+        return products;
+    }
+
+     /**
+     * 카테고리 및 서브카테고리별로 상품을 10개씩 페이지네이션하여 조회합니다.
+     * @param categoryName
+     * @param subcategoryName
+     * @param page
+     * @return
+     */
+    @Cacheable(value = "products", key = "#categoryName + '_' + #subcategoryName + '_' + #page")
+    public List<ProductDto> getProductsByCategoryAndSubcategory(String categoryName, String subcategoryName, int page) {
+        // 한 페이지에 10개씩 가져오도록 PageRequest 객체를 생성합니다.
+        PageRequest pageRequest = PageRequest.of(page, 10);
+
+        // ProductRepository에 새로운 쿼리 메소드를 추가하여 사용해야 합니다.
+        // 이 쿼리 메소드는 categoryName과 subcategoryName을 기준으로 결과를 필터링합니다.
+        // 이 메소드명은 JPA 규칙을 따르며, ProductSubcategory 엔티티를 통해 조인됩니다.
+        Page<Product> productsPage = productRepository
+                .findAllByCategory_CategoryNameAndSubcategories_Subcategory_SubcategoryName(
+                        categoryName, subcategoryName, pageRequest);
+
+        return productsPage.stream()
+                .map(Product::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     @Cacheable(value = "product", key = "#productId")
     public ProductDto getProductById(Long productId) {
         return productRepository.findById(productId)

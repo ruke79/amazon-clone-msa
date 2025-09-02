@@ -26,10 +26,15 @@ const HomePage = () => {
         }
         {products && 
         <div className="z-10 relative">
-            <HomeProductSwiper products={products} category="women's clothing" />
+            {/* <HomeProductSwiper products={products} category="women's clothing" />
             <HomeProductSwiper products={products} category="men's clothing" />
             <HomeProductSwiper products={products} category="electronics" />
-            <HomeProductSwiper products={products} category="jewelery" />            
+            <HomeProductSwiper products={products} category="jewelery" />             */}
+            <HomeProductSwiper products={products} category="fashion" />
+            <HomeProductSwiper products={products} category="consumer electronics" />
+            <HomeProductSwiper products={products} category="books" />
+            <HomeProductSwiper products={products} category="food" />            
+            <HomeProductSwiper products={products} category="furniture" />            
         </div>                  
         }
         </main>          

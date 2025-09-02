@@ -28,6 +28,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.productId = :productId")
     Product findByIdWithPessimisticLock(@Param("productId") Long productId);
 
+     
     // --- 낙관적 잠금 적용 예제 ---
     // 낙관적 잠금은 엔티티의 @Version 필드만 있으면 자동으로 동작하지만, 명시적으로 락 모드를 지정할 수도 있습니다.
     @Lock(LockModeType.OPTIMISTIC)
@@ -37,6 +38,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     public Page<Product> findAllByCategory_CategoryId(Long cateogry, Pageable page);
     public Page<Product> findAllByCategory_CategoryName(String cateogry, Pageable page);
+    public Page<Product> findAllByCategory_CategoryNameAndSubcategories_Subcategory_SubcategoryName(
+        String categoryName, String subcategoryName, Pageable pageable
+    );
+    
     public Page<Product> findAll(Pageable page);
 
     public Page<Product> findAllByCategory_CategoryNameOrderByProductIdDesc(String categoryName, Pageable page);

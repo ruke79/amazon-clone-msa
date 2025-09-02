@@ -1,15 +1,21 @@
 package com.project.catalog_service.repository;
 
 import java.util.List;
+
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.project.catalog_service.model.Subcategory;
+import com.project.catalog_service.model.Category;
+
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.Lock;
 
 @Repository
 public interface  SubcategoryRepository extends JpaRepository<Subcategory, Long>  {
+
+    List<Subcategory> findByCategory(Category category);
 
     // --- 비관적 잠금 적용 ---
     @Lock(LockModeType.PESSIMISTIC_WRITE)

@@ -51,7 +51,7 @@ public class ProductController {
     ResponseEntity<?> getProducts() {
 
         try {
-            List<ProductDto> response = productService.getProducts();
+            List<ProductDto> response = productService.warmUpProductCaches();
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
