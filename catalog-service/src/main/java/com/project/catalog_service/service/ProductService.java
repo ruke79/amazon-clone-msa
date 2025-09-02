@@ -272,8 +272,8 @@ public class ProductService {
      */
     @Cacheable(value = "products", key = "#categoryName + '_' + #subcategoryName + '_' + #page")
     public List<ProductDto> getProductsByCategoryAndSubcategory(String categoryName, String subcategoryName, int page) {
-        // 한 페이지에 10개씩 가져오도록 PageRequest 객체를 생성합니다.
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        // 한 페이지에 1개씩 가져오도록 PageRequest 객체를 생성합니다.
+        PageRequest pageRequest = PageRequest.of(page, 1);
 
         // ProductRepository에 새로운 쿼리 메소드를 추가하여 사용해야 합니다.
         // 이 쿼리 메소드는 categoryName과 subcategoryName을 기준으로 결과를 필터링합니다.
