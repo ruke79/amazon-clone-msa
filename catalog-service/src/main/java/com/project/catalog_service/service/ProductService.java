@@ -246,7 +246,7 @@ public class ProductService {
             
             for (Subcategory subcategory : allSubcategories) {
                 int page = 0;
-                while (true) {
+                
                     log.info("Fetching products for Category: {}, Subcategory: {}, Page: {}",
                             category.getCategoryName(), subcategory.getSubcategoryName(), page);
 
@@ -254,13 +254,9 @@ public class ProductService {
                     products.addAll( getProductsByCategoryAndSubcategory(
                             category.getCategoryName(), subcategory.getSubcategoryName(), page));
 
-                    // 페이지가 비었거나, 페이지 크기보다 작으면 마지막 페이지이므로 루프를 종료합니다.
-                    if (products.isEmpty() || products.size() < 10) {
-                        break;
-                    }
-
+                
                     page++; // 다음 페이지로 이동
-                }
+                
             }
         }
         log.info("Product cache warm-up completed.");
