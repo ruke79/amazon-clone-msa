@@ -269,7 +269,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public User getUser(final String verificationToken) {
         final VerificationToken token = tokenRepository.findByToken(verificationToken);
         if (token != null) {
@@ -394,8 +394,7 @@ public class UserServiceImpl implements UserService {
         return vToken;
     }
 
-    @Override
-    @Transactional  // need to be transactional for the userRepository.save
+    @Override    
     public String validateVerificationToken(String token) {
         final VerificationToken verificationToken = tokenRepository.findByToken(token);
         if (verificationToken == null) {
