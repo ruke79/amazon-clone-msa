@@ -8,6 +8,7 @@ import com.project.userservice.model.User;
 import com.project.userservice.model.VerificationToken;
 import com.project.userservice.security.request.SignupRequest;
 import com.project.userservice.security.response.LoginResponse;
+import com.project.userservice.security.util.VerificationResult;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import java.util.List;
@@ -66,6 +67,8 @@ public interface UserService {
     VerificationToken generateNewVerificationToken(String token);
 
     String validateVerificationToken(String token);
+
+    VerificationResult validateAndGetUser(String token);
 
     GoogleAuthenticatorKey generate2FASecret(Long userId);
 

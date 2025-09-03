@@ -37,6 +37,7 @@ import com.project.userservice.security.jwt.JwtUtils;
 import com.project.userservice.security.response.LoginResponse;
 import com.project.userservice.security.service.UserDetailsImpl;
 import com.project.userservice.security.service.UserDetailsServiceImpl;
+import com.project.userservice.security.util.VerificationResult;
 import com.project.userservice.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,30 +62,51 @@ public class RegistrationController {
     @GetMapping("/user-service/registrationConfirm")
     public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws JsonProcessingException {
 
-        final String result = userService.validateVerificationToken(token);        
-        final User user = userService.getUser(token);
-        log.info("User object class: {}", user.getClass().getName()); //proxy class 확인용 로그
-
-        log.info("Before accessing user's email");
-        String email = user.getEmail();
-        log.info("After accessing user's email: {}", email);
+         VerificationResult result = userService.validateAndGetUser(token);
         
-        if ("valid".equals(result)) {
-            userService.registerConfirmed(user);
-            log.info("Account verified for user: {}", user.getUsername());
+        if ("valid".equals(result.getStatus())) {
+            userService.registerConfirmed(result.getUser());
+            log.info("Account verified for user: {}", result.getUser().getUsername());
             
-            // 성공 시 프론트엔드 URL로 직접 리다이렉션
             return new ModelAndView("redirect:" + frontendUrl + "/signin", model);
         }
-
-        userService.deleteUser(user);
+        
+        userService.deleteUser(result.getUser());
         log.warn("Account verification failed for token: {}", token);
         
-        // 실패 시 프론트엔드의 다른 URL로 리다이렉션하거나, 실패 메시지를 포함
-        model.addAttribute("messageKey", "auth.message." + result);
-        model.addAttribute("expired", "expired".equals(result));
+        model.addAttribute("messageKey", "auth.message." + result.getStatus());
+        model.addAttribute("expired", "expired".equals(result.getStatus()));
         model.addAttribute("token", token);
         return new ModelAndView("redirect:" + frontendUrl + "/verification-failed", model);
+
+        // final String result = userService.validateVerificationToken(token);        
+        // final User user = userService.getUser(token);
+
+        // log.info("User object class: {}", user.getClass().getName()); //proxy class 확인용 로그
+
+        // log.info("Before accessing user's email");
+        // String email = user.getEmail();
+        // log.info("After accessing user's email: {}", email);
+        
+        // if ("valid".equals(result)) {
+        //     userService.registerConfirmed(user);
+        //     log.info("Account verified for user: {}", user.getUsername());
+            
+        //     // 성공 시 프론트엔드 URL로 직접 리다이렉션
+        //     return new ModelAndView("redirect:" + frontendUrl + "/signin", model);
+        // }
+
+        // userService.deleteUser(user);
+        // log.warn("Account verification failed for token: {}", token);
+        
+        // // 실패 시 프론트엔드의 다른 URL로 리다이렉션하거나, 실패 메시지를 포함
+        // model.addAttribute("messageKey", "auth.message." + result);
+        // model.addAttribute("expired", "expired".equals(result));
+        // model.addAttribute("token", token);
+        // return new ModelAndView("redirect:" + frontendUrl + "/verification-failed", model);
+
+
+
     }
 
     // Rest API 버전 (프론트엔드와 통신용)

@@ -25,7 +25,7 @@ import com.project.userservice.security.jwt.JwtUtils;
 import com.project.userservice.security.response.LoginResponse;
 import com.project.userservice.security.service.UserDetailsImpl;
 import com.project.userservice.security.service.UserDetailsServiceImpl;
-
+import com.project.userservice.security.util.VerificationResult;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import lombok.RequiredArgsConstructor;
@@ -515,5 +515,28 @@ public class UserServiceImpl implements UserService {
         }
         return null;
 
+    }
+
+    @Override
+    public VerificationResult validateAndGetUser(String token) {
+
+          final VerificationToken verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            return new VerificationResult(TOKEN_INVALID, null);
+        }
+
+        final User user = verificationToken.getUser();
+        final Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            tokenRepository.delete(verificationToken);
+            return new VerificationResult(TOKEN_EXPIRED, null);
+        }
+
+        user.setEnabled(true);
+        userRepository.save(user);
+        
+        return new VerificationResult(TOKEN_VALID, user);
+        
+        
     }
 }
