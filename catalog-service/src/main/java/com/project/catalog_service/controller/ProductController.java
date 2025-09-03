@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputFilter.Status;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +50,27 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 
     private final ProductService productService;
+
+    private final JobLauncher jobLauncher;
+    //@Qualifier("productIndexingJob") // 이 라인을 추가
+    //private final Job productIndexingJob;
+    private final Map<String, Job> allJobs; // List<Job> 대신 Map<String, Job>을 사용하여 Job 이름으로 특정 Job을 주입
+
+     @PostMapping("/products/load")
+    public ResponseEntity<String> syncProducts() throws Exception {
+        // allJobs 맵에서 "productIndexingJob"이라는 이름의 Job을 가져와 실행
+        Job productIndexingJob = allJobs.get("productImportJob");
+
+        if (productIndexingJob == null) {
+            return ResponseEntity.internalServerError().body("Product indexing job not found!");
+        }
+
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis())
+                .toJobParameters();
+        jobLauncher.run(productIndexingJob, jobParameters);
+        return ResponseEntity.ok("Batch synchronization job started!");
+    }
 
     
     @GetMapping(value = "/product/products")

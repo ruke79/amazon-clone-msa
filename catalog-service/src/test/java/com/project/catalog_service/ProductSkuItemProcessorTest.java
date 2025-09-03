@@ -38,6 +38,19 @@ class ProductSkuItemProcessorTest {
     private Product product;
     private ProductColor color;
 
+    // Helper method to create Product instance for testing
+    private Product createProduct(Long id) {
+        Product p = null;
+        try {
+            var constructor = Product.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            p = constructor.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create Product instance for test", e);
+        }
+        return p;
+    }
+
     @BeforeEach
     void setUp() throws Exception {
         csvDto = new ProductSkuCsvDto();
@@ -45,10 +58,15 @@ class ProductSkuItemProcessorTest {
         csvDto.setColor_id(1L);
         csvDto.setImages("images\\food\\Image_2.jpg,images\\food\\Image_9.jpg");
 
-        product = new Product();
-        product.setId(1L);
+        product = createProduct(1L);
 
-        color = new ProductColor();
+        try {
+            var colorConstructor = ProductColor.class.getDeclaredConstructor();
+            colorConstructor.setAccessible(true);
+            color = colorConstructor.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create ProductColor instance for test", e);
+        }
         color.setId(1L);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
