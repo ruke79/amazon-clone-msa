@@ -43,10 +43,11 @@ public class ImageService {
         ObjectMetadata metadata = new ObjectMetadata();
         ByteArrayInputStream stream = getByteArrayInputStream(inputStream, metadata);
 
-        client.putObject(new PutObjectRequest(bucket, resource.getFilename(), stream, metadata)
+        // S3에 업로드할 때 전체 경로(path)를 키(key)로 사용합니다.
+        client.putObject(new PutObjectRequest(bucket, path, stream, metadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
-        return client.getUrl(bucket, resource.getFilename()).toString();
+        return client.getUrl(bucket, path).toString();
 
     }
 
