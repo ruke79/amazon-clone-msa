@@ -49,6 +49,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String requestUri = request.getRequestURI();
 
+        if (requestUri.matches("/registrationConfirm(?:\\/.*)?$")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (requestUri.matches("/api/auth/public/signin(?:\\/.*)?$")) {
 
             filterChain.doFilter(request, response);
@@ -66,6 +72,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
+
 
         
         String accessToken = parseJwt(request);
