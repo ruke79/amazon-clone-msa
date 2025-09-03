@@ -44,7 +44,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestController
+//@RestController
+@Controller
 @RequiredArgsConstructor
 public class RegistrationController {
 
@@ -57,60 +58,63 @@ public class RegistrationController {
     private String frontendUrl;
 
 
-    
     @GetMapping("/registrationConfirm")
-    public ResponseEntity<Map<String, String>> confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token)  throws JsonProcessingException {
+    public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws JsonProcessingException {
 
-        //Locale locale = request.getLocale();
-        //model.addAttribute("lang", locale.getLanguage());
         final String result = userService.validateVerificationToken(token);
         final User user = userService.getUser(token);
-        
-        Map<String, String> response = new HashMap<>();
-         
-        // if (result.equals("valid")) {
-            
-        //     // if (user.isUsing2FA()) {
-        //     // model.addAttribute("qr", userService.generateQRUrl(user));
-        //     // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
-        //     // }
-
-        //     userService.registerConfirmed(user);
-
-            
-                        
-        //     model.addAttribute("messageKey", "message.accountVerified");
-        //     return new ModelAndView("redirect:"+frontendUrl+"/signin", model);            
-        // }
-
-        // userService.deleteUser(user);
-        
-        // model.addAttribute("messageKey", "auth.message." + result);
-        // model.addAttribute("expired", "expired".equals(result));
-        // model.addAttribute("token", token);
-        // return new ModelAndView("redirect:/badUser", model);
-
         
         if ("valid".equals(result)) {
             userService.registerConfirmed(user);
             log.info("Account verified for user: {}", user.getUsername());
-
-            // 성공 응답 반환: 클라이언트에게 성공 메시지와 리다이렉션 URL을 전달
-            response.put("status", "success");
-            response.put("message", "message.accountVerified");
-            response.put("redirectUrl", frontendUrl + "/signin");
-            return ResponseEntity.ok(response);
+            
+            // 성공 시 프론트엔드 URL로 직접 리다이렉션
+            return new ModelAndView("redirect:" + frontendUrl + "/signin", model);
         }
 
         userService.deleteUser(user);
         log.warn("Account verification failed for token: {}", token);
+        
+        // 실패 시 프론트엔드의 다른 URL로 리다이렉션하거나, 실패 메시지를 포함
+        model.addAttribute("messageKey", "auth.message." + result);
+        model.addAttribute("expired", "expired".equals(result));
+        model.addAttribute("token", token);
+        return new ModelAndView("redirect:" + frontendUrl + "/verification-failed", model);
+    }
 
-        // 실패 응답 반환: 클라이언트에게 실패 메시지를 전달
-        response.put("status", "failure");
-        response.put("message", "auth.message." + result);
-        return ResponseEntity.badRequest().body(response);
+    // Rest API 버전 (프론트엔드와 통신용)
+    // 프론트엔드가 이 엔드포인트를 호출하고, JSON 응답을 받도록 구현
+    // 프론트엔드에서 리다이렉션 처리    
+    // @GetMapping("/registrationConfirm")
+    // public ResponseEntity<Map<String, String>> confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token)  throws JsonProcessingException {
+
+    //     //Locale locale = request.getLocale();
+    //     //model.addAttribute("lang", locale.getLanguage());
+    //     final String result = userService.validateVerificationToken(token);
+    //     final User user = userService.getUser(token);
+        
+    //     Map<String, String> response = new HashMap<>();
+                
+    //     if ("valid".equals(result)) {
+    //         userService.registerConfirmed(user);
+    //         log.info("Account verified for user: {}", user.getUsername());
+
+    //         // 성공 응답 반환: 클라이언트에게 성공 메시지와 리다이렉션 URL을 전달
+    //         response.put("status", "success");
+    //         response.put("message", "message.accountVerified");
+    //         response.put("redirectUrl", frontendUrl + "/signin");
+    //         return ResponseEntity.ok(response);
+    //     }
+
+    //     userService.deleteUser(user);
+    //     log.warn("Account verification failed for token: {}", token);
+
+    //     // 실패 응답 반환: 클라이언트에게 실패 메시지를 전달
+    //     response.put("status", "failure");
+    //     response.put("message", "auth.message." + result);
+    //     return ResponseEntity.badRequest().body(response);
     
-    }      
+    // }      
     
 
 }
