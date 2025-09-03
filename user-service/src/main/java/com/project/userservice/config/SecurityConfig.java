@@ -125,7 +125,7 @@ public class SecurityConfig {
                                 .requestMatchers("/user-service/registrationConfirm").permitAll()  // later change to /registrationConfirm
                                 // .requestMatchers("/registrationConfirm").permitAll()
                                 .requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/sse").permitAll() //hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/sse").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .anyRequest().authenticated());
 
