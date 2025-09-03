@@ -53,12 +53,13 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) {
         final String recipientAddress = user.getEmail();
         final String subject = "Registration Confirmation";
-        final String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
+        // final String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;         
+        String newConfirmationUrl = "https://backend.ysyproject.com/user-service/registrationConfirm?token=" + token;
         final String message = messages.getMessage("message.regSuccLink", null, "You registered successfully. To confirm your registration, please click on the below link.", event.getLocale());
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + " \r\n" + confirmationUrl);
+        email.setText(message + " \r\n" + newConfirmationUrl);
         email.setFrom(env.getProperty("support.email"));
         return email;
     }
