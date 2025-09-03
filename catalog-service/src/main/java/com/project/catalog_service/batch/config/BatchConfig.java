@@ -87,101 +87,101 @@ public class BatchConfig {
 
     // --- ItemReader Beans ---
     @Bean
-    public FlatFileItemReader<CategoryCsvDto> categoryReader() {
+    public FlatFileItemReader<CategoryCsvDto> categoryFileReader() {
         return createCsvReader("categories.csv", CategoryCsvDto.class, "category_id", "category_name", "slug",
                 "created_at");
     }
 
     @Bean
-    public FlatFileItemReader<SubcategoryCsvDto> subcategoryReader() {
+    public FlatFileItemReader<SubcategoryCsvDto> subcategoryFileReader() {
         return createCsvReader("subcategories.csv", SubcategoryCsvDto.class, "subcategory_id", "subcategory_name",
                 "slug", "category_id", "created_at");
     }
 
     @Bean
-    public FlatFileItemReader<ProductCsvDto> productReader() {
+    public FlatFileItemReader<ProductCsvDto> productFileReader() {
         return createCsvReader("products.csv", ProductCsvDto.class, "product_id", "name", "description", "brand",
                 "slug", "category_id", "refund_policy", "rating", "shipping", "created_at");
     }
 
     @Bean
-    public FlatFileItemReader<ProductColorCsvDto> productColorReader() {
+    public FlatFileItemReader<ProductColorCsvDto> productColorFileReader() {
         return createCsvReader("product_colors.csv", ProductColorCsvDto.class, "color_id", "color", "color_image");
     }
 
     @Bean
-    public FlatFileItemReader<ProductSkuCsvDto> productSkuReader() {
+    public FlatFileItemReader<ProductSkuCsvDto> productSkuFileReader() {
         return createCsvReader("product_skus.csv", ProductSkuCsvDto.class, "skuproduct_id", "sku", "images", "discount",
                 "sold", "color_id", "product_id", "created_at");
     }
 
     @Bean
-    public FlatFileItemReader<ProductDetailsCsvDto> productDetailsReader() {
+    public FlatFileItemReader<ProductDetailsCsvDto> productDetailsFileReader() {
         return createCsvReader("product_details.csv", ProductDetailsCsvDto.class, "pdetail_id", "name", "value",
                 "product_id", "created_at");
     }
 
     @Bean
-    public ItemReader<ProductQACsvDto> productQAReader() {
+    public ItemReader<ProductQACsvDto> productQAFileReader() {
         return createCsvReader("product_qas.csv", ProductQACsvDto.class, "qa_id", "question", "answer", "product_id",
                 "created_at");
     }
 
     @Bean
-    public ItemReader<ProductSubcategoryCsvDto> productSubcategoryReader() {
+    public ItemReader<ProductSubcategoryCsvDto> productSubcategoryFileReader() {
         return createCsvReader("product_subcategories.csv", ProductSubcategoryCsvDto.class, "id", "product_id",
                 "subcategory_id");
     }
 
     @Bean
-    public ItemReader<ProductSizeCsvDto> productSizeReader() {
+    public ItemReader<ProductSizeCsvDto> productSizeFileReader() {
         return createCsvReader("product_sizes.csv", ProductSizeCsvDto.class, "size_id", "size", "quantity", "price",
                 "skuproduct_id");
     }
 
     // --- ItemProcessor Beans ---
     @Bean
-    public ItemProcessor<CategoryCsvDto, Category> categoryProcessor() {
+    public ItemProcessor<CategoryCsvDto, Category> categoryItemProcessor() {
         return categoryItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<SubcategoryCsvDto, Subcategory> subcategoryProcessor() {
+    public ItemProcessor<SubcategoryCsvDto, Subcategory> subcategoryItemProcessor() {
         return subcategoryItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductCsvDto, Product> productProcessor() {
+    public ItemProcessor<ProductCsvDto, Product> productItemProcessor() {
         return productItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductColorCsvDto, ProductColor> productColorProcessor() {
+    public ItemProcessor<ProductColorCsvDto, ProductColor> productColorItemProcessor() {
         return productColorItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductSkuCsvDto, ProductSku> productSkuProcessor() {
+    public ItemProcessor<ProductSkuCsvDto, ProductSku> productSkuItemProcessor() {
         return productSkuItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductDetailsCsvDto, ProductDetails> productDetailsProcessor() {
+    public ItemProcessor<ProductDetailsCsvDto, ProductDetails> productDetailsItemProcessor() {
         return productDetailsItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductQACsvDto, ProductQA> productQAProcessor() {
+    public ItemProcessor<ProductQACsvDto, ProductQA> productQAItemProcessor() {
         return productQAItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductSubcategoryCsvDto, ProductSubcategory> productSubcategoryProcessor() {
+    public ItemProcessor<ProductSubcategoryCsvDto, ProductSubcategory> productSubcategoryItemProcessor() {
         return productSubcategoryItemProcessor;
     }
 
     @Bean
-    public ItemProcessor<ProductSizeCsvDto, ProductSize> productSizeProcessor() {
+    public ItemProcessor<ProductSizeCsvDto, ProductSize> productSizeItemProcessor() {
         return productSizeItemProcessor;
     }
 
@@ -236,7 +236,7 @@ public class BatchConfig {
     public Step categoryStep() {
         return new StepBuilder("categoryStep", jobRepository)
                 .<CategoryCsvDto, Category>chunk(10, batchTransactionManager)
-                .reader(categoryReader())
+                .reader(categoryFileReader())
                 .processor(categoryItemProcessor)
                 .writer(categoryWriter())
                 .build();
@@ -246,7 +246,7 @@ public class BatchConfig {
     public Step subcategoryStep() {
         return new StepBuilder("subcategoryStep", jobRepository)
                 .<SubcategoryCsvDto, Subcategory>chunk(10, batchTransactionManager)
-                .reader(subcategoryReader())
+                .reader(subcategoryFileReader())
                 .processor(subcategoryItemProcessor)
                 .writer(subcategoryWriter())
                 .build();
@@ -256,7 +256,7 @@ public class BatchConfig {
     public Step productStep() {
         return new StepBuilder("productStep", jobRepository)
                 .<ProductCsvDto, Product>chunk(10, batchTransactionManager)
-                .reader(productReader())
+                .reader(productFileReader())
                 .processor(productItemProcessor)
                 .writer(productWriter())
                 .build();
@@ -266,7 +266,7 @@ public class BatchConfig {
     public Step productColorStep() {
         return new StepBuilder("productColorStep", jobRepository)
                 .<ProductColorCsvDto, ProductColor>chunk(10, batchTransactionManager)
-                .reader(productColorReader())
+                .reader(productColorFileReader())
                 .processor(productColorItemProcessor)
                 .writer(productColorWriter())
                 .build();
@@ -276,8 +276,8 @@ public class BatchConfig {
     public Step productSkuStep() {
         return new StepBuilder("productSkuStep", jobRepository)
                 .<ProductSkuCsvDto, ProductSku>chunk(10, batchTransactionManager)
-                .reader(productSkuReader())
-                .processor(productSkuProcessor())
+                .reader(productSkuFileReader())
+                .processor(productSkuItemProcessor())
                 .writer(productSkuWriter())
                 .build();
     }
@@ -286,8 +286,8 @@ public class BatchConfig {
     public Step productDetailsStep() {
         return new StepBuilder("productDetailsStep", jobRepository)
                 .<ProductDetailsCsvDto, ProductDetails>chunk(10, batchTransactionManager)
-                .reader(productDetailsReader())
-                .processor(productDetailsProcessor())
+                .reader(productDetailsFileReader())
+                .processor(productDetailsItemProcessor())
                 .writer(productDetailsWriter())
                 .build();
     }
@@ -296,8 +296,8 @@ public class BatchConfig {
     public Step productQAStep() {
         return new StepBuilder("productQAStep", jobRepository)
                 .<ProductQACsvDto, ProductQA>chunk(10, batchTransactionManager)
-                .reader(productQAReader())
-                .processor(productQAProcessor())
+                .reader(productQAFileReader())
+                .processor(productQAItemProcessor())
                 .writer(productQAWriter())
                 .build();
     }
@@ -306,8 +306,8 @@ public class BatchConfig {
     public Step productSubcategoryStep() {
         return new StepBuilder("productSubcategoryStep", jobRepository)
                 .<ProductSubcategoryCsvDto, ProductSubcategory>chunk(10, batchTransactionManager)
-                .reader(productSubcategoryReader())
-                .processor(productSubcategoryProcessor())
+                .reader(productSubcategoryFileReader())
+                .processor(productSubcategoryItemProcessor())
                 .writer(productSubcategoryWriter())
                 .build();
     }
@@ -316,8 +316,8 @@ public class BatchConfig {
     public Step productSizeStep() {
         return new StepBuilder("productSizeStep", jobRepository)
                 .<ProductSizeCsvDto, ProductSize>chunk(10, batchTransactionManager)
-                .reader(productSizeReader())
-                .processor(productSizeProcessor())
+                .reader(productSizeFileReader())
+                .processor(productSizeItemProcessor())
                 .writer(productSizeWriter())
                 .build();
     }
