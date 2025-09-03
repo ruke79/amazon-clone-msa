@@ -395,6 +395,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional  // need to be transactional for the userRepository.save
     public String validateVerificationToken(String token) {
         final VerificationToken verificationToken = tokenRepository.findByToken(token);
         if (verificationToken == null) {
