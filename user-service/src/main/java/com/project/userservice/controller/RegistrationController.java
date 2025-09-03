@@ -58,7 +58,7 @@ public class RegistrationController {
     private String frontendUrl;
 
 
-    @GetMapping("/registrationConfirm")
+    @GetMapping("/user-service/registrationConfirm")
     public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws JsonProcessingException {
 
         final String result = userService.validateVerificationToken(token);
