@@ -61,8 +61,13 @@ public class RegistrationController {
     @GetMapping("/user-service/registrationConfirm")
     public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws JsonProcessingException {
 
-        final String result = userService.validateVerificationToken(token);
+        final String result = userService.validateVerificationToken(token);        
         final User user = userService.getUser(token);
+        log.info("User object class: {}", user.getClass().getName()); //proxy class 확인용 로그
+
+        log.info("Before accessing user's email");
+        String email = user.getEmail();
+        log.info("After accessing user's email: {}", email);
         
         if ("valid".equals(result)) {
             userService.registerConfirmed(user);

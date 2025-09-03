@@ -468,8 +468,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override    
-    @Transactional
+    @Override        
     public void registerConfirmed(User user) throws JsonProcessingException {
 
         
