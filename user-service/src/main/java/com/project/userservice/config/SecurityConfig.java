@@ -122,7 +122,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/user/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/logout").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/auth/public/**").permitAll()
-                                .requestMatchers("/registrationConfirm").permitAll()
+                                .requestMatchers("/user-service/registrationConfirm").permitAll()  // later change to /registrationConfirm
+                                // .requestMatchers("/registrationConfirm").permitAll()
                                 .requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/sse").permitAll() //hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/oauth2/**").permitAll()
