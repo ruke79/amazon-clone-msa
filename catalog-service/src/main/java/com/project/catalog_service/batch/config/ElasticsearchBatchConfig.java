@@ -439,42 +439,42 @@ public class ElasticsearchBatchConfig {
 
     // --- ItemWriter 빈을 생성하여 반환하도록 수정
     @Bean
-    public ItemWriter<ProductDocument> productWriter() {
+    public ItemWriter<ProductDocument> productDocWriter() {
         return new ProductWriter();
     }
     
     @Bean
-    public ItemWriter<CategoryDocument> categoryWriter() {
+    public ItemWriter<CategoryDocument> categoryDocWriter() {
         return new CategoryWriter();
     }
     
     @Bean
-    public ItemWriter<ProductColorDocument> productColorWriter() {
+    public ItemWriter<ProductColorDocument> productColorDocWriter() {
         return new ProductColorWriter();
     }
     
     @Bean
-    public ItemWriter<ProductDetailsDocument> productDetailsWriter() {
+    public ItemWriter<ProductDetailsDocument> productDetailsDocWriter() {
         return new ProductDetailsWriter();
     }
     
     @Bean
-    public ItemWriter<ProductQADocument> productQAWriter() {
+    public ItemWriter<ProductQADocument> productQADocWriter() {
         return new ProductQAWriter();
     }
     
     @Bean
-    public ItemWriter<ProductSkuDocument> productSkuWriter() {
+    public ItemWriter<ProductSkuDocument> productSkuDocWriter() {
         return new ProductSkuWriter();
     }
     
     @Bean
-    public ItemWriter<ProductSizeDocument> productSizeWriter() {
+    public ItemWriter<ProductSizeDocument> productSizeDocWriter() {
         return new ProductSizeWriter();
     }
     
     @Bean
-    public ItemWriter<SubcategoryDocument> subcategoryWriter() {
+    public ItemWriter<SubcategoryDocument> subcategoryDocWriter() {
         return new SubcategoryWriter();
     }
     
@@ -533,7 +533,7 @@ public class ElasticsearchBatchConfig {
                 .<Category, CategoryDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(categoryReader())
                 .processor(categoryProcessor())
-                .writer(categoryWriter())
+                .writer(categoryDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -544,7 +544,7 @@ public class ElasticsearchBatchConfig {
                 .<ProductColor, ProductColorDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productColorReader())
                 .processor(productColorProcessor())
-                .writer(productColorWriter())
+                .writer(productColorDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -555,7 +555,7 @@ public class ElasticsearchBatchConfig {
                 .<ProductDetails, ProductDetailsDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productDetailsReader())
                 .processor(productDetailsProcessor())
-                .writer(productDetailsWriter())
+                .writer(productDetailsDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -566,7 +566,7 @@ public class ElasticsearchBatchConfig {
                 .<ProductQA, ProductQADocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productQAReader())
                 .processor(productQAProcessor())
-                .writer(productQAWriter())
+                .writer(productQADocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -577,7 +577,7 @@ public class ElasticsearchBatchConfig {
                 .<Product, ProductDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productReader())
                 .processor(productProcessor())
-                .writer(productWriter())
+                .writer(productDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -588,7 +588,7 @@ public class ElasticsearchBatchConfig {
                 .<ProductSku, ProductSkuDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productSkuReader())
                 .processor(productSkuProcessor())
-                .writer(productSkuWriter())
+                .writer(productSkuDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -599,7 +599,7 @@ public class ElasticsearchBatchConfig {
                 .<ProductSize, ProductSizeDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(productSizeReader())
                 .processor(productSizeProcessor())
-                .writer(productSizeWriter())
+                .writer(productSizeDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
@@ -610,7 +610,7 @@ public class ElasticsearchBatchConfig {
                 .<Subcategory, SubcategoryDocument>chunk(CHUNK_SIZE, batchTransactionManager)
                 .reader(subcategoryReader())
                 .processor(subcategoryProcessor())
-                .writer(subcategoryWriter())
+                .writer(subcategoryDocWriter())
                 .taskExecutor(taskExecutor) // taskExecutor 추가
                 .build();
     }
