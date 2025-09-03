@@ -49,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String requestUri = request.getRequestURI();
 
-        if (requestUri.matches("/registrationConfirm(?:\\/.*)?$")) {
+        if (requestUri.matches("/user-service/registrationConfirm(?:\\/.*)?$")) {
 
             filterChain.doFilter(request, response);
             return;
