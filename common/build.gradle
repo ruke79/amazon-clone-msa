@@ -1,8 +1,7 @@
 plugins	{
-	// id 'java'
+	 id 'java-library'
 	// id 'org.springframework.boot' version '3.4.1'
-	// id 'io.spring.dependency-management' version '1.1.7'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	// id 'io.spring.dependency-management' version '1.1.7'	
 }
 
 java {
@@ -27,27 +26,3 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'	
 }
 
-// Querydsl 설정
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs = ["src/main/java", querydslDir]
-        }
-    }
-}
-
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
-}
-
-// clean 태스크에 querydslDir 삭제 추가
-clean {
-    delete file(querydslDir)
-}
