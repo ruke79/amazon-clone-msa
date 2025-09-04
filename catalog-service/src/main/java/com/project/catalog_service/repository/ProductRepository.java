@@ -86,25 +86,23 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // @Param("material") String material,
         // @Param("gender") String gender, @Param("rating") float rating,
         // @Param("productIds") List<Long> productIds);
-   @Query(value = "select distinct a.* from product.product a " +
-    "left join product.product_details b on a.product_id = b.product_id " +
-    "where (:name is null or a.name ILIKE :name) " +
-    "AND (:productIds IS NULL OR a.product_id = ANY(CAST(:productIds AS BIGINT[]))) " + // <-- ANY 사용
-    "AND (:categoryId is null or a.category_id = :categoryId) " +
-    "AND (:brand is null or a.brand ILIKE :brand) " +
-    "AND ((:style is null AND :material is null AND :gender is null) or (b.value ILIKE :material or b.value ILIKE :style or b.value ILIKE :gender))" +
-    "AND (:rating is null or a.rating >= :rating)", nativeQuery = true)
-List<Product> findProductBySearchParams(@Param("name") String name, @Param("categoryId") Long categoryId,
-    @Param("style") String style, @Param("brand") String brand, @Param("material") String material,
-    @Param("gender") String gender, @Param("rating") float rating,
-    @Param("productIds") List<Long> productIds);
-
+    @Query(value = "select distinct a.* from product.product a " +
+        "left join product.product_details b on a.product_id = b.product_id " +
+        "where (:name is null or a.name ILIKE :name) " +
+        "AND (:productIds IS NULL OR a.product_id IN (SELECT unnest(CAST(:productIds AS BIGINT[])))) " + // <-- unnest 사용
+        "AND (:categoryId is null or a.category_id = :categoryId) " +
+        "AND (:brand is null or a.brand ILIKE :brand) " +
+        "AND ((:style is null AND :material is null AND :gender is null) or (b.value ILIKE :material or b.value ILIKE :style or b.value ILIKE :gender))" +
+        "AND (:rating is null or a.rating >= :rating)", nativeQuery = true)
+    List<Product> findProductBySearchParams(@Param("name") String name, @Param("categoryId") Long categoryId,
+        @Param("style") String style, @Param("brand") String brand, @Param("material") String material,
+        @Param("gender") String gender, @Param("rating") float rating,
+        @Param("productIds") List<Long> productIds);
          // Replaced REGEXP with SIMILAR TO or ~*
         @Query(value = "select count(distinct a.product_id) from product.product a " +
                         "left join product.product_details b on a.product_id = b.product_id " +
                         "where (:name is null or a.name ~* :name)" +
-                        "AND (:productIds IS NULL OR a.product_id = ANY(CAST(:productIds AS BIGINT[]))) " + // <-- ANY 사용
-
+                        "AND (:productIds IS NULL OR a.product_id IN (SELECT unnest(CAST(:productIds AS BIGINT[])))) " + // <-- unnest 사용
                         "AND (:categoryId is null or a.category_id = :categoryId) " +
                         "AND ((:style is null AND :material is null AND :gender is null) or (b.value ~* :material or b.value ~* :style or b.value ~* :gender))"
                         +
