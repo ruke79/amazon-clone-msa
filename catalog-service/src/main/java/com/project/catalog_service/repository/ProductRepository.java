@@ -68,26 +68,43 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         @Query(value = "select b.brand from product.category a inner join product.product b on a.category_id = b.category_id and (:categoryRegexp is null or a.category_name ILIKE :categoryRegexp)", nativeQuery = true)
         public List<String> findBrandsByCategoryName(@Param("categoryRegexp") String categoryRegexp);
 
-         // Replaced MySQL's MATCH AGAINST with PostgreSQL's ILIKE and REGEXP_LIKE with its equivalent
-        @Query(value = "select distinct a.* from product.product a " +
-                        "left join product.product_details b on a.product_id = b.product_id " +
-                        "where (:name is null or a.name ILIKE :name) " +
-                        "AND a.product_id in :productIds " +
-                        "AND (:categoryId is null or a.category_id = :categoryId) " +
-                        "AND (:brand is null or a.brand ILIKE :brand) " +
-                        "AND ((:style is null AND :material is null AND :gender is null) or (b.value ILIKE :material or b.value ILIKE :style or b.value ILIKE :gender))"
-                        +
-                        "AND (:rating is null or a.rating >= :rating)", nativeQuery = true)
-        List<Product> findProductBySearchParams(@Param("name") String name, @Param("categoryId") Long categoryId,
-                        @Param("style") String style, @Param("brand") String brand, @Param("material") String material,
-                        @Param("gender") String gender, @Param("rating") float rating,
-                        @Param("productIds") List<Long> productIds);
+        // Replaced MySQL's MATCH AGAINST with PostgreSQL's ILIKE and REGEXP_LIKE with
+        // its equivalent
+        // @Query(value = "select distinct a.* from product.product a " +
+        // "left join product.product_details b on a.product_id = b.product_id " +
+        // "where (:name is null or a.name ILIKE :name) " +
+        // "AND a.product_id in :productIds " +
+        // "AND (:categoryId is null or a.category_id = :categoryId) " +
+        // "AND (:brand is null or a.brand ILIKE :brand) " +
+        // "AND ((:style is null AND :material is null AND :gender is null) or (b.value
+        // ILIKE :material or b.value ILIKE :style or b.value ILIKE :gender))"
+        // +
+        // "AND (:rating is null or a.rating >= :rating)", nativeQuery = true)
+        // List<Product> findProductBySearchParams(@Param("name") String name,
+        // @Param("categoryId") Long categoryId,
+        // @Param("style") String style, @Param("brand") String brand,
+        // @Param("material") String material,
+        // @Param("gender") String gender, @Param("rating") float rating,
+        // @Param("productIds") List<Long> productIds);
+@Query(value = "select distinct a.* from product.product a " +
+    "left join product.product_details b on a.product_id = b.product_id " +
+    "where (:name is null or a.name ILIKE :name) " +
+    "AND (:productIds IS NULL OR a.product_id = ANY(CAST(:productIds AS BIGINT[]))) " + // <-- NULL 처리 로직 추가
+    "AND (:categoryId is null or a.category_id = :categoryId) " +
+    "AND (:brand is null or a.brand ILIKE :brand) " +
+    "AND ((:style is null AND :material is null AND :gender is null) or (b.value ILIKE :material or b.value ILIKE :style or b.value ILIKE :gender))" +
+    "AND (:rating is null or a.rating >= :rating)", nativeQuery = true)
+List<Product> findProductBySearchParams(@Param("name") String name, @Param("categoryId") Long categoryId,
+    @Param("style") String style, @Param("brand") String brand, @Param("material") String material,
+    @Param("gender") String gender, @Param("rating") float rating,
+    @Param("productIds") List<Long> productIds);
 
          // Replaced REGEXP with SIMILAR TO or ~*
         @Query(value = "select count(distinct a.product_id) from product.product a " +
                         "left join product.product_details b on a.product_id = b.product_id " +
                         "where (:name is null or a.name ~* :name)" +
-                        "AND a.product_id in :productIds " +
+                        // "AND a.product_id in (select unnest(:productIds)) " + // <-- 수정된 부분
+                        "AND (:productIds IS NULL OR a.product_id = ANY(CAST(:productIds AS BIGINT[]))) " + // <-- NULL 처리 로직 추가
                         "AND (:categoryId is null or a.category_id = :categoryId) " +
                         "AND ((:style is null AND :material is null AND :gender is null) or (b.value ~* :material or b.value ~* :style or b.value ~* :gender))"
                         +
