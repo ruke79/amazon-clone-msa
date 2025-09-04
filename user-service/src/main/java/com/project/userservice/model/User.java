@@ -91,7 +91,7 @@ public class User extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     @JsonBackReference
-    @ToString.Exclude
+    @ToString.Exclude    // 양방향 관계에서 순환 참조 방지
     private Role role;
     
         

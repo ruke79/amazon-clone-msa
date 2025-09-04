@@ -39,7 +39,7 @@ public class Role{
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JsonBackReference
-    @ToString.Exclude
+    @ToString.Exclude   // 양방향 관계에서 순환 참조 방지
     private Set<User> users = new HashSet<>();
 
     public Role(AppRole roleName) {
