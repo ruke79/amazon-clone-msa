@@ -1,157 +1,168 @@
-import com.project.catalog_service.repository.ProductRepository; // 리포지토리 패키지 경로에 맞게 수정
-import com.project.catalog_service.model.*;
 import com.project.catalog_service.repository.*;
-import com.project.common.dto.*;
-import com.project.common.util.FileUtil;
+import com.project.catalog_service.model.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE) // 실제 DB 사용 (선택 사항)
-@ActiveProfiles("test") // application-test.yml 프로파일 사용
-public class ProductRepositoryTest {
-    
-    @Mock private ProductRepository productRepository;
-    @Mock private ProductSizeRepository productSizeRepository;
-    @Mock private ProductSkuRepository productskuRepository;
-    @Mock private ProductColorRepository productColorRepository;
-    @Mock private ProductQARepository productQARepository;
+@AutoConfigureTestDatabase(replace = Replace.NONE)
+@ActiveProfiles("test")
+class ProductRepositoryTest {
 
-    
-    // 테스트를 위한 초기 데이터 설정
-    // @BeforeEach 등 메소드를 사용하여 테스트마다 초기화 가능
-    // 또는 resources/data.sql 파일을 이용해 초기 데이터 세팅
-    private Product product;
-    private ProductDto productDto;
-    private Category category;
-    private Subcategory subcategory;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private SubcategoryRepository subcategoryRepository;
+    @Autowired
+    private ProductDetailsRepository productDetailRepository;
 
-     @BeforeEach
-     void setUp() {
-        category = Category.builder().categoryId(1L).categoryName("fashion").build();
-        subcategory = Subcategory.builder().subcategoryId(1L).subcategoryName("men's clothing").category(category).build();
-        
-        product = Product.builder()
-                .productId(1L)
-                .name("TestProduct")
-                .description("Test Description")
-                .brand("TestBrand")
-                .slug("test-product")
-                .category(category)
+    // 테스트에 사용할 공통 엔티티 변수
+    private Category category1, category2;
+    private Subcategory subcategory1, subcategory2,subcategory3;
+    private Product product1, product2;
+
+    @BeforeEach
+    void setUp() {
+        // 테스트 데이터 정리
+        productRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
+        subcategoryRepository.deleteAllInBatch();
+        productDetailRepository.deleteAllInBatch();
+
+        // 카테고리, 서브카테고리 저장
+        category1 = categoryRepository.save(Category.builder().categoryName("fashion").slug("fashion").build());
+        category2 = categoryRepository.save(Category.builder().categoryName("electronics").slug("electronics").build());
+        subcategory1 = subcategoryRepository.save(Subcategory.builder().subcategoryName("men's clothing")
+                .slug("men-clothing").category(category1).build());
+        subcategory2 = subcategoryRepository
+                .save(Subcategory.builder().subcategoryName("notebook").slug("laptop").category(category2).build());
+        subcategory3 = subcategoryRepository
+                .save(Subcategory.builder().subcategoryName("phones").slug("phones").category(category2).build());
+
+
+        // 상품 데이터 생성 및 저장
+        product1 = Product.builder()
+                .name("Laptop Pro")
+                .description("Powerful laptop for professionals.")
+                .brand("BrandX")
+                .slug("laptop-pro")
+                .category(category2)
+                .rating(4.5f)
                 .build();
-                
-        // ProductDto 변환 로직에 필요한 관계 설정
-        ProductSubcategory productSubcategory = ProductSubcategory.builder().product(product).subcategory(subcategory).build();
-        Set<ProductSubcategory> subcategories = new HashSet<>();
-        subcategories.add(productSubcategory);
-        product.setSubcategories(subcategories);
-        product.setDetails(Collections.emptySet());
-        product.setQuestions(Collections.emptySet());
-        product.setSkus(Collections.emptySet());
 
-        productDto = Product.convertToDto(product);
+        product2 = Product.builder()
+                .name("Smartphone Z")
+                .description("Latest model smartphone.")
+                .brand("BrandY")
+                .slug("smartphone-z")
+                .category(category2)
+                .rating(3.8f)
+                .build();
+
+        // 상품에 서브카테고리 추가
+        Set<ProductSubcategory> subcategories2 = new HashSet<>();
+        subcategories2.add(ProductSubcategory.builder().product(product1).subcategory(subcategory2).build());
+        Set<ProductSubcategory> subcategories3 = new HashSet<>();
+        subcategories3.add(ProductSubcategory.builder().product(product2).subcategory(subcategory3).build());
+        
+        
+
+        // 상품 저장
+        product1 = productRepository.save(product1);
+        product2 = productRepository.save(product2);
+
+        // 상품 상세 정보 저장 (양방향 관계 설정)
+        // ProductDetails를 Product의 details Set에 추가하고, ProductDetails에 Product 참조 설정
+        ProductDetails detail1 = ProductDetails.builder().name("material").value("aluminum").product(product1).build();
+        ProductDetails detail2 = ProductDetails.builder().name("style").value("sleek").product(product2).build();
+        ProductDetails detail3 = ProductDetails.builder().name("gender").value("unisex").product(product2).build();
+
+        // Product 엔티티의 details Set에 ProductDetails 추가
+        product1.setDetails(new HashSet<>(Arrays.asList(detail1)));
+        product2.setDetails(new HashSet<>(Arrays.asList(detail2, detail3)));
+
+        // ProductDetails 저장
+        productDetailRepository.saveAll(Arrays.asList(detail1, detail2, detail3));
     }
 
     @Test
+    @DisplayName("상품 ID 목록으로 상품을 조회하는 테스트")
     void findProductBySearchParams_상품ID_목록_검색_테스트() {
-        // Given: 테스트에 필요한 데이터 준비
-        // 예를 들어, Product 엔티티를 생성하고 저장
-        // Product product1 = new Product(...);
-        // Product product2 = new Product(...);
-        // productRepository.saveAll(Arrays.asList(product1, product2));
+        // Given
+        List<Long> productIds = new ArrayList<>();
+        for (long i = 1; i <= 200; i++) {
+            productIds.add(i);
+        }
 
-        // 검색 파라미터
-        String name = null;
-        Long categoryId = null;
-        String style = null;
-        String brand = null;
-        String material = null;
-        String gender = null;
-        Float rating = null;
-        List<Long> productIds = Arrays.asList(1L, 2L); // 검색할 상품 ID 목록
+        float rating = 4.0f;
 
-        // When: findProductBySearchParams 메서드 호출
+        // When
         List<Product> products = productRepository.findProductBySearchParams(
-            name, categoryId, style, brand, material, gender, rating, productIds
-        );
+                null, null, null, null, null, null, rating, productIds);
 
-        // Then: 결과 검증
+        // Then
         assertThat(products).isNotNull();
         assertEquals(2, products.size());
-        // 추가적인 상세 검증: 예) products.stream().map(Product::getProductId).contains(1L, 2L)
+        assertThat(products).extracting(Product::getProductId).containsExactlyInAnyOrder(product1.getProductId(),
+                product2.getProductId());
     }
 
     @Test
+    @DisplayName("이름과 평점으로 상품을 조회하는 테스트")
     void findProductBySearchParams_이름과_평점_검색_테스트() {
-        // Given: 테스트 데이터 준비
-        // ... (필요하다면 데이터 저장)
-
-        // 검색 파라미터
+        // Given
         String name = "Laptop";
-        Long categoryId = null;
-        String style = null;
-        String brand = null;
-        String material = null;
-        String gender = null;
         Float rating = 4.0f;
-        List<Long> productIds = null; // productIds가 NULL인 경우
 
-        // When: findProductBySearchParams 메서드 호출
+        List<Long> productIds = new ArrayList<>();
+        for (long i = 1; i <= 200; i++) {
+            productIds.add(i);
+        }
+
+        // When
         List<Product> products = productRepository.findProductBySearchParams(
-            name, categoryId, style, brand, material, gender, rating, productIds
-        );
+                name, null, null, null, null, null, rating, productIds);
 
-        // Then: 결과 검증
-        // 예를 들어, name에 "Laptop"이 포함되고 rating이 4.0 이상인 상품이
-        // 1개 있다고 가정
+        // Then
         assertThat(products).isNotNull();
         assertEquals(1, products.size());
+        assertEquals(product1.getProductId(), products.get(0).getProductId());
     }
-    
-    // countProductsBySearchParams 메서드에 대한 테스트도 유사하게 작성
+
     @Test
+    @DisplayName("총 상품 개수를 조회하는 테스트")
     void countProductsBySearchParams_총_개수_검색_테스트() {
-        // Given: 테스트 데이터 준비
-        // ...
+        // Given
+        String name = "Laptop";
+        Long categoryId = category2.getCategoryId();
 
-        // 검색 파라미터
-        String name = "Phone";
-        Long categoryId = 1L;
-        String style = null;
-        String brand = null;
-        String material = null;
-        String gender = null;
-        Float rating = null;
-        List<Long> productIds = null;
+        float rating = 4.0f;
 
-        // When: countProductsBySearchParams 메서드 호출
+        List<Long> productIds = new ArrayList<>();
+        for (long i = 1; i <= 200; i++) {
+            productIds.add(i);
+        }
+
+        // When
         int count = productRepository.countProductsBySearchParams(
-            name, categoryId, style, brand, material, gender, rating, productIds
-        );
+                name, categoryId, null, null, null, null, rating, productIds);
 
-        // Then: 결과 검증
-        // 예시: "Phone" 이름이 포함되고 categoryId가 1인 상품이 5개 있다고 가정
-        assertEquals(5, count);
+        // Then
+        assertEquals(1, count);
     }
 }

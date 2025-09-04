@@ -67,7 +67,7 @@ class ProductSkuItemProcessorTest {
         } catch (Exception e) {
             throw new RuntimeException("Failed to create ProductColor instance for test", e);
         }
-        color.setId(1L);
+        color.setColorId(1L);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
         when(productColorRepository.findById(1L)).thenReturn(Optional.of(color));
