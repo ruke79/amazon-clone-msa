@@ -1,8 +1,14 @@
 plugins	{
 	// id 'java'
 	// id 'org.springframework.boot' version '3.4.1'
-	// id 'io.spring.dependency-management' version '1.1.7'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	// id 'io.spring.dependency-management' version '1.1.7'	
+}
+
+// Lombok 설정 (Querydsl과 함께 사용 시 필수)
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 dependencies {
@@ -37,11 +43,16 @@ dependencies {
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	//runtimeOnly 'com.mysql:mysql-connector-j'
 
-	// QueryDSL start
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	// QueryDSL start	
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+    
+    // Q-클래스 생성을 위한 annotationProcessor 의존성
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    
+    // JPA 엔티티를 인식시키기 위한 의존성
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 	// QueryDSL end
 
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
@@ -52,45 +63,20 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// Querydsl 설정
-def querydslDir = "$buildDir/generated/querydsl"
+// Q-클래스 생성 경로 설정
+def generated = 'src/main/generated'
 
-querydsl{
-	library = "com.querydsl:querydsl-apt"
-	jpa = true
-	querydslSourcesDir = querydslDir
-}
-sourceSets{
-	main {
-		java {
-			srcDirs = ['src/main/java', querydslDir]
-		}
-	}
-}
-compileQuerydsl{
-	options.annotationProcessorPath = configurations.querydsl
-
-	  // Q 파일 생성에 필요한 소스 경로를 추가
-    // common 모듈의 컴파일된 클래스들이 이 경로에 포함되어야 합니다.
-    doFirst {
-        if (!project(':common').tasks.compileJava.didWork) {
-            println "common 모듈 컴파일 재시작"
-            exec {
-                commandLine 'gradle', ':common:compileJava'
-            }
-        }
-        options.compilerArgs = [
-            '-proc:only',
-            '-Aquerydsl.entityAnnotation=jakarta.persistence.Entity',
-            '-Aquerydsl.superClassAnnotation=jakarta.persistence.MappedSuperclass',
-        ]
-    }
-
-}
-configurations{
-	querydsl.extendsFrom compileClasspath
-}
-
+// 빌드 시 Q-클래스 디렉토리 삭제
 clean {
-	delete file(querydslDir)
+    delete file(generated)
+}
+
+// Q-클래스 생성 디렉토리 지정
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(generated)
+}
+
+// 생성된 Q-클래스 경로를 소스 경로에 추가
+sourceSets {
+    main.java.srcDirs += [ generated ]
 }
