@@ -187,7 +187,7 @@ public class OrderService {
 
             OrderAddressDto address = new OrderAddressDto();
 
-            OrderAddressDto.deepCopyShippingAddressDto(address, data.getShippingAddress());
+            OrderAddressDto.toDto(address, data.getShippingAddress());
 
             OrderDto result = OrderDto.builder()
                     .id(Long.toString(data.getOrderId()))

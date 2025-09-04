@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
 
-        return UserProfileDto.convertToDto(user, roles);
+        return UserProfileDto.toDto(user, roles);
     }
 
     @Override

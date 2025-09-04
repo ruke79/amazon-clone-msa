@@ -35,7 +35,7 @@ public class OrderAddressDto {
 
     private boolean active;
 
-    public static void deepCopyShippingAddressDto(OrderAddressDto address, OrderAddress src ) {
+    public static void toDto(OrderAddressDto address, OrderAddress src ) {
 
         address.setId(Long.toString(src.getOrderAddressId()));
         address.setAddress1(src.getAddress1());

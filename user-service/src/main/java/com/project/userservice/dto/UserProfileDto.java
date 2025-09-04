@@ -41,7 +41,7 @@ public class UserProfileDto {
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
-    public static  UserProfileDto convertToDto(User user, List<String> roles) {
+    public static  UserProfileDto toDto(User user, List<String> roles) {
 
         UserProfileDto dto = UserProfileDto.builder()
         .userId(Long.toString(user.getUserId()))
