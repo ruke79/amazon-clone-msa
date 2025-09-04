@@ -57,10 +57,20 @@ public interface ProductSkuRepository extends JpaRepository<ProductSku, Long> {
                    nativeQuery = true)
     List<String> findColorsByProductId(@Param("productIds") List<Long> productIds);
 
-     @Query(value = "select distinct b.size from product.product_sku a " +
-                   "inner join product.product_size b on a.size_id = b.size_id " +
-                   "where a.product_id IN (SELECT unnest(CAST(:productIds AS BIGINT[])))", // <-- 이 부분을 수정
-                   nativeQuery = true)
+//     @Query(value = "select distinct b.size from product.product_sku a " +
+//             "inner join product.product_size b on a.skuproduct_id = b.skuproduct_id " +
+//             "where a.product_id in :productIds and b.size <> '' and b.size is not null", nativeQuery = true)
+  /**
+     * 특정 상품 ID 목록에 해당하는 모든 SKU의 사이즈를 중복 없이 조회합니다.
+     * JPQL을 사용하여 엔티티 간의 관계를 탐색합니다.
+     * @param productIds 조회할 상품 ID 목록
+     * @return 해당 상품들의 모든 사이즈 목록
+     */
+    @Query("SELECT DISTINCT ps.size " +
+           "FROM Product p " +
+           "JOIN p.skus psg " + // Product(p)와 ProductSku(psg) 조인
+           "JOIN psg.sizes ps " + // ProductSku(psg)와 ProductSize(ps) 조인
+           "WHERE p.productId IN (SELECT unnest(CAST(:productIds AS BIGINT[])))")
     List<String> findSizesByProductId(@Param("productIds") List<Long> productIds);
 
     // Mysql
