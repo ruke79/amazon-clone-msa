@@ -86,10 +86,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         // @Param("material") String material,
         // @Param("gender") String gender, @Param("rating") float rating,
         // @Param("productIds") List<Long> productIds);
-   @Query(value = "select distinct a.* from product.product a " +
+@Query(value = "select distinct a.* from product.product a " +
     "left join product.product_details b on a.product_id = b.product_id " +
     "where (:name is null or a.name ILIKE :name) " +
-    "AND a.product_id in (select unnest(:productIds)) " + // <-- 수정된 부분
+    "AND (:productIds IS NULL OR a.product_id = ANY(CAST(:productIds AS BIGINT[]))) " + // <-- NULL 처리 로직 추가
     "AND (:categoryId is null or a.category_id = :categoryId) " +
     "AND (:brand is null or a.brand ILIKE :brand) " +
     "AND ((:style is null AND :material is null AND :gender is null) or (b.value ILIKE :material or b.value ILIKE :style or b.value ILIKE :gender))" +
@@ -103,8 +103,8 @@ List<Product> findProductBySearchParams(@Param("name") String name, @Param("cate
         @Query(value = "select count(distinct a.product_id) from product.product a " +
                         "left join product.product_details b on a.product_id = b.product_id " +
                         "where (:name is null or a.name ~* :name)" +
-                        "AND a.product_id in (select unnest(:productIds)) " + // <-- 수정된 부분
-
+                        // "AND a.product_id in (select unnest(:productIds)) " + // <-- 수정된 부분
+                        "AND (:productIds IS NULL OR a.product_id = ANY(CAST(:productIds AS BIGINT[]))) " + // <-- NULL 처리 로직 추가
                         "AND (:categoryId is null or a.category_id = :categoryId) " +
                         "AND ((:style is null AND :material is null AND :gender is null) or (b.value ~* :material or b.value ~* :style or b.value ~* :gender))"
                         +
