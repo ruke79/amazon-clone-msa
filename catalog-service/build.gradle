@@ -69,6 +69,23 @@ sourceSets{
 }
 compileQuerydsl{
 	options.annotationProcessorPath = configurations.querydsl
+
+	  // Q 파일 생성에 필요한 소스 경로를 추가
+    // common 모듈의 컴파일된 클래스들이 이 경로에 포함되어야 합니다.
+    doFirst {
+        if (!project(':common').tasks.compileJava.didWork) {
+            println "common 모듈 컴파일 재시작"
+            exec {
+                commandLine 'gradle', ':common:compileJava'
+            }
+        }
+        options.compilerArgs = [
+            '-proc:only',
+            '-Aquerydsl.entityAnnotation=jakarta.persistence.Entity',
+            '-Aquerydsl.superClassAnnotation=jakarta.persistence.MappedSuperclass',
+        ]
+    }
+
 }
 configurations{
 	querydsl.extendsFrom compileClasspath
