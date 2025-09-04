@@ -49,6 +49,8 @@ public class DataSourceConfig {
         em.setPackagesToScan(new String[]{"com.project.catalog_service.model"});
         em. setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
+        em.setPersistenceUnitName("catalogPersistenceUnit"); // QuerydslConfig에서 사용하는 이름과 일치시킵니다
+
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
