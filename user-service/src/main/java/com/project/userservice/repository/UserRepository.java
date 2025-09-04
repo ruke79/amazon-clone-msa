@@ -36,6 +36,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    // User와 Roles를 한 번의 쿼리로 가져오기 위해 JOIN FETCH 사용
+    @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.email = :email")
+    Optional<User> findByEmailWithRoles(@Param("email") String email);
+
     void delete(User user);
 
     @Query(value = "SELECT a FROM User u LEFT JOIN ShippingAddress a  WHERE u.userId = :userId")

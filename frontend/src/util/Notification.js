@@ -29,7 +29,7 @@ export const useNotification = () => {
             // }
             if (!isConnected) {            
                 eventSource.current = new EventSoruce(
-                    `${process.env.REACT_APP_API_URL}/user-service/sse`,
+                    `${process.env.REACT_APP_API_URL}/user-service/api/sse`,
                     {
                         headers: {
                             'Content-Type' : 'text/event-stream',
