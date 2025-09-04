@@ -8,22 +8,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.common.dto.ProductColorDto;
@@ -64,6 +60,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.catalog_service.dto.request.ProductInfoLoadRequest;
 import com.project.catalog_service.dto.request.ProductRequest;
 import com.project.catalog_service.dto.response.ProductResponse;
+
+import com.project.catalog_service.mapper.ProductMapper;
 
 //import jakarta.mail.Multipart;
 import lombok.RequiredArgsConstructor;
@@ -123,7 +121,7 @@ public class ProductService {
         if (products != null) {
 
             for (Product p : products) {
-                ProductDto dto = Product.convertToDto(p);
+                ProductDto dto = ProductMapper.toDto(p);
                 result.add(dto);
             }
 
@@ -283,7 +281,7 @@ public class ProductService {
                         categoryName, subcategoryName, pageRequest);
 
         return productsPage.stream()
-                .map(Product::convertToDto)
+                .map(ProductMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -692,7 +690,7 @@ public class ProductService {
     }
 
     private ProductDto convertToDto(Product product) {
-        return Product.convertToDto(product); // Product.java에 있는 static 메서드를 사용
+        return ProductMapper.toDto(product); // Product.java에 있는 static 메서드를 사용
     }
 
     private Product getProductModel(Long productId) {

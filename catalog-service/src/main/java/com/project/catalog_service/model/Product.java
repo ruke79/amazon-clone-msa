@@ -10,14 +10,7 @@ import java.util.stream.Collectors;
 import org.hibernate.annotations.BatchSize;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.common.dto.CategoryDto;
-import com.project.common.dto.ProductColorDto;
-import com.project.common.dto.ProductDetailDto;
-import com.project.common.dto.ProductDto;
-import com.project.common.dto.ProductQADto;
-import com.project.common.dto.ProductSkuDto;
-import com.project.common.dto.ProductSizeDto;
-import com.project.common.dto.SubCategoryDto;
+
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.CascadeType;
@@ -108,80 +101,4 @@ public class Product extends BaseEntity {
     //private int num_reviews = 0;
 
     private BigDecimal shipping;
-
-
-
-    public static ProductDto convertToDto(Product product) {
-
-        CategoryDto parent = CategoryDto.builder()
-                .id(Long.toString(product.getCategory().getCategoryId()))
-                .name(product.getCategory().getCategoryName())
-                .slug(product.getCategory().getSlug()).build();
-
-        List<SubCategoryDto> subCategories = product.getSubcategories().stream()
-                .map(productSubcategory -> new SubCategoryDto(Long.toString(productSubcategory.getSubcategory().getSubcategoryId()), parent,
-                productSubcategory.getSubcategory().getSubcategoryName(), productSubcategory.getSubcategory().getSlug()))
-                .collect(Collectors.toList());
-
-        List<ProductDetailDto> details = product.getDetails().stream().map(detail -> {
-            return ProductDetailDto.builder()
-                    .name(detail.getName())
-                    .value(detail.getValue()).build();
-        }).collect(Collectors.toList());
-
-        
-        List<ProductQADto> questions = product.getQuestions().stream().map(q -> {
-            return ProductQADto.builder()
-                    .question(q.getQuestion())
-                    .answer(q.getAnswer())
-                    .build();
-        }).collect(Collectors.toList());
-
-        List<ProductSkuDto> skus = product.getSkus().stream().map(sku -> {
-
-            List<String> base64Image = new ArrayList<String>();
-            for (String image : sku.getImages()) {                
-                base64Image.add(image);
-            }
-
-            Set<ProductSizeDto> sizes = sku.getSizes().stream().map(item -> {
-                ProductSizeDto size = new ProductSizeDto(Long.toString(item.getSizeId()),
-                        item.getSize(), item.getQuantity(), item.getPrice());
-                return size;
-            }).collect(Collectors.toSet());
-
-            ProductColorDto color = new ProductColorDto(Long.toString(sku.getColor().getColorId()),
-                    sku.getColor().getColor(), sku.getColor().getColorImage());
-
-            ProductSkuDto dto = ProductSkuDto.builder()
-                    .id(Long.toString(sku.getSkuproductId()))
-                    .sku(sku.getSku())
-                    .images(base64Image)
-                    .discount(sku.getDiscount())
-                    .sold(sku.getSold())
-                    .sizes(sizes)
-                    .color(color)
-                    .build();
-
-            return dto;
-        }).collect(Collectors.toList());
-
-        return ProductDto.builder()
-                .id(Long.toString(product.getProductId()))
-                .name(product.getName())
-                .description(product.getDescription())
-                .brand(product.getBrand())
-                .slug(product.getSlug())
-                .category(parent)
-                .subCategories(subCategories)
-                .details(details)                
-                .questions(questions)
-                .skus(skus)
-                .refundPolicy(product.getRefundPolicy())
-                .rating(product.getRating())                
-                .shipping(product.getShipping().toPlainString())
-                .createdAt(product.getCreatedAt().toString())
-                .build();                
-    }
-
 }

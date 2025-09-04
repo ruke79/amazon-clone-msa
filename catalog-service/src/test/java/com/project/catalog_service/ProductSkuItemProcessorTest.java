@@ -1,4 +1,4 @@
-package com.project.catalog_service.batch.processor;
+import com.project.catalog_service.batch.processor.ProductSkuItemProcessor;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;

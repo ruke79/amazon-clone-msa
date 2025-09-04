@@ -1,3 +1,6 @@
+import com.project.common.dto.ProductDto;
+import com.project.common.dto.ProductInfoDto;
+import com.project.catalog_service.mapper.ProductMapper;
 import com.project.catalog_service.model.*;
 import com.project.catalog_service.repository.*;
 import com.project.catalog_service.service.ImageService;
@@ -73,7 +76,7 @@ class ProductServiceTest {
         product.setQuestions(Collections.emptySet());
         product.setSkus(Collections.emptySet());
 
-        productDto = Product.convertToDto(product);
+        productDto = ProductMapper.toDto(product);
     }
     
     @Test

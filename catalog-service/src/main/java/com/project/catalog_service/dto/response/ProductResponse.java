@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.project.common.dto.ProductDto;
 import com.project.catalog_service.model.Product;
 import com.project.catalog_service.util.CursorPagenation;
-import com.project.common.dto.ProductDto;
+import com.project.catalog_service.mapper.ProductMapper;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,7 +48,7 @@ public class ProductResponse {
 
     private static List<ProductDto> getContents(List<Product> products) {
         return products.stream()
-                .map(product -> product.convertToDto(product))
+                .map(ProductMapper::toDto)
                 .collect(Collectors.toList());
     }
 
