@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(
-    basePackages = "com.project.catalog_service.repository",
-    entityManagerFactoryRef = "entityManagerFactory",
-    transactionManagerRef = "transactionManager"
-)
+// @EnableJpaRepositories(
+//     basePackages = "com.project.catalog_service.repository",
+//     entityManagerFactoryRef = "entityManagerFactory",
+//     transactionManagerRef = "transactionManager"
+// )
 public class QuerydslConfig {
 
     @PersistenceContext(unitName = "catalogPersistenceUnit")
