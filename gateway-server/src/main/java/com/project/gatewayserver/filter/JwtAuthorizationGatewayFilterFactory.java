@@ -35,6 +35,7 @@ import reactor.core.publisher.Mono;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -47,7 +48,11 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
 
     
     public static class Config {
-                
+         private List<String> exceptPaths;
+
+         public List<String>  getExceptPaths() {
+            return exceptPaths;
+         }       
     }
 
     @Value("${spring.app.jwtSecret}")
@@ -68,7 +73,8 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
             String path = request.getURI().getPath();                
               // WebSocket 관련 경로를 필터 검사에서 제외
             log.info("JwtAuthorizationGatewayFilterFactory called for path: {}", request.getURI().getPath());
-            if (path.startsWith("/chat-service/chat/")) {
+              // 예외 경로 목록에 현재 경로가 포함되어 있는지 확인
+            if (config.getExceptPaths() != null && config.getExceptPaths().stream().anyMatch(path::startsWith)) {
                 return chain.filter(exchange);
             }
             
