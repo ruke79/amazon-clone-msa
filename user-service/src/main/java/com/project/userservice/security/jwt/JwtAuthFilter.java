@@ -47,31 +47,31 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         log.info("AuthTokenFilter called for URI: {}", request.getRequestURI());
 
-        //String requestUri = request.getRequestURI();
+        String requestUri = request.getRequestURI();
 
-        // if (requestUri.matches("/user-service/registrationConfirm(?:\\/.*)?$")) {
+        if (requestUri.matches("/user-service/registrationConfirm(?:\\/.*)?$")) {
 
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        // if (requestUri.matches("/api/auth/public/signin(?:\\/.*)?$")) {
+        if (requestUri.matches("/api/auth/public/signin(?:\\/.*)?$")) {
 
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        // if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
 
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        // if (requestUri.matches("/api/token(?:\\/.*)?$")) {
+        if (requestUri.matches("/api/token(?:\\/.*)?$")) {
 
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
+            filterChain.doFilter(request, response);
+            return;
+        }
 
 
         
