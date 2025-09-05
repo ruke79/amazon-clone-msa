@@ -12,7 +12,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-//@Component  --> 이 필터는 application.yml에서 수동으로 등록
+//@Component
 public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Config> {
     public CustomFilter() {
         super(Config.class);

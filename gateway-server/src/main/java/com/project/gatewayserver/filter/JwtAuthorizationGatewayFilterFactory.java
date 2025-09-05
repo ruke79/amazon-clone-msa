@@ -40,7 +40,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 @Slf4j
-//@Component  --> 이 필터는 application.yml에서 수동으로 등록
+@Component
 public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtAuthorizationGatewayFilterFactory.Config> {
     
     //Environment env;
