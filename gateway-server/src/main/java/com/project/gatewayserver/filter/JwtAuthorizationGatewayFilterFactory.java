@@ -68,7 +68,7 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
             String path = request.getURI().getPath();                
               // WebSocket 관련 경로를 필터 검사에서 제외
             log.info("JwtAuthorizationGatewayFilterFactory called for path: {}", request.getURI().getPath());
-            if (path.startsWith("/chat-service/chat/")) {
+            if (path.startsWith("/chat/")) {
                 return chain.filter(exchange);
             }
             
