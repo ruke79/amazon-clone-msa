@@ -124,7 +124,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/public/**").permitAll()
                                 .requestMatchers("/user-service/registrationConfirm").permitAll()  // later change to /registrationConfirm
                                 // .requestMatchers("/registrationConfirm").permitAll()                                
-                                .requestMatchers("/sse").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/sse").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .anyRequest().authenticated());
 
