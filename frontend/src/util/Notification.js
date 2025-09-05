@@ -34,7 +34,7 @@ export const useNotification = () => {
                         headers: {
                             'Content-Type' : 'text/event-stream',
                             'Cache-Control': 'no-cache',
-                            'Connection' : 'keep-alive',
+                            //'Connection' : 'keep-alive', // http/2에서는 무시됨
                             'X-Accel-Buffering' : 'no',                            
                             Authorization: `Bearer ${token}`,                        
                         },
