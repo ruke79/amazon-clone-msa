@@ -9,8 +9,8 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
 @Slf4j
+//@Component  --> 이 필터는 application.yml에서 수동으로 등록
 public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
     public GlobalFilter() {
         super(Config.class);
