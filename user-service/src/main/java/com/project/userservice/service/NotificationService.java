@@ -1,5 +1,6 @@
 package com.project.userservice.service;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -52,6 +53,15 @@ public class NotificationService {
         emitter.onCompletion(() -> userEmitters.remove(sessionId));
         emitter.onTimeout(() -> userEmitters.remove(sessionId));
         emitter.onError((e) -> userEmitters.remove(sessionId));
+
+           // SSE 연결이 성공적으로 이루어졌음을 알리는 초기 이벤트 전송
+        try {
+            emitter.send(SseEmitter.event().name("init").data("connection established"));
+            log.info("Initial SSE event sent for session: {}", sessionId);
+        } catch (IOException e) {
+            log.error("Failed to send initial SSE event: {}", e.getMessage());
+            emitter.completeWithError(e); // 예외 발생 시 Emitter 종료
+        }
         
         return emitter;
     }

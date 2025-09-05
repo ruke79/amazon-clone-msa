@@ -32,16 +32,23 @@ public class NotificationController {
     public SseEmitter streamNotifications(@AuthenticationPrincipal UserDetails userDetails, 
     HttpServletRequest request, HttpServletResponse response) {
 
-        String accessToken = request.getHeader("Authorization");
+        log.info("SSE 연결 시도"); // 메소드 진입 로그
+        log.info("Spring Security UserDetails: {}", userDetails != null ? userDetails.getUsername() : "null");
 
+        String accessToken = request.getHeader("Authorization");
+        log.info("Request Authorization Header: {}", accessToken);
                
         if (accessToken == null) {
-             return null;
-         }     
+            log.warn("Authorization 헤더가 누락되었습니다. null을 반환합니다.");
+            return null;
+        }     
 
         response.setHeader("X-Accel-Buffering", "no");
         response.setHeader("Connection", "keep-alive");
         response.setHeader("Cache-Control", "no-cache");
+        
+        String sessionId = accessToken.substring(7);
+        log.info("토큰에서 추출한 Session ID: {}", sessionId);
 
         return notificationService.createEmitter(accessToken.substring(7));
     }
