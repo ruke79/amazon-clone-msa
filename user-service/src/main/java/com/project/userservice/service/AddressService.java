@@ -2,6 +2,7 @@ package com.project.userservice.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class AddressService {
         AddressDto result = new AddressDto();
         AddressDto.deepCopyShippingAddressDto(result, address);
         
-        log.info("saveShippingAddress completed, returning result: {}", result.getAddressId());
+        log.info("saveShippingAddress completed, returning result: {}", result.getId());
 
         return result;
     }
@@ -103,7 +104,7 @@ public class AddressService {
                 AddressDto dto = new AddressDto();
                 AddressDto.deepCopyShippingAddressDto(dto, address);
                 
-                log.info("selectShipAddress completed, returning active address: {}", dto.getAddressId());
+                log.info("selectShipAddress completed, returning active address: {}", dto.getId());
 
                 return dto;
             }
