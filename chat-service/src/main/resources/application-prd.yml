@@ -1,0 +1,136 @@
+server:
+  port: 8086
+  ssl:    
+      key-store: file:///home/ubuntu/resources/mywebserv.site_202504149248A.pfx
+      key-store-type: PKCS12
+      key-store-password: ttnzw77n
+      key-password: ttnzw77n
+      key-alias : mywebserv.site
+
+
+kafka:
+    security:
+       protocol: "SSL"
+    ssl: 
+        trust-store-location: file:///home/ubuntu/resources/infra/truststore
+        trust-store-password: webdev2025@
+        key-store-location: file:///home/ubuntu/resources/infra/keystore
+        key-store-password: webdev2025@
+    url: webinfra.site:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생
+
+
+
+eureka:
+    instance:
+      preferIpAddress: false   # true => private ip
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+      non-secure-port-enabled : false
+      secure-port-enabled : true
+      secure-port : 8086
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+        defaultZone: https://mywebserv.site:8761/eureka
+    tls:
+      enabled: true
+      key-store: file:///home/ubuntu/resources/mywebserv.site_202504149248A.pfx
+      key-store-type: PKCS12
+      key-store-password: ttnzw77n      
+      key-password: ttnzw77n
+
+    
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+spring:
+    application:
+      name: chat-service
+
+    config:
+      import: "optional:configserver:https://mywebserv.site:8888"
+
+       
+
+    datasource:
+
+    
+      # url: jdbc:mysql://webinfra.site:3306/userdb?serverTimezone=Asia/Seoul
+      #       &sslMode=VERIFY_CA
+      #       &trustCertificateKeyStoreUrl=file:///home/ubuntu/resources/truststore
+      #       &trustCertificateKeyStorePassword=ttnzw77n&
+      #       clientCertificateKeyStoreUrl=file:///home/ubuntu/resources/keystore
+      #       &clientCertificateKeyStorePassword=ttnzw77n            
+      url: jdbc:postgresql://webinfra.site:5435/chatdb?sslmode=require
+      username: product
+      password: ysY2273!
+      properties:
+        ssl: true
+        sslfactory: org.postgresql.ssl.DefaultJavaSSLFactory
+        sslrootcert: /home/ubuntu/resources/ca.crt
+        sslpassword: webdev2025@    
+            
+      hikari:
+         maximum-pool-size: 11
+
+    jpa:
+      open-in-view: false   #  SSE 관련 설정
+      hibernate:
+         ddl-auto: none
+      properties:
+             hibernate:
+                 format_sql: false
+                 #use_sql_comments: true
+                 #type: trace
+                 dialect : org.hibernate.dialect.PostgreSQLDialect    # ssl
+
+    data:
+      mongodb:
+        client: mongodb://admin:ysY2273!@webinfra.site:27017?ssl=false
+        name: chat
+        cacert: resources/infra/ca.pem
+        keystore: resources/infra/keystore
+        keystorePassword : webdev2025@
+        username: admin
+        password: ysY2273!
+        auto-index-creation: true
+      redis:
+        ssl:
+            enabled : true 
+            cacert : /home/ubuntu/resources/ca.pem
+            cert: /home/ubuntu/resources/server.crt
+            key: /home/ubuntu/resources/server.key
+            storePassword : webdev2025@
+        repositories:
+          enabled: false
+        lettuce:
+          pool:
+            max-active: 5
+            max-idle: 5
+            min-idle: 2  
+        host: webinfra.site
+        port: 6379
+        password: ysY2273!
+
+    app:    
+      jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+
+logging:
+  level:
+    root: INFO # 운영 환경에 적합한 INFO 레벨
+    org.springframework.web: INFO # Spring Web 관련 로그를 INFO로 설정하여 불필요한 로그 최소화
+    com.project.chatserver: INFO # 본인의 애플리케이션 패키지 로그 레벨 설정 (예시)
+  
+  file:
+    name: /var/log/chat-service/app.log # 로그 파일 경로와 이름 지정
+  
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{39} - %msg%n"
+      
+        
+
