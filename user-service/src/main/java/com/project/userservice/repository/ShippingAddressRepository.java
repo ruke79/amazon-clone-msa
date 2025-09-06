@@ -21,7 +21,7 @@ public interface ShippingAddressRepository extends JpaRepository<ShippingAddress
     List<ShippingAddress> findByUser_UserId(Long userId);
     
     // --- 낙관적 잠금 적용 ---
-    @Lock(LockModeType.OPTIMISTIC) // Transactional ReadOnly true 에서 사용 가능
+    //@Lock(LockModeType.OPTIMISTIC) // Transactional ReadOnly true 에서 사용 가능
     List<ShippingAddress> findByUser_Username(@Param("username") String username);
 
     @Lock(LockModeType.OPTIMISTIC) // Transactional ReadOnly true 에서 사용 가능
