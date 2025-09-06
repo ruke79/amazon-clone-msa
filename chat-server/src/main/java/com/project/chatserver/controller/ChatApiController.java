@@ -1,8 +1,7 @@
 package com.project.chatserver.controller;
 
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -31,18 +30,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import com.project.chatserver.common.util.TokenHandler;
+import com.project.chatserver.dto.ChatRoomDto;
+import com.project.chatserver.dto.request.ChatRoomRequest;
+import com.project.chatserver.model.ChatRoom;
+import com.project.chatserver.service.ChatService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
+
 @Log4j2
 @RequiredArgsConstructor
-@Controller
-@RequestMapping("/api/chat")
-public class ChatController {
+@RestController // RestContro
+public class ChatApiController {
 
-    private final TokenHandler tokenHandler;
+
+        private final TokenHandler tokenHandler;
     private final ChatService chatService;
 
-   
-
-    @PostMapping("/room")
+      @PostMapping("/room")
     @ResponseBody
     public ChatRoomDto CreateChatRoom(@RequestBody ChatRoomRequest chatroomReqest, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -69,24 +78,7 @@ public class ChatController {
         return all;
     }
 
-    @MessageMapping("/chat/message")
-    public void sendMessage(@Valid MessageDto request) {
-            chatService.sendMessage(request);
-    }
-
-    @MessageMapping("/chat/enter")
-	public void enterChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
-
-        chatService.sendEnterMessage(msg, headerAccessor);
-    }
-
-    @MessageMapping("/chat/leave")
-	public void leaveChatRoom( @RequestBody MessageDto msg, SimpMessageHeaderAccessor headerAccessor) {
-
-        chatService.sendLeaveMessage(msg, headerAccessor);
-    }
-
-    @GetMapping("/room/{roomId}")
+     @GetMapping("/room/{roomId}")
     public ResponseEntity<List<MessageDto>> getRoomMessages(@PathVariable("roomId") String roomId,
                 @RequestParam(name = "cursor") String cursor) {
                     log.info("cursor:", cursor);
@@ -103,5 +95,6 @@ public class ChatController {
         String email = tokenHandler.getUid(token);
         return email;
     }
+
 
 }

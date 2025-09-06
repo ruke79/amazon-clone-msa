@@ -2,7 +2,7 @@ package com.project.chatserver.chat;
 
 import com.project.chatserver.client.UserServiceClient;
 import com.project.chatserver.constants.MessageType;
-import com.project.chatserver.controller.ChatController;
+import com.project.chatserver.controller.StompController;
 import com.project.chatserver.dto.MessageDto;
 // import com.project.chatserver.controller.ChatController;
 import com.project.chatserver.dto.request.ChatRoomRequest;
@@ -42,7 +42,7 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 
 
 @AutoConfigureMockMvc
-@WebMvcTest(controllers = ChatController.class)
+@WebMvcTest(controllers = StompController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 public class ChatControllerTest extends MvcTestBasic {
     @MockBean
