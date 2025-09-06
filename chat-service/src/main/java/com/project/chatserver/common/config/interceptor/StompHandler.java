@@ -33,6 +33,11 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         // StompCommand에 따라서 로직을 분기해서 처리하는 메서드를 호출한다.        
+
+         // Stomp 명령 및 헤더 전체를 로그로 출력하여 문제 파악
+        log.info("STOMP Command: {}", accessor.getCommand());
+        log.info("Native Headers: {}", accessor.getNativeHeaders());
+
         if (StompCommand.CONNECT == accessor.getCommand()) {
 
             
@@ -49,15 +54,22 @@ public class StompHandler implements ChannelInterceptor {
         } 
         if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
 
-            String userSessionId = (String) message.getHeaders().get("simpSessionId");
+            try {
 
-            String roomId = getRoomId(accessor);
-            String userId = getUserId(accessor);
+                String userSessionId = (String) message.getHeaders().get("simpSessionId");
 
-            log.info("Subscribe : {}, {} , {}", roomId,  userId, userSessionId);
-            
+                String roomId = getRoomId(accessor);
+                String userId = getUserId(accessor);
 
-            chatService.connect(roomId, userId, userSessionId);
+                log.info("Subscribe : {}, {} , {}", roomId,  userId, userSessionId);
+                
+
+                chatService.connect(roomId, userId, userSessionId);
+            } catch (Exception e) {
+                log.error("Error during SUBSCRIBE Stomp handling: {}", e.getMessage(), e);
+                throw e; // 예외를 다시 던져서 연결을 종료하도록 함
+            }
+
 
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             
