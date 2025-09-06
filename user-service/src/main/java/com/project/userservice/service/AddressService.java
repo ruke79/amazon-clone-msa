@@ -1,6 +1,7 @@
 package com.project.userservice.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -118,12 +119,24 @@ public class AddressService {
     public List<AddressDto> getShipAddresses(String username) {
         log.info("getShipAddresses called with username: {}", username);
 
-        // Optional을 안전하게 다루고, 사용자가 없을 경우 예외를 명확하게 처리
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        log.info("User found, getting all addresses for user ID: {}", user.getUserId());
-        List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.getUserId());
-        log.info("Found {} addresses.", addresses.size());
+        List<ShippingAddress> addresses = new ArrayList<>();
+
+        // try-catch 블록을 추가하여 예외를 처리
+        try {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+            log.info("User found, getting all addresses for user ID: {}", user.getUserId());
+            // Lazy 로딩 문제 해결 발생
+            //addresses = shippingAddressRepository.findByUser_UserId(user.getUserId());
+            // JOIN FETCH를 사용하여 User와 ShippingAddress를 함께 로드
+            addresses = shippingAddressRepository.findByUser_UserIdWithUser(user.getUserId());
+
+            log.info("Found {} addresses.", addresses.size());
+        } catch (RuntimeException e) {
+            log.warn("User not found: {}, returning empty list. Error: {}", username, e.getMessage());
+            return Collections.emptyList(); // 예외 발생 시 빈 목록을 반환
+        }
 
         // 스트림 API를 사용하여 변환 로직을 간결하게 작성
         List<AddressDto> addressDtos = addresses.stream()
