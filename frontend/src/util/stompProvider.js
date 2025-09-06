@@ -31,9 +31,14 @@ export function StompProvider({
     // brokerURL에 소켓 엔드포인트를 적어줍니다. 예: http://localhost:8080/ws
     // 아래처럼 SockJS 인스턴스를 생성하도록 webSocketFactory에 전달
     if (!isConnected) {
+
+       const sockjsOptions = {
+                headers: connectHeaders
+      };
+
       const client = new Client({
         // brokerURL: "스프링의 withSockJS가 아닐때 사용 ws://",
-        webSocketFactory: () => new SockJS(brokerURL), // SockJS일때 사용
+        webSocketFactory: () => new SockJS(brokerURL, null, sockjsOptions), // SockJS일때 사용
         connectHeaders : connectHeaders,        
         debug: (str) => {          
           console.log("[STOMP DEBUG]:", str);

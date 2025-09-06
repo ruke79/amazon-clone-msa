@@ -34,7 +34,7 @@ import jakarta.validation.Valid;
 @Log4j2
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
 public class ChatController {
 
     private final TokenHandler tokenHandler;

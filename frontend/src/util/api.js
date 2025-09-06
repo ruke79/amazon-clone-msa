@@ -284,14 +284,14 @@ export const processPayment = async (request) => {
 }
 
 export const createChatRoom = ({ roomName }) => {
-  const url = `/chat-service/chat/room`;
+  const url = `/chat-service/api/chat/room`;
   return api.post(url, { roomName : roomName }).then((res) => {
     return res.data;
   });
 };
 
 export const  getChatRoomList = async () => {
-  const url = `/chat-service/chat/rooms`;
+  const url = `/chat-service/api/chat/rooms`;
   // return api.get(url).then((res) => {            
   //   return res.data;
   // }).catch((error)=> { console.log(error.response.data)});
@@ -304,7 +304,7 @@ export const  getChatRoomList = async () => {
 };
 
 export const getRoomMessages = async (room, cursor) => {
-  const url = `/chat-service/chat/room/${room?.roomId}`;
+  const url = `/chat-service/api/chat/room/${room?.roomId}`;
   
   
   try {    
