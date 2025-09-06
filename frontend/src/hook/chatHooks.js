@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRef, useEffect  } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRef, useEffect, useCallback  } from "react";
 import { useDispatch } from "react-redux";
 import { addRoomToList } from "../redux/ChatSlice";
 
-import { createChatRoom, getChatRoomList, getRoomMessages } from "util/api";
-
+import { api, createChatRoom, getChatRoomList, getRoomMessages } from "util/api";
+import { useStomp } from "util/stompProvider";
 
 export const useCreateChatRoom = (props) => {
     
@@ -70,7 +70,9 @@ export const useCreateChatRoom = (props) => {
       },
     
       throwOnError : true,      
-      staleTime : 1000
+      staleTime : 1000,
+      // roomId가 있을 때만 쿼리를 실행합니다.
+      enabled: !!room?.roomId, 
   });
     
     return {
@@ -94,27 +96,26 @@ export const useCreateChatRoom = (props) => {
 
 
   export const useSendMessage = ({
-    type,
-    client,
+    type,    
     roomId,
     sender,
     message,
     deleteMessage,
   } ) => {
+
+    const { client } = useStomp();
     
-    client.send(
-      "/pub/chat/message",
-      {
-        Authorization: axios.defaults.headers.common["Authorization"],
-      },
-      JSON.stringify({
-        type: type,
-        roomId: roomId,
-        sender: sender,
-        message: message,
-      })
-    );
-    deleteMessage();
+    const sendMessage = useCallback(({ type, roomId, sender, message }) => {
+    if (client) {
+      client.send(
+        "/pub/chat/message",
+        { Authorization: api.defaults.headers.common["Authorization"] },
+        JSON.stringify({ type, roomId, sender, message })
+      );
+    }
+  }, [client]);
+
+  return sendMessage;
   };
 
   export function usePrevState(state) {

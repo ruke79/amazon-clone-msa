@@ -38,41 +38,30 @@ export function useInfiniteScroll({ hasNextPage, fetchNextPage }) {
 }
 
 export const useLogout = (isMultipleLogin = false) => {
-
   const navigate = useNavigate();
   const { logout } = useAuthContext();
 
-
-  const handleLogout = async () => {
-        
-    
-
-    try {
-      if (isMultipleLogin) {        
-          api.defaults.headers.post["MultiLogin"] = "true";          
-          console.log("multilogout");
-      }
-      else {
-          api.defaults.headers.post["MultiLogin"] = "false";        
-      }
-      await postRequest('/user-service/api/auth/logout', null);
-
+  const { mutate: logoutOp, isPending } = useMutation({
+    mutationFn: () => {
+      // isMultipleLogin 상태에 따라 헤더 설정
+      api.defaults.headers.post["MultiLogin"] = isMultipleLogin ? "true" : "false";
+      return postRequest('/user-service/api/auth/logout', null);
+    },
+    onSuccess: () => {
       tokenUtil.remove();
       logout();
       navigate('/signin');
-
-      toast.success("Signout successed. ");
-    }
-    catch (err) {
-      toast.error("Logout failed. ");
+      toast.success("Signout successed.");
+    },
+    onError: (err) => {
+      toast.error("Logout failed.");
       console.error(err.response?.data.message);
-    }
+    },
+  });
 
-  };
+  return { logout: logoutOp, isPending };
+};
 
-  return () => handleLogout();
-
-}
 
 
 export const useFetchReviews = (productId) => {
@@ -170,9 +159,8 @@ export const useFetchOrders = (filter, email) => {
 
 export const useFetchCart = (email, cartStatus, cartId) => {
 
-
   const { data, isPending, status, isSuccess, refetch } = useQuery({
-    queryKey: [{ cartId: cartId, cartStatus: cartStatus }],
+    queryKey: [ 'cart', cartId, cartStatus],
     queryFn: async () => {
       const res = await loadCart(email);
       
