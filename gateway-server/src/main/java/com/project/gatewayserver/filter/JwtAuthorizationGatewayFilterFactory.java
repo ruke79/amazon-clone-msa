@@ -1,6 +1,5 @@
 package com.project.gatewayserver.filter;
 
-
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -28,7 +27,6 @@ import org.springframework.web.server.ServerWebExchange;
 
 import com.project.common.constants.TokenStatus;
 
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -42,17 +40,21 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Slf4j
 @Component
-public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterFactory<JwtAuthorizationGatewayFilterFactory.Config> {
-    
-    //Environment env;
+public class JwtAuthorizationGatewayFilterFactory
+        extends AbstractGatewayFilterFactory<JwtAuthorizationGatewayFilterFactory.Config> {
 
-    
+    // Environment env;
+
     public static class Config {
-         private List<String> exceptPaths;
+        private List<String> exceptPaths;
 
-         public List<String>  getExceptPaths() {
+        public List<String> getExceptPaths() {
             return exceptPaths;
-         }       
+        }
+
+        public void setExceptPaths(List<String> exceptPaths) {
+            this.exceptPaths = exceptPaths;
+        }
     }
 
     @Value("${spring.app.jwtSecret}")
@@ -60,26 +62,25 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
 
     public JwtAuthorizationGatewayFilterFactory() {
         super(Config.class);
-        //this.env = env;
+        // this.env = env;
     }
 
     @Override
     public GatewayFilter apply(Config config) {
 
-        //return new OrderedGatewayFilter(
+        // return new OrderedGatewayFilter(
         return (exchange, chain) -> {
-                        
+
             ServerHttpRequest request = exchange.getRequest();
-            String path = request.getURI().getPath();                
-              // WebSocket 관련 경로를 필터 검사에서 제외
+            String path = request.getURI().getPath();
+            // WebSocket 관련 경로를 필터 검사에서 제외
             log.info("JwtAuthorizationGatewayFilterFactory called for path: {}", request.getURI().getPath());
 
-              // 예외 경로 목록에 현재 경로가 포함되어 있는지 확인
+            // 예외 경로 목록에 현재 경로가 포함되어 있는지 확인
             if (config.getExceptPaths() != null && config.getExceptPaths().stream().anyMatch(path::startsWith)) {
 
                 return chain.filter(exchange);
             }
-            
 
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return OnError(exchange, "로그인이 필요한 서비스입니다.", HttpStatus.UNAUTHORIZED);
@@ -88,17 +89,15 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
             String authorizationHeader = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
             String jwt = authorizationHeader.replace("Bearer ", "");
 
-            try {           
+            try {
 
-                isJwtTokenExpired(jwt);                
-                
-            } catch (ExpiredJwtException e) {                
+                isJwtTokenExpired(jwt);
+
+            } catch (ExpiredJwtException e) {
                 return OnError(exchange, "access token expired", HttpStatus.UNAUTHORIZED);
             }
 
-
-
-            TokenStatus tokenStatus = validateJwtToken(jwt); 
+            TokenStatus tokenStatus = validateJwtToken(jwt);
 
             if (tokenStatus == TokenStatus.VALID) {
 
@@ -112,10 +111,10 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
                 // 수정된 요청으로 교환 객체 업데이트
                 return chain.filter(exchange.mutate().request(newRequest).build());
             }
-            
+
             return OnError(exchange, "invalid access token", HttpStatus.UNAUTHORIZED);
-        };        
-        //, Ordered.LOWEST_PRECEDENCE);
+        };
+        // , Ordered.LOWEST_PRECEDENCE);
     }
 
     private SecretKey key() {
@@ -161,32 +160,30 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
     private boolean isJwtTokenExpired(String token) {
 
         return Jwts.parser()
-        .verifyWith(key())
-        .build().parseSignedClaims(token)
-        .getPayload().getExpiration().before(new Date());
-     }
-
-    
-     public TokenStatus validateJwtToken(String authToken) {
-    try {
-      Jwts.parser().verifyWith(key())
-          .build().parseSignedClaims(authToken);
-      return TokenStatus.VALID;
-    } catch (MalformedJwtException e) {
-      log.error("Invalid JWT token: {}", e.getMessage());
-      return TokenStatus.INVALID;
-    } catch (ExpiredJwtException e) {
-        log.error("JWT token is expired: {}", e.getMessage());
-      return TokenStatus.EXPIRED;
-    } catch (UnsupportedJwtException e) {
-        log.error("JWT token is unsupported: {}", e.getMessage());
-      return TokenStatus.UNSUPPORTED;
-    } catch (IllegalArgumentException e) {
-        log.error("JWT claims string is empty: {}", e.getMessage());
-      return TokenStatus.ILLEGAL_ARGS;
+                .verifyWith(key())
+                .build().parseSignedClaims(token)
+                .getPayload().getExpiration().before(new Date());
     }
-  }
-    
+
+    public TokenStatus validateJwtToken(String authToken) {
+        try {
+            Jwts.parser().verifyWith(key())
+                    .build().parseSignedClaims(authToken);
+            return TokenStatus.VALID;
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+            return TokenStatus.INVALID;
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+            return TokenStatus.EXPIRED;
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+            return TokenStatus.UNSUPPORTED;
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage());
+            return TokenStatus.ILLEGAL_ARGS;
+        }
+    }
 
     // Mono, Flux => Spring WebFlux
     private Mono<Void> OnError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
