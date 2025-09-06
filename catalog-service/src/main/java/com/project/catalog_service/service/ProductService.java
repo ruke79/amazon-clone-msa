@@ -234,7 +234,13 @@ public class ProductService {
      * 모든 카테고리/서브카테고리별 상품 목록을 순회하며 캐시를 미리 채웁니다 (Warm-up).
      */
 
+    
+    @Cacheable(value = "products", key = "'all'")
     @PostConstruct // <-- 애플리케이션 시작 시 이 메서드를 자동으로 실행
+    public void BuildProductCaches() {
+        warmUpProductCaches(20); // 페이지 크기를 20으로 설정
+    }
+    
     public List<ProductDto> warmUpProductCaches(int pageSize) {
         
         log.info("Starting to warm up product caches...");        
