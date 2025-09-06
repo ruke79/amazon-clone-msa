@@ -1,3 +1,4 @@
+package com.project.catalog_service;
 import com.project.common.dto.ProductDto;
 import com.project.common.dto.ProductInfoDto;
 import com.project.catalog_service.mapper.ProductMapper;

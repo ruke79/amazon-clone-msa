@@ -73,8 +73,10 @@ public class JwtAuthorizationGatewayFilterFactory extends AbstractGatewayFilterF
             String path = request.getURI().getPath();                
               // WebSocket 관련 경로를 필터 검사에서 제외
             log.info("JwtAuthorizationGatewayFilterFactory called for path: {}", request.getURI().getPath());
+
               // 예외 경로 목록에 현재 경로가 포함되어 있는지 확인
             if (config.getExceptPaths() != null && config.getExceptPaths().stream().anyMatch(path::startsWith)) {
+
                 return chain.filter(exchange);
             }
             

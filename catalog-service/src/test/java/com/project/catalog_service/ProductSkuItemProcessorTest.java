@@ -1,3 +1,4 @@
+package com.project.catalog_service;
 import com.project.catalog_service.batch.processor.ProductSkuItemProcessor;
 
 import static org.mockito.ArgumentMatchers.anyString;

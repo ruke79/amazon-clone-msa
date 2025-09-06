@@ -1,3 +1,4 @@
+package com.project.catalog_service;
 import com.project.catalog_service.repository.*;
 import com.project.catalog_service.service.ProductService;
 import com.project.catalog_service.service.SearchService;

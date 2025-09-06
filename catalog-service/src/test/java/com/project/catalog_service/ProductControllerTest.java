@@ -1,3 +1,4 @@
+package com.project.catalog_service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.catalog_service.controller.ProductController;
 import com.project.catalog_service.service.ProductService;
