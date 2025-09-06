@@ -1,13 +1,11 @@
 package com.project.chatserver.chat;
 
-import com.project.chatserver.client.UserServiceClient;
-import com.project.chatserver.constants.MessageType;
-import com.project.chatserver.controller.StompController;
-import com.project.chatserver.dto.MessageDto;
-// import com.project.chatserver.controller.ChatController;
-import com.project.chatserver.dto.request.ChatRoomRequest;
-import com.project.chatserver.service.ChatService;
-
+import com.project.chat_service.client.UserServiceClient;
+import com.project.chat_service.constants.MessageType;
+import com.project.chat_service.controller.StompController;
+import com.project.chat_service.dto.MessageDto;
+import com.project.chat_service.dto.request.ChatRoomRequest;
+import com.project.chat_service.service.ChatService;
 // import com.example.plantchatservice.dto.chat.Message;
 // import com.example.plantchatservice.dto.redis.ChatRoom;
 // import com.example.plantchatservice.dto.vo.ChatRequestDto;

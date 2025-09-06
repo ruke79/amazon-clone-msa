@@ -40,9 +40,7 @@ import com.project.catalog_service.service.ProductService;
 import com.project.catalog_service.service.SearchService;
 import com.project.common.response.GenericResponse;
 
-
 import lombok.RequiredArgsConstructor;
-
 
 @RequiredArgsConstructor
 @RestController
@@ -59,9 +57,9 @@ public class SearchController {
     private final ProductSizeDocumentRepository productSizeDocumentRepository;
     private final SubcategoryDocumentRepository subcategoryDocumentRepository;
 
-     private final JobLauncher jobLauncher;
-    //@Qualifier("productIndexingJob") // 이 라인을 추가
-    //private final Job productIndexingJob;
+    private final JobLauncher jobLauncher;
+    // @Qualifier("productIndexingJob") // 이 라인을 추가
+    // private final Job productIndexingJob;
     private final Map<String, Job> allJobs; // List<Job> 대신 Map<String, Job>을 사용하여 Job 이름으로 특정 Job을 주입
 
     @GetMapping("/search")
@@ -113,7 +111,6 @@ public class SearchController {
         return subcategoryDocumentRepository.findAll();
     }
 
-
     @PostMapping("/products/sync")
     public ResponseEntity<String> syncProducts() throws Exception {
         // allJobs 맵에서 "productIndexingJob"이라는 이름의 Job을 가져와 실행
@@ -123,16 +120,23 @@ public class SearchController {
             return ResponseEntity.internalServerError().body("Product indexing job not found!");
         }
 
+        // --- JobParameters에 newIndexName 추가 ---
+        // 현재 시간을 기반으로 새로운 인덱스 이름을 동적으로 생성합니다.
+        String newIndexName = "products-" + System.currentTimeMillis();
+
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
+                .addString("newIndexName", newIndexName) // newIndexName을 JobParameters에 추가
                 .toJobParameters();
+
         jobLauncher.run(productIndexingJob, jobParameters);
         return ResponseEntity.ok("Batch synchronization job started!");
     }
 
-    //Test
+    // Test
     @GetMapping("/search/category")
-    public ResponseEntity<?> searchProductsByCategory(@RequestParam("category") Long category, int pageNo, int pageSize) {
+    public ResponseEntity<?> searchProductsByCategory(@RequestParam("category") Long category, int pageNo,
+            int pageSize) {
 
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
 
