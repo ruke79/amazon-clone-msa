@@ -26,6 +26,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -33,6 +34,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Entity
 @SuperBuilder
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED) 
 @Table(name="shipping_address", schema="users",
             indexes = {
             @Index(columnList = "firstname, lastname, address1, city, state, zipCode", name = "idx_shipping_address") }         
