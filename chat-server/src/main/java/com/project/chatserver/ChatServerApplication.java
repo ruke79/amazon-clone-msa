@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableFeignClients
 @EnableJpaAuditing
-@EnableWebMvc
+//@EnableWebMvc
 public class ChatServerApplication {
 
 	public static void main(String[] args) {
