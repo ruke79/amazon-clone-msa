@@ -114,7 +114,7 @@ public class AddressService {
         return null;
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<AddressDto> getShipAddresses(String username) {
         log.info("getShipAddresses called with username: {}", username);
 
