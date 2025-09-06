@@ -60,7 +60,7 @@ const SignInPage = () => {
         });
     };
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: signin,
         throwOnError: true,
         onSuccess: (response) => {
@@ -145,16 +145,10 @@ const SignInPage = () => {
                             password,
                         }}
                         validationSchema={loginValidation}
-                        onSubmit={async () => {
-
-                            if (isLoadingRef.current) {
-                                return;
-                            }
-                            isLoadingRef.current = true;
-                            reRender();
-                            await signInHandler();
-                            isLoadingRef.current = false;
-                            reRender();
+                        onSubmit={() => {
+                            // isPending 상태를 사용하여 제출을 방지합니다.
+                            // 이미 pending 상태이므로, mutate 함수를 호출할 필요가 없습니다.
+                            signInHandler();
                         }
                         }
                     >
@@ -177,7 +171,8 @@ const SignInPage = () => {
                                     placeholder="please type Password"
                                     onChange={handleChange}
                                 />
-                                <ButtonInput type="submit" text="Sign in" />
+                                <ButtonInput type="submit" text="Sign in"  disabled={isPending}  // isPending 상태를 사용하여 버튼을 비활성화합니다.
+                              />
                             </Form>
                         )}
                     </Formik>
