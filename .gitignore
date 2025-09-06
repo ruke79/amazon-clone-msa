@@ -50,3 +50,6 @@ common/src/main/resources/localhost.p12
 docker-compose-services-2-prd.yml
 docker-compose-services-1-prd.yml
 docker-compose-core-prd.yml
+chat-service/src/main/resources/application-prd.yml
+chat-service/gradle/wrapper/gradle-wrapper.properties
+chat-service/gradle/wrapper/gradle-wrapper.jar
