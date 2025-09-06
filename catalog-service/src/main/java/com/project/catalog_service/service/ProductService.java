@@ -75,10 +75,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductService implements ApplicationContextAware {
+public class ProductService  {
 
-    private ApplicationContext applicationContext; // 컨텍스트를 저장할 필드
-
+    
     private final CategoryRepository categoryRepository;
 
     private final SubcategoryRepository subCategoryRepository;
@@ -99,11 +98,7 @@ public class ProductService implements ApplicationContextAware {
 
     // @Resource(name = "redisTemplate")
     // private ValueOperations<String, Object> productsOps;
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+    
 
     @Cacheable(value = "products", key = "#categoryName + '_' + #cursor + '_' + #pageSize")
     public List<ProductDto> getProductsByCategory(String categoryName, Long cursor, int pageSize) {
@@ -239,17 +234,7 @@ public class ProductService implements ApplicationContextAware {
     }
 
 
-
-     /**
-     * 모든 카테고리/서브카테고리별 상품 목록을 순회하며 캐시를 미리 채웁니다 (Warm-up).
-     */
-
-        
-    @PostConstruct // <-- 애플리케이션 시작 시 이 메서드를 자동으로 실행
-    public void BuildProductCaches() {
-        warmUpProductCaches(20); // 페이지 크기를 20으로 설정
-    }
-    
+     
     @Cacheable(value = "products", key = "'warmup'")
     public List<ProductDto> warmUpProductCaches(int pageSize) {
         
