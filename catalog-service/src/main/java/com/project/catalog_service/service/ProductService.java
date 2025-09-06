@@ -12,8 +12,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.BeansException;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.PageRequest;
@@ -72,7 +75,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductService {
+public class ProductService implements ApplicationContextAware {
+
+    private ApplicationContext applicationContext; // 컨텍스트를 저장할 필드
 
     private final CategoryRepository categoryRepository;
 
@@ -94,6 +99,11 @@ public class ProductService {
 
     // @Resource(name = "redisTemplate")
     // private ValueOperations<String, Object> productsOps;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
     @Cacheable(value = "products", key = "#categoryName + '_' + #cursor + '_' + #pageSize")
     public List<ProductDto> getProductsByCategory(String categoryName, Long cursor, int pageSize) {
