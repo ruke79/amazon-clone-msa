@@ -28,7 +28,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     
-    @GetMapping(value = "/sse") // produces = "text/event-stream; charset=utf-8")
+    @GetMapping(value = "/sse", produces = "text/event-stream; charset=utf-8")
     public SseEmitter streamNotifications(@AuthenticationPrincipal UserDetails userDetails, 
     HttpServletRequest request, HttpServletResponse response) {
 
@@ -43,8 +43,7 @@ public class NotificationController {
             return null;
         }     
 
-        response.setHeader("X-Accel-Buffering", "no");
-        //response.setHeader("Connection", "keep-alive");  http 1.1에서는 기본값이 keep-alive
+        response.setHeader("X-Accel-Buffering", "no");        
         response.setHeader("Cache-Control", "no-cache");
         
         String sessionId = accessToken.substring(7);
