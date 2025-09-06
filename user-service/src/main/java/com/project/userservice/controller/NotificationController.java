@@ -44,6 +44,7 @@ public class NotificationController {
         }     
 
         response.setHeader("X-Accel-Buffering", "no");        
+        response.setHeader("Connection", "keep-alive");  // http 1.1에서는 기본값이 keep-alive
         response.setHeader("Cache-Control", "no-cache");
         
         String sessionId = accessToken.substring(7);
