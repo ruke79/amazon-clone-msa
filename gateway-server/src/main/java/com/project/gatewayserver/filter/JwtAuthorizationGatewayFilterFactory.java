@@ -77,9 +77,15 @@ public class JwtAuthorizationGatewayFilterFactory
             log.info("JwtAuthorizationGatewayFilterFactory called for path: {}", request.getURI().getPath());
 
             // 예외 경로 목록에 현재 경로가 포함되어 있는지 확인
-            if (config.getExceptPaths() != null && config.getExceptPaths().stream().anyMatch(path::startsWith)) {
+            if (config.getExceptPaths() != null) {
+                log.info("Except paths: {}", config.getExceptPaths());
+                boolean isExcepted = config.getExceptPaths().stream().anyMatch(path::startsWith);
+                log.info("Path {} matches exceptPaths: {}", path, isExcepted);
 
-                return chain.filter(exchange);
+                if (isExcepted) {
+                    log.info("Path {} is an excepted path, bypassing JWT check.", path);
+                    return chain.filter(exchange);
+                }
             }
 
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
