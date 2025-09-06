@@ -110,8 +110,7 @@ public class ProductService {
         CursorPagenation<Product> productCursor = CursorPagenation.of(productsPage.getContent(), pageSize);
         return ProductResponse.of(productCursor, productsPage.getContent().size()).getContents();
     }
-
-    @Transactional(readOnly = true)
+    @Cacheable(value = "products", key = "#productName")    
     public List<ProductDto> getProductsByName(String productName) {
 
         List<Product> products = productRepository.findByName(productName);
@@ -231,6 +230,7 @@ public class ProductService {
      /**
      * 모든 카테고리/서브카테고리별 상품 목록을 순회하며 캐시를 미리 채웁니다 (Warm-up).
      */
+
     public List<ProductDto> warmUpProductCaches() {
         log.info("Starting to warm up product caches...");
 
@@ -299,8 +299,7 @@ public class ProductService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
-    @Transactional
+    
     @CachePut(value = "product", key = "#productId")
     public ProductDto updateRating(Long productId, float rating) {
         productRepository.updateRating(productId, rating);
@@ -308,6 +307,7 @@ public class ProductService {
         return convertToDto(product);
     }
 
+    
     public List<ProductSku> load(List<ProductInfoLoadRequest> products, List<MultipartFile> images,
             List<MultipartFile> colorImages) throws IOException {
 
@@ -326,13 +326,15 @@ public class ProductService {
         return result;
     }
 
-    @Transactional
+    
     public ProductSku load(ProductInfoLoadRequest request, MultipartFile images, MultipartFile colorImage)
             throws IOException {
         Product product = createOrFindProduct(request);
         return loadSku(request, product, images, colorImage);
     }
 
+    @Transactional
+    @CachePut(value = "product", key = "#result.productId")
     private Product createOrFindProduct(ProductInfoLoadRequest request) {
         if (request.getParent() != null && !request.getParent().isEmpty()) {
             return productRepository.findById(Long.parseLong(request.getParent()))
@@ -383,6 +385,8 @@ public class ProductService {
         return existingSubcategories;
     }
 
+    @Transactional
+    @CachePut(value = "product", key = "#result.productId")
     public ProductSku addProduct(ProductRequest request, List<MultipartFile> images, MultipartFile colorImage)
             throws IOException {
 
@@ -448,7 +452,7 @@ public class ProductService {
 
         return null;
     }
-
+    
     private ProductSku loadSku(ProductInfoLoadRequest request, Product product, MultipartFile image,
             MultipartFile colorImage) throws IOException {
 
@@ -791,6 +795,7 @@ public class ProductService {
 
     // A transactional public method that orchestrates the update
     @Transactional
+     @CachePut(value = "product", key = "#result.productId")
     public ProductSku updateSoldValue(Long productId, String slug, String size, Long colorId, int qty) {
         Optional<ProductSku> optionalSku = productskuRepository
                 .findByProductProductIdAndSizesSizeAndColorColorId(productId, size, colorId);
@@ -814,6 +819,7 @@ public class ProductService {
 
     // This method updates the cache with the latest data.
     // It is public so that the @CachePut annotation can be applied by Spring.
+    @Transactional
     @CachePut(value = "products", key = "#slug")
     public List<ProductDto> updateProductDtoCache(String slug, ProductSku updatedSku) {
         // Here, we re-fetch the product from the DB or a separate method
@@ -837,6 +843,7 @@ public class ProductService {
     }
 
     @Transactional
+    @CachePut(value = "product", key = "#result.skuId")
     public ProductSize updateProductSize_Qty(String slug, Long skuId, String size, int qty) {
         ProductSize productSize = getProductSizeModel(skuId, size);
 
@@ -861,6 +868,7 @@ public class ProductService {
      * @CachePut 어노테이션을 사용하여 Redis 캐시를 갱신합니다.
      *           이 메서드는 오직 캐시를 업데이트하는 역할만 담당합니다.
      */
+    @Transactional
     @CachePut(value = "products", key = "#slug")
     public List<ProductDto> refreshProductsCache(String slug) {
         log.info("Refreshing cache for slug: {}", slug);

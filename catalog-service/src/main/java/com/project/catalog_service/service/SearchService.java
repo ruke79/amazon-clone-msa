@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SearchService {
 
     private final CategoryRepository categoryRepository;
@@ -51,7 +52,7 @@ public class SearchService {
         return PageRequest.of(page, size);
     }
 
-    @Transactional(readOnly = true)
+    
     @Cacheable(value = "search_cache", cacheManager = "redisCacheManager")
     public SearchResultDto searchProducts(SearchParamsRequest params) {
         Long categoryId = (params.getCategory() != null) ? Long.parseLong(params.getCategory()) : null;
@@ -158,7 +159,7 @@ public class SearchService {
         return builder;
     }
 
-    @Transactional(readOnly = true)
+    @Cacheable(value = "colors_cache", key = "#categoryId", cacheManager = "redisCacheManager")
     public List<String> getColors(Long categoryId) {
         if (categoryId == null) {
             return productSkuRepository.findColorsByProductId(null);
@@ -167,7 +168,7 @@ public class SearchService {
         return productSkuRepository.findColorsByProductId(ids);
     }
 
-    @Transactional(readOnly = true)
+    @Cacheable(value = "sizes_cache", key = "#categoryId", cacheManager = "redisCacheManager")
     public List<String> getSizes(Long categoryId) {
         if (categoryId == null) {
             return productSkuRepository.findSizesByProductId(null);
@@ -175,8 +176,8 @@ public class SearchService {
         List<Long> ids = productRepository.findProductIDsByCategoryId(categoryId);
         return productSkuRepository.findSizesByProductId(ids);
     }
-
-    @Transactional(readOnly = true)
+    
+    @Cacheable(value = "details_cache", key = "#categoryId", cacheManager = "redisCacheManager")
     public List<ProductDetailDto> getDetails(Long categoryId) {
         if (categoryId == null) {
             return productDetailsRepository.findDistinctAll().stream()
@@ -189,7 +190,7 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-     @Transactional(readOnly = true)
+    @Cacheable(value = "products_by_category", key = "#category + '_' + #pageRequest.pageNumber", cacheManager = "redisCacheManager")
     public List<Product> findAllByCategory(Long category, Pageable pageRequest) {
 
         Page<Product> productPage = productRepository.findAllByCategory_CategoryId(category, pageRequest);
