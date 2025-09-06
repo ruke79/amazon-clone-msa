@@ -487,6 +487,11 @@ public class ElasticsearchBatchConfig {
             Object newIndexObj = jobParameters.get("newIndexName");
             final String newIndex = (newIndexObj != null) ? newIndexObj.toString() : "default-new-index"; // 기본값 설정
 
+               // --- 수정된 부분: 앨리어스 롤오버 전에 인덱스 존재 여부 확인 ---
+            if (!elasticsearchOperations.indexOps(IndexCoordinates.of(newIndex)).exists()) {
+                throw new RuntimeException("New index '" + newIndex + "' does not exist. Cannot perform alias rollover.");
+            }
+
             List<String> existingIndices = elasticsearchOperations.indexOps(IndexCoordinates.of(productAliasName)).getAliases().keySet().stream()
                 .filter(index -> !index.equals(newIndex))
                 .collect(Collectors.toList());

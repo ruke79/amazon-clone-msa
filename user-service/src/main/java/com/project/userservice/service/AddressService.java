@@ -23,20 +23,21 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class AddressService {
-
     
     private final ShippingAddressRepository shippingAddressRepository;
     private final UserRepository userRepository;
     
-  
+ 
     
     public AddressDto saveShippingAddress(AddressRequest request, String username) {
+        log.info("saveShippingAddress called with username: {}", username);
         
         User user = userRepository.findByUsername(username)
         .orElseThrow(()->new RuntimeException("User not found"));
-             
+              
+        log.info("User found: {}", user.getUsername());
 
-       ShippingAddress address = ShippingAddress.builder()
+        ShippingAddress address = ShippingAddress.builder()
             .address1(request.getAddress().getAddress1())
             .address2(request.getAddress().getAddress2())
             .city(request.getAddress().getCity())
@@ -46,108 +47,114 @@ public class AddressService {
             .phoneNumber(request.getAddress().getPhoneNumber())
             .active(request.getAddress().isActive())
             .firstname(request.getAddress().getFirstname()) 
-            .lastname(request.getAddress().getLastname())                        
+            .lastname(request.getAddress().getLastname())               
             .build();
             
-
-        ShippingAddress.deepCopyShippingAddress(address, request.getAddress());        
+        ShippingAddress.deepCopyShippingAddress(address, request.getAddress());       
 
         address.setUser(user);
 
-        address = shippingAddressRepository.save(address);       
+        log.info("Saving new address for user: {}", user.getUserId());
+        address = shippingAddressRepository.save(address);     
+        log.info("Address saved with ID: {}", address.getShippingAddressId());
         
         user.getShippingAddresses().add(address);
 
-        userRepository.save(user);  // prevent java.stackoverflow        
+        userRepository.save(user);  // prevent java.stackoverflow          
 
         AddressDto result = new AddressDto();
         AddressDto.deepCopyShippingAddressDto(result, address);
+        
+        log.info("saveShippingAddress completed, returning result: {}", result.getAddressId());
 
         return result;
     }
         
-        
     public AddressDto selectShipAddress(String username, String addressId) {
-
+        log.info("selectShipAddress called with username: {}, addressId: {}", username, addressId);
+        
         Optional<User> user = userRepository.findByUsername(username);
 
-        if (!user.isPresent())
+        if (!user.isPresent()) {
+            log.warn("User not found: {}", username);
             return null;
+        }
 
+        log.info("User found, getting addresses for user ID: {}", user.get().getUserId());
         List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
-
-                           
+        log.info("Found {} addresses for user.", addresses.size());
 
         for (ShippingAddress address : addresses) {
-
-            if (address.getShippingAddressId() == Long.parseLong(addressId)) {
-
+            log.info("Checking address ID: {}", address.getShippingAddressId());
+            if (Objects.equals(address.getShippingAddressId(), Long.parseLong(addressId))) {
+                log.info("Matching address found, ID: {}", addressId);
                 ShippingAddress currActiveAddress = shippingAddressRepository.findByActive(true).orElse(null);
                 
-                if (currActiveAddress != null) {
-
+                if (currActiveAddress != null && !Objects.equals(currActiveAddress.getShippingAddressId(), Long.parseLong(addressId))) {
+                    log.info("Deactivating current active address with ID: {}", currActiveAddress.getShippingAddressId());
                     currActiveAddress.setActive(false);
                     shippingAddressRepository.save(currActiveAddress);
                 }
 
                 address.setActive(true);
-
+                log.info("Activating new address with ID: {}", address.getShippingAddressId());
                 address = shippingAddressRepository.save(address);
                 
                 AddressDto dto = new AddressDto();
-
                 AddressDto.deepCopyShippingAddressDto(dto, address);
+                
+                log.info("selectShipAddress completed, returning active address: {}", dto.getAddressId());
 
                 return dto;
             }
         }
+        log.warn("Matching address not found for ID: {}", addressId);
         return null;
     }
 
-            
-
-
-    
-
     @Transactional(readOnly = true)
     public List<AddressDto> getShipAddresses(String username) {
-
+        log.info("getShipAddresses called with username: {}", username);
+        
         Optional<User> user = userRepository.findByUsername(username);
 
-        if (!user.isPresent())
+        if (!user.isPresent()) {
+            log.warn("User not found: {}", username);
             return null;
-
+        }
+        log.info("User found, getting all addresses for user ID: {}", user.get().getUserId());
         List<ShippingAddress> addresses = shippingAddressRepository.findByUser_UserId(user.get().getUserId());
+        log.info("Found {} addresses.", addresses.size());
 
         List<AddressDto> addressDtos = new ArrayList<>();
         for (ShippingAddress address : addresses) {
             AddressDto dto = new AddressDto();
-
             AddressDto.deepCopyShippingAddressDto(dto, address);
-
             addressDtos.add(dto);
         }
-
+        log.info("getShipAddresses completed, returning {} DTOs.", addressDtos.size());
+        
         return addressDtos;
     }
 
-    
     public void deleteShippingAddress(String username, String addressId) {
-
+        log.info("deleteShippingAddress called with username: {}, addressId: {}", username, addressId);
+        
         Optional<User> user = userRepository.findByUsername(username);
 
-        if (!user.isPresent())
+        if (!user.isPresent()) {
+            log.warn("User not found: {}", username);
             return;
+        }
 
         Optional<ShippingAddress> deleteAddress = shippingAddressRepository.findById(Long.parseLong(addressId));
-        ;
         if (deleteAddress.isPresent()) {
+            log.info("Address to delete found, ID: {}", deleteAddress.get().getShippingAddressId());
             user.get().getShippingAddresses().remove(deleteAddress.get());
             shippingAddressRepository.delete(deleteAddress.get());
+            log.info("Address deleted successfully.");
+        } else {
+            log.warn("Address with ID {} not found for deletion.", addressId);
         }
-        
     }
-
-
-
 }
