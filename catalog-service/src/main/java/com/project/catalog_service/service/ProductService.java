@@ -51,6 +51,7 @@ import com.project.catalog_service.repository.SubcategoryRepository;
 import com.project.catalog_service.util.CursorPagenation;
 import com.project.common.util.FileUtil;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -227,12 +228,16 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+
+
      /**
      * 모든 카테고리/서브카테고리별 상품 목록을 순회하며 캐시를 미리 채웁니다 (Warm-up).
      */
 
-    public List<ProductDto> warmUpProductCaches() {
-        log.info("Starting to warm up product caches...");
+    @PostConstruct // <-- 애플리케이션 시작 시 이 메서드를 자동으로 실행
+    public List<ProductDto> warmUpProductCaches(int pageSize) {
+        
+        log.info("Starting to warm up product caches...");        
 
         // 1. 모든 카테고리 목록을 가져옵니다.
         List<Category> allCategories = categoryRepository.findAll();
@@ -250,7 +255,7 @@ public class ProductService {
 
                     // 3. getProductsByCategoryAndSubcategory 메소드를 호출하여 캐시를 채웁니다.
                     products.addAll( getProductsByCategoryAndSubcategory(
-                            category.getCategoryName(), subcategory.getSubcategoryName(), page));
+                            category.getCategoryName(), subcategory.getSubcategoryName(), page, pageSize));
 
                 
                     page++; // 다음 페이지로 이동
@@ -269,9 +274,10 @@ public class ProductService {
      * @return
      */
     @Cacheable(value = "products", key = "#categoryName + '_' + #subcategoryName + '_' + #page")
-    public List<ProductDto> getProductsByCategoryAndSubcategory(String categoryName, String subcategoryName, int page) {
+    public List<ProductDto> getProductsByCategoryAndSubcategory(String categoryName, String subcategoryName, int page, int pageSize) {
+         // 기본 페이지 크기를 10으로 설정합니다.
         // 한 페이지에 1개씩 가져오도록 PageRequest 객체를 생성합니다.
-        PageRequest pageRequest = PageRequest.of(page, 1);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
 
         // ProductRepository에 새로운 쿼리 메소드를 추가하여 사용해야 합니다.
         // 이 쿼리 메소드는 categoryName과 subcategoryName을 기준으로 결과를 필터링합니다.

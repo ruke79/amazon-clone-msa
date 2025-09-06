@@ -72,12 +72,27 @@ public class ProductController {
         return ResponseEntity.ok("Batch synchronization job started!");
     }
 
+    @GetMapping(value = "/product/frontpage")
+    ResponseEntity<?> loadProductsinFrontPage() {
+
+        try {
+            List<ProductDto> response = productService.warmUpProductCaches(4); // 페이지 크기를 4으로 설정
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse(e.getMessage()));
+        }
+
+    }
+
     
     @GetMapping(value = "/product/products")
     ResponseEntity<?> getProducts() {
 
         try {
-            List<ProductDto> response = productService.warmUpProductCaches();
+            List<ProductDto> response = productService.warmUpProductCaches(20); // 페이지 크기를 20으로 설정
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

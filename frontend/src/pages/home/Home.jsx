@@ -50,7 +50,7 @@ export async function loader() {
     
     try {
         // test logic
-        const response  = await getRequest("/catalog-service/api/product/products");
+        const response  = await getRequest("/catalog-service/api/product/frontpage");
 
         return response
   } catch(err) {
