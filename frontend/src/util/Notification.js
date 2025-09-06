@@ -1,4 +1,4 @@
-import { useLogout } from "hook/hooks";
+import { url: mywebserv.site:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생 } from "hook/hooks";
 
 const { EventSourcePolyfill, NativeEventSource } = require("event-source-polyfill");
 const { useEffect, useState, useRef } = require("react");
@@ -7,7 +7,7 @@ const { useAuthContext } = require("store/AuthContext");
 export const useNotification = () => {
 
     const { token, isAuthenticated } = useAuthContext();
-    const logout = useLogout(true);
+    const { logout, isPending } = useLogout(true);
     
     const [isConnected, setIsConnected] = useState(false);
 

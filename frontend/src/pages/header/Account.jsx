@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import tokenUtil from "util/tokenUtil";
 import { postRequest } from "util/api";
-import { useLogout, useReRenderer } from "hook/hooks";
+import { url: mywebserv.site:29092  # ip접속시 ssl 인증서에서 ip는 없다고 에외발생, useReRenderer } from "hook/hooks";
 
 
 
@@ -24,7 +24,7 @@ const Account = () => {
     const { token } = useAuthContext();
     const { user } = useAuthContext();
 
-    const logout = useLogout();
+    const { logout, isPending } = useLogout();
 
     
     const isLoadingRef = useRef(false);

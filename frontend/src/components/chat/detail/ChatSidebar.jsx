@@ -75,7 +75,8 @@ import { useLogout } from 'hook/hooks';
   export default function ChatDetail() {
     const [expanded, setExpanded] = useState(true);
 
-    const logout = useLogout();
+     // useLogout()이 반환하는 객체를 구조 분해하여 logout 함수를 가져옴
+    const { logout, isPending } = useLogout();
 
     const navBarItems = [
       {
