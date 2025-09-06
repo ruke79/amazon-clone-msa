@@ -12,7 +12,7 @@ import api, { queryClient } from 'util/api'
 import { jwtDecode } from "jwt-decode";
 import { useMutation } from '@tanstack/react-query';
 import { useErrorBoundary } from "react-error-boundary";
-import { useReRenderer } from "hook/hooks";
+
 
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -42,8 +42,8 @@ const SignInPage = () => {
     const [user, setUser] = useState(initialUser);
     const { email, password, login_error } = user;
 
-    const isLoadingRef = useRef(false);
-    const reRender = useReRenderer();
+    
+    
 
     const { login, setAuthenticationStatus } = useAuthContext();
 
@@ -64,9 +64,6 @@ const SignInPage = () => {
         mutationFn: signin,
         throwOnError: true,
         onSuccess: (response) => {
-
-
-
             try {
                 const access = response.headers['access'];
 
@@ -77,14 +74,15 @@ const SignInPage = () => {
                     handleSuccessfulLogin(response, decodedToken);
                 }
                 queryClient.invalidateQueries({ querykey: [LOGIN_QUERY_KEY] });
-            } catch (error) {
+            } catch (error) {                
+                console.log("erorr >>>", error);
                 toast.error("Login Failed. Please retry.");
-                console.log("erorr >>>", error.response?.data.message);
 
             }
         },
         onError: (error) => {
             console.log("erorr >>>", error.response?.data.message);
+            toast.error(error.response?.data.message || "Login Failed.");
         }
     });
 
@@ -112,15 +110,14 @@ const SignInPage = () => {
         navigate('/');
         toast.success(response.data.message);
 
+         setAuthenticationStatus(STATUS.SUCCEEDED);
     };
 
     const signInHandler = async () => {
 
+        // isPending 상태는 useMutation이 자동으로 관리하므로, 별도 로직 불필요
         setAuthenticationStatus(STATUS.PENDING);
-        mutate({ email, password });
-
-
-        setAuthenticationStatus(STATUS.SUCCEEDED);
+        mutate({ email, password });       
     };
 
 
